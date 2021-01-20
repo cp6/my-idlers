@@ -994,7 +994,7 @@ class idlers extends helperFunctions
 
         $this->rowColOpen('form-row', 'col-12');
         $this->tagOpen('div', 'input-group');
-        $this->inputPrepend('Hostname:');
+        $this->inputPrepend('Hostname');
         $this->textInput('me_hostname', '', 'form-control', true);
         $this->tagClose('div');
         $this->hiddenInput('me_server_id');
@@ -1015,13 +1015,13 @@ class idlers extends helperFunctions
 
         $this->rowColOpen('form-row', 'col-6');
         $this->tagOpen('div', 'input-group');
-        $this->inputPrepend('Price:');
+        $this->inputPrepend('Price');
         $this->numberInput('me_price', '', 'form-control', true, 0, 999, 'any');
         $this->tagClose('div');
         $this->tagClose('div');
         $this->colOpen('col-6');
         $this->tagOpen('div', 'input-group');
-        $this->inputPrepend('Term:');
+        $this->inputPrepend('Term');
         $this->selectElement('me_term');
         $this->termSelectOptions();
         $this->tagClose('select');
@@ -1029,14 +1029,14 @@ class idlers extends helperFunctions
 
         $this->rowColOpen('form-row', 'col-6');
         $this->tagOpen('div', 'input-group');
-        $this->inputPrepend('Currency:');
+        $this->inputPrepend('Currency');
         $this->selectElement('me_currency');
         $this->CurrencySelectOptions();
         $this->tagClose('select');
         $this->tagClose('div', 2);
         $this->colOpen('col-6');
         $this->tagOpen('div', 'input-group');
-        $this->inputPrepend('OS:');
+        $this->inputPrepend('OS');
         $this->selectElement('me_os');
         $this->OsSelectOptions();
         $this->tagClose('select');
@@ -1044,7 +1044,7 @@ class idlers extends helperFunctions
 
         $this->rowColOpen('form-row', 'col-12');
         $this->tagOpen('div', 'input-group');
-        $this->inputPrepend('Virt:');
+        $this->inputPrepend('Virt');
         $this->selectElement('me_virt');
         $this->virtSelectOptions();
         $this->tagClose('select');
@@ -1100,7 +1100,7 @@ class idlers extends helperFunctions
         $this->tagClose('div', 2);
         $this->colOpen('col-6');
         $this->tagOpen('div', 'input-group');
-        $this->inputPrepend('Type:');
+        $this->inputPrepend('Type');
         $this->selectElement('me_ram_type');
         $this->selectOption('MB', 'MB', true);
         $this->selectOption('GB', 'GB');
@@ -1114,7 +1114,7 @@ class idlers extends helperFunctions
         $this->tagClose('div', 2);
         $this->colOpen('col-6');
         $this->tagOpen('div', 'input-group');
-        $this->inputPrepend('Type:');
+        $this->inputPrepend('Type');
         $this->selectElement('me_swap_type');
         $this->selectOption('MB', 'MB', true);
         $this->selectOption('GB', 'GB');
@@ -1164,7 +1164,7 @@ class idlers extends helperFunctions
 
         $this->rowColOpen('form-row', 'col-12');
         $this->tagOpen('div', 'input-group');
-        $this->inputPrepend('Hostname:');
+        $this->inputPrepend('Hostname');
         $this->textInput('sh_me_hostname', '', 'form-control', true);
         $this->tagClose('div');
         $this->hiddenInput('sh_me_server_id');
@@ -1174,13 +1174,13 @@ class idlers extends helperFunctions
 
         $this->rowColOpen('form-row', 'col-6');
         $this->tagOpen('div', 'input-group');
-        $this->inputPrepend('Price:');
+        $this->inputPrepend('Price');
         $this->numberInput('sh_me_price', '', 'form-control', true, 0, 999, 'any');
         $this->tagClose('div');
         $this->tagClose('div');
         $this->colOpen('col-6');
         $this->tagOpen('div', 'input-group');
-        $this->inputPrepend('Term:');
+        $this->inputPrepend('Term');
         $this->selectElement('sh_me_term');
         $this->termSelectOptions();
         $this->tagClose('select');
@@ -1188,7 +1188,7 @@ class idlers extends helperFunctions
 
         $this->rowColOpen('form-row', 'col-12');
         $this->tagOpen('div', 'input-group');
-        $this->inputPrepend('Currency:');
+        $this->inputPrepend('Currency');
         $this->selectElement('sh_me_currency');
         $this->CurrencySelectOptions();
         $this->tagClose('select');
@@ -1281,7 +1281,7 @@ class idlers extends helperFunctions
 
         $this->rowColOpen('form-row', 'col-12');
         $this->tagOpen('div', 'input-group');
-        $this->inputPrepend('Domain:');
+        $this->inputPrepend('Domain');
         $this->textInput('d_me_hostname', '', 'form-control', true);
         $this->tagClose('div');
         $this->hiddenInput('d_me_server_id');
@@ -1291,13 +1291,13 @@ class idlers extends helperFunctions
 
         $this->rowColOpen('form-row', 'col-6');
         $this->tagOpen('div', 'input-group');
-        $this->inputPrepend('Price:');
+        $this->inputPrepend('Price');
         $this->numberInput('d_me_price', '', 'form-control', true, 0, 999, 'any');
         $this->tagClose('div');
         $this->tagClose('div');
         $this->colOpen('col-6');
         $this->tagOpen('div', 'input-group');
-        $this->inputPrepend('Term:');
+        $this->inputPrepend('Term');
         $this->selectElement('d_me_term');
         $this->termSelectOptions();
         $this->tagClose('select');
@@ -1305,7 +1305,7 @@ class idlers extends helperFunctions
 
         $this->rowColOpen('form-row', 'col-12');
         $this->tagOpen('div', 'input-group');
-        $this->inputPrepend('Currency:');
+        $this->inputPrepend('Currency');
         $this->selectElement('d_me_currency');
         $this->CurrencySelectOptions();
         $this->tagClose('select');
@@ -1607,7 +1607,7 @@ class idlers extends helperFunctions
         $this->tagClose('div', 2);
         $this->colOpen('col-12 col-md-4');
         $this->tagOpen('div', 'input-group');
-        $this->inputPrepend('Term:');
+        $this->inputPrepend('Term');
         $this->selectElement('' . $id_append . 'term');
         $this->termSelectOptions();
         $this->tagClose('select');
@@ -1640,7 +1640,7 @@ class idlers extends helperFunctions
         $this->tagClose('div', 2);
         $this->colOpen('col-md-3');
         $this->tagOpen('div', 'input-group');
-        $this->inputPrepend('Price:');
+        $this->inputPrepend('Price');
         $this->numberInput('price', '', 'form-control', true, 0, 999, 'any');
         $this->tagClose('div', 2);
         $this->colOpen('col-md-3');
