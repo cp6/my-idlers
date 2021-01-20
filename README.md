@@ -54,15 +54,21 @@ By using a [YABs](https://github.com/masonr/yet-another-bench-script) output you
 
 [![Screenshot1](https://cdn.write.corbpie.com/wp-content/uploads/2021/01/my-idlers-self-hosted-server-domain-information-data.jpg)]()
 
+
 [![screenshot2](https://cdn.write.corbpie.com/wp-content/uploads/2021/01/my-idlers-self-hosted-server-domain-information-data-MORE.jpg)]()
+
 
 [![screenshot3](https://cdn.write.corbpie.com/wp-content/uploads/2021/01/my-idlers-self-hosted-server-domain-information-data-EDIT.jpg)]()
 
+
 [![screenshot4](https://cdn.write.corbpie.com/wp-content/uploads/2021/01/my-idlers-self-hosted-server-domain-information-order-table.png)]()
+
 
 [![screenshot5](https://cdn.write.corbpie.com/wp-content/uploads/2021/01/my-idlers-self-hosted-server-domain-information-tally-card.png)]()
 
+
 [![Auto complete location](https://cdn.write.corbpie.com/wp-content/uploads/2021/01/my-idlers-self-hosted-server-domain-information-auto-location.gif)]()
+
 
 [![Auto complete provider](https://cdn.write.corbpie.com/wp-content/uploads/2021/01/my-idlers-self-hosted-server-domain-information-auto-provider.gif)]()
 
