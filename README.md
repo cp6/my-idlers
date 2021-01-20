@@ -7,12 +7,12 @@ By using a [YABs](https://github.com/masonr/yet-another-bench-script) output you
 
 [![Generic badge](https://img.shields.io/badge/version-1.0-blue.svg)](https://shields.io/)
 
-### Requires
+## Requires
 
 * PHP 7.4 (compatible with 8.0)
 * MySQL
 
-### Features
+## Features
 * Add servers
 * Add shared hosting
 * Add domains
@@ -32,17 +32,31 @@ By using a [YABs](https://github.com/masonr/yet-another-bench-script) output you
 * Tally/stats card
 * One-page design
 
-### Install
+## Install
 
-* Unpack the files into your directory of choice.
+* Download [the zip](https://github.com/cp6/my-idlers/archive/main.zip) and unpack the files from ```my-idlers-main/``` into your directory of choice.
 * Run `my_idlers.sql` in MySQL.
-* Edit ```class.php``` lines ```544-547``` for you MySQL details.
+* Edit ```class.php``` lines ```544-547``` for your MySQL details.
+* Edit ```class.php``` lines ```539-541``` for card order type.
 
 
-### Notes
+## Notes
 
 **There is no authentication provided!**
  Either use on a local network or put behind authentication.
+ 
+ **Supporting YABS commands:**
+ 
+ ```curl -sL yabs.sh | bash```
+ 
+or
+
+```curl -sL yabs.sh | bash -s -- -r```
+
+**Make sure YABs output starts at the first line which is:** 
+
+```# ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## #```
+
  
  **A trimmed Bootstrap is used.** Only the used classes and elements are in ```style.css``` 
  Therefore adding more obscure columns or Bootstrap classes will not initially work as intended until you put this source css into ```style.css```.  
