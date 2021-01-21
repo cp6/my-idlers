@@ -57,6 +57,9 @@ body {
     .container {
         max-width: 960px
     }
+    .modal-lg {
+        max-width: 800px;
+    }
 }
 
 @media (min-width: 1200px) {

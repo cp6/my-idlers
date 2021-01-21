@@ -627,7 +627,7 @@ class idlers extends helperFunctions
         $this->tagClose('div', 3);
 
         $this->outputString('<div class="modal fade" id="yabsModal" tabindex="-1" role="dialog" aria-labelledby="yabsmodalview" aria-hidden="true">');
-        $this->outputString('<div class="modal-dialog" role="document">');
+        $this->outputString('<div class="modal-dialog modal-lg" role="document">');
         $this->outputString('<div class="modal-content text-center">');
         $this->tagOpen('div', 'modal-header');
         $this->outputString('<h4 class="modal-title w-100" id="yabs_hostname_header"></h4>');
