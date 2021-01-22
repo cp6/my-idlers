@@ -1,6 +1,21 @@
 <?php
 
-class elementHelpers
+class idlersConfig {
+    const PAGE_TITLE = 'My idlers';
+    const PAGE_DESC = 'My idlers listing server, shared hosting and domains information and data.';
+
+    const SRV_SORT_TYPE = 'HOSTNAME_ASC';//Server card sort type
+    const SH_SORT_TYPE = 'HOSTNAME_ASC';//Shared hosting sort type
+    const DC_SORT_TYPE = 'HOSTNAME_ASC';//Domains sort type
+    //Options: PRICE_DESC, PRICE_ASC, DUE_DESC, DUE_ASC, OWNED_SINCE_DESC,OWNED_SINCE_ASC, HOSTNAME_DESC & HOSTNAME_ASC
+
+    const DB_HOSTNAME = '127.0.0.1';
+    const DB_NAME = 'idlers';
+    const DB_USERNAME = 'root';
+    const DB_PASSWORD = '';
+}
+
+class elementHelpers extends idlersConfig
 {
     //Minimizes lines used + opening and closing of <?PHP tag
     protected function tagOpen(string $tag = 'div', string $class = '', string $id = '')
@@ -533,19 +548,6 @@ class helperFunctions extends elementHelpers
 
 class idlers extends helperFunctions
 {
-    const PAGE_TITLE = 'My idlers';
-    const PAGE_DESC = 'My idlers listing server, shared hosting and domains information and data.';
-
-    const SRV_SORT_TYPE = 'HOSTNAME_ASC';//Server card sort type
-    const SH_SORT_TYPE = 'HOSTNAME_ASC';//Shared hosting sort type
-    const DC_SORT_TYPE = 'HOSTNAME_ASC';//Domains sort type
-    //Options: PRICE_DESC, PRICE_ASC, DUE_DESC, DUE_ASC, OWNED_SINCE_DESC,OWNED_SINCE_ASC, HOSTNAME_DESC & HOSTNAME_ASC
-
-    const DB_HOSTNAME = '127.0.0.1';
-    const DB_NAME = 'idlers';
-    const DB_USERNAME = 'root';
-    const DB_PASSWORD = '';
-
     protected function dbConnect()
     {
         $options = array(
