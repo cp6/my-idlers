@@ -2128,9 +2128,16 @@ class idlers extends helperFunctions
         $this->tagClose('ul');
         $this->tagClose('div', 3);
         if (file_exists("yabs/{$data['server_id']}.txt")) {
-            $this->rowColOpen('row', 'col-12 text-center');
+            $this->rowColOpen('row text-center', 'col-12 col-md-6');
             $this->outputString('<a class="btn btn-main view-yabs-btn" id="viewYabs" value="' . $item_id . '" data-target="#yabsModal" data-toggle="modal" href="#" role="button">View YABs</a>');
-            $this->tagClose('div', 2);
+            $this->tagClose('div');
+            $this->colOpen('col-12 col-md-6');
+            $this->outputString('<a class="btn btn-second" id="closeViewMoreModal" role="button" data-dismiss="modal">Close</a>');
+            $this->tagClose('div',2);
+        } else {
+            $this->rowColOpen('row text-center', 'col-12');
+            $this->outputString('<a class="btn btn-second" id="closeViewMoreModal" role="button" data-dismiss="modal">Close</a>');
+            $this->tagClose('div',2);
         }
     }
 
@@ -2724,6 +2731,9 @@ class idlers extends helperFunctions
         $this->outputString(file_get_contents("yabs/$item_id.txt"));
         $this->tagClose('textarea');
         $this->tagClose('form');
+        $this->rowColOpen('row text-center', 'col-12');
+        $this->outputString('<a class="btn btn-second" role="button" data-dismiss="modal">Close YABs</a>');
+        $this->tagClose('div',2);
     }
 
 }
