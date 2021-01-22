@@ -322,6 +322,7 @@ CREATE TABLE IF NOT EXISTS `servers`
     `is_cpu_dedicated` tinyint(1)   DEFAULT '0',
     `was_special`      tinyint(1)   DEFAULT '0',
     `os`               int(11)      DEFAULT NULL,
+    `ssh_port`         int(11)      DEFAULT '22',
     `still_have`       tinyint(1)   DEFAULT '1',
     `owned_since`      date         DEFAULT NULL,
     `tags`             varchar(255) DEFAULT NULL,

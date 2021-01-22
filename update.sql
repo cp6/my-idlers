@@ -1,2 +1,5 @@
 ALTER TABLE `disk_speed`
     ADD COLUMN `datetime` DATETIME NULL DEFAULT CURRENT_TIMESTAMP AFTER `1m_as_mbps`;
+
+ALTER TABLE `servers`
+    ADD COLUMN `ssh_port` INT(11) NULL DEFAULT '22' AFTER `os`;
