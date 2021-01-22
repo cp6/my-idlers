@@ -1,6 +1,7 @@
 <?php
 
-class idlersConfig {
+class idlersConfig
+{
     const PAGE_TITLE = 'My idlers';
     const PAGE_DESC = 'My idlers listing server, shared hosting and domains information and data.';
 
@@ -1907,7 +1908,7 @@ class idlers extends helperFunctions
         $this->HTMLphrase('p', 'm-desc', 'SSH Port');
         $this->tagClose('div');
         $this->colOpen('col-8');
-        $this->HTMLphrase('p', 'm-value', '<code>'.$data['ssh_port'].'</code>');
+        $this->HTMLphrase('p', 'm-value', '<code>' . $data['ssh_port'] . '</code>');
         $this->tagClose('div', 2);
 
         $this->rowColOpen('row m-row', 'col-4');
