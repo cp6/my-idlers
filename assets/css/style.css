@@ -893,10 +893,6 @@ button.close {
     -webkit-appearance: none
 }
 
-.modal-open {
-    overflow: hidden
-}
-
 .modal-open .modal {
     overflow-x: hidden;
     overflow-y: auto
