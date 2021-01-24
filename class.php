@@ -1135,6 +1135,12 @@ class idlers extends helperFunctions
         $this->tagClose('div', 2);
 
         $this->rowColOpen('form-row', 'col-12');
+        $this->htmlPhrase('p', 'm-desc', 'Update YABs disk & network speeds:');
+        $this->outputString("<textarea class='form-control' id='me_yabs' name='me_yabs' rows='4' cols='40' placeholder='First line must be: # ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## #'>");
+        $this->outputString("</textarea>");
+        $this->tagClose('div', 2);
+
+        $this->rowColOpen('form-row', 'col-12');
         $this->tagOpen('div', 'input-group');
         $this->inputPrepend('Tags');
         $this->tagsInput('me_tags', 'form-control');
@@ -3056,6 +3062,69 @@ class itemUpdate extends idlers
         }
         $update = $this->dbConnect()->prepare("UPDATE `$table` SET `still_have` = ? WHERE `id` = ? LIMIT 1;");
         return $update->execute([$status, $this->item_id]);
+    }
+
+    public function updateYabsData(bool $save_yabs = true)
+    {//YABS data handler
+        $file_name = 'yabsFromForm.txt';
+        $logfile = fopen($file_name, "w") or die("Unable to open file!");
+        fwrite($logfile, $this->data['me_yabs']);
+        if ($save_yabs) {
+            $this->saveYABS($this->data['me_yabs'], "{$this->item_id}_" . date('Y-m-d') . ".txt");
+        }
+        fclose($logfile);
+        $file = @fopen($file_name, 'r');
+        if ($file) {
+            $array = explode("\n", fread($file, filesize($file_name)));
+        }
+        if (strpos($array[0], '# ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## #') !== false || count($array) < 50) {
+            $io_3 = explode(' ', preg_replace('!\s+!', ' ', $array[24]));
+            $io_6 = explode(' ', preg_replace('!\s+!', ' ', $array[30]));
+            (strpos($array[12], 'Enabled') !== false) ? $aes_ni = 1 : $aes_ni = 0;
+            (strpos($array[13], 'Enabled') !== false) ? $vm_amd_v = 1 : $vm_amd_v = 0;
+            $d4k_as_mbps = $this->diskSpeedAsMbps($io_3[3], $this->floatValue($io_3[2]));
+            $d64k_as_mbps = $this->diskSpeedAsMbps($io_3[7], $this->floatValue($io_3[6]));
+            $d512k_as_mbps = $this->diskSpeedAsMbps($io_6[3], $this->floatValue($io_6[2]));
+            $d1m_as_mbps = $this->diskSpeedAsMbps($io_6[7], $this->floatValue($io_6[6]));
+            $disk_test_arr = array($this->item_id, $this->floatValue($io_3[2]), $io_3[3], $this->floatValue($io_3[6]), $io_3[7], $this->floatValue($io_6[2]), $io_6[3], $this->floatValue($io_6[6]), $io_6[7], $d4k_as_mbps, $d64k_as_mbps, $d512k_as_mbps, $d1m_as_mbps);
+            $insert = $this->dbConnect()->prepare("INSERT IGNORE INTO `disk_speed` (`server_id`, `4k`, `4k_type`, `64k`, `64k_type`, `512k`, `512k_type`, `1m`, `1m_type`, `4k_as_mbps`, `64k_as_mbps`, `512k_as_mbps`, `1m_as_mbps`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?);");
+            $insert->execute([$this->item_id, $disk_test_arr[1], $disk_test_arr[2], $disk_test_arr[3], $disk_test_arr[4], $disk_test_arr[5], $disk_test_arr[6], $disk_test_arr[7], $disk_test_arr[8], $disk_test_arr[9], $disk_test_arr[10], $disk_test_arr[11], $disk_test_arr[12]]);
+            if ($array[45] == "Geekbench 5 Benchmark Test:\r") {
+                //No ipv6
+                //Has short ipv4 network speed testing (-r)
+                $start_st = 36;
+                $end_st = 43;
+            } elseif ($array[40] == "Geekbench 5 Benchmark Test:\r") {
+                //No ipv6
+                //Has full ipv4 network speed testing
+                $start_st = 36;
+                $end_st = 38;
+            } elseif ($array[40] == "iperf3 Network Speed Tests (IPv6):\r") {
+                //HAS ipv6
+                //Has short ipv4 & ipv6 network speed testing
+                $start_st = 36;
+                $end_st = 38;
+            } elseif ($array[55] == "Geekbench 5 Benchmark Test:\r") {
+                //HAS ipv6
+                //Has full ipv4 & ipv6 network speed testing
+                $start_st = 36;
+                $end_st = 43;
+            }
+            for ($i = $start_st; $i <= $end_st; $i++) {
+                if (strpos($array[$i], 'busy') !== false) {
+                    //Has a "busy" result, No insert
+                } else {
+                    $data = explode(' ', preg_replace('!\s+!', ' ', $array[$i]));
+                    $send_as_mbps = $this->networkSpeedAsMbps($this->yabsSpeedValues($data)['send_type'], $this->yabsSpeedValues($data)['send']);
+                    $recieve_as_mbps = $this->networkSpeedAsMbps($this->yabsSpeedValues($data)['receive_type'], $this->yabsSpeedValues($data)['receive']);
+                    $insert = $this->dbConnect()->prepare('INSERT IGNORE INTO `speed_tests` (`server_id`, `location`, `send`, `send_type`,`send_as_mbps`, `recieve`,`recieve_type`, `recieve_as_mbps`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
+                    $insert->execute([$this->item_id, $this->yabsSpeedLoc($data)['location'], $this->yabsSpeedValues($data)['send'], $this->yabsSpeedValues($data)['send_type'], $send_as_mbps, $this->yabsSpeedValues($data)['receive'], $this->yabsSpeedValues($data)['receive_type'], $recieve_as_mbps]);
+                }
+            }
+            return true;
+        } else {//Not formatted right
+            return false;
+        }
     }
 
 }

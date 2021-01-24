@@ -13,21 +13,21 @@ USE `idlers`;
 -- Dumping structure for table my_idlers.disk_speed
 CREATE TABLE IF NOT EXISTS `disk_speed`
 (
-    `server_id`    char(8) NOT NULL,
-    `4k`           float    DEFAULT NULL,
-    `4k_type`      char(4)  DEFAULT NULL,
-    `4k_as_mbps`   float    DEFAULT NULL,
-    `64k`          float    DEFAULT NULL,
-    `64k_type`     char(4)  DEFAULT NULL,
-    `64k_as_mbps`  float    DEFAULT NULL,
-    `512k`         float    DEFAULT NULL,
-    `512k_type`    char(4)  DEFAULT NULL,
-    `512k_as_mbps` float    DEFAULT NULL,
-    `1m`           float    DEFAULT NULL,
-    `1m_type`      char(4)  DEFAULT NULL,
-    `1m_as_mbps`   float    DEFAULT NULL,
-    `datetime`     datetime DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`server_id`)
+    `server_id`    char(8)  NOT NULL,
+    `4k`           float             DEFAULT NULL,
+    `4k_type`      char(4)           DEFAULT NULL,
+    `4k_as_mbps`   float             DEFAULT NULL,
+    `64k`          float             DEFAULT NULL,
+    `64k_type`     char(4)           DEFAULT NULL,
+    `64k_as_mbps`  float             DEFAULT NULL,
+    `512k`         float             DEFAULT NULL,
+    `512k_type`    char(4)           DEFAULT NULL,
+    `512k_as_mbps` float             DEFAULT NULL,
+    `1m`           float             DEFAULT NULL,
+    `1m_type`      char(4)           DEFAULT NULL,
+    `1m_as_mbps`   float             DEFAULT NULL,
+    `datetime`     datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY `Index 1` (`server_id`, `datetime`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = latin1;
 

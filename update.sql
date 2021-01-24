@@ -6,3 +6,9 @@ ALTER TABLE `servers`
 
 ALTER TABLE `servers`
     ADD COLUMN `notes` VARCHAR(255) NULL DEFAULT NULL AFTER `tags`;
+
+ALTER TABLE `disk_speed`
+    DROP PRIMARY KEY;
+
+ALTER TABLE `disk_speed`
+    ADD UNIQUE INDEX `Index 1` (`server_id`, `datetime`);

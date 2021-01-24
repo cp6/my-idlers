@@ -62,6 +62,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             } elseif ($_POST['type'] == 'server_modal_edit') {//Update the server info
                 $update->updateServerFromModal();
                 $update->updateServerPricingFromModal();
+                if (!is_null($_POST['me_yabs']) && !empty($_POST['me_yabs'])){
+                    $update->updateYabsData();
+                }
             } elseif ($_POST['type'] == 'shared_hosting_modal_edit') {//Update the shared hosting info
                 $update->updateSharedHostingFromModal();
                 $update->updateSharedHostingPricingFromModal();
