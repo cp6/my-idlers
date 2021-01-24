@@ -1819,7 +1819,7 @@ class idlers extends helperFunctions
         } else {//NO
             $insert = $this->dbConnect()->prepare('INSERT INTO `locations` (`name`) VALUES (?);');
             $insert->execute([$provider]);
-            return $db->lastInsertId();
+            return $this->dbConnect()->lastInsertId();
         }
     }
 
@@ -1833,7 +1833,7 @@ class idlers extends helperFunctions
         } else {//NO
             $insert = $this->dbConnect()->prepare('INSERT INTO `providers` (`name`) VALUES (?);');
             $insert->execute([$provider]);
-            return $db->lastInsertId();
+            return $this->dbConnect()->lastInsertId();
         }
     }
 
