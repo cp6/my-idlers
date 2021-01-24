@@ -692,7 +692,7 @@ class idlers extends helperFunctions
         if ($row['has_yabs'] == 1) {
             $select = $this->dbConnect()->prepare("
               SELECT servers.id as server_id,hostname,ipv4,ipv6,`cpu`,cpu_type,cpu_freq,ram,ram_type,swap,swap_type,`disk`,disk_type,bandwidth,bandwidth_type,gb5_single,gb5_multi,gb5_id,aes_ni,amd_v,
-              is_dedicated,is_cpu_dedicated,was_special,os,ssh_port,still_have,tags,virt,has_yabs,ns1,ns2,DATE_FORMAT(`owned_since`, '%M %Y') as owned_since, `owned_since` as owned_since_raw, `4k`,`4k_type`,`64k`,`64k_type`,`512k`,`512k_type`,`1m`,`1m_type`,
+              is_dedicated,is_cpu_dedicated,was_special,os,ssh_port,still_have,tags,notes,virt,has_yabs,ns1,ns2,DATE_FORMAT(`owned_since`, '%M %Y') as owned_since, `owned_since` as owned_since_raw, `4k`,`4k_type`,`64k`,`64k_type`,`512k`,`512k_type`,`1m`,`1m_type`,
               loc.name as location,send,send_type,recieve,recieve_type,price,currency,term,as_usd,per_month,next_dd,pr.name as provider
               FROM servers INNER JOIN disk_speed ds on servers.id = ds.server_id
               INNER JOIN speed_tests st on servers.id = st.server_id INNER JOIN locations loc on servers.location = loc.id
@@ -707,7 +707,7 @@ class idlers extends helperFunctions
         } else {
             $select = $this->dbConnect()->prepare("
                SELECT servers.id as server_id,hostname,ipv4,ipv6,`cpu`,cpu_type,cpu_freq,ram,ram_type,swap,swap_type,`disk`,disk_type,
-               bandwidth,bandwidth_type,gb5_single,gb5_multi,gb5_id,aes_ni,amd_v,is_dedicated,is_cpu_dedicated,was_special,os,ssh_port,still_have,tags,virt,has_yabs,ns1,ns2,
+               bandwidth,bandwidth_type,gb5_single,gb5_multi,gb5_id,aes_ni,amd_v,is_dedicated,is_cpu_dedicated,was_special,os,ssh_port,still_have,tags,notes,virt,has_yabs,ns1,ns2,
                DATE_FORMAT(`owned_since`, '%M %Y') as owned_since,loc.name as location,price,currency,term,as_usd,per_month,next_dd,pr.name as provider
                FROM servers INNER JOIN locations loc on servers.location = loc.id
                INNER JOIN providers pr on servers.provider = pr.id INNER JOIN pricing on servers.id = pricing.server_id WHERE servers.id = ? LIMIT 1;");
@@ -1127,6 +1127,12 @@ class idlers extends helperFunctions
         $this->selectOption('GB', 'GB');
         $this->tagClose('select');
         $this->tagClose('div', 3);
+
+        $this->rowColOpen('form-row', 'col-12');
+        $this->htmlPhrase('p', 'm-desc', 'Notes:');
+        $this->outputString("<textarea class='form-control' id='me_notes' name='me_notes' rows='4' cols='40' maxlength='255'>");
+        $this->outputString("</textarea>");
+        $this->tagClose('div', 2);
 
         $this->rowColOpen('form-row', 'col-12');
         $this->tagOpen('div', 'input-group');
@@ -2114,6 +2120,14 @@ class idlers extends helperFunctions
                 }
             }
         }
+
+        $this->rowColOpen('row m-section-row', 'col-12 text-center');
+        $this->htmlPhrase('p', 'm-section-text', 'Notes');
+        $this->outputString("<textarea class='form-control' id='server_notes' name='server_notes' rows='4' cols='40' maxlength='255' disabled>");
+        $this->outputString($data['notes']);
+        $this->outputString("</textarea>");
+        $this->tagClose('div', 2);
+
         $this->rowColOpen('row m-section-row', 'col-12 text-center');
         $this->HTMLphrase('p', 'm-section-text', 'Tags');
         $this->tagClose('div', 2);
@@ -2953,8 +2967,8 @@ class itemUpdate extends idlers
         } elseif ($data['me_non_active'] == 'on') {
             $this->updateActiveStatus(0);
         }
-        $update = $this->dbConnect()->prepare("UPDATE `servers` SET `hostname` = ?,`ipv4` = ?,`ipv6` = ?,`cpu` = ?,`bandwidth` = ?,`disk` = ?,`ram` = ?,`ram_type` = ?,`swap` = ?,`swap_type` = ?, `virt` = ?, `tags` = ?, `owned_since` = ?, `ns1` = ?, `ns2` = ?, `ssh_port` = ? WHERE `id`= ? LIMIT 1;");
-        return $update->execute([$data['me_hostname'], $data['me_ipv4'], $data['me_ipv6'], $data['me_cpu_amount'], $data['me_bandwidth'], $data['me_disk'], $data['me_ram'], $data['me_ram_type'], $data['me_swap'], $data['me_swap_type'], $data['me_virt'], $data['me_tags'], $data['me_owned_since'], $data['me_ns1'], $data['me_ns2'], $data['me_ssh_port'], $this->item_id]);
+        $update = $this->dbConnect()->prepare("UPDATE `servers` SET `hostname` = ?,`ipv4` = ?,`ipv6` = ?,`cpu` = ?,`bandwidth` = ?,`disk` = ?,`ram` = ?,`ram_type` = ?,`swap` = ?,`swap_type` = ?, `virt` = ?, `tags` = ?, `owned_since` = ?, `ns1` = ?, `ns2` = ?, `ssh_port` = ?, `notes` = ? WHERE `id`= ? LIMIT 1;");
+        return $update->execute([$data['me_hostname'], $data['me_ipv4'], $data['me_ipv6'], $data['me_cpu_amount'], $data['me_bandwidth'], $data['me_disk'], $data['me_ram'], $data['me_ram_type'], $data['me_swap'], $data['me_swap_type'], $data['me_virt'], $data['me_tags'], $data['me_owned_since'], $data['me_ns1'], $data['me_ns2'], $data['me_ssh_port'], $data['me_notes'], $this->item_id]);
     }
 
     public function updateServerPricingFromModal()

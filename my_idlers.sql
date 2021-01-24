@@ -326,6 +326,7 @@ CREATE TABLE IF NOT EXISTS `servers`
     `still_have`       tinyint(1)   DEFAULT '1',
     `owned_since`      date         DEFAULT NULL,
     `tags`             varchar(255) DEFAULT NULL,
+    `notes`            varchar(255) DEFAULT NULL,
     `has_yabs`         tinyint(1)   DEFAULT '0',
     PRIMARY KEY (`id`),
     UNIQUE KEY `Index 2` (`ipv4`, `hostname`, `ipv6`)

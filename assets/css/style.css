@@ -1544,7 +1544,7 @@ input:checked + .slider:before {
 }
 
 .form-control:disabled, .form-control[readonly] {
-    background-color: #202125
+    background-color: #f0f0f0;
 }
 
 .search-result {
