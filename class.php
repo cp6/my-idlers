@@ -2124,7 +2124,11 @@ class idlers extends helperFunctions
         $this->rowColOpen('row m-section-row', 'col-12 text-center');
         $this->htmlPhrase('p', 'm-section-text', 'Notes');
         $this->outputString("<textarea class='form-control' id='server_notes' name='server_notes' rows='4' cols='40' maxlength='255' disabled>");
-        $this->outputString($data['notes']);
+        if (is_null($data['notes']) || empty($data['notes'])){
+            $this->outputString('');
+        } else {
+            $this->outputString($data['notes']);
+        }
         $this->outputString("</textarea>");
         $this->tagClose('div', 2);
 
