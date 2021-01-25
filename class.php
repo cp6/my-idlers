@@ -198,6 +198,13 @@ class elementHelpers extends idlersConfig
         $this->selectOption('Triennial (3 years)', '6');
     }
 
+    protected function domainTermSelectOptions()
+    {
+        $this->selectOption('Annual (yearly)', '4', true);
+        $this->selectOption('Biennial (2 years)', '5');
+        $this->selectOption('Triennial (3 years)', '6');
+    }
+
     protected function CurrencySelectOptions()
     {
         $this->selectOption('AUD', 'AUD');
@@ -1318,7 +1325,7 @@ class idlers extends helperFunctions
         $this->tagOpen('div', 'input-group');
         $this->inputPrepend('Term');
         $this->selectElement('d_me_term');
-        $this->termSelectOptions();
+        $this->domainTermSelectOptions();
         $this->tagClose('select');
         $this->tagClose('div', 3);
 
