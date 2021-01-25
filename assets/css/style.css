@@ -1110,6 +1110,10 @@ button.close {
     visibility: hidden
 }
 
+.no-loc, .no-prov {
+    visibility: hidden
+}
+
 .form-control:focus {
     color: #495057;
     background-color: #fff;

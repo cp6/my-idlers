@@ -879,10 +879,18 @@ class idlers extends helperFunctions
         $this->tagOpen('div', 'card-body');
         $this->HTMLphrase('h6', 'price', '$' . $data['price'] . ' ' . $data['currency'] . ' ' . $this->paymentTerm($data['term']));
         $this->rowColOpen('row text-center', 'col-12');
-        $this->HTMLphrase('h6', 'provider', $data['provider']);
+        if (is_null($data['provider']) || empty($data['provider'])) {
+            $this->HTMLphrase('h6', 'provider no-prov', '&nbsp;');
+        } else {
+            $this->HTMLphrase('h6', 'provider', $data['provider']);
+        }
         $this->tagClose('div', 2);
         $this->rowColOpen('row text-center', 'col-12');
-        $this->HTMLphrase('h6', 'location', $data['location']);
+        if (is_null($data['location']) || empty($data['location'])) {
+            $this->HTMLphrase('h6', 'location no-loc', '&nbsp;');
+        } else {
+            $this->HTMLphrase('h6', 'location', $data['location']);
+        }
         $this->tagClose('div', 2);
         $this->rowColOpen('row text-center', 'col-12');
         $this->HTMLphrase('p', $dd_class, "Due in {$this->processDueDate($data['id'], $data['term'], $data['next_dd'])} days");
@@ -2776,7 +2784,7 @@ class idlers extends helperFunctions
         $this->tagClose('form');
         $this->rowColOpen('row text-center', 'col-12');
         $this->outputString('<a class="btn btn-third" role="button" data-dismiss="modal">Close YABs</a>');
-        $this->tagClose('div',2);
+        $this->tagClose('div', 2);
     }
 
 }
