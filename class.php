@@ -1168,7 +1168,7 @@ class idlers extends helperFunctions
         $this->outputString('<form id="editSharedHostingForm" method="post">');
 
         $this->rowColOpen('form-row', 'col-8');
-        $this->outputString('<label for="sh_me_delete">Delete server data</label>');
+        $this->outputString('<label for="sh_me_delete">Delete shared hosting data</label>');
         $this->tagClose('div');
         $this->colOpen('col-4');
         $this->outputString('<label class="switch"><input type="checkbox" name="sh_me_delete" id="sh_me_delete"><span class="slider round"></span></label>');
@@ -1285,7 +1285,7 @@ class idlers extends helperFunctions
         $this->outputString('<form id="editDomainForm" method="post">');
 
         $this->rowColOpen('form-row', 'col-8');
-        $this->outputString('<label for="d_me_delete">Delete server data</label>');
+        $this->outputString('<label for="d_me_delete">Delete domain data</label>');
         $this->tagClose('div');
         $this->colOpen('col-4');
         $this->outputString('<label class="switch"><input type="checkbox" name="d_me_delete" id="d_me_delete"><span class="slider round"></span></label>');
