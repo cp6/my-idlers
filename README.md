@@ -5,7 +5,21 @@ A web app for displaying, organizing and storing information about servers (VPS)
 Despite what the name infers this self hosted web app isn't just for storing idling server information. 
 By using a [YABs](https://github.com/masonr/yet-another-bench-script) output you can get disk & network speed values along with GeekBench 5 scores to do easier comparing and sorting.
 
-[![Generic badge](https://img.shields.io/badge/version-1.0-blue.svg)](https://shields.io/)
+[![Generic badge](https://img.shields.io/badge/version-1.1-blue.svg)](https://shields.io/)
+
+## 1.1 changes:
+**If you have version 1.0 please run ```update.sql```**
+* Added notes input for servers
+* Added SSH port input for servers
+* Added YABs update disk & network speed values (Keeps history)
+* Added red button for closing modals
+* Added `update.sql` for pre-existing installations only.
+* Fixed page jumping horizontally when opening modals
+* Fixed search showing duplicates when typing fast
+* Fixed adding provider and locations return id
+* Updated `my_idlers.sql` for changes
+* Updated view YABs modal to be wider
+* Updated config constants to new class at top of ```class.php```
 
 ## Requires
 
@@ -36,8 +50,11 @@ By using a [YABs](https://github.com/masonr/yet-another-bench-script) output you
 
 * Download [the zip](https://github.com/cp6/my-idlers/archive/main.zip) and unpack the files from ```my-idlers-main/``` into your directory of choice.
 * Run `my_idlers.sql` in MySQL.
-* Edit ```class.php``` lines ```544-547``` for your MySQL details.
-* Edit ```class.php``` lines ```539-541``` for card order type.
+  
+* **Only run ```update.sql``` if you have version 1.0 installed.**
+  
+* Edit ```class.php``` lines ```13-16``` for your MySQL details.
+* Edit ```class.php``` lines ```8-10``` for card order type.
 
 
 ## Notes
@@ -69,10 +86,10 @@ or
 [![Screenshot1](https://cdn.write.corbpie.com/wp-content/uploads/2021/01/my-idlers-self-hosted-server-domain-information-data.jpg)](https://cdn.write.corbpie.com/wp-content/uploads/2021/01/my-idlers-self-hosted-server-domain-information-data.jpg)
 
 
-[![screenshot2](https://cdn.write.corbpie.com/wp-content/uploads/2021/01/my-idlers-self-hosted-server-domain-information-data-MORE.jpg)](https://cdn.write.corbpie.com/wp-content/uploads/2021/01/my-idlers-self-hosted-server-domain-information-data-MORE.jpg)
+[![screenshot2](https://cdn.write.corbpie.com/wp-content/uploads/2021/01/my-idlers-self-hosted-server-domain-information-data-MORE-1.1.jpg)](https://cdn.write.corbpie.com/wp-content/uploads/2021/01/my-idlers-self-hosted-server-domain-information-data-MORE-1.1.jpg)
 
 
-[![screenshot3](https://cdn.write.corbpie.com/wp-content/uploads/2021/01/my-idlers-self-hosted-server-domain-information-data-EDIT.jpg)](https://cdn.write.corbpie.com/wp-content/uploads/2021/01/my-idlers-self-hosted-server-domain-information-data-EDIT.jpg)
+[![screenshot3](https://cdn.write.corbpie.com/wp-content/uploads/2021/01/my-idlers-self-hosted-server-domain-information-data-EDIT-1.1.jpg)](https://cdn.write.corbpie.com/wp-content/uploads/2021/01/my-idlers-self-hosted-server-domain-information-data-EDIT-1.1.jpg)
 
 
 [![screenshot4](https://cdn.write.corbpie.com/wp-content/uploads/2021/01/my-idlers-self-hosted-server-domain-information-order-table.png)](https://cdn.write.corbpie.com/wp-content/uploads/2021/01/my-idlers-self-hosted-server-domain-information-order-table.png)
