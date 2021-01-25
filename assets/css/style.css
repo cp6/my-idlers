@@ -57,6 +57,10 @@ body {
     .container {
         max-width: 960px
     }
+
+    .modal-lg {
+        max-width: 800px;
+    }
 }
 
 @media (min-width: 1200px) {
@@ -889,10 +893,6 @@ button.close {
     -webkit-appearance: none
 }
 
-.modal-open {
-    overflow: hidden
-}
-
 .modal-open .modal {
     overflow-x: hidden;
     overflow-y: auto
@@ -1314,7 +1314,7 @@ button.close {
     border-color: #3a73cf
 }
 
-.btn-main:active {
+.btn-main:active, .btn-second:active, .btn-third:active {
     background-image: none
 }
 
@@ -1330,8 +1330,16 @@ button.close {
     border-color: #2ea69a
 }
 
-.btn-second:active {
-    background-image: none
+.btn-third {
+    color: #f7f7f7;
+    background-color: #f06f6f;
+    border-color: #df4b4b;
+}
+
+.btn-third:hover, .btn-third:focus, .btn-third:active {
+    color: #f7f7f7;
+    background-color: #d05555;
+    border-color: #a62e2e;
 }
 
 .view-yabs-btn {
@@ -1532,7 +1540,7 @@ input:checked + .slider:before {
 }
 
 .form-control:disabled, .form-control[readonly] {
-    background-color: #202125
+    background-color: #f0f0f0;
 }
 
 .search-result {
