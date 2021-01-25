@@ -693,13 +693,13 @@ class idlers extends helperFunctions
 
     public function serverData(string $id)
     {
-        $select = $this->dbConnect()->prepare("SELECT `has_yabs` FROM `servers` WHERE `id` = ? LIMIT 1;");
+        $select = $this->dbConnect()->prepare("SELECT `has_yabs`, `has_st` FROM `servers` WHERE `id` = ? LIMIT 1;");
         $select->execute([$id]);
         $row = $select->fetch();
-        if ($row['has_yabs'] == 1) {
+        if ($row['has_yabs'] == 1 && $row['has_st'] == 1) {
             $select = $this->dbConnect()->prepare("
               SELECT servers.id as server_id,hostname,ipv4,ipv6,`cpu`,cpu_type,cpu_freq,ram,ram_type,swap,swap_type,`disk`,disk_type,bandwidth,bandwidth_type,gb5_single,gb5_multi,gb5_id,aes_ni,amd_v,
-              is_dedicated,is_cpu_dedicated,was_special,os,ssh_port,still_have,tags,notes,virt,has_yabs,ns1,ns2,DATE_FORMAT(`owned_since`, '%M %Y') as owned_since, `owned_since` as owned_since_raw, `4k`,`4k_type`,`64k`,`64k_type`,`512k`,`512k_type`,`1m`,`1m_type`,
+              is_dedicated,is_cpu_dedicated,was_special,os,ssh_port,still_have,tags,notes,virt,has_yabs,has_st,ns1,ns2,DATE_FORMAT(`owned_since`, '%M %Y') as owned_since, `owned_since` as owned_since_raw, `4k`,`4k_type`,`64k`,`64k_type`,`512k`,`512k_type`,`1m`,`1m_type`,
               loc.name as location,send,send_type,recieve,recieve_type,price,currency,term,as_usd,per_month,next_dd,pr.name as provider
               FROM servers INNER JOIN disk_speed ds on servers.id = ds.server_id
               INNER JOIN speed_tests st on servers.id = st.server_id INNER JOIN locations loc on servers.location = loc.id
@@ -711,6 +711,17 @@ class idlers extends helperFunctions
             $speed_tests = $sel_st->fetchAll(PDO::FETCH_ASSOC);
             $final = array_merge($speed_tests, $data);
             return json_encode($final);
+        } elseif ($row['has_yabs'] == 1 && $row['has_st'] == 0) {
+            $select = $this->dbConnect()->prepare("
+              SELECT servers.id as server_id,hostname,ipv4,ipv6,`cpu`,cpu_type,cpu_freq,ram,ram_type,swap,swap_type,`disk`,disk_type,bandwidth,bandwidth_type,gb5_single,gb5_multi,gb5_id,aes_ni,amd_v,
+              is_dedicated,is_cpu_dedicated,was_special,os,ssh_port,still_have,tags,notes,virt,has_yabs,has_st,ns1,ns2,DATE_FORMAT(`owned_since`, '%M %Y') as owned_since, `owned_since` as owned_since_raw, `4k`,`4k_type`,`64k`,`64k_type`,`512k`,`512k_type`,`1m`,`1m_type`,
+              loc.name as location,price,currency,term,as_usd,per_month,next_dd,pr.name as provider
+              FROM servers INNER JOIN disk_speed ds on servers.id = ds.server_id
+            INNER JOIN locations loc on servers.location = loc.id
+              INNER JOIN providers pr on servers.provider = pr.id INNER JOIN pricing on servers.id = pricing.server_id WHERE servers.id = ? LIMIT 1;");
+            $select->execute([$id]);
+            $data = $select->fetchAll(PDO::FETCH_ASSOC)[0];
+            return json_encode($data);
         } else {
             $select = $this->dbConnect()->prepare("
                SELECT servers.id as server_id,hostname,ipv4,ipv6,`cpu`,cpu_type,cpu_freq,ram,ram_type,swap,swap_type,`disk`,disk_type,
@@ -1891,6 +1902,7 @@ class idlers extends helperFunctions
             $ipv6 = $data['ipv6'];
         }
         ($data['has_yabs'] == 1) ? $has_yabs = true : $has_yabs = false;
+        ($data['has_st'] == 1) ? $has_st = true : $has_st = false;
         $this->tagOpen('div', 'modal-header');
         $this->HTMLphrase('h4', 'modal-title w-100', $data['hostname'], 'view_more_header');
         $this->outputString('<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
@@ -2109,7 +2121,7 @@ class idlers extends helperFunctions
         $this->colOpen('col-2');
         $this->HTMLphrase('p', 'm-value', $data['virt']);
         $this->tagClose('div', 2);
-        if ($has_yabs) {
+        if ($has_yabs && $has_st) {
             $this->rowColOpen('row m-section-row', 'col-12 text-center');
             $this->HTMLphrase('p', 'm-section-text', 'Network test');
             $this->tagClose('div', 2);
@@ -2137,7 +2149,7 @@ class idlers extends helperFunctions
         $this->rowColOpen('row m-section-row', 'col-12 text-center');
         $this->htmlPhrase('p', 'm-section-text', 'Notes');
         $this->outputString("<textarea class='form-control' id='server_notes' name='server_notes' rows='4' cols='40' maxlength='255' disabled>");
-        if (is_null($data['notes']) || empty($data['notes'])){
+        if (is_null($data['notes']) || empty($data['notes'])) {
             $this->outputString('');
         } else {
             $this->outputString($data['notes']);
@@ -2164,11 +2176,11 @@ class idlers extends helperFunctions
             $this->tagClose('div');
             $this->colOpen('col-12 col-md-6');
             $this->outputString('<a class="btn btn-third" id="closeViewMoreModal" role="button" data-dismiss="modal">Close</a>');
-            $this->tagClose('div',2);
+            $this->tagClose('div', 2);
         } else {
             $this->rowColOpen('row text-center', 'col-12');
             $this->outputString('<a class="btn btn-third" id="closeViewMoreModal" role="button" data-dismiss="modal">Close</a>');
-            $this->tagClose('div',2);
+            $this->tagClose('div', 2);
         }
     }
 
@@ -2918,6 +2930,7 @@ class itemInsert extends idlers
             $geekbench_multi = $this->intValue($array[$gb_m]);
             $geek_full_url = explode(' ', preg_replace('!\s+!', ' ', $array[$gb_url]));
             $gb5_id = substr($geek_full_url[3], strrpos($geek_full_url[3], '/') + 1);//
+            $has_a_speed_test = false;
             for ($i = $start_st; $i <= $end_st; $i++) {
                 if (strpos($array[$i], 'busy') !== false) {
                     //Has a "busy" result, No insert
@@ -2927,7 +2940,12 @@ class itemInsert extends idlers
                     $recieve_as_mbps = $this->networkSpeedAsMbps($this->yabsSpeedValues($data)['receive_type'], $this->yabsSpeedValues($data)['receive']);
                     $insert = $this->dbConnect()->prepare('INSERT INTO `speed_tests` (`server_id`, `location`, `send`, `send_type`,`send_as_mbps`, `recieve`,`recieve_type`, `recieve_as_mbps`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
                     $insert->execute([$this->item_id, $this->yabsSpeedLoc($data)['location'], $this->yabsSpeedValues($data)['send'], $this->yabsSpeedValues($data)['send_type'], $send_as_mbps, $this->yabsSpeedValues($data)['receive'], $this->yabsSpeedValues($data)['receive_type'], $recieve_as_mbps]);
+                    $has_a_speed_test = true;
                 }
+            }
+            if ($has_a_speed_test) {
+                $update_st = $this->dbConnect()->prepare('UPDATE `servers` SET `has_st` = 1 WHERE `id` = ? LIMIT 1;');
+                $update_st->execute([$this->item_id]);
             }
             ($ram_type == 'GB') ? $ram_mb = $this->GBtoMB($ram) : $ram_mb = $ram;
             ($swap_type == 'GB') ? $swap_mb = $this->GBtoMB($swap) : $swap_mb = $swap;
