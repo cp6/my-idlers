@@ -1706,7 +1706,7 @@ class idlers extends helperFunctions
         $this->rowColOpen('form-row', 'col-12 col-md-6');
         $this->tagOpen('div', 'input-group');
         $this->inputPrepend('IPv4');
-        $this->textInput('ipv4', '', 'form-control', true, 4, 124);
+        $this->textInput('ipv4', '', 'form-control', false, 4, 124);
         $this->tagClose('div', 2);
         $this->colOpen('col-12 col-md-6');
         $this->tagOpen('div', 'input-group');
@@ -2807,11 +2807,12 @@ class itemInsert extends idlers
         (isset($data['dedi_cpu'])) ? $dedi_cpu = 1 : $dedi_cpu = 0;
         ($data['virt'] == 'DEDI') ? $dedi = 1 : $dedi = 0;
         (isset($data['was_offer'])) ? $offer = 1 : $offer = 0;
+        (empty($data['ipv4'])) ? $ipv4 = null : $ipv4 = $data['ipv4'];
         (empty($data['ipv6'])) ? $ipv6 = null : $ipv6 = $data['ipv6'];
         $location_id = $this->handleLocation($data['location']);
         $provider_id = $this->handleProvider($data['provider']);
         $insert = $this->dbConnect()->prepare('INSERT IGNORE INTO `servers` (id, hostname, location, provider, ipv4,ipv6, owned_since, os, is_cpu_dedicated, is_dedicated, was_special, bandwidth, virt, has_yabs, ns1, ns2, ssh_port) VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?)');
-        $insert->execute([$item_id, $data['hostname'], $location_id, $provider_id, $data['ipv4'], $ipv6, $data['owned_since'], $data['os'], $dedi_cpu, $dedi, $offer, $data['bandwidth'], $data['virt'], $data['has_yabs'], $data['ns1'], $data['ns2'], $data['ssh_port']]);
+        $insert->execute([$item_id, $data['hostname'], $location_id, $provider_id, $ipv4, $ipv6, $data['owned_since'], $data['os'], $dedi_cpu, $dedi, $offer, $data['bandwidth'], $data['virt'], $data['has_yabs'], $data['ns1'], $data['ns2'], $data['ssh_port']]);
         $this->insertPrice($data['price'], $data['currency'], $data['term'], $data['next_due_date']);
         return $item_id;
     }
@@ -2823,6 +2824,7 @@ class itemInsert extends idlers
         (isset($data['dedi_cpu'])) ? $dedi_cpu = 1 : $dedi_cpu = 0;
         ($data['virt'] == 'DEDI') ? $dedi = 1 : $dedi = 0;
         (isset($data['was_offer'])) ? $offer = 1 : $offer = 0;
+        (empty($data['ipv4'])) ? $ipv4 = null : $ipv4 = $data['ipv4'];
         (empty($data['ipv6'])) ? $ipv6 = null : $ipv6 = $data['ipv6'];
         ($data['ram_type'] == 'GB') ? $ram_mb = $this->GBtoMB($data['ram']) : $ram_mb = $data['ram'];
         ($data['swap_type'] == 'GB') ? $swap_mb = $this->GBtoMB($data['swap']) : $swap_mb = $data['swap'];
@@ -2830,7 +2832,7 @@ class itemInsert extends idlers
         $location_id = $this->handleLocation($data['location']);
         $provider_id = $this->handleProvider($data['provider']);
         $insert = $this->dbConnect()->prepare('INSERT IGNORE INTO `servers` (id, hostname, location, provider, ipv4,ipv6, owned_since, os, is_cpu_dedicated, is_dedicated, was_special, bandwidth, virt, cpu, cpu_freq, ram, ram_type, swap, swap_type, disk, disk_type, ram_mb, swap_mb, disk_gb, ns1, ns2, ssh_port) VALUES (?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)');
-        $insert->execute([$item_id, $data['hostname'], $location_id, $provider_id, $data['ipv4'], $ipv6, $data['owned_since'], $data['os'], $dedi_cpu, $dedi, $offer, $data['bandwidth'], $data['virt'], $data['cpu_amount'], $data['cpu_speed'], $data['ram'], $data['ram_type'], $data['swap'], $data['swap_type'], $data['disk'], $data['disk_type'], $ram_mb, $swap_mb, $disk_gb, $data['ns1'], $data['ns2'], $data['ssh_port']]);
+        $insert->execute([$item_id, $data['hostname'], $location_id, $provider_id, $ipv4, $ipv6, $data['owned_since'], $data['os'], $dedi_cpu, $dedi, $offer, $data['bandwidth'], $data['virt'], $data['cpu_amount'], $data['cpu_speed'], $data['ram'], $data['ram_type'], $data['swap'], $data['swap_type'], $data['disk'], $data['disk_type'], $ram_mb, $swap_mb, $disk_gb, $data['ns1'], $data['ns2'], $data['ssh_port']]);
         $this->insertPrice($data['price'], $data['currency'], $data['term'], $data['next_due_date']);
         return $item_id;
     }
