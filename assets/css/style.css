@@ -1124,7 +1124,8 @@ button.close {
 
 .value {
     display: inline;
-    margin-bottom: .4rem
+    margin-bottom: .4rem;
+    font-size: 0.91rem;
 }
 
 .price {
