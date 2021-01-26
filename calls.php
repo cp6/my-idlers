@@ -36,6 +36,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             } elseif ($_GET['value'] == 'domain') {
                 $idle->viewMoreDomainModal($_GET['id']);//View more details modal
             }
+        } elseif ($_GET['type'] == 'dns_search') {
+            $idle->getIpForDomain($_GET['hostname'], $_GET['type']);
         }
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {

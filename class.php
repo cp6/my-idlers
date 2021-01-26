@@ -1666,6 +1666,7 @@ class idlers extends helperFunctions
         $this->tagOpen('div', 'input-group');
         $this->inputPrepend('Hostname');
         $this->textInput('hostname', '', 'form-control', true, 1, 124);
+        $this->outputString('<div class="input-group-append"><span class="input-group-text"><a id="fillIpv4" href="#"><i class="fas fa-search"></i></a></span></div>');
         $this->tagClose('div', 2);
         $this->colOpen('col-12 col-md-4');
         $this->tagOpen('div', 'input-group');
@@ -2785,6 +2786,17 @@ class idlers extends helperFunctions
         $this->rowColOpen('row text-center', 'col-12');
         $this->outputString('<a class="btn btn-third" role="button" data-dismiss="modal">Close YABs</a>');
         $this->tagClose('div', 2);
+    }
+
+    public function getIpForDomain(string $domain, string $type = 'A'): string
+    {//Gets IP from A record for a domain
+        $data = json_decode(file_get_contents("https://whatsmydns.net/api/details?server=428&type=$type&query=$domain"), true);
+        if (isset($data['data'][0]['response'][0])) {
+            if (strlen($data['data'][0]['response'][0]) > 6) {
+                return $data['data'][0]['response'][0];
+            }
+        }
+        return "";//Doesnt exist/null/empty/invalid
     }
 
 }
