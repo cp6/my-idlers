@@ -1285,6 +1285,10 @@ button.close {
     color: #00000096
 }
 
+.fa-search {
+    color: #537cf7;
+}
+
 .tab-pane {
     margin-top: .8rem
 }
