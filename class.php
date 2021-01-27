@@ -2632,7 +2632,12 @@ class idlers extends helperFunctions
 
         $oldest_d = $this->dbConnect()->prepare("SELECT `domain`, `owned_since`  FROM `domains` ORDER BY `owned_since`;");
         $oldest_d->execute();
-        $oldest_d_row = $oldest_d->fetchAll(PDO::FETCH_ASSOC)[0];
+        if (isset($oldest_d->fetchAll(PDO::FETCH_ASSOC)[0])){
+            $oldest_d_row = $oldest_d->fetchAll(PDO::FETCH_ASSOC)[0];
+        } else {
+            $oldest_d_row = array('domain' => null, 'owned_since' => null);
+        }
+
 
         $sel_price = $this->dbConnect()->prepare("SELECT `as_usd`, `term`, `usd_per_month` FROM `pricing`;");
         $sel_price->execute();
