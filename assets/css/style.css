@@ -1290,6 +1290,18 @@ button.close {
     color: #537cf7;
 }
 
+.os-icon {
+    color: #6f6b6b;
+}
+
+.green-fa {
+    color: #51bf51;
+}
+
+.red-fa {
+    color: #bf5151;
+}
+
 .tab-pane {
     margin-top: .8rem
 }

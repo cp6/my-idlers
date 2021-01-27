@@ -859,7 +859,7 @@ class idlers extends helperFunctions
     protected function vpsCard(string $id)
     {
         $select = $this->dbConnect()->prepare("
-           SELECT servers.id,servers.hostname,servers.`cpu`,servers.cpu_freq,servers.ram,servers.ram_type,servers.`disk`,
+           SELECT servers.id,servers.hostname,servers.ipv4,servers.`cpu`,servers.cpu_freq,servers.ram,servers.ram_type,servers.`disk`,
            servers.disk_type,servers.os,servers.virt,servers.was_special,locations.name as location,providers.name as provider,pricing.price,pricing.currency,pricing.term,pricing.next_dd
            FROM servers INNER JOIN locations on servers.location = locations.id INNER JOIN providers on servers.provider = providers.id
            INNER JOIN pricing on servers.id = pricing.server_id WHERE servers.id = ? LIMIT 1;");
@@ -874,7 +874,8 @@ class idlers extends helperFunctions
         $this->HTMLphrase('h4', 'hostname-header', $data['hostname']);
         $this->tagClose('div');
         $this->colOpen('col-12 col-xl-2 os-col');
-        $this->outputString($this->osIntToIcon($data['os']));
+        (empty($data['ipv4']) || is_null($data['ipv4'])) ? $host = $data['hostname'] : $host = $data['ipv4'];
+        $this->outputString('<a id="checkUpStatus" href="#" value="' . $host . '">' . $this->osIntToIcon($data['os']) . '</a>');
         $this->tagClose('div', 3);
         $this->tagOpen('div', 'card-body');
         $this->HTMLphrase('h6', 'price', '$' . $data['price'] . ' ' . $data['currency'] . ' ' . $this->paymentTerm($data['term']));
@@ -2797,6 +2798,17 @@ class idlers extends helperFunctions
             }
         }
         return "";//Doesnt exist/null/empty/invalid
+    }
+
+    public function checkIsUp(string $host, int $port = 80, int $wait_time = 1): int
+    {//Check if host/ip is "up"
+        if ($fp = @fsockopen($host, $port, $errCode, $errStr, $wait_time)) {
+            $result = 1;
+        } else {
+            $result = 0;
+        }
+        @fclose($fp);
+        return $result;
     }
 
 }
