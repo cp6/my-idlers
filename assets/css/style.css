@@ -492,7 +492,7 @@ textarea.form-control {
     padding: .375rem .75rem;
     font-size: 1rem;
     line-height: 1.5;
-    border-radius: .25rem;
+    border-radius: 0.2rem;
     transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out
 }
 
@@ -1326,7 +1326,7 @@ button.close {
 .btn-main {
     color: #f7f7f7;
     background-color: #5a95f5;
-    border-color: #3a73cf
+    border-color: #3a73cf6b
 }
 
 .btn-main:hover, .btn-main:focus, .btn-main:active {
@@ -1342,25 +1342,25 @@ button.close {
 .btn-second {
     color: #f7f7f7;
     background-color: #30cfc0;
-    border-color: #2ea69a
+    border-color: #2ea69a75
 }
 
 .btn-second:hover, .btn-second:focus, .btn-second:active {
     color: #f7f7f7;
     background-color: #26bdae;
-    border-color: #2ea69a
+    border-color: #2ea69a;
 }
 
 .btn-third {
     color: #f7f7f7;
     background-color: #f06f6f;
-    border-color: #df4b4b;
+    border-color: #df4b4b66;
 }
 
 .btn-third:hover, .btn-third:focus, .btn-third:active {
     color: #f7f7f7;
-    background-color: #d05555;
-    border-color: #a62e2e;
+    background-color: #e95656;
+    border-color: #a62e2e8f;
 }
 
 .view-yabs-btn {
