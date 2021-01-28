@@ -1752,7 +1752,8 @@ class idlers extends helperFunctions
         $this->rowColOpen('form-row', 'col-12 col-md-6');
         $this->tagOpen('div', 'input-group');
         $this->inputPrepend('Bandwidth');
-        $this->numberInput('bandwidth', '', 'form-control', false, 1, 99999, 'any');
+        $this->numberInput('bandwidth', '4', 'form-control', false, '0.5', 99999, '0.5');
+        $this->outputString('<div class="input-group-append"><span class="input-group-text">TB</span></div>');
         $this->tagClose('div', 2);
         $this->colOpen('col-12 col-md-6');
         $this->tagOpen('div', 'input-group');
@@ -2401,8 +2402,8 @@ class idlers extends helperFunctions
     public function orderTable(int $order_type)
     {
         if (in_array($order_type, array(1, 2, 3, 4, 5, 6, 7, 8))) {
-            $this->tableHeader(array('Hostname', 'CPU', 'Freq', 'Ram', 'Swap', 'Disk'));
-            $base_query = "SELECT `id`, `hostname`, `cpu`, `cpu_freq`, `ram_mb`, `swap_mb`, `disk_gb` FROM `servers`";
+            $this->tableHeader(array('Hostname', 'CPU', 'Freq', 'Ram', 'Swap', 'Disk', 'BWidth'));
+            $base_query = "SELECT `id`, `hostname`, `cpu`, `cpu_freq`, `ram`, `ram_type`, `ram_mb`, `swap`, `swap_type`, `swap_mb`, `disk`, `disk_type`, `disk_gb`, `bandwidth`, `bandwidth_type` FROM `servers`";
             if ($order_type == 1) {
                 $select = $this->dbConnect()->prepare("$base_query ORDER BY `cpu` DESC;");
             } elseif ($order_type == 2) {
@@ -2425,15 +2426,16 @@ class idlers extends helperFunctions
                 $this->tagOpen('tr');
                 $this->outputString("<td>{$row['hostname']}</td>");
                 $this->outputString("<td>{$row['cpu']}</td>");
-                $this->outputString("<td>{$row['cpu_freq']}</td>");
-                $this->outputString("<td>" . number_format($row['ram_mb'], 2) . "<span class='table-val-type'>MB</span></td>");
-                $this->outputString("<td>" . number_format($row['swap_mb'], 0) . "<span class='table-val-type'>MB</span></td>");
-                $this->outputString("<td>" . number_format($row['disk_gb'], 0) . "<span class='table-val-type'>GB</span></td>");
+                $this->outputString("<td>" . $this->mhzToGhz($row['cpu_freq']) . "<span class='table-val-type'>Ghz</span></td>");
+                $this->outputString("<td>" . number_format($row['ram'], 0) . "<span class='table-val-type'>" . $row['ram_type'] . "</span></td>");
+                $this->outputString("<td>" . number_format($row['swap'], 0) . "<span class='table-val-type'>" . $row['swap_type'] . "</span></td>");
+                $this->outputString("<td>" . number_format($row['disk'], 0) . "<span class='table-val-type'>" . $row['disk_type'] . "</span></td>");
+                $this->outputString("<td>" . number_format($row['bandwidth'], 0) . "<span class='table-val-type'>" . $row['bandwidth_type'] . "</span></td>");
                 $this->tagClose('tr');
             }
         } elseif (in_array($order_type, array(9, 10))) {
-            $this->tableHeader(array('Hostname', 'Owned since', 'CPU', 'Freq', 'Ram', 'Disk'));
-            $base_query = "SELECT `id`, `hostname`, `cpu`, `cpu_freq`, `ram_mb`, `disk_gb`, DATE_FORMAT(`owned_since`, '%D %b %Y') as dt FROM `servers`";
+            $this->tableHeader(array('Hostname', 'Owned since', 'CPU', 'Freq', 'Ram', 'Disk', 'BWidth'));
+            $base_query = "SELECT `id`, `hostname`, `cpu`, `cpu_freq`, `ram`, `ram_type`, `ram_mb`, `disk`, `disk_type`, `disk_gb`, `bandwidth`, `bandwidth_type`, DATE_FORMAT(`owned_since`, '%D %b %Y') as dt FROM `servers`";
             if ($order_type == 9) {
                 $select = $this->dbConnect()->prepare("$base_query ORDER BY `owned_since` DESC;");
             } elseif ($order_type == 10) {
@@ -2445,14 +2447,15 @@ class idlers extends helperFunctions
                 $this->outputString("<td>{$row['hostname']}</td>");
                 $this->outputString("<td>{$row['dt']}</td>");
                 $this->outputString("<td>{$row['cpu']}</td>");
-                $this->outputString("<td>{$row['cpu_freq']}</td>");
-                $this->outputString("<td>" . number_format($row['ram_mb'], 2) . "<span class='table-val-type'>MB</span></td>");
-                $this->outputString("<td>" . number_format($row['disk_gb'], 0) . "<span class='table-val-type'>GB</span></td>");
+                $this->outputString("<td>" . $this->mhzToGhz($row['cpu_freq']) . "<span class='table-val-type'>Ghz</span></td>");
+                $this->outputString("<td>" . number_format($row['ram'], 0) . "<span class='table-val-type'>" . $row['ram_type'] . "</span></td>");
+                $this->outputString("<td>" . number_format($row['disk'], 0) . "<span class='table-val-type'>" . $row['disk_type'] . "</span></td>");
+                $this->outputString("<td>" . number_format($row['bandwidth'], 0) . "<span class='table-val-type'>" . $row['bandwidth_type'] . "</span></td>");
                 $this->tagClose('tr');
             }
         } elseif (in_array($order_type, array(11, 12, 13, 14))) {
-            $this->tableHeader(array('Hostname', 'GB5 single', 'GB5 multi', 'CPU', 'Freq', 'Ram', 'Disk'));
-            $base_query = "SELECT `id`, `hostname`, `cpu`, `cpu_freq`, `ram_mb`, `disk_gb`, `gb5_single`, `gb5_multi` FROM `servers` WHERE has_yabs = 1";
+            $this->tableHeader(array('Hostname', 'GB5 single', 'GB5 multi', 'CPU', 'Freq', 'Ram', 'Disk', 'BWidth'));
+            $base_query = "SELECT `id`, `hostname`, `cpu`, `cpu_freq`, `ram`, `ram_type`, `ram_mb`, `disk`, `disk_type`, `disk_gb`, `bandwidth`, `bandwidth_type`, `gb5_single`, `gb5_multi` FROM `servers` WHERE has_yabs = 1";
             if ($order_type == 11) {
                 $select = $this->dbConnect()->prepare("$base_query ORDER BY `gb5_single` DESC;");
             } elseif ($order_type == 12) {
@@ -2469,14 +2472,15 @@ class idlers extends helperFunctions
                 $this->outputString("<td>{$row['gb5_single']}</td>");
                 $this->outputString("<td>{$row['gb5_multi']}</td>");
                 $this->outputString("<td>{$row['cpu']}</td>");
-                $this->outputString("<td>{$row['cpu_freq']}</td>");
-                $this->outputString("<td>" . number_format($row['ram_mb'], 2) . "<span class='table-val-type'>MB</span></td>");
-                $this->outputString("<td>" . number_format($row['disk_gb'], 0) . "<span class='table-val-type'>GB</span></td>");
+                $this->outputString("<td>" . $this->mhzToGhz($row['cpu_freq']) . "<span class='table-val-type'>Ghz</span></td>");
+                $this->outputString("<td>" . number_format($row['ram'], 0) . "<span class='table-val-type'>" . $row['ram_type'] . "</span></td>");
+                $this->outputString("<td>" . number_format($row['disk'], 0) . "<span class='table-val-type'>" . $row['disk_type'] . "</span></td>");
+                $this->outputString("<td>" . number_format($row['bandwidth'], 0) . "<span class='table-val-type'>" . $row['bandwidth_type'] . "</span></td>");
                 $this->tagClose('tr');
             }
         } elseif (in_array($order_type, array(15, 16, 17, 18))) {
-            $this->tableHeader(array('Hostname', 'Price', 'Term', 'P/M', 'CPU', 'Ram', 'Disk'));
-            $base_query = "SELECT `id`, `hostname`, `cpu`, `ram_mb`, `disk_gb`, `price`, `currency`, `term`, `per_month` FROM `servers` INNER JOIN `pricing`p on servers.id = p.server_id";
+            $this->tableHeader(array('Hostname', 'Price', 'Term', 'P/M', 'USD', 'CPU', 'Freq', 'Ram', 'Disk', 'BWidth'));
+            $base_query = "SELECT `id`, `hostname`, `cpu`, `cpu_freq`, `ram`, `ram_type`, `ram_mb`, `disk`, `disk_type`, `disk_gb`, `bandwidth`, `bandwidth_type`, `price`, `currency`, `term`, `per_month`, `as_usd` FROM `servers` INNER JOIN `pricing`p on servers.id = p.server_id";
             if ($order_type == 15) {
                 $select = $this->dbConnect()->prepare("$base_query ORDER BY `as_usd` DESC;");
             } elseif ($order_type == 16) {
@@ -2493,14 +2497,17 @@ class idlers extends helperFunctions
                 $this->outputString("<td>{$row['price']} {$row['currency']}</td>");
                 $this->outputString("<td>" . $this->paymentTerm($row['term']) . "</td>");
                 $this->outputString("<td>{$row['per_month']}</td>");
+                $this->outputString("<td>{$row['as_usd']}</td>");
                 $this->outputString("<td>{$row['cpu']}</td>");
-                $this->outputString("<td>" . number_format($row['ram_mb'], 2) . "<span class='table-val-type'>MB</span></td>");
-                $this->outputString("<td>" . number_format($row['disk_gb'], 0) . "<span class='table-val-type'>GB</span></td>");
+                $this->outputString("<td>" . $this->mhzToGhz($row['cpu_freq']) . "<span class='table-val-type'>Ghz</span></td>");
+                $this->outputString("<td>" . number_format($row['ram'], 0) . "<span class='table-val-type'>" . $row['ram_type'] . "</span></td>");
+                $this->outputString("<td>" . number_format($row['disk'], 0) . "<span class='table-val-type'>" . $row['disk_type'] . "</span></td>");
+                $this->outputString("<td>" . number_format($row['bandwidth'], 0) . "<span class='table-val-type'>" . $row['bandwidth_type'] . "</span></td>");
                 $this->tagClose('tr');
             }
         } elseif (in_array($order_type, array(19, 20, 21, 22, 23, 24, 25, 26))) {
-            $this->tableHeader(array('Hostname', '4k', '64k', '512k', '1m', 'CPU', 'Ram', 'Disk'));
-            $base_query = "SELECT `id`, `hostname`, `cpu`, `ram_mb`, `disk_gb`, `4k`, `4k_type`, `64k`, `64k_type`, `512k`, `512k_type`, `1m`, `1m_type` FROM `servers` INNER JOIN `disk_speed`p on servers.id = p.server_id WHERE has_yabs = 1";
+            $this->tableHeader(array('Hostname', '4k', '64k', '512k', '1m', 'CPU', 'Freq', 'Ram', 'Disk', 'BWidth'));
+            $base_query = "SELECT  `id`, `hostname`, `cpu`, `cpu_freq`, `ram`, `ram_type`, `ram_mb`, `disk`, `disk_type`, `disk_gb`, `bandwidth`, `bandwidth_type`, `4k`, `4k_type`, `64k`, `64k_type`, `512k`, `512k_type`, `1m`, `1m_type` FROM `servers` INNER JOIN `disk_speed`p on servers.id = p.server_id WHERE has_yabs = 1";
             if ($order_type == 19) {
                 $select = $this->dbConnect()->prepare("$base_query ORDER BY `4k_as_mbps` DESC;");
             } elseif ($order_type == 20) {
@@ -2527,13 +2534,15 @@ class idlers extends helperFunctions
                 $this->outputString("<td>{$row['512k']}<span class='table-val-type'>{$row['512k_type']}</span></td>");
                 $this->outputString("<td>{$row['1m']}<span class='table-val-type'>{$row['1m_type']}</span></td>");
                 $this->outputString("<td>{$row['cpu']}</td>");
-                $this->outputString("<td>" . number_format($row['ram_mb'], 2) . "<span class='table-val-type'>MB</span></td>");
-                $this->outputString("<td>" . number_format($row['disk_gb'], 0) . "<span class='table-val-type'>GB</span></td>");
+                $this->outputString("<td>" . $this->mhzToGhz($row['cpu_freq']) . "<span class='table-val-type'>Ghz</span></td>");
+                $this->outputString("<td>" . number_format($row['ram'], 0) . "<span class='table-val-type'>" . $row['ram_type'] . "</span></td>");
+                $this->outputString("<td>" . number_format($row['disk'], 0) . "<span class='table-val-type'>" . $row['disk_type'] . "</span></td>");
+                $this->outputString("<td>" . number_format($row['bandwidth'], 0) . "<span class='table-val-type'>" . $row['bandwidth_type'] . "</span></td>");
                 $this->tagClose('tr');
             }
         } elseif (in_array($order_type, array(27, 28, 29, 30))) {
-            $this->tableHeader(array('Hostname', 'Send', 'Receive', 'Location', 'CPU', 'Ram', 'Disk'));
-            $base_query = "SELECT servers.id, `hostname`, `cpu`, `ram_mb`, `disk_gb`, `send`, `send_type`, p.location, `recieve`, `recieve_type` FROM `servers` INNER JOIN `speed_tests`p on servers.id = p.server_id WHERE has_yabs = 1";
+            $this->tableHeader(array('Hostname', 'Send', 'Receive', 'Location', 'CPU', 'Freq', 'Ram', 'Disk', 'BWidth'));
+            $base_query = "SELECT servers.id, `hostname`, `cpu`, `cpu_freq`, `ram`, `ram_type`, `ram_mb`, `disk`, `disk_type`, `disk_gb`, `bandwidth`, `bandwidth_type`, `send`, `send_type`, p.location, `recieve`, `recieve_type` FROM `servers` INNER JOIN `speed_tests`p on servers.id = p.server_id WHERE has_yabs = 1";
             if ($order_type == 27) {
                 $select = $this->dbConnect()->prepare("$base_query ORDER BY `send_as_mbps` DESC LIMIT 80;");
             } elseif ($order_type == 28) {
@@ -2551,13 +2560,15 @@ class idlers extends helperFunctions
                 $this->outputString("<td>{$row['recieve']}<span class='table-val-type'>{$row['recieve_type']}</span></td>");
                 $this->outputString("<td>{$row['location']}</td>");
                 $this->outputString("<td>{$row['cpu']}</td>");
-                $this->outputString("<td>" . number_format($row['ram_mb'], 2) . "<span class='table-val-type'>MB</span></td>");
-                $this->outputString("<td>" . number_format($row['disk_gb'], 0) . "<span class='table-val-type'>GB</span></td>");
+                $this->outputString("<td>" . $this->mhzToGhz($row['cpu_freq']) . "<span class='table-val-type'>Ghz</span></td>");
+                $this->outputString("<td>" . number_format($row['ram'], 0) . "<span class='table-val-type'>" . $row['ram_type'] . "</span></td>");
+                $this->outputString("<td>" . number_format($row['disk'], 0) . "<span class='table-val-type'>" . $row['disk_type'] . "</span></td>");
+                $this->outputString("<td>" . number_format($row['bandwidth'], 0) . "<span class='table-val-type'>" . $row['bandwidth_type'] . "</span></td>");
                 $this->tagClose('tr');
             }
         } elseif (in_array($order_type, array(31, 32))) {
             $this->tableHeader(array('Hostname', 'Bandwidth', 'CPU', 'Freq', 'Ram', 'Disk'));
-            $base_query = "SELECT `id`, `hostname`, `cpu`, `cpu_freq`, `ram_mb`, `disk_gb`, `bandwidth` FROM `servers`";
+            $base_query = "SELECT `id`, `hostname`, `cpu`, `cpu_freq`, `ram`, `ram_type`, `ram_mb`, `disk`, `disk_type`, `disk_gb`, `bandwidth`, `bandwidth_type` FROM `servers`";
             if ($order_type == 31) {
                 $select = $this->dbConnect()->prepare("$base_query ORDER BY `bandwidth` DESC;");
             } elseif ($order_type == 32) {
@@ -2567,11 +2578,11 @@ class idlers extends helperFunctions
             while ($row = $select->fetch(PDO::FETCH_ASSOC)) {
                 $this->tagOpen('tr');
                 $this->outputString("<td>{$row['hostname']}</td>");
-                $this->outputString("<td>{$row['bandwidth']}</td>");
+                $this->outputString("<td>" . number_format($row['bandwidth'], 0) . "<span class='table-val-type'>" . $row['bandwidth_type'] . "</span></td>");
                 $this->outputString("<td>{$row['cpu']}</td>");
-                $this->outputString("<td>{$row['cpu_freq']}</td>");
-                $this->outputString("<td>" . number_format($row['ram_mb'], 2) . "<span class='table-val-type'>MB</span></td>");
-                $this->outputString("<td>" . number_format($row['disk_gb'], 0) . "<span class='table-val-type'>GB</span></td>");
+                $this->outputString("<td>" . $this->mhzToGhz($row['cpu_freq']) . "<span class='table-val-type'>Ghz</span></td>");
+                $this->outputString("<td>" . number_format($row['ram'], 0) . "<span class='table-val-type'>" . $row['ram_type'] . "</span></td>");
+                $this->outputString("<td>" . number_format($row['disk'], 0) . "<span class='table-val-type'>" . $row['disk_type'] . "</span></td>");
                 $this->tagClose('tr');
             }
         }
@@ -2632,7 +2643,7 @@ class idlers extends helperFunctions
 
         $oldest_d = $this->dbConnect()->prepare("SELECT `domain`, `owned_since`  FROM `domains` ORDER BY `owned_since`;");
         $oldest_d->execute();
-        if (isset($oldest_d->fetchAll(PDO::FETCH_ASSOC)[0])){
+        if (isset($oldest_d->fetchAll(PDO::FETCH_ASSOC)[0])) {
             $oldest_d_row = $oldest_d->fetchAll(PDO::FETCH_ASSOC)[0];
         } else {
             $oldest_d_row = array('domain' => null, 'owned_since' => null);
