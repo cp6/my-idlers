@@ -523,9 +523,11 @@ class helperFunctions extends elementHelpers
     }
 
     protected function diskSpeedAsMbps(string $type, string $value)
-    {//If value type GB/s convert to MB/s
+    {//If value type GB/s convert to MB/s, KB/s to MB/s
         if ($type == "GB/s") {
             return $this->GBpstoMBps($value);
+        } elseif ($type == "KB/s") {
+            return ($value / 1000);
         } else {
             return $value;
         }
