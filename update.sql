@@ -26,3 +26,6 @@ UPDATE servers t1
     ) t2
     ON t1.id = t2.server_id
 SET t1.has_st = 1;
+
+ALTER TABLE `servers`
+    CHANGE COLUMN `bandwidth` `bandwidth` FLOAT NULL DEFAULT NULL AFTER `disk_type`;
