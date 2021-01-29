@@ -3057,11 +3057,19 @@ class idlers extends helperFunctions
 
     public function getIpForDomain(string $domain, string $type = 'A'): string
     {//Gets IP from A record for a domain
-        $data = json_decode(file_get_contents("https://whatsmydns.net/api/details?server=428&type=$type&query=$domain"), true);
-        if (isset($data['data'][0]['response'][0])) {
-            if (strlen($data['data'][0]['response'][0]) > 6) {
-                return $data['data'][0]['response'][0];
-            }
+        switch ($type) {
+            case "A":
+                $data = dns_get_record($domain, DNS_A);
+                if (isset($data['0']['ip'])) {
+                    return $data['0']['ip'];
+                }
+                break;
+            case "AAAA":
+                $data = dns_get_record($domain, DNS_AAAA);
+                if (isset($data['0']['ipv6'])) {
+                    return $data['0']['ipv6'];
+                }
+                break;
         }
         return "";//Doesnt exist/null/empty/invalid
     }
