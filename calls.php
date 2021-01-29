@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             }
         } elseif (isset($_POST['action']) && $_POST['action'] == 'update') {
             $update = new itemUpdate($_POST);
-            if (isset($_POST['me_delete'])) {//Delete object
+            if (isset($_POST['me_delete']) || isset($_POST['sh_me_delete']) || isset($_POST['d_me_delete'])) {//Delete object
                 $update->deleteObjectData();
             } elseif ($_POST['type'] == 'server_modal_edit') {//Update the server info
                 $update->updateServerFromModal();
