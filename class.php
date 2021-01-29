@@ -14,6 +14,9 @@ class idlersConfig
     const DB_NAME = 'idlers';
     const DB_USERNAME = 'root';
     const DB_PASSWORD = '';
+
+    //Have slight background color for server table values: was special price and due soon
+    const COLOR_TABLE = true;
 }
 
 class elementHelpers extends idlersConfig
@@ -153,16 +156,23 @@ class elementHelpers extends idlersConfig
         $this->tagClose("ul");
     }
 
-    protected function tableHeader(array $headers)
+    protected function tableHeader(array $headers, string $class = 'table table-striped table-bordered table-sm', string $id = 'orderTable')
     {
         $this->tagOpen('div', 'table-responsive');
-        $this->outputString("<table class='table table-striped table-bordered table-sm' id='orderTable'>");
+        $this->outputString("<table class='$class' id='$id'>");
         $this->tagOpen('thead');
         $this->tagOpen('tr');
         foreach ($headers as $th) {
             $this->outputString("<th>$th</th>");
         }
         $this->outputString('</tr></thead><tbody>');
+    }
+
+    protected function tableTd(string $class, $content)
+    {
+        $this->tagOpen('td', $class);
+        $this->outputString($content);
+        $this->tagClose('td');
     }
 
     protected function virtSelectOptions()
@@ -585,10 +595,15 @@ class idlers extends helperFunctions
         $this->navTabs(array('Services', 'Add', 'Order', 'Info', 'Search'), array('#services', '#add_server', '#order', '#info', '#search'));
         $this->outputString('<div id="myTabContent" class="tab-content">');
         $this->outputString('<div class="tab-pane server-cards fade active show" id="services">');
+        $this->viewSwitcherIcon();
+        $this->tagOpen('div', '', 'cardsViewDiv');
         $this->serverCards();
         $this->sharedHostingCards();
         $this->domainCards();
         $this->tagClose('div');
+        $this->tagOpen('div', '', 'tableViewDiv');
+        //Objects tables
+        $this->tagClose('div', 2);
         $this->outputString('<div class="tab-pane fade" id="add_server">');
         //BTN Bar
         $this->rowColOpen('row text-center', 'col-12 btn-bar-col');
@@ -856,6 +871,41 @@ class idlers extends helperFunctions
         $this->tagClose('div');
     }
 
+    protected function serverTable()
+    {
+        if (self::SRV_SORT_TYPE == 'HOSTNAME_DESC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `servers` ORDER BY `hostname` DESC;");
+        } elseif (self::SRV_SORT_TYPE == 'HOSTNAME_ASC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `servers` ORDER BY `hostname`;");
+        } elseif (self::SRV_SORT_TYPE == 'OWNED_SINCE_DESC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `servers` ORDER BY `owned_since` DESC;");
+        } elseif (self::SRV_SORT_TYPE == 'OWNED_SINCE_ASC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `servers` ORDER BY `owned_since`;");
+        } elseif (self::SRV_SORT_TYPE == 'PRICE_DESC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `servers` INNER JOIN `pricing` ON servers.id = pricing.server_id ORDER BY `as_usd` DESC;");
+        } elseif (self::SRV_SORT_TYPE == 'PRICE_ASC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `servers` INNER JOIN `pricing` ON servers.id = pricing.server_id ORDER BY `as_usd`;");
+        } elseif (self::SRV_SORT_TYPE == 'DUE_DESC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `servers` INNER JOIN `pricing` ON servers.id = pricing.server_id ORDER BY `next_dd` DESC;");
+        } elseif (self::SRV_SORT_TYPE == 'DUE_ASC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `servers` INNER JOIN `pricing` ON servers.id = pricing.server_id ORDER BY `next_dd`;");
+        } else {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `servers`;");
+        }
+        $select->execute();
+        $count = $select->rowCount();
+        if ($count > 0) {
+            $this->HTMLPhrase('h4', 'card-section-header', 'Servers <span class="object-count">' . $count . '</span>');
+            $this->tagOpen('div', 'row');
+            $this->tableHeader(array('Hostname', '', '', 'Type', 'CPU', 'RAM', 'Disk', 'Price', 'OS', 'Location', 'Provider', 'Due', 'Owned', 'IPv4', 'IPv6', 'Tags'), 'table objects-table', 'serversTable');
+            while ($row = $select->fetch(PDO::FETCH_ASSOC)) {
+                $this->vpsTableRow($row['id']);
+            }
+            $this->outputString('</tbody></table></div>');
+            $this->tagClose('div');
+        }
+    }
+
     protected function vpsCard(string $id)
     {
         $select = $this->dbConnect()->prepare("
@@ -918,6 +968,206 @@ class idlers extends helperFunctions
         $this->colOpen('col-6');
         $this->outputString('<a class="btn btn-second" id="editServer" value="' . $id . '" data-target="#editServerModal" data-toggle="modal" href="#" role="button">Edit</a>');
         $this->tagClose('div', 5);
+    }
+
+    protected function locationForTable(string $location)
+    {
+        if (strpos($location, ',') !== false) {
+            return explode(',', $location)[0];
+        } else {
+            return $location;
+        }
+    }
+
+    public function objectTables()
+    {
+        $this->serverTable();
+        $this->sharedHostingTable();
+        $this->domainTable();
+    }
+
+    protected function vpsTableRow(string $id)
+    {
+        $select = $this->dbConnect()->prepare("
+           SELECT servers.id,servers.hostname,servers.ipv4,servers.ipv6,servers.`cpu`,servers.cpu_freq,servers.ram,servers.ram_type,servers.`disk`,
+           servers.disk_type,servers.os,servers.virt,servers.tags, DATE_FORMAT(`owned_since`, '%d %b %Y') as dt, servers.was_special,locations.name as location,providers.name as provider,pricing.price,pricing.currency,pricing.term,pricing.next_dd
+           FROM servers INNER JOIN locations on servers.location = locations.id INNER JOIN providers on servers.provider = providers.id
+           INNER JOIN pricing on servers.id = pricing.server_id WHERE servers.id = ? LIMIT 1;");
+        $select->execute([$id]);
+        $data = $select->fetchAll(PDO::FETCH_ASSOC)[0];
+        if (self::COLOR_TABLE) {
+            ($data['was_special'] == 1) ? $special_class = 'td-special-price' : $special_class = '';
+            if ($this->processDueDate($data['id'], $data['term'], $data['next_dd']) < 7) {
+                $ds_class = 'td-due-soon';
+            } elseif ($this->processDueDate($data['id'], $data['term'], $data['next_dd']) > 300) {
+                $ds_class = 'td-not-due-soon';
+            } else {
+                $ds_class = '';
+            }
+        } else {
+            $special_class = $ds_class = '';
+        }
+        (empty($data['ipv4']) || is_null($data['ipv4'])) ? $host = $data['hostname'] : $host = $data['ipv4'];
+        $this->tagOpen('tr');
+        $this->tableTd('', $data['hostname']);
+        $this->tableTd('', '<a class="btn btn-main table-btn" id="viewMoreServer" value="' . $data['id'] . '" data-target="#viewMoreServerModal" data-toggle="modal" href="#" role="button">More</a>');
+        $this->tableTd('', '<a class="btn btn-second table-btn" id="editServer" value="' . $data['id'] . '" data-target="#editServerModal" data-toggle="modal" href="#" role="button">Edit</a>');
+        $this->tableTd('td-text-sml', $data['virt']);
+        $this->tableTd('td-nowrap', $data['cpu'] . '<span class="data-type">@' . $this->mhzToGhz($data['cpu_freq']) . 'Ghz</span>');
+        $this->tableTd('td-nowrap', $data['ram'] . '<span class="data-type">' . $data['ram_type'] . '</span>');
+        $this->tableTd('td-nowrap', $data['disk'] . '<span class="data-type">' . $data['disk_type'] . '</span>');
+        $this->tableTd('td-nowrap ' . $special_class . '', $data['price'] . ' <span class="data-type">' . $data['currency'] . ' ' . $this->paymentTerm($data['term']) . '</span>');
+        $this->tableTd('', '<a id="checkUpStatus" href="#" value="' . $host . '">' . $this->osIntToIcon($data['os']) . '</a>');
+        $this->tableTd('td-nowrap td-text-med', '<div class="td-nowrap">' . $this->locationForTable($data['location']) . '</div>');
+        $this->tableTd('td-nowrap td-text-med', '<div class="td-nowrap">' . $data['provider'] . '</div>');
+        $this->tableTd('td-nowrap td-text-sml ' . $ds_class . '', '<div class="td-nowrap">' . $this->processDueDate($data['id'], $data['term'], $data['next_dd']) . ' days</div>');
+        $this->tableTd('td-nowrap td-text-sml', '<div class="td-nowrap">' . $data['dt'] . '</div>');
+        $this->tableTd('td-nowrap td-text-sml', '<div class="td-nowrap">' . $data['ipv4'] . '</div>');
+        $this->tableTd('td-nowrap td-text-sml', '<div class="td-nowrap">' . $data['ipv6'] . '</div>');
+        $this->tableTd('td-nowrap td-text-sml', '<div class="td-nowrap">' . $data['tags'] . '</div>');
+        $this->tagClose('tr');
+    }
+
+    protected function sharedHostingTable()
+    {
+        if (self::SH_SORT_TYPE == 'DOMAIN_DESC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `shared_hosting` ORDER BY `domain` DESC;");
+        } elseif (self::SH_SORT_TYPE == 'DOMAIN_ASC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `shared_hosting` ORDER BY `domain`;");
+        } elseif (self::SH_SORT_TYPE == 'OWNED_SINCE_DESC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `shared_hosting` ORDER BY `owned_since` DESC;");
+        } elseif (self::SH_SORT_TYPE == 'OWNED_SINCE_ASC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `shared_hosting` ORDER BY `owned_since`;");
+        } elseif (self::SH_SORT_TYPE == 'PRICE_DESC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `shared_hosting` INNER JOIN `pricing` ON shared_hosting.id = pricing.server_id ORDER BY `as_usd` DESC;");
+        } elseif (self::SH_SORT_TYPE == 'PRICE_ASC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `shared_hosting` INNER JOIN `pricing` ON shared_hosting.id = pricing.server_id ORDER BY `as_usd`;");
+        } elseif (self::SH_SORT_TYPE == 'DUE_DESC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `shared_hosting` INNER JOIN `pricing` ON shared_hosting.id = pricing.server_id ORDER BY `next_dd` DESC;");
+        } elseif (self::SH_SORT_TYPE == 'DUE_ASC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `shared_hosting` INNER JOIN `pricing` ON shared_hosting.id = pricing.server_id ORDER BY `next_dd`;");
+        } else {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `shared_hosting`;");
+        }
+        $select->execute();
+        $count = $select->rowCount();
+        if ($count > 0) {
+            $this->HTMLPhrase('h4', 'card-section-header mt-1', 'Shared hosting <span class="object-count">' . $count . '</span>');
+            $this->tagOpen('div', 'row');
+            $this->tableHeader(array('Domain', '', '', 'Type', 'Disk', 'Price', 'Location', 'Provider', 'Due', 'BWidth', 'Domains', 'Emails', 'FTPs', 'DBs', 'Since'), 'table objects-table', 'sharedHostingTable');
+            while ($row = $select->fetch(PDO::FETCH_ASSOC)) {
+                $this->sharedHostingTableRow($row['id']);
+            }
+            $this->outputString('</tbody></table></div>');
+            $this->tagClose('div');
+        }
+    }
+
+    protected function domainTable()
+    {
+        if (self::DC_SORT_TYPE == 'DOMAIN_DESC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `domains` ORDER BY `domain` DESC;");
+        } elseif (self::DC_SORT_TYPE == 'DOMAIN_ASC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `domains` ORDER BY `domain`;");
+        } elseif (self::DC_SORT_TYPE == 'OWNED_SINCE_DESC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `domains` ORDER BY `owned_since` DESC;");
+        } elseif (self::DC_SORT_TYPE == 'OWNED_SINCE_ASC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `domains` ORDER BY `owned_since`;");
+        } elseif (self::DC_SORT_TYPE == 'PRICE_DESC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `domains` INNER JOIN `pricing` ON domains.id = pricing.server_id ORDER BY `as_usd` DESC;");
+        } elseif (self::DC_SORT_TYPE == 'PRICE_ASC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `domains` INNER JOIN `pricing` ON domains.id = pricing.server_id ORDER BY `as_usd`;");
+        } elseif (self::DC_SORT_TYPE == 'DUE_DESC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `domains` INNER JOIN `pricing` ON domains.id = pricing.server_id ORDER BY `next_dd` DESC;");
+        } elseif (self::DC_SORT_TYPE == 'DUE_ASC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `domains` INNER JOIN `pricing` ON domains.id = pricing.server_id ORDER BY `next_dd`;");
+        } else {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `domains`;");
+        }
+        $select->execute();
+        $count = $select->rowCount();
+        if ($count > 0) {
+            $this->HTMLPhrase('h4', 'card-section-header mt-1', 'Domains <span class="object-count">' . $count . '</span>');
+            $this->tagOpen('div', 'row');
+            $this->tableHeader(array('Domain', '', '', 'NS1', 'NS2', 'Price', 'Provider', 'Due', 'Since'), 'table objects-table', 'domainsTable');
+            while ($row = $select->fetch(PDO::FETCH_ASSOC)) {
+                $this->domainTableRow($row['id']);
+            }
+            $this->outputString('</tbody></table></div>');
+            $this->tagClose('div');
+        }
+    }
+
+    protected function domainTableRow(string $id)
+    {
+        $select = $this->dbConnect()->prepare("
+           SELECT domains.id,domains.domain,domains.attached_to,domains.ns1,domains.ns2,DATE_FORMAT(`owned_since`, '%d %b %Y') as dt,providers.name as provider, pricing.price,pricing.currency,pricing.term,pricing.next_dd
+           FROM domains INNER JOIN providers on domains.provider = providers.id
+           INNER JOIN pricing on domains.id = pricing.server_id WHERE domains.id = ? LIMIT 1;");
+        $select->execute([$id]);
+        $data = $select->fetchAll(PDO::FETCH_ASSOC)[0];
+        if (self::COLOR_TABLE) {
+            if ($this->processDueDate($data['id'], $data['term'], $data['next_dd']) < 7) {
+                $ds_class = 'td-due-soon';
+            } elseif ($this->processDueDate($data['id'], $data['term'], $data['next_dd']) > 300) {
+                $ds_class = 'td-not-due-soon';
+            } else {
+                $ds_class = '';
+            }
+        } else {
+            $ds_class = '';
+        }
+        $this->tagOpen('tr');
+        $this->tableTd('td-nowrap', $data['domain']);
+        $this->tableTd('', '<a class="btn btn-main table-btn" id="viewMoreDomain" value="' . $data['id'] . '" data-target="#viewMoreModalDomain" data-toggle="modal" href="#" role="button">More</a>');
+        $this->tableTd('', '<a class="btn btn-second table-btn" id="editDomain" value="' . $data['id'] . '" data-target="#editModalDomain" data-toggle="modal" href="#" role="button">Edit</a>');
+        $this->tableTd('td-nowrap', '<code>' . $data['ns1'] . '<code>');
+        $this->tableTd('td-nowrap', '<code>' . $data['ns2'] . '<code>');
+        $this->tableTd('td-nowrap', $data['price'] . ' <span class="data-type">' . $data['currency'] . ' ' . $this->paymentTerm($data['term']) . '</span>');
+        $this->tableTd('td-nowrap td-text-med', '<div class="td-nowrap">' . $data['provider'] . '</div>');
+        $this->tableTd('td-nowrap td-text-sml ' . $ds_class . '', '<div class="td-nowrap">' . $this->processDueDate($data['id'], $data['term'], $data['next_dd']) . ' days</div>');
+        $this->tableTd('td-nowrap', $data['dt']);
+        $this->tagClose('tr');
+    }
+
+    protected function sharedHostingTableRow(string $id)
+    {
+        $select = $this->dbConnect()->prepare("
+           SELECT shared_hosting.id,shared_hosting.domain,shared_hosting.type,shared_hosting.was_special,shared_hosting.disk,shared_hosting.disk_type,shared_hosting.bandwidth,shared_hosting.domains_limit,shared_hosting.emails,
+                  shared_hosting.ftp,shared_hosting.db,DATE_FORMAT(`owned_since`, '%d %b %Y') as dt,locations.name as location,providers.name as provider,pricing.price,pricing.currency,pricing.term,pricing.next_dd
+           FROM shared_hosting INNER JOIN locations on shared_hosting.location = locations.id INNER JOIN providers on shared_hosting.provider = providers.id
+           INNER JOIN pricing on shared_hosting.id = pricing.server_id WHERE shared_hosting.id = ? LIMIT 1;");
+        $select->execute([$id]);
+        $data = $select->fetchAll(PDO::FETCH_ASSOC)[0];
+        if (self::COLOR_TABLE) {
+            ($data['was_special'] == 1) ? $special_class = 'td-special-price' : $special_class = '';
+            if ($this->processDueDate($data['id'], $data['term'], $data['next_dd']) < 7) {
+                $ds_class = 'td-due-soon';
+            } elseif ($this->processDueDate($data['id'], $data['term'], $data['next_dd']) > 300) {
+                $ds_class = 'td-not-due-soon';
+            } else {
+                $ds_class = '';
+            }
+        } else {
+            $special_class = $ds_class = '';
+        }
+        $this->tagOpen('tr');
+        $this->tableTd('td-nowrap', $data['domain']);
+        $this->tableTd('', '<a class="btn btn-main table-btn" id="viewMoreSharedHosting" value="' . $data['id'] . '" data-target="#viewMoreModalSharedHosting" data-toggle="modal" href="#" role="button">More</a>');
+        $this->tableTd('', '<a class="btn btn-second table-btn" id="editSharedHosting" value="' . $data['id'] . '" data-target="#editModalSharedHosting" data-toggle="modal" href="#" role="button">Edit</a>');
+        $this->tableTd('td-nowrap td-text-sml', $data['type']);
+        $this->tableTd('td-nowrap', $data['disk'] . '<span class="data-type">' . $data['disk_type'] . '</span>');
+        $this->tableTd('td-nowrap ' . $special_class . '', $data['price'] . ' <span class="data-type">' . $data['currency'] . ' ' . $this->paymentTerm($data['term']) . '</span>');
+        $this->tableTd('td-nowrap td-text-med', '<div class="td-nowrap">' . $this->locationForTable($data['location']) . '</div>');
+        $this->tableTd('td-nowrap td-text-med', '<div class="td-nowrap">' . $data['provider'] . '</div>');
+        $this->tableTd('td-nowrap td-text-sml ' . $ds_class . '', '<div class="td-nowrap">' . $this->processDueDate($data['id'], $data['term'], $data['next_dd']) . ' days</div>');
+        $this->tableTd('td-nowrap', $data['bandwidth'] . '<span class="data-type">TB</span>');
+        $this->tableTd('td-nowrap', $data['domains_limit']);
+        $this->tableTd('td-nowrap', $data['emails']);
+        $this->tableTd('td-nowrap', $data['ftp']);
+        $this->tableTd('td-nowrap', $data['db']);
+        $this->tableTd('td-nowrap', $data['dt']);
+        $this->tagClose('tr');
     }
 
     protected function SharedHostingCard(string $id)
@@ -2825,6 +3075,13 @@ class idlers extends helperFunctions
         }
         @fclose($fp);
         return $result;
+    }
+
+    protected function viewSwitcherIcon()
+    {
+        $this->rowColOpen('row text-center', 'col-12');
+        $this->outputString('<a id="viewSwitcherIcon"><i class="fas fa-table" id="viewSwitchIcon" title="Switch to table"></i></a>');
+        $this->tagClose('div', 2);
     }
 
 }

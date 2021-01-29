@@ -331,13 +331,13 @@ textarea {
 
 .table td, .table th {
     padding: .75rem;
-    vertical-align: top;
     border-top: 1px solid #dee2e6
 }
 
 .table thead th {
     vertical-align: bottom;
-    border-bottom: 2px solid #dee2e6
+    border-bottom: 2px solid #dee2e6;
+    font-weight: 600;
 }
 
 .table-sm td, .table-sm th {
@@ -1142,8 +1142,69 @@ button.close {
     color: #bf5151;
 }
 
+.fa-th, .fa-table {
+    color: #8787ff;
+    font-size: 1.2rem;
+}
+
+.os-td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.objects-table td, .objects-table th {
+    padding: 0.6rem 0.4rem;
+}
+
+.objects-table tr {
+    transition: ease-in-out 0.4s;
+}
+
+.objects-table tr:hover {
+    background: #f2f7fb;
+}
+
+.td-text-sml {
+    font-size: 86%;
+}
+
+.td-text-med {
+    font-size: 90%;
+}
+
+.td-special-price {
+    background: #ffd70014;
+}
+
+.td-due-soon {
+    background: #ff00000f;
+}
+
+.td-not-due-soon {
+    background: #00ff340f;
+}
+
+.objects-table th:first-child, .objects-table td:first-child {
+    position: sticky;
+    left: 0;
+    background-color: #f6f6f6;
+}
+
+.table-btn {
+    font-size: 0.8rem;
+    padding: .01rem 0.6rem;
+}
+
+.td-nowrap {
+    white-space: nowrap;
+}
+
 .tab-pane {
     margin-top: .8rem
+}
+
+.mt-1 {
+    margin-top: 1rem;
 }
 
 .input-group-text {
