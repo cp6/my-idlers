@@ -14,6 +14,9 @@ class idlersConfig
     const DB_NAME = 'idlers';
     const DB_USERNAME = 'root';
     const DB_PASSWORD = '';
+
+    //Have slight background color for server table values: was special price and due soon
+    const COLOR_TABLE = true;
 }
 
 class elementHelpers extends idlersConfig
@@ -153,16 +156,23 @@ class elementHelpers extends idlersConfig
         $this->tagClose("ul");
     }
 
-    protected function tableHeader(array $headers)
+    protected function tableHeader(array $headers, string $class = 'table table-striped table-bordered table-sm', string $id = 'orderTable')
     {
         $this->tagOpen('div', 'table-responsive');
-        $this->outputString("<table class='table table-striped table-bordered table-sm' id='orderTable'>");
+        $this->outputString("<table class='$class' id='$id'>");
         $this->tagOpen('thead');
         $this->tagOpen('tr');
         foreach ($headers as $th) {
             $this->outputString("<th>$th</th>");
         }
         $this->outputString('</tr></thead><tbody>');
+    }
+
+    protected function tableTd(string $class, $content)
+    {
+        $this->tagOpen('td', $class);
+        $this->outputString($content);
+        $this->tagClose('td');
     }
 
     protected function virtSelectOptions()
@@ -194,6 +204,13 @@ class elementHelpers extends idlersConfig
         $this->selectOption('Quarterly', '2');
         $this->selectOption('Half annual (half year)', '3');
         $this->selectOption('Annual (yearly)', '4');
+        $this->selectOption('Biennial (2 years)', '5');
+        $this->selectOption('Triennial (3 years)', '6');
+    }
+
+    protected function domainTermSelectOptions()
+    {
+        $this->selectOption('Annual (yearly)', '4', true);
         $this->selectOption('Biennial (2 years)', '5');
         $this->selectOption('Triennial (3 years)', '6');
     }
@@ -578,10 +595,15 @@ class idlers extends helperFunctions
         $this->navTabs(array('Services', 'Add', 'Order', 'Info', 'Search'), array('#services', '#add_server', '#order', '#info', '#search'));
         $this->outputString('<div id="myTabContent" class="tab-content">');
         $this->outputString('<div class="tab-pane server-cards fade active show" id="services">');
+        $this->viewSwitcherIcon();
+        $this->tagOpen('div', '', 'cardsViewDiv');
         $this->serverCards();
         $this->sharedHostingCards();
         $this->domainCards();
         $this->tagClose('div');
+        $this->tagOpen('div', '', 'tableViewDiv');
+        //Objects tables
+        $this->tagClose('div', 2);
         $this->outputString('<div class="tab-pane fade" id="add_server">');
         //BTN Bar
         $this->rowColOpen('row text-center', 'col-12 btn-bar-col');
@@ -686,13 +708,13 @@ class idlers extends helperFunctions
 
     public function serverData(string $id)
     {
-        $select = $this->dbConnect()->prepare("SELECT `has_yabs` FROM `servers` WHERE `id` = ? LIMIT 1;");
+        $select = $this->dbConnect()->prepare("SELECT `has_yabs`, `has_st` FROM `servers` WHERE `id` = ? LIMIT 1;");
         $select->execute([$id]);
         $row = $select->fetch();
-        if ($row['has_yabs'] == 1) {
+        if ($row['has_yabs'] == 1 && $row['has_st'] == 1) {
             $select = $this->dbConnect()->prepare("
               SELECT servers.id as server_id,hostname,ipv4,ipv6,`cpu`,cpu_type,cpu_freq,ram,ram_type,swap,swap_type,`disk`,disk_type,bandwidth,bandwidth_type,gb5_single,gb5_multi,gb5_id,aes_ni,amd_v,
-              is_dedicated,is_cpu_dedicated,was_special,os,ssh_port,still_have,tags,notes,virt,has_yabs,ns1,ns2,DATE_FORMAT(`owned_since`, '%M %Y') as owned_since, `owned_since` as owned_since_raw, `4k`,`4k_type`,`64k`,`64k_type`,`512k`,`512k_type`,`1m`,`1m_type`,
+              is_dedicated,is_cpu_dedicated,was_special,os,ssh_port,still_have,tags,notes,virt,has_yabs,has_st,ns1,ns2,DATE_FORMAT(`owned_since`, '%M %Y') as owned_since, `owned_since` as owned_since_raw, `4k`,`4k_type`,`64k`,`64k_type`,`512k`,`512k_type`,`1m`,`1m_type`,
               loc.name as location,send,send_type,recieve,recieve_type,price,currency,term,as_usd,per_month,next_dd,pr.name as provider
               FROM servers INNER JOIN disk_speed ds on servers.id = ds.server_id
               INNER JOIN speed_tests st on servers.id = st.server_id INNER JOIN locations loc on servers.location = loc.id
@@ -704,6 +726,17 @@ class idlers extends helperFunctions
             $speed_tests = $sel_st->fetchAll(PDO::FETCH_ASSOC);
             $final = array_merge($speed_tests, $data);
             return json_encode($final);
+        } elseif ($row['has_yabs'] == 1 && $row['has_st'] == 0) {
+            $select = $this->dbConnect()->prepare("
+              SELECT servers.id as server_id,hostname,ipv4,ipv6,`cpu`,cpu_type,cpu_freq,ram,ram_type,swap,swap_type,`disk`,disk_type,bandwidth,bandwidth_type,gb5_single,gb5_multi,gb5_id,aes_ni,amd_v,
+              is_dedicated,is_cpu_dedicated,was_special,os,ssh_port,still_have,tags,notes,virt,has_yabs,has_st,ns1,ns2,DATE_FORMAT(`owned_since`, '%M %Y') as owned_since, `owned_since` as owned_since_raw, `4k`,`4k_type`,`64k`,`64k_type`,`512k`,`512k_type`,`1m`,`1m_type`,
+              loc.name as location,price,currency,term,as_usd,per_month,next_dd,pr.name as provider
+              FROM servers INNER JOIN disk_speed ds on servers.id = ds.server_id
+            INNER JOIN locations loc on servers.location = loc.id
+              INNER JOIN providers pr on servers.provider = pr.id INNER JOIN pricing on servers.id = pricing.server_id WHERE servers.id = ? LIMIT 1;");
+            $select->execute([$id]);
+            $data = $select->fetchAll(PDO::FETCH_ASSOC)[0];
+            return json_encode($data);
         } else {
             $select = $this->dbConnect()->prepare("
                SELECT servers.id as server_id,hostname,ipv4,ipv6,`cpu`,cpu_type,cpu_freq,ram,ram_type,swap,swap_type,`disk`,disk_type,
@@ -838,10 +871,45 @@ class idlers extends helperFunctions
         $this->tagClose('div');
     }
 
+    protected function serverTable()
+    {
+        if (self::SRV_SORT_TYPE == 'HOSTNAME_DESC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `servers` ORDER BY `hostname` DESC;");
+        } elseif (self::SRV_SORT_TYPE == 'HOSTNAME_ASC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `servers` ORDER BY `hostname`;");
+        } elseif (self::SRV_SORT_TYPE == 'OWNED_SINCE_DESC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `servers` ORDER BY `owned_since` DESC;");
+        } elseif (self::SRV_SORT_TYPE == 'OWNED_SINCE_ASC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `servers` ORDER BY `owned_since`;");
+        } elseif (self::SRV_SORT_TYPE == 'PRICE_DESC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `servers` INNER JOIN `pricing` ON servers.id = pricing.server_id ORDER BY `as_usd` DESC;");
+        } elseif (self::SRV_SORT_TYPE == 'PRICE_ASC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `servers` INNER JOIN `pricing` ON servers.id = pricing.server_id ORDER BY `as_usd`;");
+        } elseif (self::SRV_SORT_TYPE == 'DUE_DESC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `servers` INNER JOIN `pricing` ON servers.id = pricing.server_id ORDER BY `next_dd` DESC;");
+        } elseif (self::SRV_SORT_TYPE == 'DUE_ASC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `servers` INNER JOIN `pricing` ON servers.id = pricing.server_id ORDER BY `next_dd`;");
+        } else {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `servers`;");
+        }
+        $select->execute();
+        $count = $select->rowCount();
+        if ($count > 0) {
+            $this->HTMLPhrase('h4', 'card-section-header', 'Servers <span class="object-count">' . $count . '</span>');
+            $this->tagOpen('div', 'row');
+            $this->tableHeader(array('Hostname', '', '', 'Type', 'CPU', 'RAM', 'Disk', 'Price', 'OS', 'Location', 'Provider', 'Due', 'Owned', 'IPv4', 'IPv6', 'Tags'), 'table objects-table', 'serversTable');
+            while ($row = $select->fetch(PDO::FETCH_ASSOC)) {
+                $this->vpsTableRow($row['id']);
+            }
+            $this->outputString('</tbody></table></div>');
+            $this->tagClose('div');
+        }
+    }
+
     protected function vpsCard(string $id)
     {
         $select = $this->dbConnect()->prepare("
-           SELECT servers.id,servers.hostname,servers.`cpu`,servers.cpu_freq,servers.ram,servers.ram_type,servers.`disk`,
+           SELECT servers.id,servers.hostname,servers.ipv4,servers.`cpu`,servers.cpu_freq,servers.ram,servers.ram_type,servers.`disk`,
            servers.disk_type,servers.os,servers.virt,servers.was_special,locations.name as location,providers.name as provider,pricing.price,pricing.currency,pricing.term,pricing.next_dd
            FROM servers INNER JOIN locations on servers.location = locations.id INNER JOIN providers on servers.provider = providers.id
            INNER JOIN pricing on servers.id = pricing.server_id WHERE servers.id = ? LIMIT 1;");
@@ -856,15 +924,24 @@ class idlers extends helperFunctions
         $this->HTMLphrase('h4', 'hostname-header', $data['hostname']);
         $this->tagClose('div');
         $this->colOpen('col-12 col-xl-2 os-col');
-        $this->outputString($this->osIntToIcon($data['os']));
+        (empty($data['ipv4']) || is_null($data['ipv4'])) ? $host = $data['hostname'] : $host = $data['ipv4'];
+        $this->outputString('<a id="checkUpStatus" href="#" value="' . $host . '">' . $this->osIntToIcon($data['os']) . '</a>');
         $this->tagClose('div', 3);
         $this->tagOpen('div', 'card-body');
         $this->HTMLphrase('h6', 'price', '$' . $data['price'] . ' ' . $data['currency'] . ' ' . $this->paymentTerm($data['term']));
         $this->rowColOpen('row text-center', 'col-12');
-        $this->HTMLphrase('h6', 'provider', $data['provider']);
+        if (is_null($data['provider']) || empty($data['provider'])) {
+            $this->HTMLphrase('h6', 'provider no-prov', '&nbsp;');
+        } else {
+            $this->HTMLphrase('h6', 'provider', $data['provider']);
+        }
         $this->tagClose('div', 2);
         $this->rowColOpen('row text-center', 'col-12');
-        $this->HTMLphrase('h6', 'location', $data['location']);
+        if (is_null($data['location']) || empty($data['location'])) {
+            $this->HTMLphrase('h6', 'location no-loc', '&nbsp;');
+        } else {
+            $this->HTMLphrase('h6', 'location', $data['location']);
+        }
         $this->tagClose('div', 2);
         $this->rowColOpen('row text-center', 'col-12');
         $this->HTMLphrase('p', $dd_class, "Due in {$this->processDueDate($data['id'], $data['term'], $data['next_dd'])} days");
@@ -891,6 +968,206 @@ class idlers extends helperFunctions
         $this->colOpen('col-6');
         $this->outputString('<a class="btn btn-second" id="editServer" value="' . $id . '" data-target="#editServerModal" data-toggle="modal" href="#" role="button">Edit</a>');
         $this->tagClose('div', 5);
+    }
+
+    protected function locationForTable(string $location)
+    {
+        if (strpos($location, ',') !== false) {
+            return explode(',', $location)[0];
+        } else {
+            return $location;
+        }
+    }
+
+    public function objectTables()
+    {
+        $this->serverTable();
+        $this->sharedHostingTable();
+        $this->domainTable();
+    }
+
+    protected function vpsTableRow(string $id)
+    {
+        $select = $this->dbConnect()->prepare("
+           SELECT servers.id,servers.hostname,servers.ipv4,servers.ipv6,servers.`cpu`,servers.cpu_freq,servers.ram,servers.ram_type,servers.`disk`,
+           servers.disk_type,servers.os,servers.virt,servers.tags, DATE_FORMAT(`owned_since`, '%d %b %Y') as dt, servers.was_special,locations.name as location,providers.name as provider,pricing.price,pricing.currency,pricing.term,pricing.next_dd
+           FROM servers INNER JOIN locations on servers.location = locations.id INNER JOIN providers on servers.provider = providers.id
+           INNER JOIN pricing on servers.id = pricing.server_id WHERE servers.id = ? LIMIT 1;");
+        $select->execute([$id]);
+        $data = $select->fetchAll(PDO::FETCH_ASSOC)[0];
+        if (self::COLOR_TABLE) {
+            ($data['was_special'] == 1) ? $special_class = 'td-special-price' : $special_class = '';
+            if ($this->processDueDate($data['id'], $data['term'], $data['next_dd']) < 7) {
+                $ds_class = 'td-due-soon';
+            } elseif ($this->processDueDate($data['id'], $data['term'], $data['next_dd']) > 300) {
+                $ds_class = 'td-not-due-soon';
+            } else {
+                $ds_class = '';
+            }
+        } else {
+            $special_class = $ds_class = '';
+        }
+        (empty($data['ipv4']) || is_null($data['ipv4'])) ? $host = $data['hostname'] : $host = $data['ipv4'];
+        $this->tagOpen('tr');
+        $this->tableTd('', $data['hostname']);
+        $this->tableTd('', '<a class="btn btn-main table-btn" id="viewMoreServer" value="' . $data['id'] . '" data-target="#viewMoreServerModal" data-toggle="modal" href="#" role="button">More</a>');
+        $this->tableTd('', '<a class="btn btn-second table-btn" id="editServer" value="' . $data['id'] . '" data-target="#editServerModal" data-toggle="modal" href="#" role="button">Edit</a>');
+        $this->tableTd('td-text-sml', $data['virt']);
+        $this->tableTd('td-nowrap', $data['cpu'] . '<span class="data-type">@' . $this->mhzToGhz($data['cpu_freq']) . 'Ghz</span>');
+        $this->tableTd('td-nowrap', $data['ram'] . '<span class="data-type">' . $data['ram_type'] . '</span>');
+        $this->tableTd('td-nowrap', $data['disk'] . '<span class="data-type">' . $data['disk_type'] . '</span>');
+        $this->tableTd('td-nowrap ' . $special_class . '', $data['price'] . ' <span class="data-type">' . $data['currency'] . ' ' . $this->paymentTerm($data['term']) . '</span>');
+        $this->tableTd('', '<a id="checkUpStatus" href="#" value="' . $host . '">' . $this->osIntToIcon($data['os']) . '</a>');
+        $this->tableTd('td-nowrap td-text-med', '<div class="td-nowrap">' . $this->locationForTable($data['location']) . '</div>');
+        $this->tableTd('td-nowrap td-text-med', '<div class="td-nowrap">' . $data['provider'] . '</div>');
+        $this->tableTd('td-nowrap td-text-sml ' . $ds_class . '', '<div class="td-nowrap">' . $this->processDueDate($data['id'], $data['term'], $data['next_dd']) . ' days</div>');
+        $this->tableTd('td-nowrap td-text-sml', '<div class="td-nowrap">' . $data['dt'] . '</div>');
+        $this->tableTd('td-nowrap td-text-sml', '<div class="td-nowrap">' . $data['ipv4'] . '</div>');
+        $this->tableTd('td-nowrap td-text-sml', '<div class="td-nowrap">' . $data['ipv6'] . '</div>');
+        $this->tableTd('td-nowrap td-text-sml', '<div class="td-nowrap">' . $data['tags'] . '</div>');
+        $this->tagClose('tr');
+    }
+
+    protected function sharedHostingTable()
+    {
+        if (self::SH_SORT_TYPE == 'DOMAIN_DESC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `shared_hosting` ORDER BY `domain` DESC;");
+        } elseif (self::SH_SORT_TYPE == 'DOMAIN_ASC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `shared_hosting` ORDER BY `domain`;");
+        } elseif (self::SH_SORT_TYPE == 'OWNED_SINCE_DESC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `shared_hosting` ORDER BY `owned_since` DESC;");
+        } elseif (self::SH_SORT_TYPE == 'OWNED_SINCE_ASC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `shared_hosting` ORDER BY `owned_since`;");
+        } elseif (self::SH_SORT_TYPE == 'PRICE_DESC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `shared_hosting` INNER JOIN `pricing` ON shared_hosting.id = pricing.server_id ORDER BY `as_usd` DESC;");
+        } elseif (self::SH_SORT_TYPE == 'PRICE_ASC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `shared_hosting` INNER JOIN `pricing` ON shared_hosting.id = pricing.server_id ORDER BY `as_usd`;");
+        } elseif (self::SH_SORT_TYPE == 'DUE_DESC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `shared_hosting` INNER JOIN `pricing` ON shared_hosting.id = pricing.server_id ORDER BY `next_dd` DESC;");
+        } elseif (self::SH_SORT_TYPE == 'DUE_ASC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `shared_hosting` INNER JOIN `pricing` ON shared_hosting.id = pricing.server_id ORDER BY `next_dd`;");
+        } else {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `shared_hosting`;");
+        }
+        $select->execute();
+        $count = $select->rowCount();
+        if ($count > 0) {
+            $this->HTMLPhrase('h4', 'card-section-header mt-1', 'Shared hosting <span class="object-count">' . $count . '</span>');
+            $this->tagOpen('div', 'row');
+            $this->tableHeader(array('Domain', '', '', 'Type', 'Disk', 'Price', 'Location', 'Provider', 'Due', 'BWidth', 'Domains', 'Emails', 'FTPs', 'DBs', 'Since'), 'table objects-table', 'sharedHostingTable');
+            while ($row = $select->fetch(PDO::FETCH_ASSOC)) {
+                $this->sharedHostingTableRow($row['id']);
+            }
+            $this->outputString('</tbody></table></div>');
+            $this->tagClose('div');
+        }
+    }
+
+    protected function domainTable()
+    {
+        if (self::DC_SORT_TYPE == 'DOMAIN_DESC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `domains` ORDER BY `domain` DESC;");
+        } elseif (self::DC_SORT_TYPE == 'DOMAIN_ASC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `domains` ORDER BY `domain`;");
+        } elseif (self::DC_SORT_TYPE == 'OWNED_SINCE_DESC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `domains` ORDER BY `owned_since` DESC;");
+        } elseif (self::DC_SORT_TYPE == 'OWNED_SINCE_ASC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `domains` ORDER BY `owned_since`;");
+        } elseif (self::DC_SORT_TYPE == 'PRICE_DESC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `domains` INNER JOIN `pricing` ON domains.id = pricing.server_id ORDER BY `as_usd` DESC;");
+        } elseif (self::DC_SORT_TYPE == 'PRICE_ASC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `domains` INNER JOIN `pricing` ON domains.id = pricing.server_id ORDER BY `as_usd`;");
+        } elseif (self::DC_SORT_TYPE == 'DUE_DESC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `domains` INNER JOIN `pricing` ON domains.id = pricing.server_id ORDER BY `next_dd` DESC;");
+        } elseif (self::DC_SORT_TYPE == 'DUE_ASC') {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `domains` INNER JOIN `pricing` ON domains.id = pricing.server_id ORDER BY `next_dd`;");
+        } else {
+            $select = $this->dbConnect()->prepare("SELECT `id` FROM `domains`;");
+        }
+        $select->execute();
+        $count = $select->rowCount();
+        if ($count > 0) {
+            $this->HTMLPhrase('h4', 'card-section-header mt-1', 'Domains <span class="object-count">' . $count . '</span>');
+            $this->tagOpen('div', 'row');
+            $this->tableHeader(array('Domain', '', '', 'NS1', 'NS2', 'Price', 'Provider', 'Due', 'Since'), 'table objects-table', 'domainsTable');
+            while ($row = $select->fetch(PDO::FETCH_ASSOC)) {
+                $this->domainTableRow($row['id']);
+            }
+            $this->outputString('</tbody></table></div>');
+            $this->tagClose('div');
+        }
+    }
+
+    protected function domainTableRow(string $id)
+    {
+        $select = $this->dbConnect()->prepare("
+           SELECT domains.id,domains.domain,domains.attached_to,domains.ns1,domains.ns2,DATE_FORMAT(`owned_since`, '%d %b %Y') as dt,providers.name as provider, pricing.price,pricing.currency,pricing.term,pricing.next_dd
+           FROM domains INNER JOIN providers on domains.provider = providers.id
+           INNER JOIN pricing on domains.id = pricing.server_id WHERE domains.id = ? LIMIT 1;");
+        $select->execute([$id]);
+        $data = $select->fetchAll(PDO::FETCH_ASSOC)[0];
+        if (self::COLOR_TABLE) {
+            if ($this->processDueDate($data['id'], $data['term'], $data['next_dd']) < 7) {
+                $ds_class = 'td-due-soon';
+            } elseif ($this->processDueDate($data['id'], $data['term'], $data['next_dd']) > 300) {
+                $ds_class = 'td-not-due-soon';
+            } else {
+                $ds_class = '';
+            }
+        } else {
+            $ds_class = '';
+        }
+        $this->tagOpen('tr');
+        $this->tableTd('td-nowrap', $data['domain']);
+        $this->tableTd('', '<a class="btn btn-main table-btn" id="viewMoreDomain" value="' . $data['id'] . '" data-target="#viewMoreModalDomain" data-toggle="modal" href="#" role="button">More</a>');
+        $this->tableTd('', '<a class="btn btn-second table-btn" id="editDomain" value="' . $data['id'] . '" data-target="#editModalDomain" data-toggle="modal" href="#" role="button">Edit</a>');
+        $this->tableTd('td-nowrap', '<code>' . $data['ns1'] . '<code>');
+        $this->tableTd('td-nowrap', '<code>' . $data['ns2'] . '<code>');
+        $this->tableTd('td-nowrap', $data['price'] . ' <span class="data-type">' . $data['currency'] . ' ' . $this->paymentTerm($data['term']) . '</span>');
+        $this->tableTd('td-nowrap td-text-med', '<div class="td-nowrap">' . $data['provider'] . '</div>');
+        $this->tableTd('td-nowrap td-text-sml ' . $ds_class . '', '<div class="td-nowrap">' . $this->processDueDate($data['id'], $data['term'], $data['next_dd']) . ' days</div>');
+        $this->tableTd('td-nowrap', $data['dt']);
+        $this->tagClose('tr');
+    }
+
+    protected function sharedHostingTableRow(string $id)
+    {
+        $select = $this->dbConnect()->prepare("
+           SELECT shared_hosting.id,shared_hosting.domain,shared_hosting.type,shared_hosting.was_special,shared_hosting.disk,shared_hosting.disk_type,shared_hosting.bandwidth,shared_hosting.domains_limit,shared_hosting.emails,
+                  shared_hosting.ftp,shared_hosting.db,DATE_FORMAT(`owned_since`, '%d %b %Y') as dt,locations.name as location,providers.name as provider,pricing.price,pricing.currency,pricing.term,pricing.next_dd
+           FROM shared_hosting INNER JOIN locations on shared_hosting.location = locations.id INNER JOIN providers on shared_hosting.provider = providers.id
+           INNER JOIN pricing on shared_hosting.id = pricing.server_id WHERE shared_hosting.id = ? LIMIT 1;");
+        $select->execute([$id]);
+        $data = $select->fetchAll(PDO::FETCH_ASSOC)[0];
+        if (self::COLOR_TABLE) {
+            ($data['was_special'] == 1) ? $special_class = 'td-special-price' : $special_class = '';
+            if ($this->processDueDate($data['id'], $data['term'], $data['next_dd']) < 7) {
+                $ds_class = 'td-due-soon';
+            } elseif ($this->processDueDate($data['id'], $data['term'], $data['next_dd']) > 300) {
+                $ds_class = 'td-not-due-soon';
+            } else {
+                $ds_class = '';
+            }
+        } else {
+            $special_class = $ds_class = '';
+        }
+        $this->tagOpen('tr');
+        $this->tableTd('td-nowrap', $data['domain']);
+        $this->tableTd('', '<a class="btn btn-main table-btn" id="viewMoreSharedHosting" value="' . $data['id'] . '" data-target="#viewMoreModalSharedHosting" data-toggle="modal" href="#" role="button">More</a>');
+        $this->tableTd('', '<a class="btn btn-second table-btn" id="editSharedHosting" value="' . $data['id'] . '" data-target="#editModalSharedHosting" data-toggle="modal" href="#" role="button">Edit</a>');
+        $this->tableTd('td-nowrap td-text-sml', $data['type']);
+        $this->tableTd('td-nowrap', $data['disk'] . '<span class="data-type">' . $data['disk_type'] . '</span>');
+        $this->tableTd('td-nowrap ' . $special_class . '', $data['price'] . ' <span class="data-type">' . $data['currency'] . ' ' . $this->paymentTerm($data['term']) . '</span>');
+        $this->tableTd('td-nowrap td-text-med', '<div class="td-nowrap">' . $this->locationForTable($data['location']) . '</div>');
+        $this->tableTd('td-nowrap td-text-med', '<div class="td-nowrap">' . $data['provider'] . '</div>');
+        $this->tableTd('td-nowrap td-text-sml ' . $ds_class . '', '<div class="td-nowrap">' . $this->processDueDate($data['id'], $data['term'], $data['next_dd']) . ' days</div>');
+        $this->tableTd('td-nowrap', $data['bandwidth'] . '<span class="data-type">TB</span>');
+        $this->tableTd('td-nowrap', $data['domains_limit']);
+        $this->tableTd('td-nowrap', $data['emails']);
+        $this->tableTd('td-nowrap', $data['ftp']);
+        $this->tableTd('td-nowrap', $data['db']);
+        $this->tableTd('td-nowrap', $data['dt']);
+        $this->tagClose('tr');
     }
 
     protected function SharedHostingCard(string $id)
@@ -1168,7 +1445,7 @@ class idlers extends helperFunctions
         $this->outputString('<form id="editSharedHostingForm" method="post">');
 
         $this->rowColOpen('form-row', 'col-8');
-        $this->outputString('<label for="sh_me_delete">Delete server data</label>');
+        $this->outputString('<label for="sh_me_delete">Delete shared hosting data</label>');
         $this->tagClose('div');
         $this->colOpen('col-4');
         $this->outputString('<label class="switch"><input type="checkbox" name="sh_me_delete" id="sh_me_delete"><span class="slider round"></span></label>');
@@ -1285,7 +1562,7 @@ class idlers extends helperFunctions
         $this->outputString('<form id="editDomainForm" method="post">');
 
         $this->rowColOpen('form-row', 'col-8');
-        $this->outputString('<label for="d_me_delete">Delete server data</label>');
+        $this->outputString('<label for="d_me_delete">Delete domain data</label>');
         $this->tagClose('div');
         $this->colOpen('col-4');
         $this->outputString('<label class="switch"><input type="checkbox" name="d_me_delete" id="d_me_delete"><span class="slider round"></span></label>');
@@ -1318,7 +1595,7 @@ class idlers extends helperFunctions
         $this->tagOpen('div', 'input-group');
         $this->inputPrepend('Term');
         $this->selectElement('d_me_term');
-        $this->termSelectOptions();
+        $this->domainTermSelectOptions();
         $this->tagClose('select');
         $this->tagClose('div', 3);
 
@@ -1640,6 +1917,7 @@ class idlers extends helperFunctions
         $this->tagOpen('div', 'input-group');
         $this->inputPrepend('Hostname');
         $this->textInput('hostname', '', 'form-control', true, 1, 124);
+        $this->outputString('<div class="input-group-append"><span class="input-group-text"><a id="fillIpv4" href="#"><i class="fas fa-search"></i></a></span></div>');
         $this->tagClose('div', 2);
         $this->colOpen('col-12 col-md-4');
         $this->tagOpen('div', 'input-group');
@@ -1680,7 +1958,7 @@ class idlers extends helperFunctions
         $this->rowColOpen('form-row', 'col-12 col-md-6');
         $this->tagOpen('div', 'input-group');
         $this->inputPrepend('IPv4');
-        $this->textInput('ipv4', '', 'form-control', true, 4, 124);
+        $this->textInput('ipv4', '', 'form-control', false, 4, 124);
         $this->tagClose('div', 2);
         $this->colOpen('col-12 col-md-6');
         $this->tagOpen('div', 'input-group');
@@ -1724,7 +2002,8 @@ class idlers extends helperFunctions
         $this->rowColOpen('form-row', 'col-12 col-md-6');
         $this->tagOpen('div', 'input-group');
         $this->inputPrepend('Bandwidth');
-        $this->numberInput('bandwidth', '', 'form-control', false, 1, 99999, 'any');
+        $this->numberInput('bandwidth', '4', 'form-control', false, '0.5', 99999, '0.5');
+        $this->outputString('<div class="input-group-append"><span class="input-group-text">TB</span></div>');
         $this->tagClose('div', 2);
         $this->colOpen('col-12 col-md-6');
         $this->tagOpen('div', 'input-group');
@@ -1884,6 +2163,7 @@ class idlers extends helperFunctions
             $ipv6 = $data['ipv6'];
         }
         ($data['has_yabs'] == 1) ? $has_yabs = true : $has_yabs = false;
+        ($data['has_st'] == 1) ? $has_st = true : $has_st = false;
         $this->tagOpen('div', 'modal-header');
         $this->HTMLphrase('h4', 'modal-title w-100', $data['hostname'], 'view_more_header');
         $this->outputString('<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
@@ -2102,7 +2382,7 @@ class idlers extends helperFunctions
         $this->colOpen('col-2');
         $this->HTMLphrase('p', 'm-value', $data['virt']);
         $this->tagClose('div', 2);
-        if ($has_yabs) {
+        if ($has_yabs && $has_st) {
             $this->rowColOpen('row m-section-row', 'col-12 text-center');
             $this->HTMLphrase('p', 'm-section-text', 'Network test');
             $this->tagClose('div', 2);
@@ -2130,7 +2410,7 @@ class idlers extends helperFunctions
         $this->rowColOpen('row m-section-row', 'col-12 text-center');
         $this->htmlPhrase('p', 'm-section-text', 'Notes');
         $this->outputString("<textarea class='form-control' id='server_notes' name='server_notes' rows='4' cols='40' maxlength='255' disabled>");
-        if (is_null($data['notes']) || empty($data['notes'])){
+        if (is_null($data['notes']) || empty($data['notes'])) {
             $this->outputString('');
         } else {
             $this->outputString($data['notes']);
@@ -2157,11 +2437,11 @@ class idlers extends helperFunctions
             $this->tagClose('div');
             $this->colOpen('col-12 col-md-6');
             $this->outputString('<a class="btn btn-third" id="closeViewMoreModal" role="button" data-dismiss="modal">Close</a>');
-            $this->tagClose('div',2);
+            $this->tagClose('div', 2);
         } else {
             $this->rowColOpen('row text-center', 'col-12');
             $this->outputString('<a class="btn btn-third" id="closeViewMoreModal" role="button" data-dismiss="modal">Close</a>');
-            $this->tagClose('div',2);
+            $this->tagClose('div', 2);
         }
     }
 
@@ -2372,8 +2652,8 @@ class idlers extends helperFunctions
     public function orderTable(int $order_type)
     {
         if (in_array($order_type, array(1, 2, 3, 4, 5, 6, 7, 8))) {
-            $this->tableHeader(array('Hostname', 'CPU', 'Freq', 'Ram', 'Swap', 'Disk'));
-            $base_query = "SELECT `id`, `hostname`, `cpu`, `cpu_freq`, `ram_mb`, `swap_mb`, `disk_gb` FROM `servers`";
+            $this->tableHeader(array('Hostname', 'CPU', 'Freq', 'Ram', 'Swap', 'Disk', 'BWidth'));
+            $base_query = "SELECT `id`, `hostname`, `cpu`, `cpu_freq`, `ram`, `ram_type`, `ram_mb`, `swap`, `swap_type`, `swap_mb`, `disk`, `disk_type`, `disk_gb`, `bandwidth`, `bandwidth_type` FROM `servers`";
             if ($order_type == 1) {
                 $select = $this->dbConnect()->prepare("$base_query ORDER BY `cpu` DESC;");
             } elseif ($order_type == 2) {
@@ -2396,15 +2676,16 @@ class idlers extends helperFunctions
                 $this->tagOpen('tr');
                 $this->outputString("<td>{$row['hostname']}</td>");
                 $this->outputString("<td>{$row['cpu']}</td>");
-                $this->outputString("<td>{$row['cpu_freq']}</td>");
-                $this->outputString("<td>" . number_format($row['ram_mb'], 2) . "<span class='table-val-type'>MB</span></td>");
-                $this->outputString("<td>" . number_format($row['swap_mb'], 0) . "<span class='table-val-type'>MB</span></td>");
-                $this->outputString("<td>" . number_format($row['disk_gb'], 0) . "<span class='table-val-type'>GB</span></td>");
+                $this->outputString("<td>" . $this->mhzToGhz($row['cpu_freq']) . "<span class='table-val-type'>Ghz</span></td>");
+                $this->outputString("<td>" . number_format($row['ram'], 0) . "<span class='table-val-type'>" . $row['ram_type'] . "</span></td>");
+                $this->outputString("<td>" . number_format($row['swap'], 0) . "<span class='table-val-type'>" . $row['swap_type'] . "</span></td>");
+                $this->outputString("<td>" . number_format($row['disk'], 0) . "<span class='table-val-type'>" . $row['disk_type'] . "</span></td>");
+                $this->outputString("<td>" . number_format($row['bandwidth'], 0) . "<span class='table-val-type'>" . $row['bandwidth_type'] . "</span></td>");
                 $this->tagClose('tr');
             }
         } elseif (in_array($order_type, array(9, 10))) {
-            $this->tableHeader(array('Hostname', 'Owned since', 'CPU', 'Freq', 'Ram', 'Disk'));
-            $base_query = "SELECT `id`, `hostname`, `cpu`, `cpu_freq`, `ram_mb`, `disk_gb`, DATE_FORMAT(`owned_since`, '%D %b %Y') as dt FROM `servers`";
+            $this->tableHeader(array('Hostname', 'Owned since', 'CPU', 'Freq', 'Ram', 'Disk', 'BWidth'));
+            $base_query = "SELECT `id`, `hostname`, `cpu`, `cpu_freq`, `ram`, `ram_type`, `ram_mb`, `disk`, `disk_type`, `disk_gb`, `bandwidth`, `bandwidth_type`, DATE_FORMAT(`owned_since`, '%D %b %Y') as dt FROM `servers`";
             if ($order_type == 9) {
                 $select = $this->dbConnect()->prepare("$base_query ORDER BY `owned_since` DESC;");
             } elseif ($order_type == 10) {
@@ -2416,14 +2697,15 @@ class idlers extends helperFunctions
                 $this->outputString("<td>{$row['hostname']}</td>");
                 $this->outputString("<td>{$row['dt']}</td>");
                 $this->outputString("<td>{$row['cpu']}</td>");
-                $this->outputString("<td>{$row['cpu_freq']}</td>");
-                $this->outputString("<td>" . number_format($row['ram_mb'], 2) . "<span class='table-val-type'>MB</span></td>");
-                $this->outputString("<td>" . number_format($row['disk_gb'], 0) . "<span class='table-val-type'>GB</span></td>");
+                $this->outputString("<td>" . $this->mhzToGhz($row['cpu_freq']) . "<span class='table-val-type'>Ghz</span></td>");
+                $this->outputString("<td>" . number_format($row['ram'], 0) . "<span class='table-val-type'>" . $row['ram_type'] . "</span></td>");
+                $this->outputString("<td>" . number_format($row['disk'], 0) . "<span class='table-val-type'>" . $row['disk_type'] . "</span></td>");
+                $this->outputString("<td>" . number_format($row['bandwidth'], 0) . "<span class='table-val-type'>" . $row['bandwidth_type'] . "</span></td>");
                 $this->tagClose('tr');
             }
         } elseif (in_array($order_type, array(11, 12, 13, 14))) {
-            $this->tableHeader(array('Hostname', 'GB5 single', 'GB5 multi', 'CPU', 'Freq', 'Ram', 'Disk'));
-            $base_query = "SELECT `id`, `hostname`, `cpu`, `cpu_freq`, `ram_mb`, `disk_gb`, `gb5_single`, `gb5_multi` FROM `servers` WHERE has_yabs = 1";
+            $this->tableHeader(array('Hostname', 'GB5 single', 'GB5 multi', 'CPU', 'Freq', 'Ram', 'Disk', 'BWidth'));
+            $base_query = "SELECT `id`, `hostname`, `cpu`, `cpu_freq`, `ram`, `ram_type`, `ram_mb`, `disk`, `disk_type`, `disk_gb`, `bandwidth`, `bandwidth_type`, `gb5_single`, `gb5_multi` FROM `servers` WHERE has_yabs = 1";
             if ($order_type == 11) {
                 $select = $this->dbConnect()->prepare("$base_query ORDER BY `gb5_single` DESC;");
             } elseif ($order_type == 12) {
@@ -2440,14 +2722,15 @@ class idlers extends helperFunctions
                 $this->outputString("<td>{$row['gb5_single']}</td>");
                 $this->outputString("<td>{$row['gb5_multi']}</td>");
                 $this->outputString("<td>{$row['cpu']}</td>");
-                $this->outputString("<td>{$row['cpu_freq']}</td>");
-                $this->outputString("<td>" . number_format($row['ram_mb'], 2) . "<span class='table-val-type'>MB</span></td>");
-                $this->outputString("<td>" . number_format($row['disk_gb'], 0) . "<span class='table-val-type'>GB</span></td>");
+                $this->outputString("<td>" . $this->mhzToGhz($row['cpu_freq']) . "<span class='table-val-type'>Ghz</span></td>");
+                $this->outputString("<td>" . number_format($row['ram'], 0) . "<span class='table-val-type'>" . $row['ram_type'] . "</span></td>");
+                $this->outputString("<td>" . number_format($row['disk'], 0) . "<span class='table-val-type'>" . $row['disk_type'] . "</span></td>");
+                $this->outputString("<td>" . number_format($row['bandwidth'], 0) . "<span class='table-val-type'>" . $row['bandwidth_type'] . "</span></td>");
                 $this->tagClose('tr');
             }
         } elseif (in_array($order_type, array(15, 16, 17, 18))) {
-            $this->tableHeader(array('Hostname', 'Price', 'Term', 'P/M', 'CPU', 'Ram', 'Disk'));
-            $base_query = "SELECT `id`, `hostname`, `cpu`, `ram_mb`, `disk_gb`, `price`, `currency`, `term`, `per_month` FROM `servers` INNER JOIN `pricing`p on servers.id = p.server_id";
+            $this->tableHeader(array('Hostname', 'Price', 'Term', 'P/M', 'USD', 'CPU', 'Freq', 'Ram', 'Disk', 'BWidth'));
+            $base_query = "SELECT `id`, `hostname`, `cpu`, `cpu_freq`, `ram`, `ram_type`, `ram_mb`, `disk`, `disk_type`, `disk_gb`, `bandwidth`, `bandwidth_type`, `price`, `currency`, `term`, `per_month`, `as_usd` FROM `servers` INNER JOIN `pricing`p on servers.id = p.server_id";
             if ($order_type == 15) {
                 $select = $this->dbConnect()->prepare("$base_query ORDER BY `as_usd` DESC;");
             } elseif ($order_type == 16) {
@@ -2464,14 +2747,17 @@ class idlers extends helperFunctions
                 $this->outputString("<td>{$row['price']} {$row['currency']}</td>");
                 $this->outputString("<td>" . $this->paymentTerm($row['term']) . "</td>");
                 $this->outputString("<td>{$row['per_month']}</td>");
+                $this->outputString("<td>{$row['as_usd']}</td>");
                 $this->outputString("<td>{$row['cpu']}</td>");
-                $this->outputString("<td>" . number_format($row['ram_mb'], 2) . "<span class='table-val-type'>MB</span></td>");
-                $this->outputString("<td>" . number_format($row['disk_gb'], 0) . "<span class='table-val-type'>GB</span></td>");
+                $this->outputString("<td>" . $this->mhzToGhz($row['cpu_freq']) . "<span class='table-val-type'>Ghz</span></td>");
+                $this->outputString("<td>" . number_format($row['ram'], 0) . "<span class='table-val-type'>" . $row['ram_type'] . "</span></td>");
+                $this->outputString("<td>" . number_format($row['disk'], 0) . "<span class='table-val-type'>" . $row['disk_type'] . "</span></td>");
+                $this->outputString("<td>" . number_format($row['bandwidth'], 0) . "<span class='table-val-type'>" . $row['bandwidth_type'] . "</span></td>");
                 $this->tagClose('tr');
             }
         } elseif (in_array($order_type, array(19, 20, 21, 22, 23, 24, 25, 26))) {
-            $this->tableHeader(array('Hostname', '4k', '64k', '512k', '1m', 'CPU', 'Ram', 'Disk'));
-            $base_query = "SELECT `id`, `hostname`, `cpu`, `ram_mb`, `disk_gb`, `4k`, `4k_type`, `64k`, `64k_type`, `512k`, `512k_type`, `1m`, `1m_type` FROM `servers` INNER JOIN `disk_speed`p on servers.id = p.server_id WHERE has_yabs = 1";
+            $this->tableHeader(array('Hostname', '4k', '64k', '512k', '1m', 'CPU', 'Freq', 'Ram', 'Disk', 'BWidth'));
+            $base_query = "SELECT  `id`, `hostname`, `cpu`, `cpu_freq`, `ram`, `ram_type`, `ram_mb`, `disk`, `disk_type`, `disk_gb`, `bandwidth`, `bandwidth_type`, `4k`, `4k_type`, `64k`, `64k_type`, `512k`, `512k_type`, `1m`, `1m_type` FROM `servers` INNER JOIN `disk_speed`p on servers.id = p.server_id WHERE has_yabs = 1";
             if ($order_type == 19) {
                 $select = $this->dbConnect()->prepare("$base_query ORDER BY `4k_as_mbps` DESC;");
             } elseif ($order_type == 20) {
@@ -2498,13 +2784,15 @@ class idlers extends helperFunctions
                 $this->outputString("<td>{$row['512k']}<span class='table-val-type'>{$row['512k_type']}</span></td>");
                 $this->outputString("<td>{$row['1m']}<span class='table-val-type'>{$row['1m_type']}</span></td>");
                 $this->outputString("<td>{$row['cpu']}</td>");
-                $this->outputString("<td>" . number_format($row['ram_mb'], 2) . "<span class='table-val-type'>MB</span></td>");
-                $this->outputString("<td>" . number_format($row['disk_gb'], 0) . "<span class='table-val-type'>GB</span></td>");
+                $this->outputString("<td>" . $this->mhzToGhz($row['cpu_freq']) . "<span class='table-val-type'>Ghz</span></td>");
+                $this->outputString("<td>" . number_format($row['ram'], 0) . "<span class='table-val-type'>" . $row['ram_type'] . "</span></td>");
+                $this->outputString("<td>" . number_format($row['disk'], 0) . "<span class='table-val-type'>" . $row['disk_type'] . "</span></td>");
+                $this->outputString("<td>" . number_format($row['bandwidth'], 0) . "<span class='table-val-type'>" . $row['bandwidth_type'] . "</span></td>");
                 $this->tagClose('tr');
             }
         } elseif (in_array($order_type, array(27, 28, 29, 30))) {
-            $this->tableHeader(array('Hostname', 'Send', 'Receive', 'Location', 'CPU', 'Ram', 'Disk'));
-            $base_query = "SELECT servers.id, `hostname`, `cpu`, `ram_mb`, `disk_gb`, `send`, `send_type`, p.location, `recieve`, `recieve_type` FROM `servers` INNER JOIN `speed_tests`p on servers.id = p.server_id WHERE has_yabs = 1";
+            $this->tableHeader(array('Hostname', 'Send', 'Receive', 'Location', 'CPU', 'Freq', 'Ram', 'Disk', 'BWidth'));
+            $base_query = "SELECT servers.id, `hostname`, `cpu`, `cpu_freq`, `ram`, `ram_type`, `ram_mb`, `disk`, `disk_type`, `disk_gb`, `bandwidth`, `bandwidth_type`, `send`, `send_type`, p.location, `recieve`, `recieve_type` FROM `servers` INNER JOIN `speed_tests`p on servers.id = p.server_id WHERE has_yabs = 1";
             if ($order_type == 27) {
                 $select = $this->dbConnect()->prepare("$base_query ORDER BY `send_as_mbps` DESC LIMIT 80;");
             } elseif ($order_type == 28) {
@@ -2522,13 +2810,15 @@ class idlers extends helperFunctions
                 $this->outputString("<td>{$row['recieve']}<span class='table-val-type'>{$row['recieve_type']}</span></td>");
                 $this->outputString("<td>{$row['location']}</td>");
                 $this->outputString("<td>{$row['cpu']}</td>");
-                $this->outputString("<td>" . number_format($row['ram_mb'], 2) . "<span class='table-val-type'>MB</span></td>");
-                $this->outputString("<td>" . number_format($row['disk_gb'], 0) . "<span class='table-val-type'>GB</span></td>");
+                $this->outputString("<td>" . $this->mhzToGhz($row['cpu_freq']) . "<span class='table-val-type'>Ghz</span></td>");
+                $this->outputString("<td>" . number_format($row['ram'], 0) . "<span class='table-val-type'>" . $row['ram_type'] . "</span></td>");
+                $this->outputString("<td>" . number_format($row['disk'], 0) . "<span class='table-val-type'>" . $row['disk_type'] . "</span></td>");
+                $this->outputString("<td>" . number_format($row['bandwidth'], 0) . "<span class='table-val-type'>" . $row['bandwidth_type'] . "</span></td>");
                 $this->tagClose('tr');
             }
         } elseif (in_array($order_type, array(31, 32))) {
             $this->tableHeader(array('Hostname', 'Bandwidth', 'CPU', 'Freq', 'Ram', 'Disk'));
-            $base_query = "SELECT `id`, `hostname`, `cpu`, `cpu_freq`, `ram_mb`, `disk_gb`, `bandwidth` FROM `servers`";
+            $base_query = "SELECT `id`, `hostname`, `cpu`, `cpu_freq`, `ram`, `ram_type`, `ram_mb`, `disk`, `disk_type`, `disk_gb`, `bandwidth`, `bandwidth_type` FROM `servers`";
             if ($order_type == 31) {
                 $select = $this->dbConnect()->prepare("$base_query ORDER BY `bandwidth` DESC;");
             } elseif ($order_type == 32) {
@@ -2538,11 +2828,11 @@ class idlers extends helperFunctions
             while ($row = $select->fetch(PDO::FETCH_ASSOC)) {
                 $this->tagOpen('tr');
                 $this->outputString("<td>{$row['hostname']}</td>");
-                $this->outputString("<td>{$row['bandwidth']}</td>");
+                $this->outputString("<td>" . number_format($row['bandwidth'], 0) . "<span class='table-val-type'>" . $row['bandwidth_type'] . "</span></td>");
                 $this->outputString("<td>{$row['cpu']}</td>");
-                $this->outputString("<td>{$row['cpu_freq']}</td>");
-                $this->outputString("<td>" . number_format($row['ram_mb'], 2) . "<span class='table-val-type'>MB</span></td>");
-                $this->outputString("<td>" . number_format($row['disk_gb'], 0) . "<span class='table-val-type'>GB</span></td>");
+                $this->outputString("<td>" . $this->mhzToGhz($row['cpu_freq']) . "<span class='table-val-type'>Ghz</span></td>");
+                $this->outputString("<td>" . number_format($row['ram'], 0) . "<span class='table-val-type'>" . $row['ram_type'] . "</span></td>");
+                $this->outputString("<td>" . number_format($row['disk'], 0) . "<span class='table-val-type'>" . $row['disk_type'] . "</span></td>");
                 $this->tagClose('tr');
             }
         }
@@ -2603,7 +2893,12 @@ class idlers extends helperFunctions
 
         $oldest_d = $this->dbConnect()->prepare("SELECT `domain`, `owned_since`  FROM `domains` ORDER BY `owned_since`;");
         $oldest_d->execute();
-        $oldest_d_row = $oldest_d->fetchAll(PDO::FETCH_ASSOC)[0];
+        if (isset($oldest_d->fetchAll(PDO::FETCH_ASSOC)[0])) {
+            $oldest_d_row = $oldest_d->fetchAll(PDO::FETCH_ASSOC)[0];
+        } else {
+            $oldest_d_row = array('domain' => null, 'owned_since' => null);
+        }
+
 
         $sel_price = $this->dbConnect()->prepare("SELECT `as_usd`, `term`, `usd_per_month` FROM `pricing`;");
         $sel_price->execute();
@@ -2757,7 +3052,36 @@ class idlers extends helperFunctions
         $this->tagClose('form');
         $this->rowColOpen('row text-center', 'col-12');
         $this->outputString('<a class="btn btn-third" role="button" data-dismiss="modal">Close YABs</a>');
-        $this->tagClose('div',2);
+        $this->tagClose('div', 2);
+    }
+
+    public function getIpForDomain(string $domain, string $type = 'A'): string
+    {//Gets IP from A record for a domain
+        $data = json_decode(file_get_contents("https://whatsmydns.net/api/details?server=428&type=$type&query=$domain"), true);
+        if (isset($data['data'][0]['response'][0])) {
+            if (strlen($data['data'][0]['response'][0]) > 6) {
+                return $data['data'][0]['response'][0];
+            }
+        }
+        return "";//Doesnt exist/null/empty/invalid
+    }
+
+    public function checkIsUp(string $host, int $port = 80, int $wait_time = 1): int
+    {//Check if host/ip is "up"
+        if ($fp = @fsockopen($host, $port, $errCode, $errStr, $wait_time)) {
+            $result = 1;
+        } else {
+            $result = 0;
+        }
+        @fclose($fp);
+        return $result;
+    }
+
+    protected function viewSwitcherIcon()
+    {
+        $this->rowColOpen('row text-center', 'col-12');
+        $this->outputString('<a id="viewSwitcherIcon"><i class="fas fa-table" id="viewSwitchIcon" title="Switch to table"></i></a>');
+        $this->tagClose('div', 2);
     }
 
 }
@@ -2780,11 +3104,12 @@ class itemInsert extends idlers
         (isset($data['dedi_cpu'])) ? $dedi_cpu = 1 : $dedi_cpu = 0;
         ($data['virt'] == 'DEDI') ? $dedi = 1 : $dedi = 0;
         (isset($data['was_offer'])) ? $offer = 1 : $offer = 0;
+        (empty($data['ipv4'])) ? $ipv4 = null : $ipv4 = $data['ipv4'];
         (empty($data['ipv6'])) ? $ipv6 = null : $ipv6 = $data['ipv6'];
         $location_id = $this->handleLocation($data['location']);
         $provider_id = $this->handleProvider($data['provider']);
         $insert = $this->dbConnect()->prepare('INSERT IGNORE INTO `servers` (id, hostname, location, provider, ipv4,ipv6, owned_since, os, is_cpu_dedicated, is_dedicated, was_special, bandwidth, virt, has_yabs, ns1, ns2, ssh_port) VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?)');
-        $insert->execute([$item_id, $data['hostname'], $location_id, $provider_id, $data['ipv4'], $ipv6, $data['owned_since'], $data['os'], $dedi_cpu, $dedi, $offer, $data['bandwidth'], $data['virt'], $data['has_yabs'], $data['ns1'], $data['ns2'], $data['ssh_port']]);
+        $insert->execute([$item_id, $data['hostname'], $location_id, $provider_id, $ipv4, $ipv6, $data['owned_since'], $data['os'], $dedi_cpu, $dedi, $offer, $data['bandwidth'], $data['virt'], $data['has_yabs'], $data['ns1'], $data['ns2'], $data['ssh_port']]);
         $this->insertPrice($data['price'], $data['currency'], $data['term'], $data['next_due_date']);
         return $item_id;
     }
@@ -2796,6 +3121,7 @@ class itemInsert extends idlers
         (isset($data['dedi_cpu'])) ? $dedi_cpu = 1 : $dedi_cpu = 0;
         ($data['virt'] == 'DEDI') ? $dedi = 1 : $dedi = 0;
         (isset($data['was_offer'])) ? $offer = 1 : $offer = 0;
+        (empty($data['ipv4'])) ? $ipv4 = null : $ipv4 = $data['ipv4'];
         (empty($data['ipv6'])) ? $ipv6 = null : $ipv6 = $data['ipv6'];
         ($data['ram_type'] == 'GB') ? $ram_mb = $this->GBtoMB($data['ram']) : $ram_mb = $data['ram'];
         ($data['swap_type'] == 'GB') ? $swap_mb = $this->GBtoMB($data['swap']) : $swap_mb = $data['swap'];
@@ -2803,7 +3129,7 @@ class itemInsert extends idlers
         $location_id = $this->handleLocation($data['location']);
         $provider_id = $this->handleProvider($data['provider']);
         $insert = $this->dbConnect()->prepare('INSERT IGNORE INTO `servers` (id, hostname, location, provider, ipv4,ipv6, owned_since, os, is_cpu_dedicated, is_dedicated, was_special, bandwidth, virt, cpu, cpu_freq, ram, ram_type, swap, swap_type, disk, disk_type, ram_mb, swap_mb, disk_gb, ns1, ns2, ssh_port) VALUES (?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)');
-        $insert->execute([$item_id, $data['hostname'], $location_id, $provider_id, $data['ipv4'], $ipv6, $data['owned_since'], $data['os'], $dedi_cpu, $dedi, $offer, $data['bandwidth'], $data['virt'], $data['cpu_amount'], $data['cpu_speed'], $data['ram'], $data['ram_type'], $data['swap'], $data['swap_type'], $data['disk'], $data['disk_type'], $ram_mb, $swap_mb, $disk_gb, $data['ns1'], $data['ns2'], $data['ssh_port']]);
+        $insert->execute([$item_id, $data['hostname'], $location_id, $provider_id, $ipv4, $ipv6, $data['owned_since'], $data['os'], $dedi_cpu, $dedi, $offer, $data['bandwidth'], $data['virt'], $data['cpu_amount'], $data['cpu_speed'], $data['ram'], $data['ram_type'], $data['swap'], $data['swap_type'], $data['disk'], $data['disk_type'], $ram_mb, $swap_mb, $disk_gb, $data['ns1'], $data['ns2'], $data['ssh_port']]);
         $this->insertPrice($data['price'], $data['currency'], $data['term'], $data['next_due_date']);
         return $item_id;
     }
@@ -2911,6 +3237,7 @@ class itemInsert extends idlers
             $geekbench_multi = $this->intValue($array[$gb_m]);
             $geek_full_url = explode(' ', preg_replace('!\s+!', ' ', $array[$gb_url]));
             $gb5_id = substr($geek_full_url[3], strrpos($geek_full_url[3], '/') + 1);//
+            $has_a_speed_test = false;
             for ($i = $start_st; $i <= $end_st; $i++) {
                 if (strpos($array[$i], 'busy') !== false) {
                     //Has a "busy" result, No insert
@@ -2920,7 +3247,12 @@ class itemInsert extends idlers
                     $recieve_as_mbps = $this->networkSpeedAsMbps($this->yabsSpeedValues($data)['receive_type'], $this->yabsSpeedValues($data)['receive']);
                     $insert = $this->dbConnect()->prepare('INSERT INTO `speed_tests` (`server_id`, `location`, `send`, `send_type`,`send_as_mbps`, `recieve`,`recieve_type`, `recieve_as_mbps`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
                     $insert->execute([$this->item_id, $this->yabsSpeedLoc($data)['location'], $this->yabsSpeedValues($data)['send'], $this->yabsSpeedValues($data)['send_type'], $send_as_mbps, $this->yabsSpeedValues($data)['receive'], $this->yabsSpeedValues($data)['receive_type'], $recieve_as_mbps]);
+                    $has_a_speed_test = true;
                 }
+            }
+            if ($has_a_speed_test) {
+                $update_st = $this->dbConnect()->prepare('UPDATE `servers` SET `has_st` = 1 WHERE `id` = ? LIMIT 1;');
+                $update_st->execute([$this->item_id]);
             }
             ($ram_type == 'GB') ? $ram_mb = $this->GBtoMB($ram) : $ram_mb = $ram;
             ($swap_type == 'GB') ? $swap_mb = $this->GBtoMB($swap) : $swap_mb = $swap;
