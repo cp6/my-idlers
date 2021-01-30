@@ -723,7 +723,7 @@ class idlers extends helperFunctions
         if ($row['has_yabs'] == 1 && $row['has_st'] == 1) {
             $select = $this->dbConnect()->prepare("
               SELECT servers.id as server_id,hostname,ipv4,ipv6,`cpu`,cpu_type,cpu_freq,ram,ram_type,swap,swap_type,`disk`,disk_type,bandwidth,bandwidth_type,gb5_single,gb5_multi,gb5_id,aes_ni,amd_v,
-              is_dedicated,is_cpu_dedicated,was_special,os,ssh_port,still_have,tags,notes,virt,has_yabs,has_st,ns1,ns2,DATE_FORMAT(`owned_since`, '%M %Y') as owned_since, `owned_since` as owned_since_raw, `4k`,`4k_type`,`64k`,`64k_type`,`512k`,`512k_type`,`1m`,`1m_type`,
+              is_dedicated,is_cpu_dedicated,was_special,os,ssh_port,still_have,tags,notes,label,virt,has_yabs,has_st,ns1,ns2,DATE_FORMAT(`owned_since`, '%M %Y') as owned_since, `owned_since` as owned_since_raw, `4k`,`4k_type`,`64k`,`64k_type`,`512k`,`512k_type`,`1m`,`1m_type`,
               loc.name as location,send,send_type,recieve,recieve_type,price,currency,term,as_usd,per_month,next_dd,pr.name as provider
               FROM servers INNER JOIN disk_speed ds on servers.id = ds.server_id
               INNER JOIN speed_tests st on servers.id = st.server_id INNER JOIN locations loc on servers.location = loc.id
@@ -738,7 +738,7 @@ class idlers extends helperFunctions
         } elseif ($row['has_yabs'] == 1 && $row['has_st'] == 0) {
             $select = $this->dbConnect()->prepare("
               SELECT servers.id as server_id,hostname,ipv4,ipv6,`cpu`,cpu_type,cpu_freq,ram,ram_type,swap,swap_type,`disk`,disk_type,bandwidth,bandwidth_type,gb5_single,gb5_multi,gb5_id,aes_ni,amd_v,
-              is_dedicated,is_cpu_dedicated,was_special,os,ssh_port,still_have,tags,notes,virt,has_yabs,has_st,ns1,ns2,DATE_FORMAT(`owned_since`, '%M %Y') as owned_since, `owned_since` as owned_since_raw, `4k`,`4k_type`,`64k`,`64k_type`,`512k`,`512k_type`,`1m`,`1m_type`,
+              is_dedicated,is_cpu_dedicated,was_special,os,ssh_port,still_have,tags,notes,label,virt,has_yabs,has_st,ns1,ns2,DATE_FORMAT(`owned_since`, '%M %Y') as owned_since, `owned_since` as owned_since_raw, `4k`,`4k_type`,`64k`,`64k_type`,`512k`,`512k_type`,`1m`,`1m_type`,
               loc.name as location,price,currency,term,as_usd,per_month,next_dd,pr.name as provider
               FROM servers INNER JOIN disk_speed ds on servers.id = ds.server_id
             INNER JOIN locations loc on servers.location = loc.id
@@ -1297,6 +1297,12 @@ class idlers extends helperFunctions
         $this->hiddenInput('action', 'update');
         $this->hiddenInput('type', 'server_modal_edit');
         $this->tagClose('div', 2);
+
+        $this->rowColOpen('form-row', 'col-12');
+        $this->tagOpen('div', 'input-group');
+        $this->inputPrepend('Label');
+        $this->textInput('me_label', '', 'form-control', false, 1, 24);
+        $this->tagClose('div', 3);
 
         $this->rowColOpen('form-row', 'col-md-6');
         $this->tagOpen('div', 'input-group');
@@ -1994,12 +2000,17 @@ class idlers extends helperFunctions
         $this->tagClose('select');
         $this->tagClose('div', 3);
 
-        $this->rowColOpen('form-row', 'col-12 col-md-6');
+        $this->rowColOpen('form-row', 'col-12 col-md-4');
+        $this->tagOpen('div', 'input-group');
+        $this->inputPrepend('Label');
+        $this->textInput('label', '', 'form-control', false, 1, 24);
+        $this->tagClose('div', 2);
+        $this->colOpen('col-12 col-md-4');
         $this->tagOpen('div', 'input-group');
         $this->inputPrepend('IPv4');
         $this->textInput('ipv4', '', 'form-control', false, 4, 124);
         $this->tagClose('div', 2);
-        $this->colOpen('col-12 col-md-6');
+        $this->colOpen('col-12 col-md-4');
         $this->tagOpen('div', 'input-group');
         $this->inputPrepend('IPv6');
         $this->textInput('ipv6', '', 'form-control', false, 4, 124);
@@ -2196,11 +2207,8 @@ class idlers extends helperFunctions
         if (!isset($data)) {//returned no data
             exit;
         }
-        if (is_null($data['ipv6']) || empty($data['ipv6'])) {
-            $ipv6 = '-';
-        } else {
-            $ipv6 = $data['ipv6'];
-        }
+        (is_null($data['ipv6']) || empty($data['ipv6'])) ? $ipv6 = '-' : $ipv6 = $data['ipv6'];
+
         ($data['has_yabs'] == 1) ? $has_yabs = true : $has_yabs = false;
         ($data['has_st'] == 1) ? $has_st = true : $has_st = false;
         $this->tagOpen('div', 'modal-header');
@@ -2208,6 +2216,16 @@ class idlers extends helperFunctions
         $this->outputString('<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
         $this->tagClose('div');
         $this->tagOpen('div', 'modal-body');
+
+        if (!is_null($data['label']) || !empty($data['label'])) {
+            $this->rowColOpen('row m-row', 'col-4');
+            $this->HTMLphrase('p', 'm-desc', 'Label');
+            $this->tagClose('div');
+            $this->colOpen('col-8');
+            $this->outputString('<p class="m-value">' . $data['label'] . '</p>');
+            $this->tagClose('div', 2);
+        }
+
         $this->rowColOpen('row m-row', 'col-4');
         $this->HTMLphrase('p', 'm-desc', 'IPv4');
         $this->tagClose('div');
@@ -3182,10 +3200,11 @@ class itemInsert extends idlers
         (isset($data['was_offer'])) ? $offer = 1 : $offer = 0;
         (empty($data['ipv4'])) ? $ipv4 = null : $ipv4 = $data['ipv4'];
         (empty($data['ipv6'])) ? $ipv6 = null : $ipv6 = $data['ipv6'];
+        (empty($data['label'])) ? $label = null : $label = $data['label'];
         $location_id = $this->handleLocation($data['location']);
         $provider_id = $this->handleProvider($data['provider']);
-        $insert = $this->dbConnect()->prepare('INSERT IGNORE INTO `servers` (id, hostname, location, provider, ipv4,ipv6, owned_since, os, is_cpu_dedicated, is_dedicated, was_special, bandwidth, virt, has_yabs, ns1, ns2, ssh_port) VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?)');
-        $insert->execute([$item_id, $data['hostname'], $location_id, $provider_id, $ipv4, $ipv6, $data['owned_since'], $data['os'], $dedi_cpu, $dedi, $offer, $data['bandwidth'], $data['virt'], $data['has_yabs'], $data['ns1'], $data['ns2'], $data['ssh_port']]);
+        $insert = $this->dbConnect()->prepare('INSERT IGNORE INTO `servers` (id, hostname, location, provider, ipv4,ipv6, owned_since, os, is_cpu_dedicated, is_dedicated, was_special, bandwidth, virt, has_yabs, ns1, ns2, ssh_port, label) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)');
+        $insert->execute([$item_id, $data['hostname'], $location_id, $provider_id, $ipv4, $ipv6, $data['owned_since'], $data['os'], $dedi_cpu, $dedi, $offer, $data['bandwidth'], $data['virt'], $data['has_yabs'], $data['ns1'], $data['ns2'], $data['ssh_port'], $label]);
         $this->insertPrice($data['price'], $data['currency'], $data['term'], $data['next_due_date']);
         return $item_id;
     }
@@ -3199,13 +3218,14 @@ class itemInsert extends idlers
         (isset($data['was_offer'])) ? $offer = 1 : $offer = 0;
         (empty($data['ipv4'])) ? $ipv4 = null : $ipv4 = $data['ipv4'];
         (empty($data['ipv6'])) ? $ipv6 = null : $ipv6 = $data['ipv6'];
+        (empty($data['label'])) ? $label = null : $label = $data['label'];
         ($data['ram_type'] == 'GB') ? $ram_mb = $this->GBtoMB($data['ram']) : $ram_mb = $data['ram'];
         ($data['swap_type'] == 'GB') ? $swap_mb = $this->GBtoMB($data['swap']) : $swap_mb = $data['swap'];
         ($data['disk_type'] == 'TB') ? $disk_gb = $this->TBtoGB($data['disk']) : $disk_gb = $data['disk'];
         $location_id = $this->handleLocation($data['location']);
         $provider_id = $this->handleProvider($data['provider']);
-        $insert = $this->dbConnect()->prepare('INSERT IGNORE INTO `servers` (id, hostname, location, provider, ipv4,ipv6, owned_since, os, is_cpu_dedicated, is_dedicated, was_special, bandwidth, virt, cpu, cpu_freq, ram, ram_type, swap, swap_type, disk, disk_type, ram_mb, swap_mb, disk_gb, ns1, ns2, ssh_port) VALUES (?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)');
-        $insert->execute([$item_id, $data['hostname'], $location_id, $provider_id, $ipv4, $ipv6, $data['owned_since'], $data['os'], $dedi_cpu, $dedi, $offer, $data['bandwidth'], $data['virt'], $data['cpu_amount'], $data['cpu_speed'], $data['ram'], $data['ram_type'], $data['swap'], $data['swap_type'], $data['disk'], $data['disk_type'], $ram_mb, $swap_mb, $disk_gb, $data['ns1'], $data['ns2'], $data['ssh_port']]);
+        $insert = $this->dbConnect()->prepare('INSERT IGNORE INTO `servers` (id, hostname, location, provider, ipv4,ipv6, owned_since, os, is_cpu_dedicated, is_dedicated, was_special, bandwidth, virt, cpu, cpu_freq, ram, ram_type, swap, swap_type, disk, disk_type, ram_mb, swap_mb, disk_gb, ns1, ns2, ssh_port, label) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)');
+        $insert->execute([$item_id, $data['hostname'], $location_id, $provider_id, $ipv4, $ipv6, $data['owned_since'], $data['os'], $dedi_cpu, $dedi, $offer, $data['bandwidth'], $data['virt'], $data['cpu_amount'], $data['cpu_speed'], $data['ram'], $data['ram_type'], $data['swap'], $data['swap_type'], $data['disk'], $data['disk_type'], $ram_mb, $swap_mb, $disk_gb, $data['ns1'], $data['ns2'], $data['ssh_port'], $label]);
         $this->insertPrice($data['price'], $data['currency'], $data['term'], $data['next_due_date']);
         return $item_id;
     }
@@ -3385,8 +3405,8 @@ class itemUpdate extends idlers
         } elseif ($data['me_non_active'] == 'on') {
             $this->updateActiveStatus(0);
         }
-        $update = $this->dbConnect()->prepare("UPDATE `servers` SET `hostname` = ?,`ipv4` = ?,`ipv6` = ?,`cpu` = ?,`bandwidth` = ?,`disk` = ?,`ram` = ?,`ram_type` = ?,`swap` = ?,`swap_type` = ?, `virt` = ?, `tags` = ?, `owned_since` = ?, `ns1` = ?, `ns2` = ?, `ssh_port` = ?, `notes` = ? WHERE `id`= ? LIMIT 1;");
-        return $update->execute([$data['me_hostname'], $data['me_ipv4'], $data['me_ipv6'], $data['me_cpu_amount'], $data['me_bandwidth'], $data['me_disk'], $data['me_ram'], $data['me_ram_type'], $data['me_swap'], $data['me_swap_type'], $data['me_virt'], $data['me_tags'], $data['me_owned_since'], $data['me_ns1'], $data['me_ns2'], $data['me_ssh_port'], $data['me_notes'], $this->item_id]);
+        $update = $this->dbConnect()->prepare("UPDATE `servers` SET `hostname` = ?,`ipv4` = ?,`ipv6` = ?,`cpu` = ?,`bandwidth` = ?,`disk` = ?,`ram` = ?,`ram_type` = ?,`swap` = ?,`swap_type` = ?, `virt` = ?, `tags` = ?, `owned_since` = ?, `ns1` = ?, `ns2` = ?, `ssh_port` = ?, `notes` = ?, `label` = ? WHERE `id`= ? LIMIT 1;");
+        return $update->execute([$data['me_hostname'], $data['me_ipv4'], $data['me_ipv6'], $data['me_cpu_amount'], $data['me_bandwidth'], $data['me_disk'], $data['me_ram'], $data['me_ram_type'], $data['me_swap'], $data['me_swap_type'], $data['me_virt'], $data['me_tags'], $data['me_owned_since'], $data['me_ns1'], $data['me_ns2'], $data['me_ssh_port'], $data['me_notes'], $data['me_label'], $this->item_id]);
     }
 
     public function updateServerPricingFromModal()
