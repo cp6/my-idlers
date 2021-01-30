@@ -2108,11 +2108,11 @@ class idlers extends helperFunctions
     public function searchResults(string $search_term)
     {
         if (!empty($search_term)) {
-            $select = $this->dbConnect()->prepare("SELECT `id`, `hostname`,`ipv4`, `virt`, p.price, p.currency, p.term  FROM `servers` INNER JOIN pricing p on servers.id = p.server_id WHERE `hostname` LIKE ? OR `ipv4` LIKE ? LIMIT 30;");
-            $select->execute(["%$search_term%", "%$search_term%"]);
+            $select = $this->dbConnect()->prepare("SELECT `id`, `hostname`,`ipv4`, `virt`, `tags`, `label`, p.price, p.currency, p.term  FROM `servers` INNER JOIN pricing p on servers.id = p.server_id WHERE `hostname` LIKE ? OR `ipv4` LIKE ? OR `tags` LIKE ?  OR `label` LIKE ? LIMIT 30;");
+            $select->execute(["%$search_term%", "%$search_term%", "%$search_term%", "%$search_term%"]);
             while ($row = $select->fetch(PDO::FETCH_ASSOC)) {
                 $this->rowColOpen('row search-result', 'col-6');
-                $this->outputString("<p class='m-value'>{$row['hostname']} <code>{$row['ipv4']}</code> <span class='data-type'>{$row['virt']}</span> {$row['price']} {$row['currency']} <span class='data-type'>" . $this->paymentTerm($row['term']) . "</span></p>");
+                $this->outputString("<p class='m-value'>{$row['hostname']} <code>{$row['ipv4']}</code> <span class='data-type'>{$row['virt']}</span> {$row['price']} {$row['currency']} <span class='data-type'>" . $this->paymentTerm($row['term']) . "</span> <code>{$row['label']}</code></p>");
                 $this->tagClose('div');
                 $this->colOpen('col-3');
                 $this->outputString('<a class="btn btn-main" id="viewMoreServer" value="' . $row['id'] . '" data-target="#viewMoreServerModal" data-toggle="modal" href="#" role="button">View</a>');
