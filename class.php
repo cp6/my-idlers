@@ -1563,6 +1563,27 @@ class idlers extends helperFunctions
         $this->tagClose('div', 4);
     }
 
+    protected function attachDomainInput()
+    {
+        $this->rowColOpen('form-row', 'col-12');
+        $this->tagOpen('div', 'input-group');
+        $this->inputPrepend('Attached to');
+        $this->selectElement('d_me_attached_to');
+        $select_servers = $this->dbConnect()->prepare("SELECT `id`, `hostname` FROM `servers`;");
+        $select_servers->execute();
+        $this->selectOption('', '', true);//Empty option for when not attached
+        while ($row = $select_servers->fetch(PDO::FETCH_ASSOC)) {
+            $this->selectOption($row['hostname'], $row['id']);
+        }
+        $select_shared = $this->dbConnect()->prepare("SELECT `id`, `domain` FROM `shared_hosting`;");
+        $select_shared->execute();
+        while ($row = $select_shared->fetch(PDO::FETCH_ASSOC)) {
+            $this->selectOption($row['domain'], $row['id']);
+        }
+        $this->tagClose('select');
+        $this->tagClose('div', 3);
+    }
+
     public function editDomainModal()
     {
         $this->outputString('<div class="modal fade" id="editModalDomain" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">');
@@ -1622,6 +1643,8 @@ class idlers extends helperFunctions
         $this->CurrencySelectOptions();
         $this->tagClose('select');
         $this->tagClose('div', 3);
+
+        $this->attachDomainInput();
 
         $this->rowColOpen('form-row', 'col-12');
         $this->tagOpen('div', 'input-group');
@@ -2573,6 +2596,15 @@ class idlers extends helperFunctions
         $this->outputString('<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
         $this->tagClose('div');
         $this->tagOpen('div', 'modal-body');
+
+        $this->rowColOpen('row m-row', 'col-4');
+        $this->HTMLphrase('p', 'm-desc', 'Attached to');
+        $this->tagClose('div');
+        $this->colOpen('col-8');
+        $this->outputString('<code><p class="m-value">' . $this->idToObjectName($data['attached_to']) . '</p></code>');
+        $this->tagClose('div', 2);
+
+
         $this->rowColOpen('row m-row', 'col-4');
         $this->HTMLphrase('p', 'm-desc', 'NS2');
         $this->tagClose('div');
@@ -3104,6 +3136,30 @@ class idlers extends helperFunctions
         $this->tagClose('div', 2);
     }
 
+    protected function idToObjectName(string $id)
+    {//Returns a hostname or domain for an id
+        $servers = $this->dbConnect()->prepare("SELECT `hostname` FROM `servers` WHERE `id` = ? LIMIT 1;");
+        $servers->execute([$id]);
+        $servers_res = $servers->fetch(PDO::FETCH_ASSOC);
+        if ($servers_res) {
+            return $servers_res['hostname'];
+        } else {
+            $shared = $this->dbConnect()->prepare("SELECT `domain` FROM `shared_hosting` WHERE `id` = ? LIMIT 1;");
+            $shared->execute([$id]);
+            $shared_res = $shared->fetch(PDO::FETCH_ASSOC);
+            if ($shared_res) {
+                return $shared_res['domain'];
+            } else {
+                $domain = $this->dbConnect()->prepare("SELECT `domain` FROM `domains` WHERE `id` = ? LIMIT 1;");
+                $domain->execute([$id]);
+                $domain_res = $domain->fetch(PDO::FETCH_ASSOC);
+                if ($domain_res) {
+                    return $domain_res['domain'];
+                }
+            }
+        }
+        return $id;
+    }
 }
 
 class itemInsert extends idlers
@@ -3369,8 +3425,9 @@ class itemUpdate extends idlers
         } elseif ($data['d_me_non_active'] == 'on') {
             $this->updateActiveStatus(0);
         }
-        $update = $this->dbConnect()->prepare("UPDATE `domains` SET `domain` = ?,`ns1` = ?,`ns2` = ?,`owned_since` = ? WHERE `id`= ? LIMIT 1;");
-        return $update->execute([$data['d_me_hostname'], $data['d_me_ns1'], $data['d_me_ns2'], $data['d_me_owned_since'], $this->item_id]);
+        (!empty($_POST['d_me_attached_to'])) ? $attached_to = $_POST['d_me_attached_to'] : $attached_to = null;
+        $update = $this->dbConnect()->prepare("UPDATE `domains` SET `domain` = ?,`ns1` = ?,`ns2` = ?,`owned_since` = ?, `attached_to` = ? WHERE `id`= ? LIMIT 1;");
+        return $update->execute([$data['d_me_hostname'], $data['d_me_ns1'], $data['d_me_ns2'], $data['d_me_owned_since'], $attached_to, $this->item_id]);
     }
 
     public function updateDomainPricingFromModal()
