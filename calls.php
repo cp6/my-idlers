@@ -40,6 +40,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $idle->getIpForDomain($_GET['hostname'], $_GET['dns_type']);
         } elseif ($_GET['type'] == 'check_up') {
             echo $idle->checkIsUp($_GET['host']);
+        } elseif ($_GET['type'] == 'object_cards') {
+            header('Content-Type: text/html; charset=utf-8');
+            echo $idle->objectCards();
         } elseif ($_GET['type'] == 'object_tables') {
             header('Content-Type: text/html; charset=utf-8');
             echo $idle->objectTables();

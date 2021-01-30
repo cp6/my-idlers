@@ -17,6 +17,8 @@ class idlersConfig
 
     //Have slight background color for server table values: was special price and due soon
     const COLOR_TABLE = true;
+
+    const DEFAULT_VIEW = 'CARDS';//CARDS or TABLE
 }
 
 class elementHelpers extends idlersConfig
@@ -598,12 +600,17 @@ class idlers extends helperFunctions
         $this->outputString('<div id="myTabContent" class="tab-content">');
         $this->outputString('<div class="tab-pane server-cards fade active show" id="services">');
         $this->viewSwitcherIcon();
-        $this->tagOpen('div', '', 'cardsViewDiv');
-        $this->serverCards();
-        $this->sharedHostingCards();
-        $this->domainCards();
+        if (self::DEFAULT_VIEW == 'CARDS') {
+            $cards_start = 'active';
+            $table_start = '';
+        } else {
+            $cards_start = '';
+            $table_start = 'active';
+        }
+        $this->tagOpen('div', $cards_start, 'cardsViewDiv');
+        //Object cards
         $this->tagClose('div');
-        $this->tagOpen('div', '', 'tableViewDiv');
+        $this->tagOpen('div', $table_start, 'tableViewDiv');
         //Objects tables
         $this->tagClose('div', 2);
         $this->outputString('<div class="tab-pane fade" id="add_server">');
@@ -979,6 +986,13 @@ class idlers extends helperFunctions
         } else {
             return $location;
         }
+    }
+
+    public function objectCards()
+    {
+        $this->serverCards();
+        $this->sharedHostingCards();
+        $this->domainCards();
     }
 
     public function objectTables()
@@ -3082,7 +3096,11 @@ class idlers extends helperFunctions
     protected function viewSwitcherIcon()
     {
         $this->rowColOpen('row text-center', 'col-12');
-        $this->outputString('<a id="viewSwitcherIcon"><i class="fas fa-table" id="viewSwitchIcon" title="Switch to table"></i></a>');
+        if (self::DEFAULT_VIEW == 'CARDS') {
+            $this->outputString('<a id="viewSwitcherIcon"><i class="fas fa-table" id="viewSwitchIcon" title="Switch to table"></i></a>');
+        } else {
+            $this->outputString('<a id="viewSwitcherIcon"><i class="fas fa-th" id="viewSwitchIcon" title="Switch to cards"></i></a>');
+        }
         $this->tagClose('div', 2);
     }
 
