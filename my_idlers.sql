@@ -292,6 +292,7 @@ CREATE TABLE IF NOT EXISTS `servers`
 (
     `id`               char(8) NOT NULL,
     `hostname`         varchar(124) DEFAULT NULL,
+    `label` varchar(24) DEFAULT NULL,
     `location`         int(11)      DEFAULT NULL,
     `provider`         int(11)      DEFAULT NULL,
     `ipv4`             varchar(124) DEFAULT NULL,
