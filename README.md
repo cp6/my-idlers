@@ -5,23 +5,21 @@ A web app for displaying, organizing and storing information about servers (VPS)
 Despite what the name infers this self hosted web app isn't just for storing idling server information. 
 By using a [YABs](https://github.com/masonr/yet-another-bench-script) output you can get disk & network speed values along with GeekBench 5 scores to do easier comparing and sorting.
 
-[![Generic badge](https://img.shields.io/badge/version-1.2-blue.svg)](https://shields.io/)
+[![Generic badge](https://img.shields.io/badge/version-1.3-blue.svg)](https://shields.io/)
 
-## 1.2 changes:
-**If you have version 1.1 or less already installed please run ```update.sql```**
-* Added table view type (use switcher icon to change to this view)
-* Added auto get IPv4/IPv6 based on hostname (Click icon at hostname input)
-* Added up/down status (Click OS icon)
-* Updated the order by table for better formatting
-* Removed unused buttons from the CSS
-* Updated Minor style changes
-* Updated `update.sql` for pre-existing installations only.
-* Updated when type DEDI selected "is_dedi" will be toggled
-* Updated IPv4 no longer required field
-* Fixed no location and/or provider causing uneven cards
-* Updated delete labels
-* Updated domain terms to be annual and longer only
-* Fixed error when all speedtests are "busy"
+## 1.3 changes:
+**If you have version 1.2 already installed please run ```update1.2to1.3.sql```**
+* Added constant to set main view type (cards or table).
+* Fixed DNS GET requests.
+* Added label field/input for servers.
+* Fixed domain & shared hosting deletion.
+* Updated to dns_get_record() instead of DNS API calling.
+* Added KB/s to MB/s conversion.
+* Fixed active status for view type div.
+* Added attach domain to server or shared hosting.
+* Updated search to include tags and labels.
+* Updated server view more modal formatting.
+* Updated server edit modal formatting.
 * Updated `my_idlers.sql` for changes
 
 ## Requires
@@ -45,6 +43,7 @@ By using a [YABs](https://github.com/masonr/yet-another-bench-script) output you
 * Multi payment-term compatibility
 * Pre-defined operating systems
 * Assign tags
+* Assign labels
 * Assign server type (KVM, OVZ, LXC & dedi)
 * Easy to edit values
 * Order by table
@@ -57,10 +56,12 @@ By using a [YABs](https://github.com/masonr/yet-another-bench-script) output you
 * Download [the zip](https://github.com/cp6/my-idlers/archive/main.zip) and unpack the files from ```my-idlers-main/``` into your directory of choice.
 * Run `my_idlers.sql` in MySQL.
   
-* **Only run ```update.sql``` if you have version 1.1 or less already installed.**
+* **Only run ```update1.2to1.3.sql``` if you have version 1.2 installed.**
   
 * Edit ```class.php``` lines ```13-16``` for your MySQL details.
 * Edit ```class.php``` lines ```8-10``` for card order type.
+
+* Make sure you have write access to process and store the YABs outputs.
 
 
 ## Notes

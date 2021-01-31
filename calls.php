@@ -40,6 +40,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $idle->getIpForDomain($_GET['hostname'], $_GET['dns_type']);
         } elseif ($_GET['type'] == 'check_up') {
             echo $idle->checkIsUp($_GET['host']);
+        } elseif ($_GET['type'] == 'object_cards') {
+            header('Content-Type: text/html; charset=utf-8');
+            echo $idle->objectCards();
         } elseif ($_GET['type'] == 'object_tables') {
             header('Content-Type: text/html; charset=utf-8');
             echo $idle->objectTables();
@@ -64,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             }
         } elseif (isset($_POST['action']) && $_POST['action'] == 'update') {
             $update = new itemUpdate($_POST);
-            if (isset($_POST['me_delete'])) {//Delete object
+            if (isset($_POST['me_delete']) || isset($_POST['sh_me_delete']) || isset($_POST['d_me_delete'])) {//Delete object
                 $update->deleteObjectData();
             } elseif ($_POST['type'] == 'server_modal_edit') {//Update the server info
                 $update->updateServerFromModal();

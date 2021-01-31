@@ -57,10 +57,6 @@ body {
     .container {
         max-width: 960px
     }
-
-    .modal-lg {
-        max-width: 800px;
-    }
 }
 
 @media (min-width: 1200px) {
@@ -196,6 +192,10 @@ body {
     }
 }
 
+.mm-col {
+    margin-bottom: 0.2rem;
+}
+
 [tabindex="-1"]:focus {
     outline: 0 !important
 }
@@ -249,7 +249,7 @@ a:hover {
 
 code {
     font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-    font-size: 87.5%;
+    font-size: 82%;
     color: #e83e8c;
     word-break: break-word
 }
@@ -1533,5 +1533,11 @@ input:checked + .slider:before {
 @media only screen and (max-width: 620px) {
     .btn-bar-col {
         overflow-x: scroll
+    }
+}
+
+@media (min-width: 992px) {
+    .modal-lg {
+        max-width: 800px;
     }
 }

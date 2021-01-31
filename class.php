@@ -17,6 +17,8 @@ class idlersConfig
 
     //Have slight background color for server table values: was special price and due soon
     const COLOR_TABLE = true;
+
+    const DEFAULT_VIEW = 'CARDS';//CARDS or TABLE
 }
 
 class elementHelpers extends idlersConfig
@@ -523,9 +525,11 @@ class helperFunctions extends elementHelpers
     }
 
     protected function diskSpeedAsMbps(string $type, string $value)
-    {//If value type GB/s convert to MB/s
+    {//If value type GB/s convert to MB/s, KB/s to MB/s
         if ($type == "GB/s") {
             return $this->GBpstoMBps($value);
+        } elseif ($type == "KB/s") {
+            return ($value / 1000);
         } else {
             return $value;
         }
@@ -596,12 +600,17 @@ class idlers extends helperFunctions
         $this->outputString('<div id="myTabContent" class="tab-content">');
         $this->outputString('<div class="tab-pane server-cards fade active show" id="services">');
         $this->viewSwitcherIcon();
-        $this->tagOpen('div', '', 'cardsViewDiv');
-        $this->serverCards();
-        $this->sharedHostingCards();
-        $this->domainCards();
+        if (self::DEFAULT_VIEW == 'CARDS') {
+            $cards_start = 'active';
+            $table_start = '';
+        } else {
+            $cards_start = '';
+            $table_start = 'active';
+        }
+        $this->tagOpen('div', $cards_start, 'cardsViewDiv');
+        //Object cards
         $this->tagClose('div');
-        $this->tagOpen('div', '', 'tableViewDiv');
+        $this->tagOpen('div', $table_start, 'tableViewDiv');
         //Objects tables
         $this->tagClose('div', 2);
         $this->outputString('<div class="tab-pane fade" id="add_server">');
@@ -647,7 +656,7 @@ class idlers extends helperFunctions
         $this->editDomainModal();
 
         $this->outputString('<div class="modal fade" id="viewMoreServerModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">');
-        $this->outputString('<div class="modal-dialog" role="document">');
+        $this->outputString('<div class="modal-dialog modal-lg" role="document">');
         $this->outputString('<div class="modal-content" id="viewMoreModalBody">');
         $this->tagClose('div', 3);
 
@@ -714,8 +723,8 @@ class idlers extends helperFunctions
         if ($row['has_yabs'] == 1 && $row['has_st'] == 1) {
             $select = $this->dbConnect()->prepare("
               SELECT servers.id as server_id,hostname,ipv4,ipv6,`cpu`,cpu_type,cpu_freq,ram,ram_type,swap,swap_type,`disk`,disk_type,bandwidth,bandwidth_type,gb5_single,gb5_multi,gb5_id,aes_ni,amd_v,
-              is_dedicated,is_cpu_dedicated,was_special,os,ssh_port,still_have,tags,notes,virt,has_yabs,has_st,ns1,ns2,DATE_FORMAT(`owned_since`, '%M %Y') as owned_since, `owned_since` as owned_since_raw, `4k`,`4k_type`,`64k`,`64k_type`,`512k`,`512k_type`,`1m`,`1m_type`,
-              loc.name as location,send,send_type,recieve,recieve_type,price,currency,term,as_usd,per_month,next_dd,pr.name as provider
+              is_dedicated,is_cpu_dedicated,was_special,os,ssh_port,still_have,tags,notes,label,virt,has_yabs,has_st,ns1,ns2,DATE_FORMAT(`owned_since`, '%M %Y') as owned_since, `owned_since` as owned_since_raw, `4k`,`4k_type`,`64k`,`64k_type`,`512k`,`512k_type`,`1m`,`1m_type`,
+              loc.name as location,send,send_type,recieve,recieve_type,price,currency,term,as_usd,per_month,usd_per_month,next_dd,pr.name as provider
               FROM servers INNER JOIN disk_speed ds on servers.id = ds.server_id
               INNER JOIN speed_tests st on servers.id = st.server_id INNER JOIN locations loc on servers.location = loc.id
               INNER JOIN providers pr on servers.provider = pr.id INNER JOIN pricing on servers.id = pricing.server_id WHERE servers.id = ? LIMIT 1;");
@@ -729,8 +738,8 @@ class idlers extends helperFunctions
         } elseif ($row['has_yabs'] == 1 && $row['has_st'] == 0) {
             $select = $this->dbConnect()->prepare("
               SELECT servers.id as server_id,hostname,ipv4,ipv6,`cpu`,cpu_type,cpu_freq,ram,ram_type,swap,swap_type,`disk`,disk_type,bandwidth,bandwidth_type,gb5_single,gb5_multi,gb5_id,aes_ni,amd_v,
-              is_dedicated,is_cpu_dedicated,was_special,os,ssh_port,still_have,tags,notes,virt,has_yabs,has_st,ns1,ns2,DATE_FORMAT(`owned_since`, '%M %Y') as owned_since, `owned_since` as owned_since_raw, `4k`,`4k_type`,`64k`,`64k_type`,`512k`,`512k_type`,`1m`,`1m_type`,
-              loc.name as location,price,currency,term,as_usd,per_month,next_dd,pr.name as provider
+              is_dedicated,is_cpu_dedicated,was_special,os,ssh_port,still_have,tags,notes,label,virt,has_yabs,has_st,ns1,ns2,DATE_FORMAT(`owned_since`, '%M %Y') as owned_since, `owned_since` as owned_since_raw, `4k`,`4k_type`,`64k`,`64k_type`,`512k`,`512k_type`,`1m`,`1m_type`,
+              loc.name as location,price,currency,term,as_usd,per_month,usd_per_month,next_dd,pr.name as provider
               FROM servers INNER JOIN disk_speed ds on servers.id = ds.server_id
             INNER JOIN locations loc on servers.location = loc.id
               INNER JOIN providers pr on servers.provider = pr.id INNER JOIN pricing on servers.id = pricing.server_id WHERE servers.id = ? LIMIT 1;");
@@ -740,8 +749,8 @@ class idlers extends helperFunctions
         } else {
             $select = $this->dbConnect()->prepare("
                SELECT servers.id as server_id,hostname,ipv4,ipv6,`cpu`,cpu_type,cpu_freq,ram,ram_type,swap,swap_type,`disk`,disk_type,
-               bandwidth,bandwidth_type,gb5_single,gb5_multi,gb5_id,aes_ni,amd_v,is_dedicated,is_cpu_dedicated,was_special,os,ssh_port,still_have,tags,notes,virt,has_yabs,ns1,ns2,
-               DATE_FORMAT(`owned_since`, '%M %Y') as owned_since,loc.name as location,price,currency,term,as_usd,per_month,next_dd,pr.name as provider
+               bandwidth,bandwidth_type,gb5_single,gb5_multi,gb5_id,aes_ni,amd_v,is_dedicated,is_cpu_dedicated,was_special,os,ssh_port,still_have,tags,notes,virt,has_yabs,ns1,ns2,label,has_st,
+               DATE_FORMAT(`owned_since`, '%M %Y') as owned_since,loc.name as location,price,currency,term,as_usd,per_month,usd_per_month,next_dd,pr.name as provider
                FROM servers INNER JOIN locations loc on servers.location = loc.id
                INNER JOIN providers pr on servers.provider = pr.id INNER JOIN pricing on servers.id = pricing.server_id WHERE servers.id = ? LIMIT 1;");
             $select->execute([$id]);
@@ -977,6 +986,13 @@ class idlers extends helperFunctions
         } else {
             return $location;
         }
+    }
+
+    public function objectCards()
+    {
+        $this->serverCards();
+        $this->sharedHostingCards();
+        $this->domainCards();
     }
 
     public function objectTables()
@@ -1247,7 +1263,7 @@ class idlers extends helperFunctions
     public function editServerModal()
     {
         $this->outputString('<div class="modal fade" id="editServerModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">');
-        $this->outputString('<div class="modal-dialog" role="document">');
+        $this->outputString('<div class="modal-dialog modal-lg" role="document">');
         $this->tagOpen('div', 'modal-content');
         $this->tagOpen('div', 'modal-header');
         $this->outputString('<h4 class="modal-title w-100" id="me_hostname_header"></h4>');
@@ -1258,78 +1274,77 @@ class idlers extends helperFunctions
         $this->tagOpen('div', 'modal-body');
         $this->outputString('<form id="editForm" method="post">');
 
-        $this->rowColOpen('form-row', 'col-8');
+        $this->rowColOpen('form-row', 'col-12 col-md-6');
         $this->outputString('<label for="me_delete">Delete server data</label>');
-        $this->tagClose('div');
-        $this->colOpen('col-4');
         $this->outputString('<label class="switch"><input type="checkbox" name="me_delete" id="me_delete"><span class="slider round"></span></label>');
-        $this->tagClose('div', 2);
-
-        $this->rowColOpen('form-row', 'col-8');
-        $this->outputString('<label for="me_non_active">No longer have (Keep info)</label>');
         $this->tagClose('div');
-        $this->colOpen('col-4');
+        $this->colOpen('col-12 col-md-6');
+        $this->outputString('<label for="me_non_active">No longer have (Keep info)</label>');
         $this->outputString('<label class="switch"><input type="checkbox" name="me_non_active" id="me_non_active"><span class="slider round"></span></label>');
         $this->tagClose('div', 2);
 
-        $this->rowColOpen('form-row', 'col-12');
+        $this->rowColOpen('form-row', 'col-12 col-md-6 mm-col');
         $this->tagOpen('div', 'input-group');
         $this->inputPrepend('Hostname');
         $this->textInput('me_hostname', '', 'form-control', true);
-        $this->tagClose('div');
+        $this->tagClose('div', 2);
+        $this->colOpen('col-12 col-md-6 mm-col');
+        $this->tagOpen('div', 'input-group');
+        $this->inputPrepend('Label');
+        $this->textInput('me_label', '', 'form-control', false, 1, 24);
         $this->hiddenInput('me_server_id');
         $this->hiddenInput('action', 'update');
         $this->hiddenInput('type', 'server_modal_edit');
-        $this->tagClose('div', 2);
+        $this->tagClose('div', 3);
 
-        $this->rowColOpen('form-row', 'col-md-6');
+
+        $this->rowColOpen('form-row', 'col-md-6 mm-col');
         $this->tagOpen('div', 'input-group');
         $this->inputPrepend('NS1');
         $this->textInput('me_ns1', '', 'form-control', false);
         $this->tagClose('div', 2);
-        $this->colOpen('col-12 col-md-6');
+        $this->colOpen('col-12 col-md-6 mm-col');
         $this->tagOpen('div', 'input-group');
         $this->inputPrepend('NS2');
         $this->textInput('me_ns2', '', 'form-control', false);
         $this->tagClose('div', 3);
 
-        $this->rowColOpen('form-row', 'col-6');
+        $this->rowColOpen('form-row', 'col-6 col-md-4 mm-col');
         $this->tagOpen('div', 'input-group');
         $this->inputPrepend('Price');
         $this->numberInput('me_price', '', 'form-control', true, 0, 999, 'any');
         $this->tagClose('div');
         $this->tagClose('div');
-        $this->colOpen('col-6');
+        $this->colOpen('col-6 col-md-4 mm-col');
         $this->tagOpen('div', 'input-group');
         $this->inputPrepend('Term');
         $this->selectElement('me_term');
         $this->termSelectOptions();
         $this->tagClose('select');
-        $this->tagClose('div', 3);
-
-        $this->rowColOpen('form-row', 'col-6');
+        $this->tagClose('div', 2);
+        $this->colOpen('col-6 col-md-4 mm-col');
         $this->tagOpen('div', 'input-group');
         $this->inputPrepend('Currency');
         $this->selectElement('me_currency');
         $this->CurrencySelectOptions();
         $this->tagClose('select');
-        $this->tagClose('div', 2);
-        $this->colOpen('col-6');
+        $this->tagClose('div', 3);
+
+        $this->rowColOpen('form-row', 'col-12 col-md-4 mm-col');
         $this->tagOpen('div', 'input-group');
         $this->inputPrepend('OS');
         $this->selectElement('me_os');
         $this->OsSelectOptions();
         $this->tagClose('select');
-        $this->tagClose('div', 3);
-
-        $this->rowColOpen('form-row', 'col-12 col-md-6');
+        $this->tagClose('div', 2);
+        $this->colOpen('col-12 col-md-4 mm-col');
         $this->tagOpen('div', 'input-group');
         $this->inputPrepend('Virt');
         $this->selectElement('me_virt');
         $this->virtSelectOptions();
         $this->tagClose('select');
         $this->tagClose('div', 2);
-        $this->colOpen('col-12 col-md-6');
+        $this->colOpen('col-12 col-md-4 mm-col');
         $this->tagOpen('div', 'input-group');
         $this->inputPrepend('SSH Port');
         $this->textInput('me_ssh_port');
@@ -1346,24 +1361,23 @@ class idlers extends helperFunctions
         $this->textInput('me_ipv6');
         $this->tagClose('div', 3);
 
-        $this->rowColOpen('form-row', 'col-12');
+        $this->rowColOpen('form-row', 'col-12 col-md-6 mm-col');
         $this->tagOpen('div', 'input-group');
         $this->inputPrepend('Owned since');
         $this->outputString('<input type="date" class="form-control" id="me_owned_since" name="me_owned_since">');
-        $this->tagClose('div', 3);
-
-        $this->rowColOpen('form-row', 'col-12');
+        $this->tagClose('div', 2);
+        $this->colOpen('col-12 col-md-6 mm-col');
         $this->tagOpen('div', 'input-group');
         $this->inputPrepend('Next due date');
         $this->outputString('<input type="date" class="form-control" id="me_next_dd" name="me_next_dd">');
         $this->tagClose('div', 3);
 
-        $this->rowColOpen('form-row', 'col-12 col-md-6');
+        $this->rowColOpen('form-row', 'col-12 col-md-6 mm-col');
         $this->tagOpen('div', 'input-group');
         $this->inputPrepend('CPU amount');
         $this->numberInput('me_cpu_amount', '', 'form-control', false, 1, 48);
         $this->tagClose('div', 2);
-        $this->colOpen('col-12 col-md-6');
+        $this->colOpen('col-12 col-md-6 mm-col');
         $this->tagOpen('div', 'input-group');
         $this->inputPrepend('Bandwidth');
         $this->numberInput('me_bandwidth', '', 'form-control', false, 1, 9999);
@@ -1405,23 +1419,22 @@ class idlers extends helperFunctions
         $this->tagClose('select');
         $this->tagClose('div', 3);
 
-        $this->rowColOpen('form-row', 'col-12');
+        $this->rowColOpen('form-row', 'col-12 col-md-6');
         $this->htmlPhrase('p', 'm-desc', 'Notes:');
         $this->outputString("<textarea class='form-control' id='me_notes' name='me_notes' rows='4' cols='40' maxlength='255'>");
         $this->outputString("</textarea>");
-        $this->tagClose('div', 2);
+        $this->tagClose('div');
+        $this->colOpen('col-12 col-md-6');
+        $this->tagOpen('div', 'input-group');
+        $this->inputPrepend('Tags');
+        $this->tagsInput('me_tags', 'form-control');
+        $this->tagClose('div', 3);
 
         $this->rowColOpen('form-row', 'col-12');
         $this->htmlPhrase('p', 'm-desc', 'Update YABs disk & network speeds:');
         $this->outputString("<textarea class='form-control' id='me_yabs' name='me_yabs' rows='4' cols='40' placeholder='First line must be: # ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## #'>");
         $this->outputString("</textarea>");
         $this->tagClose('div', 2);
-
-        $this->rowColOpen('form-row', 'col-12');
-        $this->tagOpen('div', 'input-group');
-        $this->inputPrepend('Tags');
-        $this->tagsInput('me_tags', 'form-control');
-        $this->tagClose('div', 3);
 
         $this->rowColOpen('form-row text-center', 'col-12');
         $this->submitInput('Update', 'submitInput', 'btn btn-second');
@@ -1547,6 +1560,27 @@ class idlers extends helperFunctions
         $this->tagClose('div', 4);
     }
 
+    protected function attachDomainInput()
+    {
+        $this->rowColOpen('form-row', 'col-12');
+        $this->tagOpen('div', 'input-group');
+        $this->inputPrepend('Attached to');
+        $this->selectElement('d_me_attached_to');
+        $select_servers = $this->dbConnect()->prepare("SELECT `id`, `hostname` FROM `servers`;");
+        $select_servers->execute();
+        $this->selectOption('', '', true);//Empty option for when not attached
+        while ($row = $select_servers->fetch(PDO::FETCH_ASSOC)) {
+            $this->selectOption($row['hostname'], $row['id']);
+        }
+        $select_shared = $this->dbConnect()->prepare("SELECT `id`, `domain` FROM `shared_hosting`;");
+        $select_shared->execute();
+        while ($row = $select_shared->fetch(PDO::FETCH_ASSOC)) {
+            $this->selectOption($row['domain'], $row['id']);
+        }
+        $this->tagClose('select');
+        $this->tagClose('div', 3);
+    }
+
     public function editDomainModal()
     {
         $this->outputString('<div class="modal fade" id="editModalDomain" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">');
@@ -1606,6 +1640,8 @@ class idlers extends helperFunctions
         $this->CurrencySelectOptions();
         $this->tagClose('select');
         $this->tagClose('div', 3);
+
+        $this->attachDomainInput();
 
         $this->rowColOpen('form-row', 'col-12');
         $this->tagOpen('div', 'input-group');
@@ -1955,12 +1991,17 @@ class idlers extends helperFunctions
         $this->tagClose('select');
         $this->tagClose('div', 3);
 
-        $this->rowColOpen('form-row', 'col-12 col-md-6');
+        $this->rowColOpen('form-row', 'col-12 col-md-4');
+        $this->tagOpen('div', 'input-group');
+        $this->inputPrepend('Label');
+        $this->textInput('label', '', 'form-control', false, 1, 24);
+        $this->tagClose('div', 2);
+        $this->colOpen('col-12 col-md-4');
         $this->tagOpen('div', 'input-group');
         $this->inputPrepend('IPv4');
         $this->textInput('ipv4', '', 'form-control', false, 4, 124);
         $this->tagClose('div', 2);
-        $this->colOpen('col-12 col-md-6');
+        $this->colOpen('col-12 col-md-4');
         $this->tagOpen('div', 'input-group');
         $this->inputPrepend('IPv6');
         $this->textInput('ipv6', '', 'form-control', false, 4, 124);
@@ -2058,11 +2099,11 @@ class idlers extends helperFunctions
     public function searchResults(string $search_term)
     {
         if (!empty($search_term)) {
-            $select = $this->dbConnect()->prepare("SELECT `id`, `hostname`,`ipv4`, `virt`, p.price, p.currency, p.term  FROM `servers` INNER JOIN pricing p on servers.id = p.server_id WHERE `hostname` LIKE ? OR `ipv4` LIKE ? LIMIT 30;");
-            $select->execute(["%$search_term%", "%$search_term%"]);
+            $select = $this->dbConnect()->prepare("SELECT `id`, `hostname`,`ipv4`, `virt`, `tags`, `label`, p.price, p.currency, p.term  FROM `servers` INNER JOIN pricing p on servers.id = p.server_id WHERE `hostname` LIKE ? OR `ipv4` LIKE ? OR `tags` LIKE ?  OR `label` LIKE ? LIMIT 30;");
+            $select->execute(["%$search_term%", "%$search_term%", "%$search_term%", "%$search_term%"]);
             while ($row = $select->fetch(PDO::FETCH_ASSOC)) {
                 $this->rowColOpen('row search-result', 'col-6');
-                $this->outputString("<p class='m-value'>{$row['hostname']} <code>{$row['ipv4']}</code> <span class='data-type'>{$row['virt']}</span> {$row['price']} {$row['currency']} <span class='data-type'>" . $this->paymentTerm($row['term']) . "</span></p>");
+                $this->outputString("<p class='m-value'>{$row['hostname']} <code>{$row['ipv4']}</code> <span class='data-type'>{$row['virt']}</span> {$row['price']} {$row['currency']} <span class='data-type'>" . $this->paymentTerm($row['term']) . "</span> <code>{$row['label']}</code></p>");
                 $this->tagClose('div');
                 $this->colOpen('col-3');
                 $this->outputString('<a class="btn btn-main" id="viewMoreServer" value="' . $row['id'] . '" data-target="#viewMoreServerModal" data-toggle="modal" href="#" role="button">View</a>');
@@ -2157,11 +2198,8 @@ class idlers extends helperFunctions
         if (!isset($data)) {//returned no data
             exit;
         }
-        if (is_null($data['ipv6']) || empty($data['ipv6'])) {
-            $ipv6 = '-';
-        } else {
-            $ipv6 = $data['ipv6'];
-        }
+        (is_null($data['ipv6']) || empty($data['ipv6'])) ? $ipv6 = '-' : $ipv6 = $data['ipv6'];
+
         ($data['has_yabs'] == 1) ? $has_yabs = true : $has_yabs = false;
         ($data['has_st'] == 1) ? $has_st = true : $has_st = false;
         $this->tagOpen('div', 'modal-header');
@@ -2169,157 +2207,125 @@ class idlers extends helperFunctions
         $this->outputString('<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
         $this->tagClose('div');
         $this->tagOpen('div', 'modal-body');
-        $this->rowColOpen('row m-row', 'col-4');
-        $this->HTMLphrase('p', 'm-desc', 'IPv4');
-        $this->tagClose('div');
-        $this->colOpen('col-8');
-        $this->outputString('<code><p class="m-value">' . $data['ipv4'] . '</p></code>');
-        $this->tagClose('div', 2);
 
-        $this->rowColOpen('row m-row', 'col-4');
-        $this->HTMLphrase('p', 'm-desc', 'IPv6');
+        if (!is_null($data['label']) || !empty($data['label'])) {
+            $this->rowColOpen('row m-row', 'col-4 mm-col');
+            $this->HTMLphrase('p', 'm-desc', 'Label');
+            $this->tagClose('div');
+            $this->colOpen('col-8');
+            $this->outputString('<p class="m-value">' . $data['label'] . '</p>');
+            $this->tagClose('div', 2);
+        }
+
+        $this->rowColOpen('row m-row', 'col-12 col-md-6 mm-col');
+        $this->HTMLphrase('p', 'm-desc', 'IPv4 ');
+        $this->outputString('<code><p class="m-value">' . $data['ipv4'] . '</p></code>');
         $this->tagClose('div');
-        $this->colOpen('col-8');
+        $this->colOpen('col-12 col-md-6 mm-col');
+        $this->HTMLphrase('p', 'm-desc', 'IPv6 ');
         $this->outputString('<code><p class="m-value">' . $ipv6 . '</p></code>');
         $this->tagClose('div', 2);
 
-        $this->rowColOpen('row m-row', 'col-4');
-        $this->HTMLphrase('p', 'm-desc', 'NS1');
-        $this->tagClose('div');
-        $this->colOpen('col-8');
+        $this->rowColOpen('row m-row', 'col-12 col-md-6 mm-col');
+        $this->HTMLphrase('p', 'm-desc', 'NS1 ');
         $this->outputString('<code><p class="m-value">' . $data['ns1'] . '</p></code>');
-        $this->tagClose('div', 2);
-        $this->rowColOpen('row m-row', 'col-4');
-        $this->HTMLphrase('p', 'm-desc', 'NS2');
         $this->tagClose('div');
-        $this->colOpen('col-8');
+        $this->colOpen('col-12 col-md-6 mm-col');
+        $this->HTMLphrase('p', 'm-desc', 'NS2 ');
         $this->outputString('<code><p class="m-value">' . $data['ns2'] . '</p></code>');
         $this->tagClose('div', 2);
 
-        $this->rowColOpen('row m-row', 'col-4');
-        $this->HTMLphrase('p', 'm-desc', 'SSH Port');
-        $this->tagClose('div');
-        $this->colOpen('col-8');
-        $this->HTMLphrase('p', 'm-value', '<code>' . $data['ssh_port'] . '</code>');
-        $this->tagClose('div', 2);
-
-        $this->rowColOpen('row m-row', 'col-4');
-        $this->HTMLphrase('p', 'm-desc', 'Bandwidth');
-        $this->tagClose('div');
-        $this->colOpen('col-8');
-        $this->HTMLphrase('p', 'm-value', '' . $data['bandwidth'] . '<span class="data-type">' . $data['bandwidth_type'] . '</span>');
-        $this->tagClose('div', 2);
-
-        $this->rowColOpen('row m-row', 'col-4');
-        $this->HTMLphrase('p', 'm-desc', 'Disk');
-        $this->tagClose('div');
-        $this->colOpen('col-8');
-        $this->HTMLphrase('p', 'm-value', '' . $data['disk'] . '<span class="data-type">' . $data['disk_type'] . '</span>');
-        $this->tagClose('div', 2);
-
-        $this->rowColOpen('row m-row', 'col-4');
-        $this->HTMLphrase('p', 'm-desc', 'Location');
-        $this->tagClose('div');
-        $this->colOpen('col-8');
+        $this->rowColOpen('row m-row', 'col-12 col-md-6 mm-col');
+        $this->HTMLphrase('p', 'm-desc', 'Location ');
         $this->HTMLphrase('p', 'm-value', $data['location']);
-        $this->tagClose('div', 2);
-
-        $this->rowColOpen('row m-row', 'col-4');
-        $this->HTMLphrase('p', 'm-desc', 'Provider');
         $this->tagClose('div');
-        $this->colOpen('col-8');
+        $this->colOpen('col-12 col-md-6 mm-col');
+        $this->HTMLphrase('p', 'm-desc', 'Provider ');
         $this->HTMLphrase('p', 'm-value', $data['provider']);
         $this->tagClose('div', 2);
 
-        $this->rowColOpen('row m-row', 'col-4');
-        $this->HTMLphrase('p', 'm-desc', 'OS');
-        $this->tagClose('div');
-        $this->colOpen('col-8');
+        $this->rowColOpen('row m-row', 'col-12 col-md-6 mm-col');
+        $this->HTMLphrase('p', 'm-desc', 'OS ');
         $this->HTMLphrase('p', 'm-value', $this->osIntToString($data['os']));
-        $this->tagClose('div', 2);
-
-        $this->rowColOpen('row m-row', 'col-4');
-        $this->HTMLphrase('p', 'm-desc', 'Due in');
         $this->tagClose('div');
-        $this->colOpen('col-8');
+        $this->colOpen('col-12 col-md-6 mm-col');
+        $this->HTMLphrase('p', 'm-desc', 'Due in ');
         $this->HTMLphrase('p', 'm-value', '' . $this->processDueDate($data['server_id'], $data['term'], $data['next_dd']) . '<span class="data-type">days</span>');
         $this->tagClose('div', 2);
 
-        $this->rowColOpen('row m-section-row', 'col-12 text-center');
-        $this->HTMLphrase('p', 'm-section-text', 'CPU');
+        $this->rowColOpen('row m-row', 'col-12 col-md-6 mm-col');
+        $this->HTMLphrase('p', 'm-desc', 'Bandwidth ');
+        $this->HTMLphrase('p', 'm-value', '' . $data['bandwidth'] . '<span class="data-type">' . $data['bandwidth_type'] . '</span>');
+        $this->tagClose('div');
+        $this->colOpen('col-12 col-md-6 mm-col');
+        $this->HTMLphrase('p', 'm-desc', 'SSH Port ');
+        $this->outputString('<code><p class="m-value">' . $data['ssh_port'] . '</p></code>');
         $this->tagClose('div', 2);
 
-        $this->rowColOpen('row m-row', 'col-4');
-        $this->HTMLphrase('p', 'm-desc', 'Amount');
-        $this->tagClose('div');
-        $this->colOpen('col-8');
+        $this->rowColOpen('row m-row', 'col-12 col-md-6 mm-col');
+        $this->HTMLphrase('p', 'm-desc', 'Disk ');
+        $this->HTMLphrase('p', 'm-value', '' . $data['disk'] . '<span class="data-type">' . $data['disk_type'] . '</span>');
+        $this->tagClose('div', 2);
+
+        $this->rowColOpen('row m-section-row', 'col-12 col-md-6');
+        $this->HTMLphrase('p', 'm-section-text text-center', 'CPU');
+        $this->rowColOpen('row m-row', 'col-12 col-md-6');
+        $this->HTMLphrase('p', 'm-desc', 'Amount ');
         $this->HTMLphrase('p', 'm-value', $data['cpu']);
-        $this->tagClose('div', 2);
-
-        $this->rowColOpen('row m-row', 'col-4');
-        $this->HTMLphrase('p', 'm-desc', 'Frequency');
         $this->tagClose('div');
-        $this->colOpen('col-8');
-        $this->HTMLphrase('p', 'm-value', $data['cpu_freq']);
+        $this->colOpen('col-12 col-md-6');
+        $this->HTMLphrase('p', 'm-desc', 'Frequency ');
+        $this->HTMLphrase('p', 'm-value', $data['cpu_freq'] . '<span class="data-type">Mhz</span>');
         $this->tagClose('div', 2);
-
         $this->rowColOpen('row m-row', 'col-12');
         $this->outputString('<i><p class="m-value">' . $data['cpu_type'] . '</p></i>');
-        $this->tagClose('div', 2);
+        $this->tagClose('div', 3);
 
-        $this->rowColOpen('row m-section-row', 'col-12 text-center');
-        $this->outputString('<p class="m-section-text">Ram</p>');
-        $this->tagClose('div', 2);
-
-        $this->rowColOpen('row m-row', 'col-4');
-        $this->HTMLphrase('p', 'm-desc', 'Ram');
-        $this->tagClose('div');
-        $this->colOpen('col-8');
+        $this->colOpen('col-12 col-md-6');
+        $this->outputString('<p class="m-section-text text-center">Ram</p>');
+        $this->rowColOpen('row m-row', 'col-12 col-md-6');
+        $this->HTMLphrase('p', 'm-desc', 'Ram ');
         $this->HTMLphrase('p', 'm-value', '' . $data['ram'] . '<span class="data-type">' . $data['ram_type'] . '</span>');
-        $this->tagClose('div', 2);
-
-        $this->rowColOpen('row m-row', 'col-4');
-        $this->HTMLphrase('p', 'm-desc', 'Swap');
         $this->tagClose('div');
-        $this->colOpen('col-8');
+        $this->colOpen('col-12 col-md-6');
+        $this->HTMLphrase('p', 'm-desc', 'Swap ');
         $this->HTMLphrase('p', 'm-value', '' . $data['swap'] . '<span class="data-type">' . $data['swap_type'] . '</span>');
-        $this->tagClose('div', 2);
+        $this->tagClose('div', 4);
 
         if ($has_yabs) {
             $this->rowColOpen('row m-section-row', 'col-12 text-center');
             $this->HTMLphrase('p', 'm-section-text', 'GeekBench 5');
             $this->tagClose('div', 2);
-            $this->rowColOpen('row m-row', 'col-4');
+            $this->rowColOpen('row m-row', 'col-4 mm-col');
             $this->HTMLphrase('p', 'm-desc', 'single: ');
             $this->HTMLphrase('p', 'm-value', $data['gb5_single']);
             $this->tagClose('div');
-            $this->colOpen('col-4');
+            $this->colOpen('col-4 mm-col');
             $this->HTMLphrase('p', 'm-desc', 'multi: ');
             $this->HTMLphrase('p', 'm-value', $data['gb5_multi']);
             $this->tagClose('div');
-            $this->colOpen('col-4');
+            $this->colOpen('col-4 mm-col');
             $this->HTMLphrase('p', 'm-desc', 'id: ');
             $this->outputString('<a id="m_gb5_id_link" href="https://browser.geekbench.com/v5/cpu/' . $data['gb5_id'] . '"><p class="m-value">' . $data['gb5_id'] . '</p></a>');
             $this->tagClose('div', 2);
 
             $this->rowColOpen('row m-section-row', 'col-12 text-center');
-            $this->HTMLphrase('p', 'm-section-text', 'Disk test');
+            $this->HTMLphrase('p', 'm-section-text', 'Disk tests');
             $this->tagClose('div', 2);
 
-            $this->rowColOpen('row m-row', 'col-6');
+            $this->rowColOpen('row m-row', 'col-6 col-md-3 mm-col');
             $this->HTMLphrase('p', 'm-desc', '4k: ');
             $this->HTMLphrase('p', 'm-value', '' . $data['4k'] . '<span class="data-type">' . $data['4k_type'] . '</span>');
             $this->tagClose('div');
-            $this->colOpen('col-6');
+            $this->colOpen('col-6 col-md-3 mm-col');
             $this->HTMLphrase('p', 'm-desc', '64k: ');
             $this->HTMLphrase('p', 'm-value', '' . $data['64k'] . '<span class="data-type">' . $data['64k_type'] . '</span>');
-            $this->tagClose('div', 2);
-
-            $this->rowColOpen('row m-row', 'col-6');
+            $this->tagClose('div');
+            $this->colOpen('col-6 col-md-3 mm-col');
             $this->HTMLphrase('p', 'm-desc', '512k: ');
             $this->HTMLphrase('p', 'm-value', '' . $data['512k'] . '<span class="data-type">' . $data['512k_type'] . '</span>');
             $this->tagClose('div');
-            $this->colOpen('col-6');
+            $this->colOpen('col-6 col-md-3 mm-col');
             $this->HTMLphrase('p', 'm-desc', '1m: ');
             $this->HTMLphrase('p', 'm-value', '' . $data['1m'] . '<span class="data-type">' . $data['1m_type'] . '</span>');
             $this->tagClose('div', 2);
@@ -2328,63 +2334,67 @@ class idlers extends helperFunctions
         $this->HTMLphrase('p', 'm-section-text', 'Pricing');
         $this->tagClose('div', 2);
 
-        $this->rowColOpen('row m-row', 'col-12');
+        $this->rowColOpen('row m-row', 'col-12 col-md-6 mm-col');
         $this->HTMLphrase('p', 'm-value', '' . $data['price'] . ' <span class="data-type">' . $data['currency'] . '</span> ');
         $this->HTMLphrase('p', 'm-value', $this->paymentTerm($data['term']));
+        $this->tagClose('div');
+        $this->colOpen('col-12 col-md-6 mm-col');
+        $this->HTMLphrase('p', 'm-desc', 'As USD per month: ');
+        $this->HTMLphrase('p', 'm-value', '$' . $data['usd_per_month'] . '');
         $this->tagClose('div', 2);
 
         $this->rowColOpen('row m-section-row', 'col-12 text-center');
         $this->HTMLphrase('p', 'm-section-text', 'Other');
         $this->tagClose('div', 2);
 
-        $this->rowColOpen('row m-row', 'col-4');
+        $this->rowColOpen('row m-row', 'col-4 mm-col');
         $this->HTMLphrase('p', 'm-desc', 'Owned since');
         $this->tagClose('div');
-        $this->colOpen('col-8');
+        $this->colOpen('col-8 mm-col');
         $this->HTMLphrase('p', 'm-value', $data['owned_since']);
         $this->tagClose('div', 2);
 
-        $this->rowColOpen('row m-row', 'col-4');
+        $this->rowColOpen('row m-row', 'col-4 mm-col');
         $this->HTMLphrase('p', 'm-desc', 'Dedicated: ');
         $this->tagClose('div');
-        $this->colOpen('col-2');
+        $this->colOpen('col-2 mm-col');
         $this->HTMLphrase('p', 'm-value', $this->intToYesNo($data['is_dedicated']));
         $this->tagClose('div');
-        $this->colOpen('col-4');
+        $this->colOpen('col-4 mm-col');
         $this->HTMLphrase('p', 'm-desc', 'Dedi CPU: ');
         $this->tagClose('div');
-        $this->colOpen('col-2');
+        $this->colOpen('col-2 mm-col');
         $this->HTMLphrase('p', 'm-value', $this->intToYesNo($data['is_cpu_dedicated']));
         $this->tagClose('div', 2);
 
-        $this->rowColOpen('row m-row', 'col-4');
+        $this->rowColOpen('row m-row', 'col-4 mm-col');
         $this->HTMLphrase('p', 'm-desc', 'Is offer: ');
         $this->tagClose('div');
-        $this->colOpen('col-2');
+        $this->colOpen('col-2 mm-col');
         $this->HTMLphrase('p', 'm-value', $this->intToYesNo($data['was_special']));
         $this->tagClose('div');
-        $this->colOpen('col-4');
+        $this->colOpen('col-4 mm-col');
         $this->HTMLphrase('p', 'm-desc', 'AES-NI: ');
         $this->tagClose('div');
-        $this->colOpen('col-2');
+        $this->colOpen('col-2 mm-col');
         $this->HTMLphrase('p', 'm-value', $this->intToYesNo($data['aes_ni']));
         $this->tagClose('div', 2);
 
-        $this->rowColOpen('row m-row', 'col-4');
+        $this->rowColOpen('row m-row', 'col-4 mm-col');
         $this->HTMLphrase('p', 'm-desc', 'VM-x/AMD-V: ');
         $this->tagClose('div');
-        $this->colOpen('col-2');
+        $this->colOpen('col-2 mm-col');
         $this->HTMLphrase('p', 'm-value', $this->intToYesNo($data['amd_v']));
         $this->tagClose('div');
-        $this->colOpen('col-4');
+        $this->colOpen('col-4 mm-col');
         $this->HTMLphrase('p', 'm-desc', 'Virt: ');
         $this->tagClose('div');
-        $this->colOpen('col-2');
+        $this->colOpen('col-2 mm-col');
         $this->HTMLphrase('p', 'm-value', $data['virt']);
         $this->tagClose('div', 2);
         if ($has_yabs && $has_st) {
             $this->rowColOpen('row m-section-row', 'col-12 text-center');
-            $this->HTMLphrase('p', 'm-section-text', 'Network test');
+            $this->HTMLphrase('p', 'm-section-text', 'Network tests');
             $this->tagClose('div', 2);
             $this->tagOpen('div', 'row');
             $this->outputString('<div class="col-6"><p class="m-desc">Location:</p></div>');
@@ -2407,8 +2417,8 @@ class idlers extends helperFunctions
             }
         }
 
-        $this->rowColOpen('row m-section-row', 'col-12 text-center');
-        $this->htmlPhrase('p', 'm-section-text', 'Notes');
+        $this->rowColOpen('row m-section-row', 'col-12 col-md-6');
+        $this->htmlPhrase('p', 'm-section-text text-center', 'Notes');
         $this->outputString("<textarea class='form-control' id='server_notes' name='server_notes' rows='4' cols='40' maxlength='255' disabled>");
         if (is_null($data['notes']) || empty($data['notes'])) {
             $this->outputString('');
@@ -2416,12 +2426,9 @@ class idlers extends helperFunctions
             $this->outputString($data['notes']);
         }
         $this->outputString("</textarea>");
-        $this->tagClose('div', 2);
-
-        $this->rowColOpen('row m-section-row', 'col-12 text-center');
-        $this->HTMLphrase('p', 'm-section-text', 'Tags');
-        $this->tagClose('div', 2);
-        $this->rowColOpen('row m-row', 'col-12');
+        $this->tagClose('div');
+        $this->colOpen('col-12 col-md-6');
+        $this->HTMLphrase('p', 'm-section-text text-center', 'Tags');
         $this->tagOpen('ul');
         $tags_arr = explode(",", $data['tags']);
         foreach ($tags_arr as $tag) {
@@ -2430,16 +2437,16 @@ class idlers extends helperFunctions
             }
         }
         $this->tagClose('ul');
-        $this->tagClose('div', 3);
+        $this->tagClose('div', 2);
         if (file_exists("yabs/{$data['server_id']}.txt")) {
-            $this->rowColOpen('row text-center', 'col-12 col-md-6');
+            $this->rowColOpen('row m-section-row text-center', 'col-12 col-md-6');
             $this->outputString('<a class="btn btn-main view-yabs-btn" id="viewYabs" value="' . $item_id . '" data-target="#yabsModal" data-toggle="modal" href="#" role="button">View YABs</a>');
             $this->tagClose('div');
             $this->colOpen('col-12 col-md-6');
             $this->outputString('<a class="btn btn-third" id="closeViewMoreModal" role="button" data-dismiss="modal">Close</a>');
             $this->tagClose('div', 2);
         } else {
-            $this->rowColOpen('row text-center', 'col-12');
+            $this->rowColOpen('row m-section-row text-center', 'col-12');
             $this->outputString('<a class="btn btn-third" id="closeViewMoreModal" role="button" data-dismiss="modal">Close</a>');
             $this->tagClose('div', 2);
         }
@@ -2557,6 +2564,15 @@ class idlers extends helperFunctions
         $this->outputString('<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
         $this->tagClose('div');
         $this->tagOpen('div', 'modal-body');
+
+        $this->rowColOpen('row m-row', 'col-4');
+        $this->HTMLphrase('p', 'm-desc', 'Attached to');
+        $this->tagClose('div');
+        $this->colOpen('col-8');
+        $this->outputString('<code><p class="m-value">' . $this->idToObjectName($data['attached_to']) . '</p></code>');
+        $this->tagClose('div', 2);
+
+
         $this->rowColOpen('row m-row', 'col-4');
         $this->HTMLphrase('p', 'm-desc', 'NS2');
         $this->tagClose('div');
@@ -3088,10 +3104,38 @@ class idlers extends helperFunctions
     protected function viewSwitcherIcon()
     {
         $this->rowColOpen('row text-center', 'col-12');
-        $this->outputString('<a id="viewSwitcherIcon"><i class="fas fa-table" id="viewSwitchIcon" title="Switch to table"></i></a>');
+        if (self::DEFAULT_VIEW == 'CARDS') {
+            $this->outputString('<a id="viewSwitcherIcon"><i class="fas fa-table" id="viewSwitchIcon" title="Switch to table"></i></a>');
+        } else {
+            $this->outputString('<a id="viewSwitcherIcon"><i class="fas fa-th" id="viewSwitchIcon" title="Switch to cards"></i></a>');
+        }
         $this->tagClose('div', 2);
     }
 
+    protected function idToObjectName(string $id)
+    {//Returns a hostname or domain for an id
+        $servers = $this->dbConnect()->prepare("SELECT `hostname` FROM `servers` WHERE `id` = ? LIMIT 1;");
+        $servers->execute([$id]);
+        $servers_res = $servers->fetch(PDO::FETCH_ASSOC);
+        if ($servers_res) {
+            return $servers_res['hostname'];
+        } else {
+            $shared = $this->dbConnect()->prepare("SELECT `domain` FROM `shared_hosting` WHERE `id` = ? LIMIT 1;");
+            $shared->execute([$id]);
+            $shared_res = $shared->fetch(PDO::FETCH_ASSOC);
+            if ($shared_res) {
+                return $shared_res['domain'];
+            } else {
+                $domain = $this->dbConnect()->prepare("SELECT `domain` FROM `domains` WHERE `id` = ? LIMIT 1;");
+                $domain->execute([$id]);
+                $domain_res = $domain->fetch(PDO::FETCH_ASSOC);
+                if ($domain_res) {
+                    return $domain_res['domain'];
+                }
+            }
+        }
+        return $id;
+    }
 }
 
 class itemInsert extends idlers
@@ -3114,10 +3158,11 @@ class itemInsert extends idlers
         (isset($data['was_offer'])) ? $offer = 1 : $offer = 0;
         (empty($data['ipv4'])) ? $ipv4 = null : $ipv4 = $data['ipv4'];
         (empty($data['ipv6'])) ? $ipv6 = null : $ipv6 = $data['ipv6'];
+        (empty($data['label'])) ? $label = null : $label = $data['label'];
         $location_id = $this->handleLocation($data['location']);
         $provider_id = $this->handleProvider($data['provider']);
-        $insert = $this->dbConnect()->prepare('INSERT IGNORE INTO `servers` (id, hostname, location, provider, ipv4,ipv6, owned_since, os, is_cpu_dedicated, is_dedicated, was_special, bandwidth, virt, has_yabs, ns1, ns2, ssh_port) VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?)');
-        $insert->execute([$item_id, $data['hostname'], $location_id, $provider_id, $ipv4, $ipv6, $data['owned_since'], $data['os'], $dedi_cpu, $dedi, $offer, $data['bandwidth'], $data['virt'], $data['has_yabs'], $data['ns1'], $data['ns2'], $data['ssh_port']]);
+        $insert = $this->dbConnect()->prepare('INSERT IGNORE INTO `servers` (id, hostname, location, provider, ipv4,ipv6, owned_since, os, is_cpu_dedicated, is_dedicated, was_special, bandwidth, virt, has_yabs, ns1, ns2, ssh_port, label) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)');
+        $insert->execute([$item_id, $data['hostname'], $location_id, $provider_id, $ipv4, $ipv6, $data['owned_since'], $data['os'], $dedi_cpu, $dedi, $offer, $data['bandwidth'], $data['virt'], $data['has_yabs'], $data['ns1'], $data['ns2'], $data['ssh_port'], $label]);
         $this->insertPrice($data['price'], $data['currency'], $data['term'], $data['next_due_date']);
         return $item_id;
     }
@@ -3131,13 +3176,14 @@ class itemInsert extends idlers
         (isset($data['was_offer'])) ? $offer = 1 : $offer = 0;
         (empty($data['ipv4'])) ? $ipv4 = null : $ipv4 = $data['ipv4'];
         (empty($data['ipv6'])) ? $ipv6 = null : $ipv6 = $data['ipv6'];
+        (empty($data['label'])) ? $label = null : $label = $data['label'];
         ($data['ram_type'] == 'GB') ? $ram_mb = $this->GBtoMB($data['ram']) : $ram_mb = $data['ram'];
         ($data['swap_type'] == 'GB') ? $swap_mb = $this->GBtoMB($data['swap']) : $swap_mb = $data['swap'];
         ($data['disk_type'] == 'TB') ? $disk_gb = $this->TBtoGB($data['disk']) : $disk_gb = $data['disk'];
         $location_id = $this->handleLocation($data['location']);
         $provider_id = $this->handleProvider($data['provider']);
-        $insert = $this->dbConnect()->prepare('INSERT IGNORE INTO `servers` (id, hostname, location, provider, ipv4,ipv6, owned_since, os, is_cpu_dedicated, is_dedicated, was_special, bandwidth, virt, cpu, cpu_freq, ram, ram_type, swap, swap_type, disk, disk_type, ram_mb, swap_mb, disk_gb, ns1, ns2, ssh_port) VALUES (?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)');
-        $insert->execute([$item_id, $data['hostname'], $location_id, $provider_id, $ipv4, $ipv6, $data['owned_since'], $data['os'], $dedi_cpu, $dedi, $offer, $data['bandwidth'], $data['virt'], $data['cpu_amount'], $data['cpu_speed'], $data['ram'], $data['ram_type'], $data['swap'], $data['swap_type'], $data['disk'], $data['disk_type'], $ram_mb, $swap_mb, $disk_gb, $data['ns1'], $data['ns2'], $data['ssh_port']]);
+        $insert = $this->dbConnect()->prepare('INSERT IGNORE INTO `servers` (id, hostname, location, provider, ipv4,ipv6, owned_since, os, is_cpu_dedicated, is_dedicated, was_special, bandwidth, virt, cpu, cpu_freq, ram, ram_type, swap, swap_type, disk, disk_type, ram_mb, swap_mb, disk_gb, ns1, ns2, ssh_port, label) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)');
+        $insert->execute([$item_id, $data['hostname'], $location_id, $provider_id, $ipv4, $ipv6, $data['owned_since'], $data['os'], $dedi_cpu, $dedi, $offer, $data['bandwidth'], $data['virt'], $data['cpu_amount'], $data['cpu_speed'], $data['ram'], $data['ram_type'], $data['swap'], $data['swap_type'], $data['disk'], $data['disk_type'], $ram_mb, $swap_mb, $disk_gb, $data['ns1'], $data['ns2'], $data['ssh_port'], $label]);
         $this->insertPrice($data['price'], $data['currency'], $data['term'], $data['next_due_date']);
         return $item_id;
     }
@@ -3317,8 +3363,8 @@ class itemUpdate extends idlers
         } elseif ($data['me_non_active'] == 'on') {
             $this->updateActiveStatus(0);
         }
-        $update = $this->dbConnect()->prepare("UPDATE `servers` SET `hostname` = ?,`ipv4` = ?,`ipv6` = ?,`cpu` = ?,`bandwidth` = ?,`disk` = ?,`ram` = ?,`ram_type` = ?,`swap` = ?,`swap_type` = ?, `virt` = ?, `tags` = ?, `owned_since` = ?, `ns1` = ?, `ns2` = ?, `ssh_port` = ?, `notes` = ? WHERE `id`= ? LIMIT 1;");
-        return $update->execute([$data['me_hostname'], $data['me_ipv4'], $data['me_ipv6'], $data['me_cpu_amount'], $data['me_bandwidth'], $data['me_disk'], $data['me_ram'], $data['me_ram_type'], $data['me_swap'], $data['me_swap_type'], $data['me_virt'], $data['me_tags'], $data['me_owned_since'], $data['me_ns1'], $data['me_ns2'], $data['me_ssh_port'], $data['me_notes'], $this->item_id]);
+        $update = $this->dbConnect()->prepare("UPDATE `servers` SET `hostname` = ?,`ipv4` = ?,`ipv6` = ?,`cpu` = ?,`bandwidth` = ?,`disk` = ?,`ram` = ?,`ram_type` = ?,`swap` = ?,`swap_type` = ?, `virt` = ?, `tags` = ?, `owned_since` = ?, `ns1` = ?, `ns2` = ?, `ssh_port` = ?, `notes` = ?, `label` = ? WHERE `id`= ? LIMIT 1;");
+        return $update->execute([$data['me_hostname'], $data['me_ipv4'], $data['me_ipv6'], $data['me_cpu_amount'], $data['me_bandwidth'], $data['me_disk'], $data['me_ram'], $data['me_ram_type'], $data['me_swap'], $data['me_swap_type'], $data['me_virt'], $data['me_tags'], $data['me_owned_since'], $data['me_ns1'], $data['me_ns2'], $data['me_ssh_port'], $data['me_notes'], $data['me_label'], $this->item_id]);
     }
 
     public function updateServerPricingFromModal()
@@ -3357,8 +3403,9 @@ class itemUpdate extends idlers
         } elseif ($data['d_me_non_active'] == 'on') {
             $this->updateActiveStatus(0);
         }
-        $update = $this->dbConnect()->prepare("UPDATE `domains` SET `domain` = ?,`ns1` = ?,`ns2` = ?,`owned_since` = ? WHERE `id`= ? LIMIT 1;");
-        return $update->execute([$data['d_me_hostname'], $data['d_me_ns1'], $data['d_me_ns2'], $data['d_me_owned_since'], $this->item_id]);
+        (!empty($_POST['d_me_attached_to'])) ? $attached_to = $_POST['d_me_attached_to'] : $attached_to = null;
+        $update = $this->dbConnect()->prepare("UPDATE `domains` SET `domain` = ?,`ns1` = ?,`ns2` = ?,`owned_since` = ?, `attached_to` = ? WHERE `id`= ? LIMIT 1;");
+        return $update->execute([$data['d_me_hostname'], $data['d_me_ns1'], $data['d_me_ns2'], $data['d_me_owned_since'], $attached_to, $this->item_id]);
     }
 
     public function updateDomainPricingFromModal()

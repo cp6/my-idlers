@@ -1,0 +1,2 @@
+ALTER TABLE `servers`
+    ADD COLUMN `label` VARCHAR(24) NULL DEFAULT NULL AFTER `hostname`;
