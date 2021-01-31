@@ -722,10 +722,12 @@ class idlers extends helperFunctions
         $row = $select->fetch();
         if ($row['has_yabs'] == 1 && $row['has_st'] == 1) {
             $select = $this->dbConnect()->prepare("
-              SELECT servers.id as server_id,hostname,ipv4,ipv6,`cpu`,cpu_type,cpu_freq,ram,ram_type,swap,swap_type,`disk`,disk_type,bandwidth,bandwidth_type,gb5_single,gb5_multi,gb5_id,aes_ni,amd_v,
+              SELECT servers.id as server_id,hostname,ipv4,ipv4_asn,asn_v4.name,ipv6,ipv6_asn,asn_v6.name,`cpu`,cpu_type,cpu_freq,ram,ram_type,swap,swap_type,`disk`,disk_type,bandwidth,bandwidth_type,gb5_single,gb5_multi,gb5_id,aes_ni,amd_v,
               is_dedicated,is_cpu_dedicated,was_special,os,ssh_port,still_have,tags,notes,label,virt,has_yabs,has_st,ns1,ns2,DATE_FORMAT(`owned_since`, '%M %Y') as owned_since, `owned_since` as owned_since_raw, `4k`,`4k_type`,`64k`,`64k_type`,`512k`,`512k_type`,`1m`,`1m_type`,
               loc.name as location,send,send_type,recieve,recieve_type,price,currency,term,as_usd,per_month,usd_per_month,next_dd,pr.name as provider
               FROM servers INNER JOIN disk_speed ds on servers.id = ds.server_id
+              INNER JOIN asn AS asn_v4 ON servers.ipv4_asn = asn_v4.id
+              INNER JOIN asn AS asn_v6 ON servers.ipv6_asn = asn_v6.id              
               INNER JOIN speed_tests st on servers.id = st.server_id INNER JOIN locations loc on servers.location = loc.id
               INNER JOIN providers pr on servers.provider = pr.id INNER JOIN pricing on servers.id = pricing.server_id WHERE servers.id = ? LIMIT 1;");
             $select->execute([$id]);
@@ -737,21 +739,25 @@ class idlers extends helperFunctions
             return json_encode($final);
         } elseif ($row['has_yabs'] == 1 && $row['has_st'] == 0) {
             $select = $this->dbConnect()->prepare("
-              SELECT servers.id as server_id,hostname,ipv4,ipv6,`cpu`,cpu_type,cpu_freq,ram,ram_type,swap,swap_type,`disk`,disk_type,bandwidth,bandwidth_type,gb5_single,gb5_multi,gb5_id,aes_ni,amd_v,
+              SELECT servers.id as server_id,hostname,ipv4,ipv4_asn,asn_v4.name,ipv6,ipv6_asn,asn_v6.name,`cpu`,cpu_type,cpu_freq,ram,ram_type,swap,swap_type,`disk`,disk_type,bandwidth,bandwidth_type,gb5_single,gb5_multi,gb5_id,aes_ni,amd_v,
               is_dedicated,is_cpu_dedicated,was_special,os,ssh_port,still_have,tags,notes,label,virt,has_yabs,has_st,ns1,ns2,DATE_FORMAT(`owned_since`, '%M %Y') as owned_since, `owned_since` as owned_since_raw, `4k`,`4k_type`,`64k`,`64k_type`,`512k`,`512k_type`,`1m`,`1m_type`,
               loc.name as location,price,currency,term,as_usd,per_month,usd_per_month,next_dd,pr.name as provider
               FROM servers INNER JOIN disk_speed ds on servers.id = ds.server_id
-            INNER JOIN locations loc on servers.location = loc.id
+              INNER JOIN asn AS asn_v4 ON servers.ipv4_asn = asn_v4.id
+              INNER JOIN asn AS asn_v6 ON servers.ipv6_asn = asn_v6.id
+              INNER JOIN locations loc on servers.location = loc.id
               INNER JOIN providers pr on servers.provider = pr.id INNER JOIN pricing on servers.id = pricing.server_id WHERE servers.id = ? LIMIT 1;");
             $select->execute([$id]);
             $data = $select->fetchAll(PDO::FETCH_ASSOC)[0];
             return json_encode($data);
         } else {
             $select = $this->dbConnect()->prepare("
-               SELECT servers.id as server_id,hostname,ipv4,ipv6,`cpu`,cpu_type,cpu_freq,ram,ram_type,swap,swap_type,`disk`,disk_type,
+               SELECT servers.id as server_id,hostname,ipv4,ipv4_asn,asn_v4.name,ipv6,ipv6_asn,asn_v6.name,`cpu`,cpu_type,cpu_freq,ram,ram_type,swap,swap_type,`disk`,disk_type,
                bandwidth,bandwidth_type,gb5_single,gb5_multi,gb5_id,aes_ni,amd_v,is_dedicated,is_cpu_dedicated,was_special,os,ssh_port,still_have,tags,notes,virt,has_yabs,ns1,ns2,label,has_st,
                DATE_FORMAT(`owned_since`, '%M %Y') as owned_since,loc.name as location,price,currency,term,as_usd,per_month,usd_per_month,next_dd,pr.name as provider
                FROM servers INNER JOIN locations loc on servers.location = loc.id
+               INNER JOIN asn AS asn_v4 ON servers.ipv4_asn = asn_v4.id
+               INNER JOIN asn AS asn_v6 ON servers.ipv6_asn = asn_v6.id               
                INNER JOIN providers pr on servers.provider = pr.id INNER JOIN pricing on servers.id = pricing.server_id WHERE servers.id = ? LIMIT 1;");
             $select->execute([$id]);
             $data = $select->fetchAll(PDO::FETCH_ASSOC)[0];
@@ -1350,16 +1356,27 @@ class idlers extends helperFunctions
         $this->textInput('me_ssh_port');
         $this->tagClose('div', 3);
 
-        $this->rowColOpen('form-row', 'col-12');
+        $this->rowColOpen('form-row', 'col-8');
         $this->tagOpen('div', 'input-group');
         $this->inputPrepend('IPv4');
         $this->textInput('me_ipv4');
-        $this->tagClose('div', 3);
-        $this->rowColOpen('form-row', 'col-12');
+        $this->tagClose('div', 2);
+        $this->colOpen('col-4');
+        $this->tagOpen('div', 'input-group');
+        $this->inputPrepend('ASN');
+        $this->textInput('me_asn_ipv4');
+        $this->tagClose('div', 3);            
+
+        $this->rowColOpen('form-row', 'col-8');
         $this->tagOpen('div', 'input-group');
         $this->inputPrepend('IPv6');
         $this->textInput('me_ipv6');
-        $this->tagClose('div', 3);
+        $this->tagClose('div', 2);
+        $this->colOpen('col-4');
+        $this->tagOpen('div', 'input-group');
+        $this->inputPrepend('ASN');
+        $this->textInput('me_asn_ipv6');
+        $this->tagClose('div', 3);  
 
         $this->rowColOpen('form-row', 'col-12 col-md-6 mm-col');
         $this->tagOpen('div', 'input-group');
@@ -1990,30 +2007,40 @@ class idlers extends helperFunctions
         $this->CurrencySelectOptions();
         $this->tagClose('select');
         $this->tagClose('div', 3);
+        
+        $this->rowColOpen('form-row', 'col-md-3');
+        $this->tagOpen('div', 'input-group');
+        $this->inputPrepend('IPv4');
+        $this->textInput('ipv4', '', 'form-control', false, 4, 124);
+        $this->tagClose('div', 2);
+        $this->colOpen('col-md-3');
+        $this->tagOpen('div', 'input-group');
+        $this->inputPrepend('IPv4 ASN');
+        $this->textInput('asn_ipv4', '', 'form-control', true, 1, 999999, 1);
+        $this->tagClose('div', 2);
+        $this->colOpen('col-md-3');
+        $this->tagOpen('div', 'input-group');
+        $this->inputPrepend('IPv6');
+        $this->textInput('ipv6', '', 'form-control', false, 4, 124);
+        $this->tagClose('div', 2);        
+        $this->colOpen('col-md-3');
+        $this->tagOpen('div', 'input-group');
+        $this->inputPrepend('IPv6 ASN');
+        $this->textInput('asn_ipv6', '', 'form-control', true, 1, 999999, 1);
+        $this->tagClose('div', 3);
 
         $this->rowColOpen('form-row', 'col-12 col-md-4');
         $this->tagOpen('div', 'input-group');
         $this->inputPrepend('Label');
         $this->textInput('label', '', 'form-control', false, 1, 24);
         $this->tagClose('div', 2);
-        $this->colOpen('col-12 col-md-4');
-        $this->tagOpen('div', 'input-group');
-        $this->inputPrepend('IPv4');
-        $this->textInput('ipv4', '', 'form-control', false, 4, 124);
-        $this->tagClose('div', 2);
-        $this->colOpen('col-12 col-md-4');
-        $this->tagOpen('div', 'input-group');
-        $this->inputPrepend('IPv6');
-        $this->textInput('ipv6', '', 'form-control', false, 4, 124);
-        $this->tagClose('div', 3);
-
-        $this->rowColOpen('form-row', 'col-12 col-md-4');
+        $this->colOpen('col-12 col-md-2');        
         $this->outputString('<label for="was_offer">Was special offer</label>');
         $this->tagClose('div');
         $this->colOpen('col-12 col-md-2');
         $this->outputString('<label class="switch"><input type="checkbox" name="was_offer" id="was_offer"><span class="slider round"></span></label>');
         $this->tagClose('div');
-        $this->colOpen('col-12 col-md-4');
+        $this->colOpen('col-12 col-md-2');
         $this->outputString('<label for="dedi_cpu">Dedicated CPU</label>');
         $this->tagClose('div');
         $this->colOpen('col-12 col-md-2');

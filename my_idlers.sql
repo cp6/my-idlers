@@ -10,6 +10,15 @@
 CREATE DATABASE IF NOT EXISTS `idlers` /*!40100 DEFAULT CHARACTER SET latin1 */;
 USE `idlers`;
 
+-- Dumping structure for table my_idlers.asn
+CREATE TABLE IF NOT EXISTS `asn` 
+(
+    `id`          INT               NOT NULL, 
+    `name`        VARCHAR(64)       NOT NULL, 
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = latin1;
+
 -- Dumping structure for table my_idlers.disk_speed
 CREATE TABLE IF NOT EXISTS `disk_speed`
 (
@@ -296,7 +305,9 @@ CREATE TABLE IF NOT EXISTS `servers`
     `location`         int(11)      DEFAULT NULL,
     `provider`         int(11)      DEFAULT NULL,
     `ipv4`             varchar(124) DEFAULT NULL,
+    `ipv4_asn`         int(11)      DEFAULT NULL,    
     `ipv6`             varchar(124) DEFAULT NULL,
+    `ipv6_asn`         int(11)      DEFAULT NULL,    
     `ns1`              varchar(124) DEFAULT NULL,
     `ns2`              varchar(124) DEFAULT NULL,
     `virt`             varchar(4)   DEFAULT NULL,
@@ -331,7 +342,9 @@ CREATE TABLE IF NOT EXISTS `servers`
     `has_yabs`         tinyint(1)   DEFAULT 0,
     `has_st`           tinyint(1)   DEFAULT 0,
     PRIMARY KEY (`id`),
-    UNIQUE KEY `Index 2` (`ipv4`, `hostname`, `ipv6`)
+    UNIQUE KEY `Index 2` (`ipv4`, `hostname`, `ipv6`),
+    FOREIGN KEY (`ipv4_asn`) REFERENCES `asn`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+    FOREIGN KEY (`ipv6_asn`) REFERENCES `asn`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB
   DEFAULT CHARSET = latin1;
 
