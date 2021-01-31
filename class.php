@@ -1263,7 +1263,7 @@ class idlers extends helperFunctions
     public function editServerModal()
     {
         $this->outputString('<div class="modal fade" id="editServerModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">');
-        $this->outputString('<div class="modal-dialog" role="document">');
+        $this->outputString('<div class="modal-dialog modal-lg" role="document">');
         $this->tagOpen('div', 'modal-content');
         $this->tagOpen('div', 'modal-header');
         $this->outputString('<h4 class="modal-title w-100" id="me_hostname_header"></h4>');
@@ -1274,84 +1274,77 @@ class idlers extends helperFunctions
         $this->tagOpen('div', 'modal-body');
         $this->outputString('<form id="editForm" method="post">');
 
-        $this->rowColOpen('form-row', 'col-8');
+        $this->rowColOpen('form-row', 'col-12 col-md-6');
         $this->outputString('<label for="me_delete">Delete server data</label>');
-        $this->tagClose('div');
-        $this->colOpen('col-4');
         $this->outputString('<label class="switch"><input type="checkbox" name="me_delete" id="me_delete"><span class="slider round"></span></label>');
-        $this->tagClose('div', 2);
-
-        $this->rowColOpen('form-row', 'col-8');
-        $this->outputString('<label for="me_non_active">No longer have (Keep info)</label>');
         $this->tagClose('div');
-        $this->colOpen('col-4');
+        $this->colOpen('col-12 col-md-6');
+        $this->outputString('<label for="me_non_active">No longer have (Keep info)</label>');
         $this->outputString('<label class="switch"><input type="checkbox" name="me_non_active" id="me_non_active"><span class="slider round"></span></label>');
         $this->tagClose('div', 2);
 
-        $this->rowColOpen('form-row', 'col-12');
+        $this->rowColOpen('form-row', 'col-12 col-md-6 mm-col');
         $this->tagOpen('div', 'input-group');
         $this->inputPrepend('Hostname');
         $this->textInput('me_hostname', '', 'form-control', true);
-        $this->tagClose('div');
-        $this->hiddenInput('me_server_id');
-        $this->hiddenInput('action', 'update');
-        $this->hiddenInput('type', 'server_modal_edit');
         $this->tagClose('div', 2);
-
-        $this->rowColOpen('form-row', 'col-12');
+        $this->colOpen('col-12 col-md-6 mm-col');
         $this->tagOpen('div', 'input-group');
         $this->inputPrepend('Label');
         $this->textInput('me_label', '', 'form-control', false, 1, 24);
+        $this->hiddenInput('me_server_id');
+        $this->hiddenInput('action', 'update');
+        $this->hiddenInput('type', 'server_modal_edit');
         $this->tagClose('div', 3);
 
-        $this->rowColOpen('form-row', 'col-md-6');
+
+        $this->rowColOpen('form-row', 'col-md-6 mm-col');
         $this->tagOpen('div', 'input-group');
         $this->inputPrepend('NS1');
         $this->textInput('me_ns1', '', 'form-control', false);
         $this->tagClose('div', 2);
-        $this->colOpen('col-12 col-md-6');
+        $this->colOpen('col-12 col-md-6 mm-col');
         $this->tagOpen('div', 'input-group');
         $this->inputPrepend('NS2');
         $this->textInput('me_ns2', '', 'form-control', false);
         $this->tagClose('div', 3);
 
-        $this->rowColOpen('form-row', 'col-6');
+        $this->rowColOpen('form-row', 'col-6 col-md-4 mm-col');
         $this->tagOpen('div', 'input-group');
         $this->inputPrepend('Price');
         $this->numberInput('me_price', '', 'form-control', true, 0, 999, 'any');
         $this->tagClose('div');
         $this->tagClose('div');
-        $this->colOpen('col-6');
+        $this->colOpen('col-6 col-md-4 mm-col');
         $this->tagOpen('div', 'input-group');
         $this->inputPrepend('Term');
         $this->selectElement('me_term');
         $this->termSelectOptions();
         $this->tagClose('select');
-        $this->tagClose('div', 3);
-
-        $this->rowColOpen('form-row', 'col-6');
+        $this->tagClose('div', 2);
+        $this->colOpen('col-6 col-md-4 mm-col');
         $this->tagOpen('div', 'input-group');
         $this->inputPrepend('Currency');
         $this->selectElement('me_currency');
         $this->CurrencySelectOptions();
         $this->tagClose('select');
-        $this->tagClose('div', 2);
-        $this->colOpen('col-6');
+        $this->tagClose('div', 3);
+
+        $this->rowColOpen('form-row', 'col-12 col-md-4 mm-col');
         $this->tagOpen('div', 'input-group');
         $this->inputPrepend('OS');
         $this->selectElement('me_os');
         $this->OsSelectOptions();
         $this->tagClose('select');
-        $this->tagClose('div', 3);
-
-        $this->rowColOpen('form-row', 'col-12 col-md-6');
+        $this->tagClose('div', 2);
+        $this->colOpen('col-12 col-md-4 mm-col');
         $this->tagOpen('div', 'input-group');
         $this->inputPrepend('Virt');
         $this->selectElement('me_virt');
         $this->virtSelectOptions();
         $this->tagClose('select');
         $this->tagClose('div', 2);
-        $this->colOpen('col-12 col-md-6');
+        $this->colOpen('col-12 col-md-4 mm-col');
         $this->tagOpen('div', 'input-group');
         $this->inputPrepend('SSH Port');
         $this->textInput('me_ssh_port');
@@ -1368,24 +1361,23 @@ class idlers extends helperFunctions
         $this->textInput('me_ipv6');
         $this->tagClose('div', 3);
 
-        $this->rowColOpen('form-row', 'col-12');
+        $this->rowColOpen('form-row', 'col-12 col-md-6 mm-col');
         $this->tagOpen('div', 'input-group');
         $this->inputPrepend('Owned since');
         $this->outputString('<input type="date" class="form-control" id="me_owned_since" name="me_owned_since">');
-        $this->tagClose('div', 3);
-
-        $this->rowColOpen('form-row', 'col-12');
+        $this->tagClose('div', 2);
+        $this->colOpen('col-12 col-md-6 mm-col');
         $this->tagOpen('div', 'input-group');
         $this->inputPrepend('Next due date');
         $this->outputString('<input type="date" class="form-control" id="me_next_dd" name="me_next_dd">');
         $this->tagClose('div', 3);
 
-        $this->rowColOpen('form-row', 'col-12 col-md-6');
+        $this->rowColOpen('form-row', 'col-12 col-md-6 mm-col');
         $this->tagOpen('div', 'input-group');
         $this->inputPrepend('CPU amount');
         $this->numberInput('me_cpu_amount', '', 'form-control', false, 1, 48);
         $this->tagClose('div', 2);
-        $this->colOpen('col-12 col-md-6');
+        $this->colOpen('col-12 col-md-6 mm-col');
         $this->tagOpen('div', 'input-group');
         $this->inputPrepend('Bandwidth');
         $this->numberInput('me_bandwidth', '', 'form-control', false, 1, 9999);
@@ -1427,23 +1419,22 @@ class idlers extends helperFunctions
         $this->tagClose('select');
         $this->tagClose('div', 3);
 
-        $this->rowColOpen('form-row', 'col-12');
+        $this->rowColOpen('form-row', 'col-12 col-md-6');
         $this->htmlPhrase('p', 'm-desc', 'Notes:');
         $this->outputString("<textarea class='form-control' id='me_notes' name='me_notes' rows='4' cols='40' maxlength='255'>");
         $this->outputString("</textarea>");
-        $this->tagClose('div', 2);
+        $this->tagClose('div');
+        $this->colOpen('col-12 col-md-6');
+        $this->tagOpen('div', 'input-group');
+        $this->inputPrepend('Tags');
+        $this->tagsInput('me_tags', 'form-control');
+        $this->tagClose('div', 3);
 
         $this->rowColOpen('form-row', 'col-12');
         $this->htmlPhrase('p', 'm-desc', 'Update YABs disk & network speeds:');
         $this->outputString("<textarea class='form-control' id='me_yabs' name='me_yabs' rows='4' cols='40' placeholder='First line must be: # ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## #'>");
         $this->outputString("</textarea>");
         $this->tagClose('div', 2);
-
-        $this->rowColOpen('form-row', 'col-12');
-        $this->tagOpen('div', 'input-group');
-        $this->inputPrepend('Tags');
-        $this->tagsInput('me_tags', 'form-control');
-        $this->tagClose('div', 3);
 
         $this->rowColOpen('form-row text-center', 'col-12');
         $this->submitInput('Update', 'submitInput', 'btn btn-second');
