@@ -656,7 +656,7 @@ class idlers extends helperFunctions
         $this->editDomainModal();
 
         $this->outputString('<div class="modal fade" id="viewMoreServerModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">');
-        $this->outputString('<div class="modal-dialog" role="document">');
+        $this->outputString('<div class="modal-dialog modal-lg" role="document">');
         $this->outputString('<div class="modal-content" id="viewMoreModalBody">');
         $this->tagClose('div', 3);
 
@@ -724,7 +724,7 @@ class idlers extends helperFunctions
             $select = $this->dbConnect()->prepare("
               SELECT servers.id as server_id,hostname,ipv4,ipv6,`cpu`,cpu_type,cpu_freq,ram,ram_type,swap,swap_type,`disk`,disk_type,bandwidth,bandwidth_type,gb5_single,gb5_multi,gb5_id,aes_ni,amd_v,
               is_dedicated,is_cpu_dedicated,was_special,os,ssh_port,still_have,tags,notes,label,virt,has_yabs,has_st,ns1,ns2,DATE_FORMAT(`owned_since`, '%M %Y') as owned_since, `owned_since` as owned_since_raw, `4k`,`4k_type`,`64k`,`64k_type`,`512k`,`512k_type`,`1m`,`1m_type`,
-              loc.name as location,send,send_type,recieve,recieve_type,price,currency,term,as_usd,per_month,next_dd,pr.name as provider
+              loc.name as location,send,send_type,recieve,recieve_type,price,currency,term,as_usd,per_month,usd_per_month,next_dd,pr.name as provider
               FROM servers INNER JOIN disk_speed ds on servers.id = ds.server_id
               INNER JOIN speed_tests st on servers.id = st.server_id INNER JOIN locations loc on servers.location = loc.id
               INNER JOIN providers pr on servers.provider = pr.id INNER JOIN pricing on servers.id = pricing.server_id WHERE servers.id = ? LIMIT 1;");
@@ -739,7 +739,7 @@ class idlers extends helperFunctions
             $select = $this->dbConnect()->prepare("
               SELECT servers.id as server_id,hostname,ipv4,ipv6,`cpu`,cpu_type,cpu_freq,ram,ram_type,swap,swap_type,`disk`,disk_type,bandwidth,bandwidth_type,gb5_single,gb5_multi,gb5_id,aes_ni,amd_v,
               is_dedicated,is_cpu_dedicated,was_special,os,ssh_port,still_have,tags,notes,label,virt,has_yabs,has_st,ns1,ns2,DATE_FORMAT(`owned_since`, '%M %Y') as owned_since, `owned_since` as owned_since_raw, `4k`,`4k_type`,`64k`,`64k_type`,`512k`,`512k_type`,`1m`,`1m_type`,
-              loc.name as location,price,currency,term,as_usd,per_month,next_dd,pr.name as provider
+              loc.name as location,price,currency,term,as_usd,per_month,usd_per_month,next_dd,pr.name as provider
               FROM servers INNER JOIN disk_speed ds on servers.id = ds.server_id
             INNER JOIN locations loc on servers.location = loc.id
               INNER JOIN providers pr on servers.provider = pr.id INNER JOIN pricing on servers.id = pricing.server_id WHERE servers.id = ? LIMIT 1;");
@@ -749,8 +749,8 @@ class idlers extends helperFunctions
         } else {
             $select = $this->dbConnect()->prepare("
                SELECT servers.id as server_id,hostname,ipv4,ipv6,`cpu`,cpu_type,cpu_freq,ram,ram_type,swap,swap_type,`disk`,disk_type,
-               bandwidth,bandwidth_type,gb5_single,gb5_multi,gb5_id,aes_ni,amd_v,is_dedicated,is_cpu_dedicated,was_special,os,ssh_port,still_have,tags,notes,virt,has_yabs,ns1,ns2,
-               DATE_FORMAT(`owned_since`, '%M %Y') as owned_since,loc.name as location,price,currency,term,as_usd,per_month,next_dd,pr.name as provider
+               bandwidth,bandwidth_type,gb5_single,gb5_multi,gb5_id,aes_ni,amd_v,is_dedicated,is_cpu_dedicated,was_special,os,ssh_port,still_have,tags,notes,virt,has_yabs,ns1,ns2,label,has_st,
+               DATE_FORMAT(`owned_since`, '%M %Y') as owned_since,loc.name as location,price,currency,term,as_usd,per_month,usd_per_month,next_dd,pr.name as provider
                FROM servers INNER JOIN locations loc on servers.location = loc.id
                INNER JOIN providers pr on servers.provider = pr.id INNER JOIN pricing on servers.id = pricing.server_id WHERE servers.id = ? LIMIT 1;");
             $select->execute([$id]);
@@ -2218,7 +2218,7 @@ class idlers extends helperFunctions
         $this->tagOpen('div', 'modal-body');
 
         if (!is_null($data['label']) || !empty($data['label'])) {
-            $this->rowColOpen('row m-row', 'col-4');
+            $this->rowColOpen('row m-row', 'col-4 mm-col');
             $this->HTMLphrase('p', 'm-desc', 'Label');
             $this->tagClose('div');
             $this->colOpen('col-8');
@@ -2226,157 +2226,115 @@ class idlers extends helperFunctions
             $this->tagClose('div', 2);
         }
 
-        $this->rowColOpen('row m-row', 'col-4');
-        $this->HTMLphrase('p', 'm-desc', 'IPv4');
-        $this->tagClose('div');
-        $this->colOpen('col-8');
+        $this->rowColOpen('row m-row', 'col-12 col-md-6 mm-col');
+        $this->HTMLphrase('p', 'm-desc', 'IPv4 ');
         $this->outputString('<code><p class="m-value">' . $data['ipv4'] . '</p></code>');
-        $this->tagClose('div', 2);
-
-        $this->rowColOpen('row m-row', 'col-4');
-        $this->HTMLphrase('p', 'm-desc', 'IPv6');
         $this->tagClose('div');
-        $this->colOpen('col-8');
+        $this->colOpen('col-12 col-md-6 mm-col');
+        $this->HTMLphrase('p', 'm-desc', 'IPv6 ');
         $this->outputString('<code><p class="m-value">' . $ipv6 . '</p></code>');
         $this->tagClose('div', 2);
 
-        $this->rowColOpen('row m-row', 'col-4');
-        $this->HTMLphrase('p', 'm-desc', 'NS1');
-        $this->tagClose('div');
-        $this->colOpen('col-8');
+        $this->rowColOpen('row m-row', 'col-12 col-md-6 mm-col');
+        $this->HTMLphrase('p', 'm-desc', 'NS1 ');
         $this->outputString('<code><p class="m-value">' . $data['ns1'] . '</p></code>');
-        $this->tagClose('div', 2);
-        $this->rowColOpen('row m-row', 'col-4');
-        $this->HTMLphrase('p', 'm-desc', 'NS2');
         $this->tagClose('div');
-        $this->colOpen('col-8');
+        $this->colOpen('col-12 col-md-6 mm-col');
+        $this->HTMLphrase('p', 'm-desc', 'NS2 ');
         $this->outputString('<code><p class="m-value">' . $data['ns2'] . '</p></code>');
         $this->tagClose('div', 2);
 
-        $this->rowColOpen('row m-row', 'col-4');
-        $this->HTMLphrase('p', 'm-desc', 'SSH Port');
-        $this->tagClose('div');
-        $this->colOpen('col-8');
-        $this->HTMLphrase('p', 'm-value', '<code>' . $data['ssh_port'] . '</code>');
-        $this->tagClose('div', 2);
-
-        $this->rowColOpen('row m-row', 'col-4');
-        $this->HTMLphrase('p', 'm-desc', 'Bandwidth');
-        $this->tagClose('div');
-        $this->colOpen('col-8');
-        $this->HTMLphrase('p', 'm-value', '' . $data['bandwidth'] . '<span class="data-type">' . $data['bandwidth_type'] . '</span>');
-        $this->tagClose('div', 2);
-
-        $this->rowColOpen('row m-row', 'col-4');
-        $this->HTMLphrase('p', 'm-desc', 'Disk');
-        $this->tagClose('div');
-        $this->colOpen('col-8');
-        $this->HTMLphrase('p', 'm-value', '' . $data['disk'] . '<span class="data-type">' . $data['disk_type'] . '</span>');
-        $this->tagClose('div', 2);
-
-        $this->rowColOpen('row m-row', 'col-4');
-        $this->HTMLphrase('p', 'm-desc', 'Location');
-        $this->tagClose('div');
-        $this->colOpen('col-8');
+        $this->rowColOpen('row m-row', 'col-12 col-md-6 mm-col');
+        $this->HTMLphrase('p', 'm-desc', 'Location ');
         $this->HTMLphrase('p', 'm-value', $data['location']);
-        $this->tagClose('div', 2);
-
-        $this->rowColOpen('row m-row', 'col-4');
-        $this->HTMLphrase('p', 'm-desc', 'Provider');
         $this->tagClose('div');
-        $this->colOpen('col-8');
+        $this->colOpen('col-12 col-md-6 mm-col');
+        $this->HTMLphrase('p', 'm-desc', 'Provider ');
         $this->HTMLphrase('p', 'm-value', $data['provider']);
         $this->tagClose('div', 2);
 
-        $this->rowColOpen('row m-row', 'col-4');
-        $this->HTMLphrase('p', 'm-desc', 'OS');
-        $this->tagClose('div');
-        $this->colOpen('col-8');
+        $this->rowColOpen('row m-row', 'col-12 col-md-6 mm-col');
+        $this->HTMLphrase('p', 'm-desc', 'OS ');
         $this->HTMLphrase('p', 'm-value', $this->osIntToString($data['os']));
-        $this->tagClose('div', 2);
-
-        $this->rowColOpen('row m-row', 'col-4');
-        $this->HTMLphrase('p', 'm-desc', 'Due in');
         $this->tagClose('div');
-        $this->colOpen('col-8');
+        $this->colOpen('col-12 col-md-6 mm-col');
+        $this->HTMLphrase('p', 'm-desc', 'Due in ');
         $this->HTMLphrase('p', 'm-value', '' . $this->processDueDate($data['server_id'], $data['term'], $data['next_dd']) . '<span class="data-type">days</span>');
         $this->tagClose('div', 2);
 
-        $this->rowColOpen('row m-section-row', 'col-12 text-center');
-        $this->HTMLphrase('p', 'm-section-text', 'CPU');
+        $this->rowColOpen('row m-row', 'col-12 col-md-6 mm-col');
+        $this->HTMLphrase('p', 'm-desc', 'Bandwidth ');
+        $this->HTMLphrase('p', 'm-value', '' . $data['bandwidth'] . '<span class="data-type">' . $data['bandwidth_type'] . '</span>');
+        $this->tagClose('div');
+        $this->colOpen('col-12 col-md-6 mm-col');
+        $this->HTMLphrase('p', 'm-desc', 'SSH Port ');
+        $this->outputString('<code><p class="m-value">' . $data['ssh_port'] . '</p></code>');
         $this->tagClose('div', 2);
 
-        $this->rowColOpen('row m-row', 'col-4');
-        $this->HTMLphrase('p', 'm-desc', 'Amount');
-        $this->tagClose('div');
-        $this->colOpen('col-8');
+        $this->rowColOpen('row m-row', 'col-12 col-md-6 mm-col');
+        $this->HTMLphrase('p', 'm-desc', 'Disk ');
+        $this->HTMLphrase('p', 'm-value', '' . $data['disk'] . '<span class="data-type">' . $data['disk_type'] . '</span>');
+        $this->tagClose('div', 2);
+
+        $this->rowColOpen('row m-section-row', 'col-12 col-md-6');
+        $this->HTMLphrase('p', 'm-section-text text-center', 'CPU');
+        $this->rowColOpen('row m-row', 'col-12 col-md-6');
+        $this->HTMLphrase('p', 'm-desc', 'Amount ');
         $this->HTMLphrase('p', 'm-value', $data['cpu']);
-        $this->tagClose('div', 2);
-
-        $this->rowColOpen('row m-row', 'col-4');
-        $this->HTMLphrase('p', 'm-desc', 'Frequency');
         $this->tagClose('div');
-        $this->colOpen('col-8');
-        $this->HTMLphrase('p', 'm-value', $data['cpu_freq']);
+        $this->colOpen('col-12 col-md-6');
+        $this->HTMLphrase('p', 'm-desc', 'Frequency ');
+        $this->HTMLphrase('p', 'm-value', $data['cpu_freq'] . '<span class="data-type">Mhz</span>');
         $this->tagClose('div', 2);
-
         $this->rowColOpen('row m-row', 'col-12');
         $this->outputString('<i><p class="m-value">' . $data['cpu_type'] . '</p></i>');
-        $this->tagClose('div', 2);
+        $this->tagClose('div', 3);
 
-        $this->rowColOpen('row m-section-row', 'col-12 text-center');
-        $this->outputString('<p class="m-section-text">Ram</p>');
-        $this->tagClose('div', 2);
-
-        $this->rowColOpen('row m-row', 'col-4');
-        $this->HTMLphrase('p', 'm-desc', 'Ram');
-        $this->tagClose('div');
-        $this->colOpen('col-8');
+        $this->colOpen('col-12 col-md-6');
+        $this->outputString('<p class="m-section-text text-center">Ram</p>');
+        $this->rowColOpen('row m-row', 'col-12 col-md-6');
+        $this->HTMLphrase('p', 'm-desc', 'Ram ');
         $this->HTMLphrase('p', 'm-value', '' . $data['ram'] . '<span class="data-type">' . $data['ram_type'] . '</span>');
-        $this->tagClose('div', 2);
-
-        $this->rowColOpen('row m-row', 'col-4');
-        $this->HTMLphrase('p', 'm-desc', 'Swap');
         $this->tagClose('div');
-        $this->colOpen('col-8');
+        $this->colOpen('col-12 col-md-6');
+        $this->HTMLphrase('p', 'm-desc', 'Swap ');
         $this->HTMLphrase('p', 'm-value', '' . $data['swap'] . '<span class="data-type">' . $data['swap_type'] . '</span>');
-        $this->tagClose('div', 2);
+        $this->tagClose('div', 4);
 
         if ($has_yabs) {
             $this->rowColOpen('row m-section-row', 'col-12 text-center');
             $this->HTMLphrase('p', 'm-section-text', 'GeekBench 5');
             $this->tagClose('div', 2);
-            $this->rowColOpen('row m-row', 'col-4');
+            $this->rowColOpen('row m-row', 'col-4 mm-col');
             $this->HTMLphrase('p', 'm-desc', 'single: ');
             $this->HTMLphrase('p', 'm-value', $data['gb5_single']);
             $this->tagClose('div');
-            $this->colOpen('col-4');
+            $this->colOpen('col-4 mm-col');
             $this->HTMLphrase('p', 'm-desc', 'multi: ');
             $this->HTMLphrase('p', 'm-value', $data['gb5_multi']);
             $this->tagClose('div');
-            $this->colOpen('col-4');
+            $this->colOpen('col-4 mm-col');
             $this->HTMLphrase('p', 'm-desc', 'id: ');
             $this->outputString('<a id="m_gb5_id_link" href="https://browser.geekbench.com/v5/cpu/' . $data['gb5_id'] . '"><p class="m-value">' . $data['gb5_id'] . '</p></a>');
             $this->tagClose('div', 2);
 
             $this->rowColOpen('row m-section-row', 'col-12 text-center');
-            $this->HTMLphrase('p', 'm-section-text', 'Disk test');
+            $this->HTMLphrase('p', 'm-section-text', 'Disk tests');
             $this->tagClose('div', 2);
 
-            $this->rowColOpen('row m-row', 'col-6');
+            $this->rowColOpen('row m-row', 'col-6 col-md-3 mm-col');
             $this->HTMLphrase('p', 'm-desc', '4k: ');
             $this->HTMLphrase('p', 'm-value', '' . $data['4k'] . '<span class="data-type">' . $data['4k_type'] . '</span>');
             $this->tagClose('div');
-            $this->colOpen('col-6');
+            $this->colOpen('col-6 col-md-3 mm-col');
             $this->HTMLphrase('p', 'm-desc', '64k: ');
             $this->HTMLphrase('p', 'm-value', '' . $data['64k'] . '<span class="data-type">' . $data['64k_type'] . '</span>');
-            $this->tagClose('div', 2);
-
-            $this->rowColOpen('row m-row', 'col-6');
+            $this->tagClose('div');
+            $this->colOpen('col-6 col-md-3 mm-col');
             $this->HTMLphrase('p', 'm-desc', '512k: ');
             $this->HTMLphrase('p', 'm-value', '' . $data['512k'] . '<span class="data-type">' . $data['512k_type'] . '</span>');
             $this->tagClose('div');
-            $this->colOpen('col-6');
+            $this->colOpen('col-6 col-md-3 mm-col');
             $this->HTMLphrase('p', 'm-desc', '1m: ');
             $this->HTMLphrase('p', 'm-value', '' . $data['1m'] . '<span class="data-type">' . $data['1m_type'] . '</span>');
             $this->tagClose('div', 2);
@@ -2385,63 +2343,67 @@ class idlers extends helperFunctions
         $this->HTMLphrase('p', 'm-section-text', 'Pricing');
         $this->tagClose('div', 2);
 
-        $this->rowColOpen('row m-row', 'col-12');
+        $this->rowColOpen('row m-row', 'col-12 col-md-6 mm-col');
         $this->HTMLphrase('p', 'm-value', '' . $data['price'] . ' <span class="data-type">' . $data['currency'] . '</span> ');
         $this->HTMLphrase('p', 'm-value', $this->paymentTerm($data['term']));
+        $this->tagClose('div');
+        $this->colOpen('col-12 col-md-6 mm-col');
+        $this->HTMLphrase('p', 'm-desc', 'As USD per month: ');
+        $this->HTMLphrase('p', 'm-value', '$' . $data['usd_per_month'] . '');
         $this->tagClose('div', 2);
 
         $this->rowColOpen('row m-section-row', 'col-12 text-center');
         $this->HTMLphrase('p', 'm-section-text', 'Other');
         $this->tagClose('div', 2);
 
-        $this->rowColOpen('row m-row', 'col-4');
+        $this->rowColOpen('row m-row', 'col-4 mm-col');
         $this->HTMLphrase('p', 'm-desc', 'Owned since');
         $this->tagClose('div');
-        $this->colOpen('col-8');
+        $this->colOpen('col-8 mm-col');
         $this->HTMLphrase('p', 'm-value', $data['owned_since']);
         $this->tagClose('div', 2);
 
-        $this->rowColOpen('row m-row', 'col-4');
+        $this->rowColOpen('row m-row', 'col-4 mm-col');
         $this->HTMLphrase('p', 'm-desc', 'Dedicated: ');
         $this->tagClose('div');
-        $this->colOpen('col-2');
+        $this->colOpen('col-2 mm-col');
         $this->HTMLphrase('p', 'm-value', $this->intToYesNo($data['is_dedicated']));
         $this->tagClose('div');
-        $this->colOpen('col-4');
+        $this->colOpen('col-4 mm-col');
         $this->HTMLphrase('p', 'm-desc', 'Dedi CPU: ');
         $this->tagClose('div');
-        $this->colOpen('col-2');
+        $this->colOpen('col-2 mm-col');
         $this->HTMLphrase('p', 'm-value', $this->intToYesNo($data['is_cpu_dedicated']));
         $this->tagClose('div', 2);
 
-        $this->rowColOpen('row m-row', 'col-4');
+        $this->rowColOpen('row m-row', 'col-4 mm-col');
         $this->HTMLphrase('p', 'm-desc', 'Is offer: ');
         $this->tagClose('div');
-        $this->colOpen('col-2');
+        $this->colOpen('col-2 mm-col');
         $this->HTMLphrase('p', 'm-value', $this->intToYesNo($data['was_special']));
         $this->tagClose('div');
-        $this->colOpen('col-4');
+        $this->colOpen('col-4 mm-col');
         $this->HTMLphrase('p', 'm-desc', 'AES-NI: ');
         $this->tagClose('div');
-        $this->colOpen('col-2');
+        $this->colOpen('col-2 mm-col');
         $this->HTMLphrase('p', 'm-value', $this->intToYesNo($data['aes_ni']));
         $this->tagClose('div', 2);
 
-        $this->rowColOpen('row m-row', 'col-4');
+        $this->rowColOpen('row m-row', 'col-4 mm-col');
         $this->HTMLphrase('p', 'm-desc', 'VM-x/AMD-V: ');
         $this->tagClose('div');
-        $this->colOpen('col-2');
+        $this->colOpen('col-2 mm-col');
         $this->HTMLphrase('p', 'm-value', $this->intToYesNo($data['amd_v']));
         $this->tagClose('div');
-        $this->colOpen('col-4');
+        $this->colOpen('col-4 mm-col');
         $this->HTMLphrase('p', 'm-desc', 'Virt: ');
         $this->tagClose('div');
-        $this->colOpen('col-2');
+        $this->colOpen('col-2 mm-col');
         $this->HTMLphrase('p', 'm-value', $data['virt']);
         $this->tagClose('div', 2);
         if ($has_yabs && $has_st) {
             $this->rowColOpen('row m-section-row', 'col-12 text-center');
-            $this->HTMLphrase('p', 'm-section-text', 'Network test');
+            $this->HTMLphrase('p', 'm-section-text', 'Network tests');
             $this->tagClose('div', 2);
             $this->tagOpen('div', 'row');
             $this->outputString('<div class="col-6"><p class="m-desc">Location:</p></div>');
@@ -2464,8 +2426,8 @@ class idlers extends helperFunctions
             }
         }
 
-        $this->rowColOpen('row m-section-row', 'col-12 text-center');
-        $this->htmlPhrase('p', 'm-section-text', 'Notes');
+        $this->rowColOpen('row m-section-row', 'col-12 col-md-6');
+        $this->htmlPhrase('p', 'm-section-text text-center', 'Notes');
         $this->outputString("<textarea class='form-control' id='server_notes' name='server_notes' rows='4' cols='40' maxlength='255' disabled>");
         if (is_null($data['notes']) || empty($data['notes'])) {
             $this->outputString('');
@@ -2473,12 +2435,9 @@ class idlers extends helperFunctions
             $this->outputString($data['notes']);
         }
         $this->outputString("</textarea>");
-        $this->tagClose('div', 2);
-
-        $this->rowColOpen('row m-section-row', 'col-12 text-center');
-        $this->HTMLphrase('p', 'm-section-text', 'Tags');
-        $this->tagClose('div', 2);
-        $this->rowColOpen('row m-row', 'col-12');
+        $this->tagClose('div');
+        $this->colOpen('col-12 col-md-6');
+        $this->HTMLphrase('p', 'm-section-text text-center', 'Tags');
         $this->tagOpen('ul');
         $tags_arr = explode(",", $data['tags']);
         foreach ($tags_arr as $tag) {
@@ -2487,16 +2446,16 @@ class idlers extends helperFunctions
             }
         }
         $this->tagClose('ul');
-        $this->tagClose('div', 3);
+        $this->tagClose('div', 2);
         if (file_exists("yabs/{$data['server_id']}.txt")) {
-            $this->rowColOpen('row text-center', 'col-12 col-md-6');
+            $this->rowColOpen('row m-section-row text-center', 'col-12 col-md-6');
             $this->outputString('<a class="btn btn-main view-yabs-btn" id="viewYabs" value="' . $item_id . '" data-target="#yabsModal" data-toggle="modal" href="#" role="button">View YABs</a>');
             $this->tagClose('div');
             $this->colOpen('col-12 col-md-6');
             $this->outputString('<a class="btn btn-third" id="closeViewMoreModal" role="button" data-dismiss="modal">Close</a>');
             $this->tagClose('div', 2);
         } else {
-            $this->rowColOpen('row text-center', 'col-12');
+            $this->rowColOpen('row m-section-row text-center', 'col-12');
             $this->outputString('<a class="btn btn-third" id="closeViewMoreModal" role="button" data-dismiss="modal">Close</a>');
             $this->tagClose('div', 2);
         }
