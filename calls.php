@@ -37,7 +37,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 $idle->viewMoreDomainModal($_GET['id']);//View more details modal
             }
         } elseif ($_GET['type'] == 'dns_search') {
-            $idle->getIpForDomain($_GET['hostname'], $_GET['dns_type']);
+            header('Content-Type: text/html; charset=utf-8');
+            echo $idle->getIpForDomain($_GET['hostname'], $_GET['dns_type']);
+        } elseif ($_GET['type'] == 'asn_search') {
+            header('Content-Type: text/html; charset=utf-8');        
+            echo $idle->getAsnForIp($_GET['ip']);
+        } elseif ($_GET['type'] == 'asn_name') {
+            header('Content-Type: text/html; charset=utf-8');        
+            echo $idle->getAsnName($_GET['asn']);            
         } elseif ($_GET['type'] == 'check_up') {
             echo $idle->checkIsUp($_GET['host']);
         } elseif ($_GET['type'] == 'object_cards') {

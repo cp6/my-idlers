@@ -3086,9 +3086,55 @@ class idlers extends helperFunctions
                     return $data['0']['ipv6'];
                 }
                 break;
+            case "TXT":
+                $data = dns_get_record($domain, DNS_TXT);
+                if (isset($data['0']['txt'])) {
+                    return $data['0']['txt'];
+                }
+                break;                
         }
         return "";//Doesnt exist/null/empty/invalid
     }
+    
+    public function getAsnForIp(string $ip): int
+    {//Gets ASN for an IP address
+        if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+          $parts = explode('.',$ip); 
+          $dnslookup = implode('.', array_reverse($parts)) . '.origin.asn.cymru.com.';
+        } elseif (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+          $addr = inet_pton($ip);
+          $unpack = unpack('H*hex', $addr);
+          $hex = $unpack['hex'];
+          $dnslookup = implode('.', array_reverse(str_split($hex))) . '.origin6.asn.cymru.com.';
+        }
+        
+        if (isset($dnslookup)) {
+          $record = $this->getIpForDomain($dnslookup, 'TXT');
+          if(!empty($record)) {
+            // example: 3356 | 4.0.0.0/9 | US | arin | 1992-12-01
+             $result = explode(" | ", $record);
+             $asn = array_shift($result);
+             return $asn;
+          }
+        }
+
+        return 0;//Doesnt exist/null/empty/invalid
+    }
+    
+    public function getAsnName(int $asn): string
+    {//Gets ASN description for an ASN id
+        //AS3356.asn.cymru.com
+        $dnslookup = 'AS' . $asn . '.asn.cymru.com.';
+        $record = $this->getIpForDomain($dnslookup, 'TXT');
+        if(!empty($record)) {
+          // example: 3356 | US | arin | 2000-03-10 | LEVEL3, US
+          $result = explode(" | ", $record);
+          $name = end($result);
+          return $name;          
+        }
+
+        return "";//Doesnt exist/null/empty/invalid
+    }    
 
     public function checkIsUp(string $host, int $port = 80, int $wait_time = 1): int
     {//Check if host/ip is "up"
