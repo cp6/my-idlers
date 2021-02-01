@@ -2569,7 +2569,11 @@ class idlers extends helperFunctions
         $this->HTMLphrase('p', 'm-desc', 'Attached to');
         $this->tagClose('div');
         $this->colOpen('col-8');
-        $this->outputString('<code><p class="m-value">' . $this->idToObjectName($data['attached_to']) . '</p></code>');
+        if (!is_null($data['attached_to']) && !empty($data['attached_to'])){
+            $this->outputString('<code><p class="m-value">' . $this->idToObjectName($data['attached_to']) . '</p></code>');
+        } else {
+            $this->outputString('');
+        }
         $this->tagClose('div', 2);
 
 
