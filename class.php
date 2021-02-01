@@ -568,6 +568,20 @@ class helperFunctions extends elementHelpers
         $date = new DateTime($ahead_date);
         return $date->diff($today)->format("%a");
     }
+
+    protected function deleteYabsForId(string $id)
+    {
+        if ($handle = opendir("yabs/")) {
+            while (false !== ($file = readdir($handle))) {
+                if ('.' === $file) continue;
+                if (strpos($file, $id) !== false) {
+                    unlink("yabs/$file");
+                }
+            }
+            closedir($handle);
+        }
+    }
+
 }
 
 class idlers extends helperFunctions
@@ -3452,6 +3466,7 @@ class itemUpdate extends idlers
             $del_disk->execute([$item_id]);
             $del_speed = $this->dbConnect()->prepare("DELETE FROM `speed_tests` WHERE `server_id` = ?;");
             $del_speed->execute([$item_id]);
+            $this->deleteYabsForId($item_id);//Delete saved YABs
         }
     }
 
