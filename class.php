@@ -19,6 +19,8 @@ class idlersConfig
     const COLOR_TABLE = true;
 
     const DEFAULT_VIEW = 'CARDS';//CARDS or TABLE
+
+    const SAVE_YABS_OUTPUT = true;//true or false
 }
 
 class elementHelpers extends idlersConfig
@@ -2569,7 +2571,7 @@ class idlers extends helperFunctions
         $this->HTMLphrase('p', 'm-desc', 'Attached to');
         $this->tagClose('div');
         $this->colOpen('col-8');
-        if (!is_null($data['attached_to']) && !empty($data['attached_to'])){
+        if (!is_null($data['attached_to']) && !empty($data['attached_to'])) {
             $this->outputString('<code><p class="m-value">' . $this->idToObjectName($data['attached_to']) . '</p></code>');
         } else {
             $this->outputString('');
@@ -3209,14 +3211,11 @@ class itemInsert extends idlers
         return $domain_id;
     }
 
-    public function insertYabsData(bool $save_yabs = true)
+    public function insertYabsData()
     {//YABS data handler
         $file_name = 'yabsFromForm.txt';
         $logfile = fopen($file_name, "w") or die("Unable to open file!");
         fwrite($logfile, $this->data['yabs']);
-        if ($save_yabs) {
-            $this->saveYABS($this->data['yabs'], "{$this->item_id}.txt");
-        }
         fclose($logfile);
         $file = @fopen($file_name, 'r');
         if ($file) {
@@ -3224,11 +3223,11 @@ class itemInsert extends idlers
             //echo json_encode($array);
             //exit;
         }
-        if (count($array) < 50){
+        if (count($array) < 50) {
             return 9;//Less than 50 lines
         }
         if (strpos($array[0], '# ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## #') !== false) {
-            if ($array[1] == "\r"){
+            if ($array[1] == "\r") {
                 return 8;//Didnt copy output correctly
             }
             $version_array = explode(' ', preg_replace('!\s+!', ' ', $this->trimRemoveR($array[2])));
@@ -3326,6 +3325,9 @@ class itemInsert extends idlers
                 ($disk_type == 'TB') ? $disk_gb = $this->TBtoGB($disk) : $disk_gb = $disk;
                 $update = $this->dbConnect()->prepare('UPDATE `servers` SET `cpu` = ?, `cpu_freq` = ?, `cpu_type` = ?, ram = ?, ram_type = ?, swap = ?, swap_type = ?, disk = ?, disk_type = ?, `aes_ni` = ?, `amd_v` = ?, gb5_single = ?, gb5_multi = ?, gb5_id = ?, ram_mb = ?, swap_mb = ?, disk_gb = ? WHERE `id` = ? LIMIT 1;');
                 $update->execute([$cpu_cores, $cpu_freq, $cpu, $ram, $ram_type, $swap, $swap_type, $disk, $disk_type, $aes_ni, $vm_amd_v, $geekbench_single, $geekbench_multi, $gb5_id, $ram_mb, $swap_mb, $disk_gb, $this->item_id]);
+                if (self::SAVE_YABS_OUTPUT) {
+                    $this->saveYABS($this->data['yabs'], "{$this->item_id}.txt");
+                }
                 return 1;
             } else {
                 return 2;//Wrong version
