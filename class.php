@@ -3220,95 +3220,114 @@ class itemInsert extends idlers
             //echo json_encode($array);
             //exit;
         }
-        if (strpos($array[0], '# ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## #') !== false || count($array) < 50) {
+        if (count($array) < 50){
+            return 9;//Less than 50 lines
+        }
+        if (strpos($array[0], '# ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## #') !== false) {
+            if ($array[1] == "\r"){
+                return 8;//Didnt copy output correctly
+            }
             $version_array = explode(' ', preg_replace('!\s+!', ' ', $this->trimRemoveR($array[2])));
             $version = $version_array[1];//YABs version
-            $cpu = $this->trimRemoveR(str_replace(':', '', strstr($array[10], ': ')));
-            $cpu_spec = explode(' ', strstr($array[11], ': '));//: 2 @ 3792.872 MHz
-            $cpu_cores = $cpu_spec[1];
-            $cpu_freq = $cpu_spec[3];
-            $ram_line = $this->trimRemoveR(str_replace(':', '', strstr($array[14], ': ')));
-            $ram = floatval($ram_line);
-            $ram_type = $this->datatype($ram_line);
-            $swap_line = $this->trimRemoveR(str_replace(':', '', strstr($array[15], ': ')));
-            $swap = floatval($swap_line);
-            $swap_type = $this->datatype($swap_line);
-            $disk_line = $this->trimRemoveR(str_replace(':', '', strstr($array[16], ': ')));
-            $disk = floatval($disk_line);
-            $disk_type = $this->datatype($disk_line);
-            $io_3 = explode(' ', preg_replace('!\s+!', ' ', $array[24]));
-            $io_6 = explode(' ', preg_replace('!\s+!', ' ', $array[30]));
-            (strpos($array[12], 'Enabled') !== false) ? $aes_ni = 1 : $aes_ni = 0;
-            (strpos($array[13], 'Enabled') !== false) ? $vm_amd_v = 1 : $vm_amd_v = 0;
-            $d4k_as_mbps = $this->diskSpeedAsMbps($io_3[3], $this->floatValue($io_3[2]));
-            $d64k_as_mbps = $this->diskSpeedAsMbps($io_3[7], $this->floatValue($io_3[6]));
-            $d512k_as_mbps = $this->diskSpeedAsMbps($io_6[3], $this->floatValue($io_6[2]));
-            $d1m_as_mbps = $this->diskSpeedAsMbps($io_6[7], $this->floatValue($io_6[6]));
-            $disk_test_arr = array($this->item_id, $this->floatValue($io_3[2]), $io_3[3], $this->floatValue($io_3[6]), $io_3[7], $this->floatValue($io_6[2]), $io_6[3], $this->floatValue($io_6[6]), $io_6[7], $d4k_as_mbps, $d64k_as_mbps, $d512k_as_mbps, $d1m_as_mbps);
-            $this->insertDiskTest($disk_test_arr);
-            if ($array[45] == "Geekbench 5 Benchmark Test:\r") {
-                //No ipv6
-                //Has short ipv4 network speed testing (-r)
-                $start_st = 36;
-                $end_st = 43;
-                $gb_s = 49;
-                $gb_m = 50;
-                $gb_url = 51;
-            } elseif ($array[40] == "Geekbench 5 Benchmark Test:\r") {
-                //No ipv6
-                //Has full ipv4 network speed testing
-                $start_st = 36;
-                $end_st = 38;
-                $gb_s = 44;
-                $gb_m = 45;
-                $gb_url = 46;
-            } elseif ($array[40] == "iperf3 Network Speed Tests (IPv6):\r") {
-                //HAS ipv6
-                //Has short ipv4 & ipv6 network speed testing
-                $start_st = 36;
-                $end_st = 38;
-                $gb_s = 52;
-                $gb_m = 53;
-                $gb_url = 54;
-            } elseif ($array[55] == "Geekbench 5 Benchmark Test:\r") {
-                //HAS ipv6
-                //Has full ipv4 & ipv6 network speed testing
-                $start_st = 36;
-                $end_st = 43;
-                $gb_s = 59;
-                $gb_m = 60;
-                $gb_url = 61;
-            }
-            $geekbench_single = $this->intValue($array[$gb_s]);
-            $geekbench_multi = $this->intValue($array[$gb_m]);
-            $geek_full_url = explode(' ', preg_replace('!\s+!', ' ', $array[$gb_url]));
-            $gb5_id = substr($geek_full_url[3], strrpos($geek_full_url[3], '/') + 1);//
-            $has_a_speed_test = false;
-            for ($i = $start_st; $i <= $end_st; $i++) {
-                if (strpos($array[$i], 'busy') !== false) {
-                    //Has a "busy" result, No insert
+            if ($version == 'v2020-12-29') {
+                $cpu = $this->trimRemoveR(str_replace(':', '', strstr($array[10], ': ')));
+                $cpu_spec = explode(' ', strstr($array[11], ': '));//: 2 @ 3792.872 MHz
+                $cpu_cores = $cpu_spec[1];
+                $cpu_freq = $cpu_spec[3];
+                $ram_line = $this->trimRemoveR(str_replace(':', '', strstr($array[14], ': ')));
+                $ram = floatval($ram_line);
+                $ram_type = $this->datatype($ram_line);
+                $swap_line = $this->trimRemoveR(str_replace(':', '', strstr($array[15], ': ')));
+                $swap = floatval($swap_line);
+                $swap_type = $this->datatype($swap_line);
+                $disk_line = $this->trimRemoveR(str_replace(':', '', strstr($array[16], ': ')));
+                $disk = floatval($disk_line);
+                $disk_type = $this->datatype($disk_line);
+                $io_3 = explode(' ', preg_replace('!\s+!', ' ', $array[24]));
+                $io_6 = explode(' ', preg_replace('!\s+!', ' ', $array[30]));
+                (strpos($array[12], 'Enabled') !== false) ? $aes_ni = 1 : $aes_ni = 0;
+                (strpos($array[13], 'Enabled') !== false) ? $vm_amd_v = 1 : $vm_amd_v = 0;
+                $d4k_as_mbps = $this->diskSpeedAsMbps($io_3[3], $this->floatValue($io_3[2]));
+                $d64k_as_mbps = $this->diskSpeedAsMbps($io_3[7], $this->floatValue($io_3[6]));
+                $d512k_as_mbps = $this->diskSpeedAsMbps($io_6[3], $this->floatValue($io_6[2]));
+                $d1m_as_mbps = $this->diskSpeedAsMbps($io_6[7], $this->floatValue($io_6[6]));
+                $disk_test_arr = array($this->item_id, $this->floatValue($io_3[2]), $io_3[3], $this->floatValue($io_3[6]), $io_3[7], $this->floatValue($io_6[2]), $io_6[3], $this->floatValue($io_6[6]), $io_6[7], $d4k_as_mbps, $d64k_as_mbps, $d512k_as_mbps, $d1m_as_mbps);
+                $this->insertDiskTest($disk_test_arr);
+                if (isset($array[40])) {
+                    if ($array[45] == "Geekbench 5 Benchmark Test:\r") {
+                        //No ipv6
+                        //Has short ipv4 network speed testing (-r)
+                        $start_st = 36;
+                        $end_st = 43;
+                        $gb_s = 49;
+                        $gb_m = 50;
+                        $gb_url = 51;
+                    } elseif ($array[45] == "Geekbench 4 Benchmark Test:\r") {
+                        return 6;//GeekBench 5 only allowed
+                    } elseif ($array[45] == "Geekbench 5 test failed. Run manually to determine cause.") {
+                        return 7;//GeekBench test failed
+                    } elseif ($array[40] == "Geekbench 5 Benchmark Test:\r") {
+                        //No ipv6
+                        //Has full ipv4 network speed testing
+                        $start_st = 36;
+                        $end_st = 38;
+                        $gb_s = 44;
+                        $gb_m = 45;
+                        $gb_url = 46;
+                    } elseif ($array[40] == "iperf3 Network Speed Tests (IPv6):\r") {
+                        //HAS ipv6
+                        //Has short ipv4 & ipv6 network speed testing
+                        $start_st = 36;
+                        $end_st = 38;
+                        $gb_s = 52;
+                        $gb_m = 53;
+                        $gb_url = 54;
+                    } elseif ($array[55] == "Geekbench 5 Benchmark Test:\r") {
+                        //HAS ipv6
+                        //Has full ipv4 & ipv6 network speed testing
+                        $start_st = 36;
+                        $end_st = 43;
+                        $gb_s = 59;
+                        $gb_m = 60;
+                        $gb_url = 61;
+                    } else {
+                        return 5;//Not correct YABs command output
+                    }
                 } else {
-                    $data = explode(' ', preg_replace('!\s+!', ' ', $array[$i]));
-                    $send_as_mbps = $this->networkSpeedAsMbps($this->yabsSpeedValues($data)['send_type'], $this->yabsSpeedValues($data)['send']);
-                    $recieve_as_mbps = $this->networkSpeedAsMbps($this->yabsSpeedValues($data)['receive_type'], $this->yabsSpeedValues($data)['receive']);
-                    $insert = $this->dbConnect()->prepare('INSERT INTO `speed_tests` (`server_id`, `location`, `send`, `send_type`,`send_as_mbps`, `recieve`,`recieve_type`, `recieve_as_mbps`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
-                    $insert->execute([$this->item_id, $this->yabsSpeedLoc($data)['location'], $this->yabsSpeedValues($data)['send'], $this->yabsSpeedValues($data)['send_type'], $send_as_mbps, $this->yabsSpeedValues($data)['receive'], $this->yabsSpeedValues($data)['receive_type'], $recieve_as_mbps]);
-                    $has_a_speed_test = true;
+                    return 4;//Not correct format
                 }
+                $geekbench_single = $this->intValue($array[$gb_s]);
+                $geekbench_multi = $this->intValue($array[$gb_m]);
+                $geek_full_url = explode(' ', preg_replace('!\s+!', ' ', $array[$gb_url]));
+                $gb5_id = substr($geek_full_url[3], strrpos($geek_full_url[3], '/') + 1);//
+                $has_a_speed_test = false;
+                for ($i = $start_st; $i <= $end_st; $i++) {
+                    if (strpos($array[$i], 'busy') !== false) {
+                        //Has a "busy" result, No insert
+                    } else {
+                        $data = explode(' ', preg_replace('!\s+!', ' ', $array[$i]));
+                        $send_as_mbps = $this->networkSpeedAsMbps($this->yabsSpeedValues($data)['send_type'], $this->yabsSpeedValues($data)['send']);
+                        $recieve_as_mbps = $this->networkSpeedAsMbps($this->yabsSpeedValues($data)['receive_type'], $this->yabsSpeedValues($data)['receive']);
+                        $insert = $this->dbConnect()->prepare('INSERT INTO `speed_tests` (`server_id`, `location`, `send`, `send_type`,`send_as_mbps`, `recieve`,`recieve_type`, `recieve_as_mbps`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
+                        $insert->execute([$this->item_id, $this->yabsSpeedLoc($data)['location'], $this->yabsSpeedValues($data)['send'], $this->yabsSpeedValues($data)['send_type'], $send_as_mbps, $this->yabsSpeedValues($data)['receive'], $this->yabsSpeedValues($data)['receive_type'], $recieve_as_mbps]);
+                        $has_a_speed_test = true;
+                    }
+                }
+                if ($has_a_speed_test) {
+                    $update_st = $this->dbConnect()->prepare('UPDATE `servers` SET `has_st` = 1 WHERE `id` = ? LIMIT 1;');
+                    $update_st->execute([$this->item_id]);
+                }
+                ($ram_type == 'GB') ? $ram_mb = $this->GBtoMB($ram) : $ram_mb = $ram;
+                ($swap_type == 'GB') ? $swap_mb = $this->GBtoMB($swap) : $swap_mb = $swap;
+                ($disk_type == 'TB') ? $disk_gb = $this->TBtoGB($disk) : $disk_gb = $disk;
+                $update = $this->dbConnect()->prepare('UPDATE `servers` SET `cpu` = ?, `cpu_freq` = ?, `cpu_type` = ?, ram = ?, ram_type = ?, swap = ?, swap_type = ?, disk = ?, disk_type = ?, `aes_ni` = ?, `amd_v` = ?, gb5_single = ?, gb5_multi = ?, gb5_id = ?, ram_mb = ?, swap_mb = ?, disk_gb = ? WHERE `id` = ? LIMIT 1;');
+                $update->execute([$cpu_cores, $cpu_freq, $cpu, $ram, $ram_type, $swap, $swap_type, $disk, $disk_type, $aes_ni, $vm_amd_v, $geekbench_single, $geekbench_multi, $gb5_id, $ram_mb, $swap_mb, $disk_gb, $this->item_id]);
+                return 1;
+            } else {
+                return 2;//Wrong version
             }
-            if ($has_a_speed_test) {
-                $update_st = $this->dbConnect()->prepare('UPDATE `servers` SET `has_st` = 1 WHERE `id` = ? LIMIT 1;');
-                $update_st->execute([$this->item_id]);
-            }
-            ($ram_type == 'GB') ? $ram_mb = $this->GBtoMB($ram) : $ram_mb = $ram;
-            ($swap_type == 'GB') ? $swap_mb = $this->GBtoMB($swap) : $swap_mb = $swap;
-            ($disk_type == 'TB') ? $disk_gb = $this->TBtoGB($disk) : $disk_gb = $disk;
-            $update = $this->dbConnect()->prepare('UPDATE `servers` SET `cpu` = ?, `cpu_freq` = ?, `cpu_type` = ?, ram = ?, ram_type = ?, swap = ?, swap_type = ?, disk = ?, disk_type = ?, `aes_ni` = ?, `amd_v` = ?, gb5_single = ?, gb5_multi = ?, gb5_id = ?, ram_mb = ?, swap_mb = ?, disk_gb = ? WHERE `id` = ? LIMIT 1;');
-            $update->execute([$cpu_cores, $cpu_freq, $cpu, $ram, $ram_type, $swap, $swap_type, $disk, $disk_type, $aes_ni, $vm_amd_v, $geekbench_single, $geekbench_multi, $gb5_id, $ram_mb, $swap_mb, $disk_gb, $this->item_id]);
-            return true;
         } else {
-            //Not formatted right
-            return false;
+            return 3;//Didnt start at right spot
         }
     }
 
