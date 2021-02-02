@@ -2100,6 +2100,7 @@ class idlers extends helperFunctions
 
     public function mainPage()
     {
+        $this->checkPHPversion();//Check PHP version. Wont load if not PHP 7.4 or above
         $this->pageHead();
         $this->pageContents();
         $this->pageFooter();
@@ -3152,6 +3153,14 @@ class idlers extends helperFunctions
             }
         }
         return $id;
+    }
+
+    protected function checkPHPversion()
+    {
+        if (version_compare(PHP_VERSION, '7.4') === -1) {
+            echo "<script type='text/javascript'>alert('My idlers requires PHP 7.4 as a minimum version. You have " . PHP_VERSION . " installed');</script>";
+            exit;
+        }
     }
 
     //Compare functions
