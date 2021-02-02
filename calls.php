@@ -46,6 +46,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         } elseif ($_GET['type'] == 'object_tables') {
             header('Content-Type: text/html; charset=utf-8');
             echo $idle->objectTables();
+        } elseif ($_GET['type'] == 'compare_table') {
+            header('Content-Type: text/html; charset=utf-8');
+            echo $idle->compareTable($_GET['server1'], $_GET['server2']);
         }
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {

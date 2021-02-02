@@ -612,7 +612,7 @@ class idlers extends helperFunctions
 
     protected function pageContents()
     {
-        $this->navTabs(array('Services', 'Add', 'Order', 'Info', 'Search'), array('#services', '#add_server', '#order', '#info', '#search'));
+        $this->navTabs(array('Services', 'Add', 'Order', 'Info', 'Search', 'Compare'), array('#services', '#add_server', '#order', '#info', '#search', '#compare'));
         $this->outputString('<div id="myTabContent" class="tab-content">');
         $this->outputString('<div class="tab-pane server-cards fade active show" id="services">');
         $this->viewSwitcherIcon();
@@ -665,6 +665,10 @@ class idlers extends helperFunctions
 
         $this->outputString('<div class="tab-pane fade" id="search">');
         $this->searchDiv();
+        $this->tagClose('div');
+
+        $this->outputString('<div class="tab-pane fade" id="compare">');
+        $this->compareSection();
         $this->tagClose('div', 2);
 
         $this->editServerModal();
@@ -738,22 +742,23 @@ class idlers extends helperFunctions
         $row = $select->fetch();
         if ($row['has_yabs'] == 1 && $row['has_st'] == 1) {
             $select = $this->dbConnect()->prepare("
-              SELECT servers.id as server_id,hostname,ipv4,ipv6,`cpu`,cpu_type,cpu_freq,ram,ram_type,swap,swap_type,`disk`,disk_type,bandwidth,bandwidth_type,gb5_single,gb5_multi,gb5_id,aes_ni,amd_v,
-              is_dedicated,is_cpu_dedicated,was_special,os,ssh_port,still_have,tags,notes,label,virt,has_yabs,has_st,ns1,ns2,DATE_FORMAT(`owned_since`, '%M %Y') as owned_since, `owned_since` as owned_since_raw, `4k`,`4k_type`,`64k`,`64k_type`,`512k`,`512k_type`,`1m`,`1m_type`,
+              SELECT servers.id as server_id,hostname,ipv4,ipv6,`cpu`,cpu_type,cpu_freq,ram,ram_type,ram_mb,swap,swap_type,swap_mb,`disk`,disk_type,disk_gb,bandwidth,bandwidth_type,gb5_single,gb5_multi,gb5_id,aes_ni,amd_v,
+              is_dedicated,is_cpu_dedicated,was_special,os,ssh_port,still_have,tags,notes,label,virt,has_yabs,has_st,ns1,ns2,DATE_FORMAT(`owned_since`, '%M %Y') as owned_since, `owned_since` as owned_since_raw, `4k`,`4k_type`,`4k_as_mbps`,`64k`,`64k_type`,
+              `64k_as_mbps`,`512k`,`512k_type`,`512k_as_mbps`,`1m`,`1m_type`,`1m_as_mbps`,
               loc.name as location,send,send_type,recieve,recieve_type,price,currency,term,as_usd,per_month,usd_per_month,next_dd,pr.name as provider
               FROM servers INNER JOIN disk_speed ds on servers.id = ds.server_id
               INNER JOIN speed_tests st on servers.id = st.server_id INNER JOIN locations loc on servers.location = loc.id
               INNER JOIN providers pr on servers.provider = pr.id INNER JOIN pricing on servers.id = pricing.server_id WHERE servers.id = ? LIMIT 1;");
             $select->execute([$id]);
             $data = $select->fetchAll(PDO::FETCH_ASSOC)[0];
-            $sel_st = $this->dbConnect()->prepare("SELECT `location`, `send`, `send_type`, `recieve`, `recieve_type` FROM `speed_tests` WHERE `server_id` = ? ORDER BY `datetime` DESC LIMIT 8;");
+            $sel_st = $this->dbConnect()->prepare("SELECT `location`, `send`, `send_type`,`send_as_mbps`, `recieve`, `recieve_type`, `recieve_as_mbps` FROM `speed_tests` WHERE `server_id` = ? ORDER BY `datetime` DESC LIMIT 8;");
             $sel_st->execute([$id]);
             $speed_tests = $sel_st->fetchAll(PDO::FETCH_ASSOC);
             $final = array_merge($speed_tests, $data);
             return json_encode($final);
         } elseif ($row['has_yabs'] == 1 && $row['has_st'] == 0) {
             $select = $this->dbConnect()->prepare("
-              SELECT servers.id as server_id,hostname,ipv4,ipv6,`cpu`,cpu_type,cpu_freq,ram,ram_type,swap,swap_type,`disk`,disk_type,bandwidth,bandwidth_type,gb5_single,gb5_multi,gb5_id,aes_ni,amd_v,
+              SELECT servers.id as server_id,hostname,ipv4,ipv6,`cpu`,cpu_type,cpu_freq,ram,ram_type,ram_mb,swap,swap_type,swap_mb,`disk`,disk_type,disk_gb,bandwidth,bandwidth_type,gb5_single,gb5_multi,gb5_id,aes_ni,amd_v,
               is_dedicated,is_cpu_dedicated,was_special,os,ssh_port,still_have,tags,notes,label,virt,has_yabs,has_st,ns1,ns2,DATE_FORMAT(`owned_since`, '%M %Y') as owned_since, `owned_since` as owned_since_raw, `4k`,`4k_type`,`64k`,`64k_type`,`512k`,`512k_type`,`1m`,`1m_type`,
               loc.name as location,price,currency,term,as_usd,per_month,usd_per_month,next_dd,pr.name as provider
               FROM servers INNER JOIN disk_speed ds on servers.id = ds.server_id
@@ -764,7 +769,7 @@ class idlers extends helperFunctions
             return json_encode($data);
         } else {
             $select = $this->dbConnect()->prepare("
-               SELECT servers.id as server_id,hostname,ipv4,ipv6,`cpu`,cpu_type,cpu_freq,ram,ram_type,swap,swap_type,`disk`,disk_type,
+               SELECT servers.id as server_id,hostname,ipv4,ipv6,`cpu`,cpu_type,cpu_freq,ram,ram_type,ram_mb,swap,swap_type,swap_mb,`disk`,disk_type,disk_gb,
                bandwidth,bandwidth_type,gb5_single,gb5_multi,gb5_id,aes_ni,amd_v,is_dedicated,is_cpu_dedicated,was_special,os,ssh_port,still_have,tags,notes,virt,has_yabs,ns1,ns2,label,has_st,
                DATE_FORMAT(`owned_since`, '%M %Y') as owned_since,loc.name as location,price,currency,term,as_usd,per_month,usd_per_month,next_dd,pr.name as provider
                FROM servers INNER JOIN locations loc on servers.location = loc.id
@@ -3148,6 +3153,228 @@ class idlers extends helperFunctions
         }
         return $id;
     }
+
+    //Compare functions
+    protected function compatibleComparesSelect()
+    {
+        $select = $this->dbConnect()->prepare("SELECT `id`, `hostname` FROM `servers` WHERE `has_yabs` = 1 AND `has_st` = 1 ORDER BY `hostname`;");
+        $select->execute();
+        $rows = $select->fetchAll(PDO::FETCH_ASSOC);
+        $this->rowColOpen('form-row', 'col-12 col-md-6 mm-col');
+        $this->tagOpen('div', 'input-group');
+        $this->inputPrepend('Server 1');
+        $this->selectElement('compare_s1');
+        $this->selectOption('', '', true);//Empty
+        foreach ($rows as $aserver) {
+            $this->selectOption($aserver['hostname'], $aserver['id']);
+        }
+        $this->tagClose('select');
+        $this->tagClose('div', 2);
+        $this->colOpen('col-12 col-md-6 mm-col');
+        $this->tagOpen('div', 'input-group');
+        $this->inputPrepend('Server 2');
+        $this->selectElement('compare_s2');
+        $this->selectOption('', '', true);
+        foreach ($rows as $aserver) {
+            $this->selectOption($aserver['hostname'], $aserver['id']);
+        }
+        $this->tagClose('select');
+        $this->tagClose('div', 3);
+    }
+
+    protected function compareSection()
+    {
+        $this->compatibleComparesSelect();
+        $this->tagOpen('div', '', 'compareTableDiv');
+        $this->tagClose('div');
+    }
+
+    protected function tableRowCompare(string $val1, string $val2, string $value_type = '', bool $is_int = true)
+    {
+        $value_append = '<span class="data-type">' . $value_type . '</span>';
+        if ($is_int) {
+            $val1 = intval($val1);
+            $val2 = intval($val2);
+        }
+        if ($val1 > $val2) {//val1 is greater than val2
+            $result = '+' . ($val1 - $val2);
+            if (!empty($value_type)) {
+                $result = '+' . ($val1 - $val2) . $value_append;
+                $val1 = $val1 . $value_append;
+                $val2 = $val2 . $value_append;
+            }
+            $this->tableTd('td-nowrap', $val1);
+            $this->tableTd('td-nowrap plus-td', $result);
+            $this->tableTd('td-nowrap', $val2);
+        } elseif ($val1 < $val2) {//val1 is less than val2
+            $result = '-' . ($val2 - $val1);
+            if (!empty($value_type)) {
+                $result = '-' . ($val2 - $val1) . $value_append;
+                $val1 = $val1 . $value_append;
+                $val2 = $val2 . $value_append;
+            }
+            $this->tableTd('td-nowrap', $val1);
+            $this->tableTd('td-nowrap neg-td', $result);
+            $this->tableTd('td-nowrap', $val2);
+        } else {//Equal
+            $result = 0;
+            if (!empty($value_type)) {
+                $result = '0' . $value_append;
+                $val1 = $val1 . $value_append;
+                $val2 = $val2 . $value_append;
+            }
+            $this->tableTd('td-nowrap', $val1);
+            $this->tableTd('td-nowrap equal-td', $result);
+            $this->tableTd('td-nowrap', $val2);
+        }
+    }
+
+    public function compareTable(string $server1_id, string $server2_id)
+    {
+        $server1_data = json_decode($this->serverData($server1_id), true);
+        $server2_data = json_decode($this->serverData($server2_id), true);
+
+        $this->tableHeader(array('', $server1_data['hostname'], 'DIF', $server2_data['hostname']), 'table compare-table', 'compareTable');
+
+        $this->tagOpen('tr');
+        $this->tableTd('td-nowrap', 'CPU count');
+        $this->tableRowCompare($server1_data['cpu'], $server2_data['cpu']);
+        $this->tagClose('tr');
+        $this->tagOpen('tr');
+        $this->tableTd('td-nowrap', 'CPU freq');
+        $this->tableRowCompare($this->mhzToGhz($server1_data['cpu_freq']), $this->mhzToGhz($server2_data['cpu_freq']), 'Ghz', false);
+        $this->tagClose('tr');
+        $this->tagOpen('tr');
+        $this->tableTd('td-nowrap', 'Ram');
+        $this->tableRowCompare($server1_data['ram_mb'], $server2_data['ram_mb'], 'MB');
+        $this->tagClose('tr');
+        $this->tagOpen('tr');
+        $this->tableTd('td-nowrap', 'Swap');
+        $this->tableRowCompare($server1_data['swap_mb'], $server2_data['swap_mb'], 'MB');
+        $this->tagClose('tr');
+        $this->tagOpen('tr');
+        $this->tableTd('td-nowrap', 'Disk');
+        $this->tableRowCompare($server1_data['disk_gb'], $server2_data['disk_gb'], 'GB');
+        $this->tagClose('tr');
+        if ($server1_data['has_yabs'] == 1 && $server2_data['has_yabs'] == 1) {
+            $this->tagOpen('tr');
+            $this->tableTd('td-nowrap', 'GB5 single');
+            $this->tableRowCompare($server1_data['gb5_single'], $server2_data['gb5_single']);
+            $this->tagClose('tr');
+            $this->tagOpen('tr');
+            $this->tableTd('td-nowrap', 'GB5 multi');
+            $this->tableRowCompare($server1_data['gb5_multi'], $server2_data['gb5_multi']);
+            $this->tagClose('tr');
+            $this->tagOpen('tr');
+            $this->tableTd('td-nowrap', '4k disk');
+            $this->tableRowCompare($server1_data['4k_as_mbps'], $server2_data['4k_as_mbps'], 'MB/s');
+            $this->tagClose('tr');
+            $this->tagOpen('tr');
+            $this->tableTd('td-nowrap', '64k disk');
+            $this->tableRowCompare($server1_data['64k_as_mbps'], $server2_data['64k_as_mbps'], 'MB/s');
+            $this->tagClose('tr');
+            $this->tagOpen('tr');
+            $this->tableTd('td-nowrap', '512k disk');
+            $this->tableRowCompare($server1_data['512k_as_mbps'], $server2_data['512k_as_mbps'], 'MB/s');
+            $this->tagClose('tr');
+            $this->tagOpen('tr');
+            $this->tableTd('td-nowrap', '1m disk');
+            $this->tableRowCompare($server1_data['1m_as_mbps'], $server2_data['1m_as_mbps'], 'MB/s');
+            $this->tagClose('tr');
+        }
+        if ($server1_data['has_st'] == 1 && $server2_data['has_st'] == 1) {
+            if (isset($server1_data[0]) && isset($server2_data[0])) {
+                if ($server1_data[0]['location'] == $server2_data[0]['location']) {
+                    $this->tagOpen('tr');
+                    $this->tableTd('td-nowrap', $server1_data[0]['location'] . ' send');
+                    $this->tableRowCompare($server1_data[0]['send_as_mbps'], $server2_data[0]['send_as_mbps'], 'MBps');
+                    $this->tagClose('tr');
+                    $this->tagOpen('tr');
+                    $this->tableTd('td-nowrap', $server1_data[0]['location'] . ' recieve');
+                    $this->tableRowCompare($server1_data[0]['recieve_as_mbps'], $server2_data[0]['recieve_as_mbps'], 'MBps');
+                    $this->tagClose('tr');
+                }
+            }
+            if (isset($server1_data[1]) && isset($server2_data[1])) {
+                if ($server1_data[1]['location'] == $server2_data[1]['location']) {
+                    $this->tagOpen('tr');
+                    $this->tableTd('td-nowrap', $server1_data[1]['location'] . ' send');
+                    $this->tableRowCompare($server1_data[1]['send_as_mbps'], $server2_data[1]['send_as_mbps'], 'MBps');
+                    $this->tagClose('tr');
+                    $this->tagOpen('tr');
+                    $this->tableTd('td-nowrap', $server1_data[1]['location'] . ' recieve');
+                    $this->tableRowCompare($server1_data[1]['recieve_as_mbps'], $server2_data[1]['recieve_as_mbps'], 'MBps');
+                    $this->tagClose('tr');
+                }
+            }
+            if (isset($server1_data[2]) && isset($server2_data[2])) {
+                if ($server1_data[2]['location'] == $server2_data[2]['location']) {
+                    $this->tagOpen('tr');
+                    $this->tableTd('td-nowrap', $server1_data[2]['location'] . ' send');
+                    $this->tableRowCompare($server1_data[2]['send_as_mbps'], $server2_data[2]['send_as_mbps'], 'MBps');
+                    $this->tagClose('tr');
+                    $this->tagOpen('tr');
+                    $this->tableTd('td-nowrap', $server1_data[2]['location'] . ' recieve');
+                    $this->tableRowCompare($server1_data[2]['recieve_as_mbps'], $server2_data[2]['recieve_as_mbps'], 'MBps');
+                    $this->tagClose('tr');
+                }
+            }
+        }
+        $this->tagOpen('tr');
+        $this->tableTd('td-nowrap', 'USD p/m');
+        $this->tableRowCompare($server1_data['usd_per_month'], $server2_data['usd_per_month'], 'p/m', false);
+        $this->tagClose('tr');
+        $this->tagOpen('tr');
+        $this->tableTd('td-nowrap', 'Actual price');
+        $this->tableTd('td-nowrap', $server1_data['price'] . '<span class="data-type">' . $server1_data['currency'] . '</span>' . ' ' . $this->paymentTerm($server1_data['term']));
+        $this->tableTd('td-nowrap equal-td', '');
+        $this->tableTd('td-nowrap', $server2_data['price'] . '<span class="data-type">' . $server2_data['currency'] . '</span>' . ' ' . $this->paymentTerm($server2_data['term']));
+        $this->tagClose('tr');
+        $this->tagOpen('tr');
+        if ($server1_data['price'] > 0 && $server2_data['price'] > 0) {
+            $this->tableTd('td-nowrap', 'CPU per USD');
+            $this->tableRowCompare(number_format(($server1_data['usd_per_month'] / $server1_data['cpu']), 2), number_format(($server2_data['usd_per_month'] / $server2_data['cpu']), 2), '', false);
+            $this->tagClose('tr');
+            $this->tagOpen('tr');
+            $this->tableTd('td-nowrap', 'Disk GB per USD');
+            $this->tableRowCompare(($server1_data['disk_gb'] / $server1_data['usd_per_month']), ($server2_data['disk_gb'] / $server2_data['usd_per_month']), 'GB', true);
+            $this->tagClose('tr');
+            $this->tagOpen('tr');
+            $this->tableTd('td-nowrap', 'Ram MB per USD');
+            $this->tableRowCompare(($server1_data['ram_mb'] / $server1_data['usd_per_month']), ($server2_data['ram_mb'] / $server2_data['usd_per_month']), 'MB', true);
+            $this->tagClose('tr');
+            if ($server1_data['has_yabs'] == 1 && $server2_data['has_yabs'] == 1) {
+                $this->tagOpen('tr');
+                $this->tableTd('td-nowrap', 'GB5 single per USD');
+                $this->tableRowCompare(($server1_data['gb5_single'] / $server1_data['usd_per_month']), ($server2_data['gb5_single'] / $server2_data['usd_per_month']), '', true);
+                $this->tagClose('tr');
+                $this->tagOpen('tr');
+                $this->tableTd('td-nowrap', 'GB5 multi per USD');
+                $this->tableRowCompare(($server1_data['gb5_multi'] / $server1_data['usd_per_month']), ($server2_data['gb5_multi'] / $server2_data['usd_per_month']), '', true);
+                $this->tagClose('tr');
+            }
+        }
+        $this->tagOpen('tr');
+        $this->tableTd('td-nowrap', 'Location');
+        $this->tableTd('td-nowrap', $server1_data['location']);
+        $this->tableTd('td-nowrap equal-td', '');
+        $this->tableTd('td-nowrap', $server2_data['location']);
+        $this->tagClose('tr');
+        $this->tagOpen('tr');
+        $this->tableTd('td-nowrap', 'Provider');
+        $this->tableTd('td-nowrap', $server1_data['provider']);
+        $this->tableTd('td-nowrap equal-td', '');
+        $this->tableTd('td-nowrap', $server2_data['provider']);
+        $this->tagClose('tr');
+        $this->tableTd('td-nowrap', 'Owned since');
+        $this->tableTd('td-nowrap', $server1_data['owned_since']);
+        $this->tableTd('td-nowrap equal-td', '');
+        $this->tableTd('td-nowrap', $server2_data['owned_since']);
+        $this->tagClose('tr');
+        $this->outputString('</tbody></table></div>');
+    }
+
+
 }
 
 class itemInsert extends idlers
