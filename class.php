@@ -21,6 +21,8 @@ class idlersConfig
     const DEFAULT_VIEW = 'CARDS';//CARDS or TABLE
 
     const SAVE_YABS_OUTPUT = true;//true or false
+
+    const GET_ASN_INFO = true;//Get ANS name and number
 }
 
 class elementHelpers extends idlersConfig
@@ -3099,11 +3101,19 @@ class idlers extends helperFunctions
 
     public function getIpForDomain(string $domain, string $type = 'A'): string
     {//Gets IP from A record for a domain
-        $data = json_decode(file_get_contents("https://whatsmydns.net/api/details?server=428&type=$type&query=$domain"), true);
-        if (isset($data['data'][0]['response'][0])) {
-            if (strlen($data['data'][0]['response'][0]) > 6) {
-                return $data['data'][0]['response'][0];
-            }
+        switch ($type) {
+            case "A":
+                $data = dns_get_record($domain, DNS_A);
+                if (isset($data['0']['ip'])) {
+                    return $data['0']['ip'];
+                }
+                break;
+            case "AAAA":
+                $data = dns_get_record($domain, DNS_AAAA);
+                if (isset($data['0']['ipv6'])) {
+                    return $data['0']['ipv6'];
+                }
+                break;
         }
         return "";//Doesnt exist/null/empty/invalid
     }
@@ -3117,6 +3127,25 @@ class idlers extends helperFunctions
         }
         @fclose($fp);
         return $result;
+    }
+
+    public function getAsnInfo(string $ip)
+    {//Thanks ripe.net
+        $data = json_decode(@file_get_contents("https://stat.ripe.net/data/whois/data.json?resource=$ip"), true);
+        if (isset($data) && $data['status_code'] == 200) {
+            $origin = $desc = '';
+            foreach ($data['data']['irr_records'][0] as $rec) {
+                if ($rec['key'] == 'descr') {
+                    $desc = $rec['value'];
+                }
+                if ($rec['key'] == 'origin') {
+                    $origin .= $rec['value'];
+                }
+            }
+            return "$desc, AS$origin";
+        } else {
+            return "";
+        }
     }
 
     protected function viewSwitcherIcon()
@@ -3383,7 +3412,6 @@ class idlers extends helperFunctions
         $this->outputString('</tbody></table></div>');
     }
 
-
 }
 
 class itemInsert extends idlers
@@ -3407,10 +3435,24 @@ class itemInsert extends idlers
         (empty($data['ipv4'])) ? $ipv4 = null : $ipv4 = $data['ipv4'];
         (empty($data['ipv6'])) ? $ipv6 = null : $ipv6 = $data['ipv6'];
         (empty($data['label'])) ? $label = null : $label = $data['label'];
+        if (self::GET_ASN_INFO) {
+            if (!is_null($ipv4)) {
+                $asn = $this->getAsnInfo($ipv4);
+            } elseif (!is_null($ipv6)) {
+                $asn = $this->getAsnInfo($ipv6);
+            } else {
+                $asn = null;
+            }
+            if (empty($asn)) {
+                $asn = null;
+            }
+        } else {
+            $asn = null;
+        }
         $location_id = $this->handleLocation($data['location']);
         $provider_id = $this->handleProvider($data['provider']);
-        $insert = $this->dbConnect()->prepare('INSERT IGNORE INTO `servers` (id, hostname, location, provider, ipv4,ipv6, owned_since, os, is_cpu_dedicated, is_dedicated, was_special, bandwidth, virt, has_yabs, ns1, ns2, ssh_port, label) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)');
-        $insert->execute([$item_id, $data['hostname'], $location_id, $provider_id, $ipv4, $ipv6, $data['owned_since'], $data['os'], $dedi_cpu, $dedi, $offer, $data['bandwidth'], $data['virt'], $data['has_yabs'], $data['ns1'], $data['ns2'], $data['ssh_port'], $label]);
+        $insert = $this->dbConnect()->prepare('INSERT IGNORE INTO `servers` (id, hostname, location, provider, ipv4,ipv6, owned_since, os, is_cpu_dedicated, is_dedicated, was_special, bandwidth, virt, has_yabs, ns1, ns2, ssh_port, label, asn) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)');
+        $insert->execute([$item_id, $data['hostname'], $location_id, $provider_id, $ipv4, $ipv6, $data['owned_since'], $data['os'], $dedi_cpu, $dedi, $offer, $data['bandwidth'], $data['virt'], $data['has_yabs'], $data['ns1'], $data['ns2'], $data['ssh_port'], $label, $asn]);
         $this->insertPrice($data['price'], $data['currency'], $data['term'], $data['next_due_date']);
         return $item_id;
     }
@@ -3425,13 +3467,27 @@ class itemInsert extends idlers
         (empty($data['ipv4'])) ? $ipv4 = null : $ipv4 = $data['ipv4'];
         (empty($data['ipv6'])) ? $ipv6 = null : $ipv6 = $data['ipv6'];
         (empty($data['label'])) ? $label = null : $label = $data['label'];
+        if (self::GET_ASN_INFO) {
+            if (!is_null($ipv4)) {
+                $asn = $this->getAsnInfo($ipv4);
+            } elseif (!is_null($ipv6)) {
+                $asn = $this->getAsnInfo($ipv6);
+            } else {
+                $asn = null;
+            }
+            if (empty($asn)) {
+                $asn = null;
+            }
+        } else {
+            $asn = null;
+        }
         ($data['ram_type'] == 'GB') ? $ram_mb = $this->GBtoMB($data['ram']) : $ram_mb = $data['ram'];
         ($data['swap_type'] == 'GB') ? $swap_mb = $this->GBtoMB($data['swap']) : $swap_mb = $data['swap'];
         ($data['disk_type'] == 'TB') ? $disk_gb = $this->TBtoGB($data['disk']) : $disk_gb = $data['disk'];
         $location_id = $this->handleLocation($data['location']);
         $provider_id = $this->handleProvider($data['provider']);
-        $insert = $this->dbConnect()->prepare('INSERT IGNORE INTO `servers` (id, hostname, location, provider, ipv4,ipv6, owned_since, os, is_cpu_dedicated, is_dedicated, was_special, bandwidth, virt, cpu, cpu_freq, ram, ram_type, swap, swap_type, disk, disk_type, ram_mb, swap_mb, disk_gb, ns1, ns2, ssh_port, label) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)');
-        $insert->execute([$item_id, $data['hostname'], $location_id, $provider_id, $ipv4, $ipv6, $data['owned_since'], $data['os'], $dedi_cpu, $dedi, $offer, $data['bandwidth'], $data['virt'], $data['cpu_amount'], $data['cpu_speed'], $data['ram'], $data['ram_type'], $data['swap'], $data['swap_type'], $data['disk'], $data['disk_type'], $ram_mb, $swap_mb, $disk_gb, $data['ns1'], $data['ns2'], $data['ssh_port'], $label]);
+        $insert = $this->dbConnect()->prepare('INSERT IGNORE INTO `servers` (id, hostname, location, provider, ipv4,ipv6, owned_since, os, is_cpu_dedicated, is_dedicated, was_special, bandwidth, virt, cpu, cpu_freq, ram, ram_type, swap, swap_type, disk, disk_type, ram_mb, swap_mb, disk_gb, ns1, ns2, ssh_port, label, asn) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)');
+        $insert->execute([$item_id, $data['hostname'], $location_id, $provider_id, $ipv4, $ipv6, $data['owned_since'], $data['os'], $dedi_cpu, $dedi, $offer, $data['bandwidth'], $data['virt'], $data['cpu_amount'], $data['cpu_speed'], $data['ram'], $data['ram_type'], $data['swap'], $data['swap_type'], $data['disk'], $data['disk_type'], $ram_mb, $swap_mb, $disk_gb, $data['ns1'], $data['ns2'], $data['ssh_port'], $label, $asn]);
         $this->insertPrice($data['price'], $data['currency'], $data['term'], $data['next_due_date']);
         return $item_id;
     }

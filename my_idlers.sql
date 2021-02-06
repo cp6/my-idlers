@@ -292,7 +292,7 @@ CREATE TABLE IF NOT EXISTS `servers`
 (
     `id`               char(8) NOT NULL,
     `hostname`         varchar(124) DEFAULT NULL,
-    `label` varchar(24) DEFAULT NULL,
+    `label`            varchar(24)  DEFAULT NULL,
     `location`         int(11)      DEFAULT NULL,
     `provider`         int(11)      DEFAULT NULL,
     `ipv4`             varchar(124) DEFAULT NULL,
@@ -328,6 +328,7 @@ CREATE TABLE IF NOT EXISTS `servers`
     `owned_since`      date         DEFAULT NULL,
     `tags`             varchar(255) DEFAULT NULL,
     `notes`            varchar(255) DEFAULT NULL,
+    `asn`              varchar(124) DEFAULT NULL,
     `has_yabs`         tinyint(1)   DEFAULT 0,
     `has_st`           tinyint(1)   DEFAULT 0,
     PRIMARY KEY (`id`),
