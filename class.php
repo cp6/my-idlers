@@ -745,7 +745,7 @@ class idlers extends helperFunctions
         if ($row['has_yabs'] == 1 && $row['has_st'] == 1) {
             $select = $this->dbConnect()->prepare("
               SELECT servers.id as server_id,hostname,ipv4,ipv6,`cpu`,cpu_type,cpu_freq,ram,ram_type,ram_mb,swap,swap_type,swap_mb,`disk`,disk_type,disk_gb,bandwidth,bandwidth_type,gb5_single,gb5_multi,gb5_id,aes_ni,amd_v,
-              is_dedicated,is_cpu_dedicated,was_special,os,ssh_port,still_have,tags,notes,label,virt,has_yabs,has_st,ns1,ns2,DATE_FORMAT(`owned_since`, '%M %Y') as owned_since, `owned_since` as owned_since_raw, `4k`,`4k_type`,`4k_as_mbps`,`64k`,`64k_type`,
+              is_dedicated,is_cpu_dedicated,was_special,os,ssh_port,still_have,tags,notes,label,asn,virt,has_yabs,has_st,ns1,ns2,DATE_FORMAT(`owned_since`, '%M %Y') as owned_since, `owned_since` as owned_since_raw, `4k`,`4k_type`,`4k_as_mbps`,`64k`,`64k_type`,
               `64k_as_mbps`,`512k`,`512k_type`,`512k_as_mbps`,`1m`,`1m_type`,`1m_as_mbps`,
               loc.name as location,send,send_type,recieve,recieve_type,price,currency,term,as_usd,per_month,usd_per_month,next_dd,pr.name as provider
               FROM servers INNER JOIN disk_speed ds on servers.id = ds.server_id
@@ -761,7 +761,7 @@ class idlers extends helperFunctions
         } elseif ($row['has_yabs'] == 1 && $row['has_st'] == 0) {
             $select = $this->dbConnect()->prepare("
               SELECT servers.id as server_id,hostname,ipv4,ipv6,`cpu`,cpu_type,cpu_freq,ram,ram_type,ram_mb,swap,swap_type,swap_mb,`disk`,disk_type,disk_gb,bandwidth,bandwidth_type,gb5_single,gb5_multi,gb5_id,aes_ni,amd_v,
-              is_dedicated,is_cpu_dedicated,was_special,os,ssh_port,still_have,tags,notes,label,virt,has_yabs,has_st,ns1,ns2,DATE_FORMAT(`owned_since`, '%M %Y') as owned_since, `owned_since` as owned_since_raw, `4k`,`4k_type`,`64k`,`64k_type`,`512k`,`512k_type`,`1m`,`1m_type`,
+              is_dedicated,is_cpu_dedicated,was_special,os,ssh_port,still_have,tags,notes,label,asn,virt,has_yabs,has_st,ns1,ns2,DATE_FORMAT(`owned_since`, '%M %Y') as owned_since, `owned_since` as owned_since_raw, `4k`,`4k_type`,`64k`,`64k_type`,`512k`,`512k_type`,`1m`,`1m_type`,
               loc.name as location,price,currency,term,as_usd,per_month,usd_per_month,next_dd,pr.name as provider
               FROM servers INNER JOIN disk_speed ds on servers.id = ds.server_id
             INNER JOIN locations loc on servers.location = loc.id
@@ -772,7 +772,7 @@ class idlers extends helperFunctions
         } else {
             $select = $this->dbConnect()->prepare("
                SELECT servers.id as server_id,hostname,ipv4,ipv6,`cpu`,cpu_type,cpu_freq,ram,ram_type,ram_mb,swap,swap_type,swap_mb,`disk`,disk_type,disk_gb,
-               bandwidth,bandwidth_type,gb5_single,gb5_multi,gb5_id,aes_ni,amd_v,is_dedicated,is_cpu_dedicated,was_special,os,ssh_port,still_have,tags,notes,virt,has_yabs,ns1,ns2,label,has_st,
+               bandwidth,bandwidth_type,gb5_single,gb5_multi,gb5_id,aes_ni,amd_v,is_dedicated,is_cpu_dedicated,was_special,os,ssh_port,still_have,tags,notes,virt,has_yabs,ns1,ns2,label,asn,has_st,
                DATE_FORMAT(`owned_since`, '%M %Y') as owned_since,loc.name as location,price,currency,term,as_usd,per_month,usd_per_month,next_dd,pr.name as provider
                FROM servers INNER JOIN locations loc on servers.location = loc.id
                INNER JOIN providers pr on servers.provider = pr.id INNER JOIN pricing on servers.id = pricing.server_id WHERE servers.id = ? LIMIT 1;");
@@ -2289,6 +2289,14 @@ class idlers extends helperFunctions
         $this->rowColOpen('row m-row', 'col-12 col-md-6 mm-col');
         $this->HTMLphrase('p', 'm-desc', 'Disk ');
         $this->HTMLphrase('p', 'm-value', '' . $data['disk'] . '<span class="data-type">' . $data['disk_type'] . '</span>');
+        $this->tagClose('div');
+        $this->colOpen('col-12 col-md-6');
+        if (!is_null($data['asn'])) {
+            $asn_exp = explode(',', $data['asn']);
+            $asn_link = "<a href='https://stat.ripe.net/" . $asn_exp[1] . "#tabId=at-a-glance'>$asn_exp[1]</a>";
+            $this->HTMLphrase('p', 'm-desc', 'ASN ');
+            $this->HTMLphrase('p', 'm-value', $asn_exp[0] . ' ' . $asn_link);
+        }
         $this->tagClose('div', 2);
 
         $this->rowColOpen('row m-section-row', 'col-12 col-md-6');
