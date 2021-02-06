@@ -7,19 +7,17 @@ By using a [YABs](https://github.com/masonr/yet-another-bench-script) output you
 
 [![Generic badge](https://img.shields.io/badge/version-1.3-blue.svg)](https://shields.io/)
 
-## 1.3 changes:
-**If you have version 1.2 already installed please run ```update1.2to1.3.sql```**
-* Added constant to set main view type (cards or table).
-* Fixed DNS GET requests.
-* Added label field/input for servers.
-* Fixed domain & shared hosting deletion.
-* Updated to dns_get_record() instead of DNS API calling.
-* Added KB/s to MB/s conversion.
-* Fixed active status for view type div.
-* Added attach domain to server or shared hosting.
-* Updated search to include tags and labels.
-* Updated server view more modal formatting.
-* Updated server edit modal formatting.
+## 1.4 changes:
+**If you have version 1.3 already installed please run ```update1.3to1.4.sql```**
+* Added compare servers section
+* Added ASN fetcher
+* Added check for min version PHP 7.4 
+* Added errors checks for YABs output inserting
+* Added improved screenshots to readme
+* Updated delete YABs txt file when deleting server data
+* Added save YABs to txt file constant
+* Updated domain attached to errors when null
+* Updated getIpForDomain() call to echo (working now)
 * Updated `my_idlers.sql` for changes
 
 ## Requires
@@ -36,6 +34,7 @@ By using a [YABs](https://github.com/masonr/yet-another-bench-script) output you
 * [Auto get IP's from hostname](https://cdn.write.corbpie.com/wp-content/uploads/2021/01/my-idlers-self-hosted-server-domain-information-ips-from-hostname.gif)
 * [Check up/down status](https://cdn.write.corbpie.com/wp-content/uploads/2021/01/my-idlers-self-hosted-server-domain-information-ping-up-feature.gif)
 * Get YABs data from output
+* Compare 2 servers
 * Save & view YABs output
 * Update YABs disk & network results
 * Next due date system
@@ -56,7 +55,7 @@ By using a [YABs](https://github.com/masonr/yet-another-bench-script) output you
 * Download [the zip](https://github.com/cp6/my-idlers/archive/main.zip) and unpack the files from ```my-idlers-main/``` into your directory of choice.
 * Run `my_idlers.sql` in MySQL.
   
-* **Only run ```update1.2to1.3.sql``` if you have version 1.2 installed.**
+* **Only run ```update1.3to1.4.sql``` if you have version 1.3 installed.**
   
 * Edit ```class.php``` lines ```13-16``` for your MySQL details.
 * Edit ```class.php``` lines ```8-10``` for card order type.
