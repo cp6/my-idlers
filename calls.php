@@ -46,6 +46,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         } elseif ($_GET['type'] == 'object_tables') {
             header('Content-Type: text/html; charset=utf-8');
             echo $idle->objectTables();
+        } elseif ($_GET['type'] == 'compare_table') {
+            header('Content-Type: text/html; charset=utf-8');
+            echo $idle->compareTable($_GET['server1'], $_GET['server2']);
         }
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -56,8 +59,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         if (isset($_POST['action']) && $_POST['action'] == 'insert') {//From an insert 'type' form
             $insert = new itemInsert($_POST);
             if (isset($_POST['from_yabs'])) {//From add form YABs
-                $insert->insertBasicWithYabs();//Insert basic data from form
-                $insert->insertYabsData();//Insert YABs data from the form
+                $id = $insert->insertBasicWithYabs();//Insert basic data from form
+                $response_code = $insert->insertYabsData();//Insert YABs data from the form
+                if ($response_code != 1) {
+                    header('Content-Type: text/html; charset=utf-8');
+                    $update = new itemUpdate(array('me_server_id' => $id));
+                    $update->deleteObjectData();
+                    echo $response_code;
+                    exit;
+                }
             } elseif (isset($_POST['manual'])) {//From add form manual
                 $insert->insertBasic();
             } elseif (isset($_POST['shared_hosting_form'])) {//From shared hosting form

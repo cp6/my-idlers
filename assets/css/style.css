@@ -51,6 +51,9 @@ body {
     .container {
         max-width: 720px
     }
+    .nav-link {
+        padding: .5rem 0.45rem;
+    }
 }
 
 @media (min-width: 992px) {
@@ -1184,10 +1187,27 @@ button.close {
     background: #00ff340f;
 }
 
-.objects-table th:first-child, .objects-table td:first-child {
+.objects-table th:first-child, .objects-table td:first-child, .compare-table th:first-child, .compare-table td:first-child {
     position: sticky;
     left: 0;
     background-color: #f6f6f6;
+    text-align: left;
+}
+
+.compare-table td, .compare-table th {
+    text-align: center;
+}
+
+.plus-td {
+    background: #71ed7136;
+}
+
+.neg-td {
+    background: #ed827136;
+}
+
+.equal-td {
+    background: #6189ff26;
 }
 
 .table-btn {
@@ -1539,5 +1559,11 @@ input:checked + .slider:before {
 @media (min-width: 992px) {
     .modal-lg {
         max-width: 800px;
+    }
+}
+
+@media (max-width: 700px) {
+    .nav-link {
+        padding: 0.5rem 0.45rem;
     }
 }
