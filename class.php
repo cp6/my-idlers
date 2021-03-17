@@ -23,6 +23,11 @@ class idlersConfig
     const SAVE_YABS_OUTPUT = true;//true or false
 
     const GET_ASN_INFO = true;//Get ANS name and number
+
+    //Failed attempts before ip locked from attempting login
+    const FAIL_ATTEMPTS_ALLOWED = 4;
+    //Minutes to lock ip for
+    const IP_LOCK_MINUTES = 10;
 }
 
 class elementHelpers extends idlersConfig
@@ -3846,4 +3851,252 @@ class itemUpdate extends idlers
         }
     }
 
+}
+
+class auth extends idlers
+{
+    public string $token;
+    private string $user;
+    private string $ip_address;
+
+    public function selfDestruct()
+    {
+        $select = $this->dbConnect()->prepare("SELECT `user` FROM `auth`;");
+        $select->execute();
+        $user_count = $select->rowCount();
+        if ($user_count == 0) {
+            //Begin create user
+            $this->createAccountForm();
+        } else {
+            //User already exists
+            //Delete AUTH.php
+            $this->deleteAuthFile();
+        }
+    }
+
+    protected function createAccountForm()
+    {
+        if (isset($_POST['pass']) && isset($_POST['user'])) {
+            //Form submitted
+            $this->insertAccount($_POST['user'], $_POST['pass']);
+        } else {
+            $this->pageHead();
+            $this->rowColOpen('row text-center', 'col-12');
+            $this->tagOpen('div', 'card');
+            $this->tagOpen('div', 'card-header');
+            $this->HTMLphrase('h1', '', 'Create account');
+            $this->HTMLphrase('p', '', 'If you are seeing this there are currently 0 accounts. Once 1 is created this file gets deleted.');
+            $this->tagClose('div');
+            $this->tagOpen('div', 'card-body');
+            $this->outputString('<form method="post">');
+            $this->rowColOpen('form-row', 'col-12 col-md-6 mm-col');
+            $this->tagOpen('div', 'input-group');
+            $this->inputPrepend('Username');
+            $this->textInput('user', '', 'form-control', true, 4, 64);
+            $this->tagClose('div', 2);
+            $this->colOpen('col-12 col-md-6 mm-col');
+            $this->tagOpen('div', 'input-group');
+            $this->inputPrepend('Password');
+            $this->outputString("<input type='password' id='pass' name='pass' class='form-control' min-length='12' max-length='124' required>");
+            $this->tagClose('div', 3);
+            $this->rowColOpen('form-row text-center', 'col-12');
+            $this->submitInput('Create', 'submitInput', 'btn btn-main');
+            $this->tagClose('div', 2);
+            $this->tagClose('form');
+            $this->tagClose('div', 4);
+            $this->pageFooter();
+        }
+    }
+
+    protected function insertAccount(string $user, string $pass): bool
+    {
+        $hashed_password = password_hash($pass, PASSWORD_DEFAULT);//Hash the submitted password
+        $insert = $this->dbConnect()->prepare("INSERT INTO `auth` (`user`, `pass`) VALUES (?,?)");
+        return $insert->execute([$user, $hashed_password]);
+    }
+
+    public function sessionStartIfNone()
+    {
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();//No session stated... so start one
+        }
+    }
+
+    public function isLoggedIn(): bool
+    {
+        $this->sessionStartIfNone();//Start session if none already started
+        if (isset($_SESSION['token']) && !empty($_SESSION['token'])) {
+            $this->token = $_SESSION['token'];
+            return true;//Logged in
+        } else {
+            return false;
+        }
+    }
+
+    public function loginForm()
+    {
+        if (isset($_POST['user']) && isset($_POST['pass'])) {
+            $this->attemptLogin($_POST['user'], $_POST['pass']);
+        } else {
+            $this->pageHead();
+            $this->rowColOpen('row text-center', 'col-12');
+            $this->tagOpen('div', 'card');
+            $this->tagOpen('div', 'card-header');
+            $this->HTMLphrase('h3', '', 'My idlers login');
+            $this->tagClose('div');
+            $this->tagOpen('div', 'card-body');
+            $this->outputString('<form method="post">');
+            $this->rowColOpen('form-row', 'col-12 col-md-3');
+            $this->tagClose('div', 1);
+            $this->colOpen('col-12 col-md-6 mm-col');
+            $this->tagOpen('div', 'input-group');
+            $this->inputPrepend('Username');
+            $this->textInput('user', '', 'form-control', true, 4, 64);
+            $this->tagClose('div', 2);
+            $this->colOpen('col-12 col-md-3');
+            $this->tagClose('div', 2);
+
+            $this->rowColOpen('form-row', 'col-12 col-md-3');
+            $this->tagClose('div', 1);
+            $this->colOpen('col-12 col-md-6 mm-col');
+            $this->tagOpen('div', 'input-group');
+            $this->inputPrepend('Password');
+            $this->outputString("<input type='password' id='pass' name='pass' class='form-control' min-length='12' max-length='124' required>");
+            $this->tagClose('div', 2);
+            $this->colOpen('col-12 col-md-3');
+            $this->tagClose('div', 2);
+
+            $this->rowColOpen('form-row text-center', 'col-12');
+            $this->submitInput('Login', 'submitInput', 'btn btn-main');
+            $this->tagClose('div', 2);
+            $this->tagClose('form');
+            $this->tagClose('div', 4);
+            $this->pageFooter();
+        }
+    }
+
+    protected function usernameExists(string $username): bool
+    {
+        $select = $this->dbConnect()->prepare("SELECT `user` FROM `auth` WHERE `user` = ? LIMIT 1;");
+        $select->execute([$username]);
+        $row = $select->fetch(PDO::FETCH_ASSOC);
+        if (!empty($row)) {//Row found
+            $this->user = $row['user'];
+            return true;
+        } else {//NO row found
+            return false;
+        }
+    }
+
+    protected function checkPasswordCorrect(string $password): bool
+    {
+        $select = $this->dbConnect()->prepare("SELECT `pass` FROM `auth` WHERE `user` = ? LIMIT 1;");
+        $select->execute([$this->user]);
+        $row = $select->fetch(PDO::FETCH_ASSOC);
+        if (password_verify($password, $row['pass'])) {
+            return true;//Password is correct
+        } else {
+            return false;//Bad password
+        }
+    }
+
+    protected function doLoginWasSuccess(): bool
+    {
+        $update = $this->dbConnect()->prepare("UPDATE `auth` SET `login_count` = (login_count + 1), `last_login` = NOW() WHERE `user` = ? LIMIT 1;");
+        return $update->execute([$this->user]);
+    }
+
+    protected function addLoginFailCount(): bool
+    {
+        $update = $this->dbConnect()->prepare("UPDATE `auth` SET login_fails = (login_fails + 1), `last_fail` = NOW() WHERE `user` = ? LIMIT 1;");
+        return $update->execute([$this->user]);
+    }
+
+    protected function addLoginFailAttempt(): bool
+    {
+        $insert = $this->dbConnect()->prepare('INSERT IGNORE INTO `login_attempts` (`user`, `ip`) VALUES (?, ?)');
+        return $insert->execute([$this->user, $this->ip_address]);
+    }
+
+    protected function setToken(int $length = 32)
+    {
+        $this->sessionStartIfNone();
+        $_SESSION['token'] = $this->genID($length);//Set session as token
+        $this->token = $_SESSION['token'];
+        $update_token = $this->dbConnect()->prepare("UPDATE `auth` SET `token` = ? WHERE `user` = ? LIMIT 1;");
+        $update_token->execute([$_SESSION['token'], $this->user]);
+    }
+
+    protected function indexRedirect()
+    {
+        header("Location: index.php");
+        exit;
+    }
+
+    protected function getRecentFailCount(): int
+    {
+        $select = $this->dbConnect()->prepare("SELECT COUNT(*) as the_count FROM `login_attempts` WHERE `ip` = ? AND `datetime` > (NOW() - INTERVAL 10 MINUTE);");
+        $select->execute([$this->ip_address]);
+        return $select->fetch()['the_count'];//login fails for IP in last 10 minutes
+    }
+
+    protected function hasLockTimePassed(): bool
+    {
+        $select = $this->dbConnect()->prepare("SELECT `datetime` FROM `login_attempts` WHERE `ip` = ? ORDER BY `datetime` DESC LIMIT 1;");
+        $select->execute([$this->ip_address]);
+        $locked_until = $select->fetch(PDO::FETCH_ASSOC);
+        $time = new DateTime($locked_until['datetime']);
+        $time->add(new DateInterval("PT" . self::IP_LOCK_MINUTES . "M"));
+        $locked_until_formatted = $time->format('Y-m-d H:i:s');
+        $now = date('Y-m-d H:i:s');
+        if ($now > $locked_until_formatted) {//Time has passed
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function attemptLogin(string $username, string $password)
+    {
+        $this->ip_address = $_SERVER['REMOTE_ADDR'];
+        if ($this->getRecentFailCount() >= self::FAIL_ATTEMPTS_ALLOWED) {
+            if (!$this->hasLockTimePassed()) {//IP is currently not allowed to attempt login
+                $this->indexRedirect();//Redirect to index and show login form
+            } else {//IP has passed lock time
+                if ($this->usernameExists($username)) {//Username found
+                    if ($this->checkPasswordCorrect($password)) {//Password is correct
+                        $this->doLoginWasSuccess();//Add login counter and last login datetime
+                        $this->setToken();//Set session token
+                        $this->indexRedirect();//Redirect to index and show servers
+                    } else {//Password is wrong
+                        $this->addLoginFailCount();
+                        $this->addLoginFailAttempt();
+                        $this->indexRedirect();//Redirect to index and login form
+                    }
+                } else {//Username not found in DB
+                    $this->indexRedirect();//Redirect to index and show login form
+                }
+            }
+        } else {//A clean attempt
+            echo $this->getRecentFailCount();
+            if ($this->usernameExists($username)) {//Username found
+                if ($this->checkPasswordCorrect($password)) {//Password is correct
+                    $this->doLoginWasSuccess();//Add login counter and last login datetime
+                    $this->setToken();//Set session token
+                    $this->indexRedirect();//Redirect to index and show servers
+                } else {//Password is wrong
+                    $this->addLoginFailCount();//Add 1 onto login fail count
+                    $this->addLoginFailAttempt();//ip and datetime into login attempt fail logs
+                    $this->indexRedirect();//Redirect to index and show login form
+                }
+            } else {//Username not found in DB
+                $this->indexRedirect();//Redirect to index and show login form
+            }
+        }
+    }
+
+    protected function deleteAuthFile()
+    {
+        unlink('AUTH.php');
+    }
 }
