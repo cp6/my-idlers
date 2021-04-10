@@ -1408,7 +1408,7 @@ class idlers extends helperFunctions
         $this->colOpen('col-12 col-md-6 mm-col');
         $this->tagOpen('div', 'input-group');
         $this->inputPrepend('Bandwidth');
-        $this->numberInput('me_bandwidth', '', 'form-control', false, 1, 9999);
+        $this->numberInput('me_bandwidth', '', 'form-control', false, 0, 9999);
         $this->outputString('<div class="input-group-append"><span class="input-group-text">TB</span></div>');
         $this->tagClose('div', 3);
 
@@ -1436,7 +1436,7 @@ class idlers extends helperFunctions
         $this->rowColOpen('form-row', 'col-6');
         $this->tagOpen('div', 'input-group');
         $this->inputPrepend('Swap');
-        $this->numberInput('me_swap', '', 'form-control', false, 0.5, 9999, 'any');
+        $this->numberInput('me_swap', '', 'form-control', false, 0, 9999, 'any');
         $this->tagClose('div', 2);
         $this->colOpen('col-6');
         $this->tagOpen('div', 'input-group');
@@ -1546,7 +1546,7 @@ class idlers extends helperFunctions
         $this->rowColOpen('form-row', 'col-12');
         $this->tagOpen('div', 'input-group');
         $this->inputPrepend('Bandwidth');
-        $this->numberInput('sh_me_bandwidth', '', 'form-control', false, 1, 99999);
+        $this->numberInput('sh_me_bandwidth', '', 'form-control', false, 0, 99999);
         $this->outputString('<div class="input-group-append"><span class="input-group-text">GB</span></div>');
         $this->tagClose('div', 3);
 
@@ -1933,7 +1933,7 @@ class idlers extends helperFunctions
         $this->colOpen('col-12 col-md-3');
         $this->tagOpen('div', 'input-group');
         $this->inputPrepend('Swap');
-        $this->numberInput('swap', '100', 'form-control', true, 1, 62000, 'any');
+        $this->numberInput('swap', '100', 'form-control', true, 0, 62000, 'any');
         $this->tagClose('div', 2);
         $this->colOpen('col-12 col-md-3');
         $this->tagOpen('div', 'input-group');
