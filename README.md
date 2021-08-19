@@ -2,6 +2,8 @@
 
 A web app for displaying, organizing and storing information about servers (VPS), shared hosting and domains.
 
+[Live demo](https://myidlers.srv3r.com/)
+
 Despite what the name infers this self hosted web app isn't just for storing idling server information. 
 By using a [YABs](https://github.com/masonr/yet-another-bench-script) output you can get disk & network speed values along with GeekBench 5 scores to do easier comparing and sorting.
 
