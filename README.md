@@ -2,6 +2,10 @@
 
 A web app for displaying, organizing and storing information about servers (VPS), shared hosting and domains.
 
+## V2 notes
+
+V2 build is going to be a complete overhaul of My idlers with the project being moved onto the Laravel framework. This will simplyfy development and most of the features from the original build will be present in V2.
+
 [Live demo](https://myidlers.srv3r.com/)
 
 Despite what the name infers this self hosted web app isn't just for storing idling server information. 
