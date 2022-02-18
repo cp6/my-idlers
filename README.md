@@ -17,20 +17,22 @@ removed.
 
 [Old version live demo](https://myidlers.srv3r.com/)
 
-[![Generic badge](https://img.shields.io/badge/version-2.0-blue.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Laravel-9.0-red.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/PHP-8.1-purple.svg)](https://shields.io/)
+[![Generic badge](https://img.shields.io/badge/version-2.0-blue.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Laravel-9.0-red.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/PHP-8.1-purple.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Bootstrap-5.1-pink.svg)](https://shields.io/)
 
 ## 2.0 changes:
 
 **Unfortunately you cannot migrate your current install to the new 2.0 version**
 
-* Laravel framework (version 9)
-* Breeze authentication
-* API GET for any of the CRUD data
-* Labels (titles/desc) system
-* Misc services
-* DNS CRUD
+* Laravel framework (version 9).
+* Breeze authentication.
+* API GET for any of the CRUD data.
+* Labels (titles/desc) system.
+* Misc services.
+* DNS CRUD.
+* Reseller hosting.
 * Make servers displayable public with config options to hide certain values.
-* Vue JS used where possible
+* Vue JS used where possible.
+* Datatables used on large tables (Locations, labels, and providers).
 
 ## Requires
 
@@ -42,8 +44,6 @@ removed.
 * Add servers
 * Add shared hosting
 * Add domains
-* [Auto suggest locations](https://cdn.write.corbpie.com/wp-content/uploads/2021/01/my-idlers-self-hosted-server-domain-information-auto-location.gif)
-* [Auto suggest providers](https://cdn.write.corbpie.com/wp-content/uploads/2021/01/my-idlers-self-hosted-server-domain-information-auto-provider.gif)
 * [Auto get IP's from hostname](https://cdn.write.corbpie.com/wp-content/uploads/2021/01/my-idlers-self-hosted-server-domain-information-ips-from-hostname.gif)
 * [Check up/down status](https://cdn.write.corbpie.com/wp-content/uploads/2021/01/my-idlers-self-hosted-server-domain-information-ping-up-feature.gif)
 * Get YABs data from output
@@ -54,32 +54,87 @@ removed.
 * Multi currency compatibility
 * Multi payment-term compatibility
 * Pre-defined operating systems
-* Assign tags
 * Assign labels
 * Assign server type (KVM, OVZ, LXC & dedi)
 * Easy to edit values
 * Order by table
-* Search items
 * Tally/stats card
-* One-page design
 
 ## Install
 
-* Download [the zip](https://github.com/cp6/my-idlers/archive/main.zip) and unpack the files from ```my-idlers-main/```
-  into your directory of choice.
-* Run `my_idlers.sql` in MySQL.
+* git clone https://github.com/cp6/my-idlers.git into your directory of choice
+* Run `composer install`
 
-* **Only run ```update1.3to1.4.sql``` if you have version 1.3 installed.**
+* Run `cp .env.example .env`
+* Edit (If needed) MySQL details in .env
+* Run `php artisan key:generate`
+* Run `php artisan make:database my_idlers` to create database
+* Run `php artisan migrate:fresh --seed` to create tables and seed data
+* Run `php artisan serve`
 
-* Edit ```class.php``` lines ```13-16``` for your MySQL details.
-* Edit ```class.php``` lines ```8-10``` for card order type.
+## API endpoints
 
-* Make sure you have write access to process and store the YABs outputs.
+For GET requests the header must have `Accept: application/json` and your API token (found at `/account`)
+
+`Authorization : Bearer API_TOKEN_HERE`
+
+All API requests must be appended with `api/` e.g `mydomain.com/api/servers/gYk8J0a7`
+
+**GET request:**
+
+`dns/`
+
+`dns/{id}`
+
+`domains/`
+
+`domains/{id}`
+
+`servers`
+
+`servers/{id}`
+
+`labels/`
+
+`labels/{id}`
+
+`locations/`
+
+`locations/{id}`
+
+`misc/`
+
+`misc/{id}`
+
+`networkSpeeds/`
+
+`networkSpeeds/{id}`
+
+`pricing/`
+
+`pricing/{id}`
+
+`providers/`
+
+`providers/{id}`
+
+`reseller/`
+
+`reseller/{id}`
+
+`settings/`
+
+`shared/`
+
+`shared/{id}`
+
+
 
 ## Notes
 
-**There is no authentication provided!**
-Either use on a local network or put behind authentication.
+**Public viewable listings**
+
+If enabled the public viewable table for your server listings is at `/servers/public`
 
 **Supporting YABS commands:**
 
@@ -93,14 +148,9 @@ or
 
 ```# ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## #```
 
-**A trimmed Bootstrap is used.** Only the used classes and elements are in ```style.css```
-Therefore adding more obscure columns or Bootstrap classes will not initially work as intended until you put this source
-css into ```style.css```.
+### Screenshots for v2
 
-**Auto complete provider & location are text inputs!** This means that if your choice isn't there then simply type it
-out and upon form submission it gets added to the pool to choose from next time.
-
-### Screenshots
+### Screenshots for versions before v2
 
 [![My idlers screenshot1](https://cdn.write.corbpie.com/wp-content/uploads/2021/02/my-idlers-self-hosted-server-info-cards.jpg)](https://cdn.write.corbpie.com/wp-content/uploads/2021/02/my-idlers-self-hosted-server-info-cards.jpg)
 
