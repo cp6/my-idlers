@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="LaravelQuerySettings">
+    <option name="filterDataSources" value="true" />
+    <option name="filteredDataSources">
+      <set>
+        <option value="efc7de96-2071-4420-9d95-422a64f97449&lt;-/lq/-&gt;myidlers" />
+        <option value="efc7de96-2071-4420-9d95-422a64f97449&lt;-/lq/-&gt;laravel" />
+        <option value="efc7de96-2071-4420-9d95-422a64f97449&lt;-/lq/-&gt;idlers" />
+        <option value="efc7de96-2071-4420-9d95-422a64f97449&lt;-/lq/-&gt;first-project" />
+      </set>
+    </option>
+  </component>
+</project>
