@@ -1,10 +1,12 @@
 {
-    "name": "laravel/laravel",
+    "name": "corbpie/myidlers",
     "type": "project",
-    "description": "The Laravel Framework.",
+    "description": "Web app for displaying, organizing and storing information about servers, shared/reseller hosting and domains.",
     "keywords": [
-        "framework",
-        "laravel"
+        "myidlers",
+        "crud",
+        "vps",
+        "organization"
     ],
     "license": "MIT",
     "require": {
