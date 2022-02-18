@@ -48,9 +48,6 @@ Route::resource('misc', MiscController::class)->middleware(['auth']);
 
 Route::resource('providers', ProvidersController::class)->middleware(['auth']);
 
-//Test
-Route::get('providers/list', [ProvidersController::class, 'getProviders'])->name('list-providers');
-
 Route::resource('reseller', ResellerController::class)->middleware(['auth']);
 
 Route::get('servers/public', 'App\Http\Controllers\ServerController@showServersPublic')->name('servers/public');
