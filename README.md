@@ -5,7 +5,7 @@ A web app for displaying, organizing and storing information about servers (VPS)
 Despite what the name infers this self hosted web app isn't just for storing idling server information. 
 By using a [YABs](https://github.com/masonr/yet-another-bench-script) output you can get disk & network speed values along with GeekBench 5 scores to do easier comparing and sorting.
 
-[![Generic badge](https://img.shields.io/badge/version-1.3-blue.svg)](https://shields.io/)
+[![Generic badge](https://img.shields.io/badge/version-1.5-blue.svg)](https://shields.io/)
 
 ## 1.3 changes:
 **If you have version 1.2 already installed please run ```update1.2to1.3.sql```**
