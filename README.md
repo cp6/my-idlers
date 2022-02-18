@@ -11,7 +11,8 @@ V2 build is going to be a complete overhaul of My idlers with the project being 
 Despite what the name infers this self hosted web app isn't just for storing idling server information. 
 By using a [YABs](https://github.com/masonr/yet-another-bench-script) output you can get disk & network speed values along with GeekBench 5 scores to do easier comparing and sorting.
 
-[![Generic badge](https://img.shields.io/badge/version-1.4-blue.svg)](https://shields.io/)
+
+[![Generic badge](https://img.shields.io/badge/version-1.5-blue.svg)](https://shields.io/)
 
 ## 1.4 changes:
 **If you have version 1.3 already installed please run ```update1.3to1.4.sql```**
