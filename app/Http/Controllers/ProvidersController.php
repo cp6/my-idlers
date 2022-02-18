@@ -55,7 +55,6 @@ class ProvidersController extends Controller
                 })
                 ->rawColumns(['action'])
                 ->make(true);
-            dd($dt);
         }
     }
 
