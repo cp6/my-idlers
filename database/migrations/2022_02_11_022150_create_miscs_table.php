@@ -17,7 +17,7 @@ class CreateMiscsTable extends Migration
             $table->char('id', 8)->unique();
             $table->string('name');
             $table->tinyInteger('active')->default(1);
-            $table->date('owned_since');
+            $table->date('owned_since')->nullable();
             $table->timestamps();
         });
     }
