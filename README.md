@@ -150,6 +150,11 @@ or
 
 ### Screenshots for v2
 
+[![My idlers screenshot1](https://cdn.write.corbpie.com/wp-content/uploads/2022/02/My-idlers-home-page-v2.png)](https://cdn.write.corbpie.com/wp-content/uploads/2022/02/My-idlers-home-page-v2.png)
+
+[![My idlers screenshot1](https://cdn.write.corbpie.com/wp-content/uploads/2022/02/My-idlers-locations-page-v2.png)](https://cdn.write.corbpie.com/wp-content/uploads/2022/02/My-idlers-locations-page-v2.png)
+
+
 ### Screenshots for versions before v2
 
 [![My idlers screenshot1](https://cdn.write.corbpie.com/wp-content/uploads/2021/02/my-idlers-self-hosted-server-info-cards.jpg)](https://cdn.write.corbpie.com/wp-content/uploads/2021/02/my-idlers-self-hosted-server-info-cards.jpg)
