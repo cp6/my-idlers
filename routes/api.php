@@ -19,11 +19,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-
-Route::middleware('auth:api')->get('/test', function (Request $request) {
-    return new JsonResponse(['message' => 'Hello world']);
-});
-
 Route::middleware('auth:api')->get('dns/', 'App\Http\Controllers\ApiController@getAllDns');
 Route::middleware('auth:api')->get('dns/{id}', 'App\Http\Controllers\ApiController@getDns');
 
