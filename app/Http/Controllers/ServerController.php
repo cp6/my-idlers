@@ -143,15 +143,21 @@ class ServerController extends Controller
             ->join('providers as p', 's.provider_id', '=', 'p.id')
             ->join('locations as l', 's.location_id', '=', 'l.id')
             ->join('os as o', 's.os_id', '=', 'o.id')
+            ->Leftjoin('yabs as y', 's.id', '=', 'y.server_id')
+            ->Leftjoin('disk_speed as ds', 'y.id', '=', 'ds.id')
             ->where('s.id', '=', $server->id)
-            ->get(['s.*', 'p.name as provider_name', 'l.name as location', 'o.name as os_name', 'pr.*']);
+            ->get(['s.*', 'p.name as provider', 'l.name as location', 'o.name as os_name', 'pr.*', 'y.*', 'ds.*']);
+
+        $network_speeds = json_decode(DB::table('network_speed')
+            ->where('network_speed.server_id', '=', $server->id)
+            ->get(),true);
 
         $labels = DB::table('labels_assigned as l')
             ->join('labels', 'l.label_id', '=', 'labels.id')
             ->where('l.service_id', '=', $server->id)
             ->get(['labels.label']);
 
-        return view('servers.show', compact(['server', 'server_extras', 'labels']));
+        return view('servers.show', compact(['server', 'server_extras', 'network_speeds', 'labels']));
     }
 
     public function edit(Server $server)
