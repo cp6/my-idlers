@@ -6,6 +6,7 @@ use App\Http\Controllers\DomainsController;
 use App\Http\Controllers\LabelsController;
 use App\Http\Controllers\LocationsController;
 use App\Http\Controllers\MiscController;
+use App\Http\Controllers\OsController;
 use App\Http\Controllers\ProvidersController;
 use App\Http\Controllers\ResellerController;
 use App\Http\Controllers\ServerController;
