@@ -46,6 +46,8 @@ Route::resource('locations', LocationsController::class)->middleware(['auth']);
 
 Route::resource('misc', MiscController::class)->middleware(['auth']);
 
+Route::resource('os', OsController::class)->middleware(['auth']);
+
 Route::resource('providers', ProvidersController::class)->middleware(['auth']);
 
 Route::resource('reseller', ResellerController::class)->middleware(['auth']);
