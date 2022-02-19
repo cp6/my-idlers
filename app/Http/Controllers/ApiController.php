@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Labels;
 use App\Models\NetworkSpeed;
+use App\Models\OS;
 use App\Models\Pricing;
 use App\Models\Providers;
 use App\Models\Server;
@@ -219,6 +220,20 @@ class ApiController extends Controller
         $settings = DB::table('settings')
             ->get()->toJson(JSON_PRETTY_PRINT);
         return response($settings, 200);
+    }
+
+    protected function getAllOs()
+    {
+        $os = OS::all()->toJson(JSON_PRETTY_PRINT);
+        return response($os, 200);
+    }
+
+    protected function getOs($id)
+    {
+        $os = DB::table('os as o')
+            ->where('o.id', '=', $id)
+            ->get()->toJson(JSON_PRETTY_PRINT);
+        return response($os, 200);
     }
 
     public function getAllProvidersTable(Request $request)

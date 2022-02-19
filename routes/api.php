@@ -40,6 +40,9 @@ Route::middleware('auth:api')->get('misc/{id}', 'App\Http\Controllers\ApiControl
 Route::middleware('auth:api')->get('networkSpeeds/', 'App\Http\Controllers\ApiController@getAllNetworkSpeeds');
 Route::middleware('auth:api')->get('networkSpeeds/{id}', 'App\Http\Controllers\ApiController@getNetworkSpeeds');
 
+Route::middleware('auth:api')->get('os/', 'App\Http\Controllers\ApiController@getAllOs');
+Route::middleware('auth:api')->get('os/{id}', 'App\Http\Controllers\ApiController@getOs');
+
 Route::middleware('auth:api')->get('pricing/', 'App\Http\Controllers\ApiController@getAllPricing');
 Route::middleware('auth:api')->get('pricing/{id}', 'App\Http\Controllers\ApiController@getPricing');
 

@@ -30,6 +30,7 @@ removed.
 * Misc services.
 * DNS CRUD.
 * Reseller hosting.
+* Added Operating systems to DB, Deleting and creating them now possible.
 * Make servers displayable public with config options to hide certain values.
 * Vue JS used where possible.
 * Datatables used on large tables (Locations, labels, and providers).
@@ -109,6 +110,10 @@ All API requests must be appended with `api/` e.g `mydomain.com/api/servers/gYk8
 `networkSpeeds/`
 
 `networkSpeeds/{id}`
+
+`os/`
+
+`os/{id}`
 
 `pricing/`
 
