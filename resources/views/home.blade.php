@@ -141,6 +141,7 @@
                                     <thead class="table-light">
                                     <tr>
                                         <th class="text-nowrap">Name</th>
+                                        <th class="text-nowrap">Type</th>
                                         <th class="text-nowrap">Due</th>
                                         <th class="text-nowrap">Price</th>
                                         <th class="text-nowrap"></th>
@@ -160,6 +161,19 @@
                                                     {{$due_soon->domain}}.{{$due_soon->extension}}
                                                 @elseif($due_soon->service_type === 5)
                                                     {{$due_soon->name}}
+                                                @endif
+                                            </td>
+                                            <td class="text-nowrap">
+                                                @if($due_soon->service_type === 1)
+                                                    VPS
+                                                @elseif($due_soon->service_type === 2)
+                                                    SHARED
+                                                @elseif($due_soon->service_type === 3)
+                                                    RESELLER
+                                                @elseif($due_soon->service_type === 4)
+                                                    DOMAIN
+                                                @elseif($due_soon->service_type === 5)
+                                                    MISC
                                                 @endif
                                             </td>
                                             <td class="text-nowrap">
@@ -197,6 +211,7 @@
                                     <thead class="table-light">
                                     <tr>
                                         <th class="text-nowrap">Name</th>
+                                        <th class="text-nowrap">Type</th>
                                         <th class="text-nowrap">Added</th>
                                         <th class="text-nowrap">Price</th>
                                         <th class="text-nowrap"></th>
@@ -216,6 +231,19 @@
                                                     {{$new->domain}}.{{$new->extension}}
                                                 @elseif($new->service_type === 5)
                                                     {{$new->name}}
+                                                @endif
+                                            </td>
+                                            <td class="text-nowrap">
+                                                @if($due_soon->service_type === 1)
+                                                    VPS
+                                                @elseif($due_soon->service_type === 2)
+                                                    SHARED
+                                                @elseif($due_soon->service_type === 3)
+                                                    RESELLER
+                                                @elseif($due_soon->service_type === 4)
+                                                    DOMAIN
+                                                @elseif($due_soon->service_type === 5)
+                                                    MISC
                                                 @endif
                                             </td>
                                             <td class="text-nowrap">{{Carbon\Carbon::parse($new->created_at)->diffForHumans()}}</td>
