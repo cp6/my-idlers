@@ -21,7 +21,7 @@ class CreateYabsTable extends Migration
             $table->dateTime('output_date');
             $table->tinyInteger('cpu_cores');
             $table->float('cpu_freq');
-            $table->string('cpu');
+            $table->string('cpu_model');
             $table->float('ram');
             $table->char('ram_type', 2);
             $table->float('ram_mb');

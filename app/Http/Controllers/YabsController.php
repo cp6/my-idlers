@@ -52,7 +52,7 @@ class YabsController extends Controller
             'output_date' => $yabs['output_date'],
             'cpu_cores' => $yabs['cpu_cores'],
             'cpu_freq' => $yabs['cpu_freq'],
-            'cpu' => $yabs['cpu'],
+            'cpu_model' => $yabs['cpu'],
             'ram' => $yabs['ram'],
             'ram_type' => $yabs['ram_type'],
             'ram_mb' => $yabs['ram_mb'],
