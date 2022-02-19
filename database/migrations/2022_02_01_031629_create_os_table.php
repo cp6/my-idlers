@@ -16,6 +16,7 @@ class CreateOsTable extends Migration
         Schema::create('os', function (Blueprint $table) {
             $table->id()->autoIncrement();
             $table->string('name')->unique();
+            $table->timestamps();
         });
 
     }
