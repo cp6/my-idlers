@@ -18,7 +18,10 @@ class ApiController extends Controller
     {
         $servers = DB::table('servers as s')
             ->Join('pricings as p', 's.id', '=', 'p.service_id')
-            ->get(['s.*', 'p.id as price_id', 'p.currency', 'p.price', 'p.term', 'p.as_usd', 'p.usd_per_month', 'p.next_due_date'])->toJson(JSON_PRETTY_PRINT);
+            ->join('providers as pr', 's.provider_id', '=', 'pr.id')
+            ->join('locations as l', 's.location_id', '=', 'l.id')
+            ->join('os as o', 's.os_id', '=', 'o.id')
+            ->get(['s.*', 'p.id as price_id', 'p.currency', 'p.price', 'p.term', 'p.as_usd', 'p.usd_per_month', 'p.next_due_date', 'pr.name as provider', 'l.name as location','o.name as os'])->toJson(JSON_PRETTY_PRINT);
 
         return response($servers, 200);
     }
@@ -27,8 +30,11 @@ class ApiController extends Controller
     {
         $server = DB::table('servers as s')
             ->Join('pricings as p', 's.id', '=', 'p.service_id')
+            ->join('providers as pr', 's.provider_id', '=', 'pr.id')
+            ->join('locations as l', 's.location_id', '=', 'l.id')
+            ->join('os as o', 's.os_id', '=', 'o.id')
             ->where('s.id', '=', $id)
-            ->get(['s.*', 'p.id as price_id', 'p.currency', 'p.price', 'p.term', 'p.as_usd', 'p.usd_per_month', 'p.next_due_date']);
+            ->get(['s.*', 'p.id as price_id', 'p.currency', 'p.price', 'p.term', 'p.as_usd', 'p.usd_per_month', 'p.next_due_date', 'pr.name as provider', 'l.name as location','o.name as os']);
 
         $yabs = DB::table('yabs')
             ->where('yabs.server_id', '=', $id)
