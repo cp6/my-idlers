@@ -23,5 +23,6 @@ class DatabaseSeeder extends Seeder
         $this->call(LabelsSeeder::class);
         $this->call(DomainsSeeder::class);
         $this->call(ServersSeeder::class);
+        $this->call(SharedSeeder::class);
     }
 }
