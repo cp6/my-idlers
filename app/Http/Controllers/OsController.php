@@ -21,7 +21,7 @@ class OsController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|min:2'
+            'os_name' => 'required|min:2'
         ]);
 
         OS::create([
@@ -32,9 +32,9 @@ class OsController extends Controller
             ->with('success', 'OS Created Successfully.');
     }
 
-    public function destroy(OS $OS)
+    public function destroy(OS $o)
     {
-        $items = OS::find($OS->id);
+        $items = OS::find($o->id);
 
         $items->delete();
 
