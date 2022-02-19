@@ -60,7 +60,9 @@
                             </tr>
                             <tr>
                                 <td class="px-2 py-2 font-bold text-muted">CPU</td>
-                                <td>{{ $server_extras[0]->cpu_cores }} <small>@</small> {{ $server_extras[0]->cpu_freq }}</td>
+                                <td>{{ $server_extras[0]->cpu }} @if($server_extras[0]->has_yabs)
+                                        <small>@</small> {{ $server_extras[0]->cpu_freq }}
+                                    @endif</td>
                             </tr>
                             <tr>
                                 <td class="px-2 py-2 font-bold text-muted">RAM</td>
@@ -123,55 +125,62 @@
                     </a>
                 </div>
                 <div class="col-12 col-lg-6">
-                    <div class="table-responsive">
-                        <table class="table table-borderless text-nowrap">
-                            <tbody>
-                            <tr>
-                                <td class="px-2 py-2 font-bold text-muted">GB5 Single/Multi</td>
-                                <td>
-                                    {{$server_extras[0]->gb5_single}} / {{$server_extras[0]->gb5_multi}}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="px-2 py-2 font-bold text-muted">CPU</td>
-                                <td>{{$server_extras[0]->cpu}}</td>
-                            </tr>
-                            <tr>
-                                <td class="px-2 py-2 font-bold text-muted">AES</td>
-                                <td>{{ ($server_extras[0]->aes === 1) ? 'Yes' : 'No' }}</td>
-                            </tr>
-                            <tr>
-                                <td class="px-2 py-2 font-bold text-muted">VM</td>
-                                <td>{{ ($server_extras[0]->vm === 1) ? 'Yes' : 'No' }}</td>
-                            </tr>
-                            <tr>
-                                <td class="px-2 py-2 font-bold text-muted">Disk 4k</td>
-                                <td>{{$server_extras[0]->d_4k}} <small>{{$server_extras[0]->d_4k_type}}</small></td>
-                            </tr>
-                            <tr>
-                                <td class="px-2 py-2 font-bold text-muted">Disk 64k</td>
-                                <td>{{$server_extras[0]->d_64k}} <small>{{$server_extras[0]->d_64k_type}}</small></td>
-                            </tr>
-                            <tr>
-                                <td class="px-2 py-2 font-bold text-muted">Disk 512k</td>
-                                <td>{{$server_extras[0]->d_512k}} <small>{{$server_extras[0]->d_512k_type}}</small></td>
-                            </tr>
-                            <tr>
-                                <td class="px-2 py-2 font-bold text-muted">Disk 1m</td>
-                                <td>{{$server_extras[0]->d_1m}} <small>{{$server_extras[0]->d_1m_type}}</small></td>
-                            </tr>
-                            <tr>
-                                <td class="px-2 py-2 font-bold">Network speed (s/r)</td>
-                            </tr>
-                            @foreach($network_speeds as $ns)
+                    @if($server_extras[0]->has_yabs)
+                        <div class="table-responsive">
+                            <table class="table table-borderless text-nowrap">
+                                <tbody>
                                 <tr>
-                                    <td class="px-2 py-2 font-bold text-muted">{{$ns['location']}}</td>
-                                    <td>{{$ns['send']}} <small>{{$ns['send_type']}}</small> {{$ns['receive']}} <small>{{$ns['receive_type']}}</small></td>
+                                    <td class="px-2 py-2 font-bold text-muted">GB5 Single/Multi</td>
+                                    <td>
+                                        {{$server_extras[0]->gb5_single}} / {{$server_extras[0]->gb5_multi}}
+                                    </td>
                                 </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+                                <tr>
+                                    <td class="px-2 py-2 font-bold text-muted">CPU</td>
+                                    <td>{{$server_extras[0]->cpu_model}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-2 py-2 font-bold text-muted">AES</td>
+                                    <td>{{ ($server_extras[0]->aes === 1) ? 'Yes' : 'No' }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-2 py-2 font-bold text-muted">VM</td>
+                                    <td>{{ ($server_extras[0]->vm === 1) ? 'Yes' : 'No' }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-2 py-2 font-bold text-muted">Disk 4k</td>
+                                    <td>{{$server_extras[0]->d_4k}} <small>{{$server_extras[0]->d_4k_type}}</small></td>
+                                </tr>
+                                <tr>
+                                    <td class="px-2 py-2 font-bold text-muted">Disk 64k</td>
+                                    <td>{{$server_extras[0]->d_64k}} <small>{{$server_extras[0]->d_64k_type}}</small>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="px-2 py-2 font-bold text-muted">Disk 512k</td>
+                                    <td>{{$server_extras[0]->d_512k}} <small>{{$server_extras[0]->d_512k_type}}</small>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="px-2 py-2 font-bold text-muted">Disk 1m</td>
+                                    <td>{{$server_extras[0]->d_1m}} <small>{{$server_extras[0]->d_1m_type}}</small></td>
+                                </tr>
+                                <tr>
+                                    <td class="px-2 py-2 font-bold">Network speed (s/r)</td>
+                                </tr>
+                                @foreach($network_speeds as $ns)
+                                    <tr>
+                                        <td class="px-2 py-2 font-bold text-muted">{{$ns['location']}}</td>
+                                        <td>{{$ns['send']}} <small>{{$ns['send_type']}}</small> {{$ns['receive']}}
+                                            <small>{{$ns['receive_type']}}</small></td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    @else
+                        <p>Please <a href="{{ route('yabs.create') }}" class="text-decoration-none">add a YABs</a> to see Geekbench, disk and network speeds</p>
+                    @endif
                 </div>
             </div>
         </x-card>
