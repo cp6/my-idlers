@@ -36,8 +36,8 @@
                             @foreach($yabs as $yab)
                                 <tr>
                                     <td><a href="servers/{{$yab->server_id}}" class="text-decoration-none">{{ $yab->hostname }}</a></td>
-                                    <td><span title="{{$yab->cpu}}">{{ $yab->cpu_cores }}</span></td>
-                                    <td><span title="{{$yab->cpu}}">{{ $yab->cpu_freq }}<small>Ghz</small></span></td>
+                                    <td><span title="{{$yab->cpu_model}}">{{ $yab->cpu_cores }}</span></td>
+                                    <td><span title="{{$yab->cpu_model}}">{{ $yab->cpu_freq }}<small>Ghz</small></span></td>
                                     <td>{{ $yab->ram }}<small>{{ $yab->ram_type }}</small></td>
                                     <td>{{ $yab->disk }}<small>{{ $yab->disk_type }}</small></td>
                                     <td><a href="https://browser.geekbench.com/v5/cpu/{{$yab->gb5_id}}" class="text-decoration-none">{{ $yab->gb5_single }}</a></td>

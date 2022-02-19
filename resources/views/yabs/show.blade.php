@@ -24,7 +24,7 @@
                                 </tr>
                                 <tr>
                                     <td class="px-4 py-2 font-bold">CPU type</td>
-                                    <td>{{ $yab[0]->cpu }}</td>
+                                    <td>{{ $yab[0]->cpu_model }}</td>
                                 </tr>
                                 <tr>
                                     <td class="px-4 py-2 font-bold">Ram</td>
