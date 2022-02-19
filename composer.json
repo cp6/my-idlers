@@ -16,7 +16,8 @@
         "laravel/framework": "^9.0",
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.4",
-        "yajra/laravel-datatables-oracle": "~9.0"
+        "yajra/laravel-datatables-oracle": "~9.0",
+        "ext-json": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
@@ -37,7 +38,7 @@
             "dont-discover": []
         }
     },
-    "files" : [
+    "files": [
         "app/Process.php"
     ],
     "autoload": {
