@@ -167,13 +167,13 @@
                                                 @if($due_soon->service_type === 1)
                                                     VPS
                                                 @elseif($due_soon->service_type === 2)
-                                                    SHARED
+                                                    Shared
                                                 @elseif($due_soon->service_type === 3)
-                                                    RESELLER
+                                                    Reseller
                                                 @elseif($due_soon->service_type === 4)
-                                                    DOMAIN
+                                                    Domain
                                                 @elseif($due_soon->service_type === 5)
-                                                    MISC
+                                                    Misc
                                                 @endif
                                             </td>
                                             <td class="text-nowrap">
@@ -234,16 +234,16 @@
                                                 @endif
                                             </td>
                                             <td class="text-nowrap">
-                                                @if($due_soon->service_type === 1)
+                                                @if($new->service_type === 1)
                                                     VPS
-                                                @elseif($due_soon->service_type === 2)
-                                                    SHARED
-                                                @elseif($due_soon->service_type === 3)
-                                                    RESELLER
-                                                @elseif($due_soon->service_type === 4)
-                                                    DOMAIN
-                                                @elseif($due_soon->service_type === 5)
-                                                    MISC
+                                                @elseif($new->service_type === 2)
+                                                    Shared
+                                                @elseif($new->service_type === 3)
+                                                    Reseller
+                                                @elseif($new->service_type === 4)
+                                                    Domain
+                                                @elseif($new->service_type === 5)
+                                                    Misc
                                                 @endif
                                             </td>
                                             <td class="text-nowrap">{{Carbon\Carbon::parse($new->created_at)->diffForHumans()}}</td>
