@@ -2,6 +2,10 @@
 @section('style')
     <x-modal-style></x-modal-style>
 @endsection
+@section('scripts')
+    <script src="{{ asset('js/vue.min.js') }}"></script>
+    <script src="{{ asset('js/axios.min.js') }}"></script>
+@endsection
 <x-app-layout>
     <x-slot name="header">
         {{ __('Shared hosting') }}
