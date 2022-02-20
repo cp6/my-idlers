@@ -25,14 +25,16 @@ class DomainsSeeder extends Seeder
                 "domain" => "node",
                 "extension" => "ai",
                 "provider_id" => 59,
-                "owned_since" => '2013-01-12'
+                "owned_since" => '2013-01-12',
+                "created_at" => Carbon::now()
             ],
             [
                 "id" => $id2,
                 "domain" => "cpu",
                 "extension" => "club",
                 "provider_id" => 59,
-                "owned_since" => '2016-04-25'
+                "owned_since" => '2016-04-25',
+                "created_at" => Carbon::now()
             ]
         ];
 
