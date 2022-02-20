@@ -25,13 +25,19 @@ class DomainsController extends Controller
 
     public function show(Domains $domain)
     {
+
         $service_extras = DB::table('domains as d')
             ->join('providers as p', 'd.provider_id', '=', 'p.id')
             ->join('pricings as pr', 'd.id', '=', 'pr.service_id')
             ->where('d.id', '=', $domain->id)
             ->get(['d.*', 'p.name as provider_name', 'pr.*']);
 
-        return view('domains.show', compact(['domain', 'service_extras']));
+        $labels = DB::table('labels_assigned as l')
+            ->join('labels', 'l.label_id', '=', 'labels.id')
+            ->where('l.service_id', '=', $domain->id)
+            ->get(['labels.label']);
+
+        return view('domains.show', compact(['domain', 'service_extras', 'labels']));
     }
 
     public function create()
