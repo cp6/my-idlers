@@ -38,6 +38,12 @@ class ServerController extends Controller
 
         Session::put('timer_version_footer', $settings[0]->show_versions_footer);
         Session::put('show_servers_public', $settings[0]->show_servers_public);
+        Session::put('show_server_value_ip', $settings[0]->show_server_value_ip);
+        Session::put('show_server_value_hostname', $settings[0]->show_server_value_hostname);
+        Session::put('show_server_value_price', $settings[0]->show_server_value_price);
+        Session::put('show_server_value_yabs', $settings[0]->show_server_value_yabs);
+        Session::put('show_server_value_provider', $settings[0]->show_server_value_provider);
+        Session::put('show_server_value_location', $settings[0]->show_server_value_location);
         Session::save();
 
         if ((Session::has('show_servers_public') && Session::get('show_servers_public') === 1) || Auth::check()) {
@@ -48,7 +54,7 @@ class ServerController extends Controller
                 ->Join('os as o', 's.os_id', '=', 'o.id')
                 ->LeftJoin('yabs as y', 's.id', '=', 'y.server_id')
                 ->LeftJoin('disk_speed as ds', 'y.id', '=', 'ds.id')
-                ->get(['s.*', 'pr.currency', 'pr.price', 'pr.term', 'pr.as_usd', 'pr.next_due_date', 'pr.service_id', 'p.name as provider_name', 'l.name as location', 'o.name as os_name', 'y.*', 'y.id as yabs_id', 'ds.*']);
+                ->get(['pr.currency', 'pr.price', 'pr.term', 'pr.as_usd', 'pr.next_due_date', 'pr.service_id', 'p.name as provider_name', 'l.name as location', 'o.name as os_name', 'y.*', 'y.id as yabs_id', 'ds.*','s.*']);
 
             return view('servers.public-index', compact('servers'));
         }
