@@ -10,6 +10,7 @@
         <x-delete-confirm-modal></x-delete-confirm-modal>
         <x-card class="shadow mt-3">
             <a href="{{ route('yabs.create') }}" class="btn btn-primary mb-3">Add YABs</a>
+            <x-errors-alert></x-errors-alert>
             <x-success-alert></x-success-alert>
                 <div class="table-responsive">
                     <table class="table table-bordered">
