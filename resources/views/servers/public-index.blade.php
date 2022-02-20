@@ -9,7 +9,7 @@
                 <table class="table table-bordered">
                     <thead class="table-light">
                     <tr class="bg-gray-100 bg-">
-                        <th>Name</th>
+                        <th class="nowrap">Name</th>
                         <th class="text-center"><i class="fas fa-box" title="Virt"></i></th>
                         <th class="text-center">OS</th>
                         <th class="text-center"><i class="fas fa-microchip" title="CPU"></i></th>
@@ -34,40 +34,69 @@
                     @if(!empty($servers))
                         @foreach($servers as $s)
                             <tr>
-                                <td>
-                                @if(Session::has('show_server_value_hostname') && Session::get('show_server_value_hostname') === '1')
+                                <td class="nowrap">
+                                    @if(Session::has('show_server_value_hostname') && Session::get('show_server_value_hostname') === '1')
                                         {{ $s->hostname }}
-                                @endif
+                                    @endif
                                 </td>
                                 <td class="text-center">
                                     {{ App\Models\Server::serviceServerType($s->server_type) }}
                                 </td>
                                 <td class="text-center">{!!App\Models\Server::osIntToIcon($s->os_id, $s->os_name)!!}</td>
-                                <td class="text-center">{{$s->cpu_cores}}</td>
-                                <td class="text-center">{{$s->cpu_freq}}</td>
-                                <td class="text-center">
+                                <td class="text-center">{{$s->cpu}}</td>
+                                <td class="text-nowrap">{{$s->cpu_freq}}</td>
+                                <td class="text-nowrap">
                                     @if($s->ram_as_mb > 1024)
                                         {{ number_format(($s->ram_as_mb / 1000),0) }}<small>GB</small>
                                     @else
                                         {{$s->ram_as_mb}}<small>MB</small>
                                     @endif
                                 </td>
-                                <td class="text-center">
+                                <td class="text-nowrap">
                                     @if($s->disk > 1000)
                                         {{ number_format(($s->disk / 1000),1) }}<small>TB</small>
                                     @else
                                         {{$s->disk}}<small>GB</small>
                                     @endif
                                 </td>
-                                <td class="text-nowrap">{{ $s->location }}</td>
-                                <td class="text-nowrap">{{ $s->provider_name }}</td>
+                                <td class="text-nowrap">
+                                    @if(Session::get('show_server_value_location') === 1)
+                                        {{ $s->location }}
+                                    @endif</td>
+                                <td class="text-nowrap">
+                                    @if(Session::get('show_server_value_provider') === 1)
+                                        {{ $s->provider_name }}
+                                    @endif
+                                </td>
                                 <td class="text-nowrap">{{ $s->price }} {{$s->currency}} {{\App\Process::paymentTermIntToString($s->term)}}</td>
-                                <td class="text-nowrap">{{$s->gb5_single}}</td>
-                                <td class="text-nowrap">{{$s->gb5_multi}}</td>
-                                <td class="text-nowrap">{{$s->d_4k_as_mbps}}<small>Mbps</small></td>
-                                <td class="text-nowrap">{{$s->d_64k_as_mbps}}<small>Mbps</small></td>
-                                <td class="text-nowrap">{{$s->d_512k_as_mbps}}<small>Mbps</small></td>
-                                <td class="text-nowrap">{{$s->d_1m_as_mbps}}<small>Mbps</small></td>
+                                <td class="text-nowrap">
+                                    @if(Session::get('show_server_value_yabs') === 1)
+                                        {{$s->gb5_single}}
+                                    @endif
+                                </td>
+                                <td class="text-nowrap">
+                                    @if(Session::get('show_server_value_yabs') === 1)
+                                        {{$s->gb5_multi}}
+                                    @endif
+                                </td>
+                                <td class="text-nowrap">
+                                    @if(Session::get('show_server_value_yabs') === 1)
+                                        {{$s->d_4k}}<small>{{$s->d_4k_type}}</small>
+                                    @endif
+                                </td>
+                                <td class="text-nowrap">
+                                    @if(Session::get('show_server_value_yabs') === 1)
+                                        {{$s->d_64k}}<small>{{$s->d_64k_type}}</small>
+                                    @endif
+                                </td>
+                                <td class="text-nowrap">
+                                    @if(Session::get('show_server_value_yabs') === 1)
+                                        {{$s->d_512k}}<small>{{$s->d_512k_type}}</small>
+                                    @endif</td>
+                                <td class="text-nowrap">
+                                    @if(Session::get('show_server_value_yabs') === 1)
+                                        {{$s->d_1m}}<small>{{$s->d_1m_type}}</small>
+                                    @endif</td>
                                 <td class="text-nowrap"> {{ $s->owned_since }}</td>
                                 <td class="text-nowrap">
                                     @if(Session::has('show_server_value_ip') && Session::get('show_server_value_ip') === '1')
