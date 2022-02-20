@@ -9,6 +9,7 @@ use App\Models\Server;
 use App\Models\Providers;
 use App\Models\Locations;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
@@ -38,9 +39,8 @@ class ServerController extends Controller
         Session::put('timer_version_footer', $settings[0]->show_versions_footer);
         Session::put('show_servers_public', $settings[0]->show_servers_public);
         Session::save();
-       // dd(Session::all());
 
-        if (Session::has('show_servers_public') && Session::get('show_servers_public') === 1) {
+        if ((Session::has('show_servers_public') && Session::get('show_servers_public') === 1) || Auth::check()) {
             $servers = DB::table('servers as s')
                 ->Join('pricings as pr', 's.id', '=', 'pr.service_id')
                 ->Join('providers as p', 's.provider_id', '=', 'p.id')
