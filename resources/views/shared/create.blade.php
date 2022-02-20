@@ -190,6 +190,32 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row mb-3">
+                        <div class="col-12 col-lg-3 mb-4">
+                            <x-labels-select>
+                                <x-slot name="title">label</x-slot>
+                                <x-slot name="name">label1</x-slot>
+                            </x-labels-select>
+                        </div>
+                        <div class="col-12 col-lg-3 mb-4">
+                            <x-labels-select>
+                                <x-slot name="title">label</x-slot>
+                                <x-slot name="name">label2</x-slot>
+                            </x-labels-select>
+                        </div>
+                        <div class="col-12 col-lg-3 mb-4">
+                            <x-labels-select>
+                                <x-slot name="title">label</x-slot>
+                                <x-slot name="name">label3</x-slot>
+                            </x-labels-select>
+                        </div>
+                        <div class="col-12 col-lg-3 mb-4">
+                            <x-labels-select>
+                                <x-slot name="title">label</x-slot>
+                                <x-slot name="name">label4</x-slot>
+                            </x-labels-select>
+                        </div>
+                    </div>
                     <div>
                         <button type="submit"
                                 class="btn btn-success py-0 px-4 mt-2">

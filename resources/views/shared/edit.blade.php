@@ -161,9 +161,9 @@
                                 </div>
                                 <select class="form-control" name="location_id">
                                     <option value="999">Null</option>
-                                    @foreach ($locations as $loc)
+                                    @foreach ($locations as $item)
                                         <option
-                                            value="{{ $loc->id }}" {{ ( $loc->id === $shared[0]->provider_id) ? 'selected' : '' }}> {{ $loc  ->name }} </option>
+                                            value="{{ $item->id }}" {{ ( $item->id === $shared[0]->location_id) ? 'selected' : '' }}> {{ $item->name }} </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -200,7 +200,8 @@
                         <div class="col-12 col-lg-3 mb-4">
                             <div class="input-group">
                                 <div class="input-group-prepend"><span class="input-group-text">Domains</span></div>
-                                <input type="number" name="domains" class="form-control" value="{{$shared[0]->domains_limit}}"
+                                <input type="number" name="domains" class="form-control"
+                                       value="{{$shared[0]->domains_limit}}"
                                        min="1" max="9999">
                             </div>
                         </div>
@@ -222,7 +223,8 @@
                         <div class="col-12 col-lg-3 mb-4">
                             <div class="input-group">
                                 <div class="input-group-prepend"><span class="input-group-text">Email</span></div>
-                                <input type="number" name="email" class="form-control" value="{{$shared[0]->email_limit}}"
+                                <input type="number" name="email" class="form-control"
+                                       value="{{$shared[0]->email_limit}}"
                                        min="1" max="99999">
                             </div>
                         </div>
@@ -241,7 +243,8 @@
                         <div class="col-12 col-lg-3 mb-4">
                             <div class="input-group">
                                 <div class="input-group-prepend"><span class="input-group-text">FTP</span></div>
-                                <input type="number" name="ftp" class="form-control" value="{{$shared[0]->ftp_limit}}" min="1"
+                                <input type="number" name="ftp" class="form-control" value="{{$shared[0]->ftp_limit}}"
+                                       min="1"
                                        max="99999">
                             </div>
                         </div>
@@ -253,8 +256,47 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row mb-3">
+                        <div class="col-12 col-lg-3 mb-4">
+                            <x-labels-select>
+                                <x-slot name="title">label</x-slot>
+                                <x-slot name="name">label1</x-slot>
+                                @if(isset($labels[0]->id))
+                                    <x-slot name="current">{{$labels[0]->id}}</x-slot>
+                                @endif
+                            </x-labels-select>
+                        </div>
+                        <div class="col-12 col-lg-3 mb-4">
+                            <x-labels-select>
+                                <x-slot name="title">label</x-slot>
+                                <x-slot name="name">label2</x-slot>
+                                @if(isset($labels[1]->id))
+                                    <x-slot name="current">{{$labels[1]->id}}</x-slot>
+                                @endif
+                            </x-labels-select>
+                        </div>
+                        <div class="col-12 col-lg-3 mb-4">
+                            <x-labels-select>
+                                <x-slot name="title">label</x-slot>
+                                <x-slot name="name">label3</x-slot>
+                                @if(isset($labels[2]->id))
+                                    <x-slot name="current">{{$labels[2]->id}}</x-slot>
+                                @endif
+                            </x-labels-select>
+                        </div>
+                        <div class="col-12 col-lg-3 mb-4">
+                            <x-labels-select>
+                                <x-slot name="title">label</x-slot>
+                                <x-slot name="name">label4</x-slot>
+                                @if(isset($labels[3]->id))
+                                    <x-slot name="current">{{$labels[3]->id}}</x-slot>
+                                @endif
+                            </x-labels-select>
+                        </div>
+                    </div>
                     <div class="form-check mt-2">
-                        <input class="form-check-input" name="is_active" type="checkbox" value="1" {{ ($shared[0]->active === 1) ? 'checked' : '' }}>
+                        <input class="form-check-input" name="is_active" type="checkbox"
+                               value="1" {{ ($shared[0]->active === 1) ? 'checked' : '' }}>
                         <label class="form-check-label">
                             I still have this server
                         </label>

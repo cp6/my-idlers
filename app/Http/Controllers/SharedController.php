@@ -96,6 +96,14 @@ class SharedController extends Controller
             'next_due_date' => $request->next_due_date,
         ]);
 
+        $labels_array = [$request->label1, $request->label2, $request->label3, $request->label4];
+
+        for ($i = 1; $i <= 4; $i++) {
+            if (!is_null($labels_array[($i - 1)])) {
+                DB::insert('INSERT IGNORE INTO labels_assigned (label_id, service_id) values (?, ?)', [$labels_array[($i - 1)], $shared_id]);
+            }
+        }
+
         return redirect()->route('shared.index')
             ->with('success', 'Shared hosting created Successfully.');
     }
@@ -121,14 +129,17 @@ class SharedController extends Controller
     {
         $locations = DB::table('locations')->get(['*']);
         $providers = json_decode(DB::table('providers')->get(['*']), true);
+        $labels = DB::table('labels_assigned as l')
+            ->join('labels', 'l.label_id', '=', 'labels.id')
+            ->where('l.service_id', '=', $shared->id)
+            ->get(['labels.id', 'labels.label']);
 
         $shared = DB::table('shared_hosting as s')
             ->join('pricings as p', 's.id', '=', 'p.service_id')
             ->where('s.id', '=', $shared->id)
             ->get(['s.*', 'p.*']);
 
-
-        return view('shared.edit', compact(['shared', 'locations', 'providers']));
+        return view('shared.edit', compact(['shared', 'locations', 'providers', 'labels']));
     }
 
     public function update(Request $request, Shared $shared)
@@ -192,6 +203,16 @@ class SharedController extends Controller
                 'usd_per_month' => $pricing->costAsPerMonth($as_usd, $request->payment_term),
                 'next_due_date' => $request->next_due_date,
             ]);
+
+        $deleted = DB::table('labels_assigned')->where('service_id', '=', $request->id)->delete();
+
+        $labels_array = [$request->label1, $request->label2, $request->label3, $request->label4];
+
+        for ($i = 1; $i <= 4; $i++) {
+            if (!is_null($labels_array[($i - 1)])) {
+                DB::insert('INSERT IGNORE INTO labels_assigned ( label_id, service_id) values (?, ?)', [$labels_array[($i - 1)], $request->id]);
+            }
+        }
 
         return redirect()->route('shared.index')
             ->with('success', 'Shared hosting updated Successfully.');
