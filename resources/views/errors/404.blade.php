@@ -1,4 +1,10 @@
-@section('title') {{'Error'}} {{$status}} @endsection
+@section('title') {{'Error'}}
+@if(isset($status))
+    {{$status}}
+@else
+    <h1>404</h1>
+@endif
+@endsection
 @section('style')
     <style>
         .page-not-found-div {
