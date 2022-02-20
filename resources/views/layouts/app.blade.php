@@ -10,9 +10,6 @@
 
     <title>@yield('title') - My idlers</title>
 
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
-
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/fa.min.css') }}">
 
@@ -21,8 +18,7 @@
 
     <script src="{{ asset('js/bootstrap.min.js') }}" defer></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    @yield('scripts')
 </head>
 <body class="font-sans antialiased">
 <div class="container-fluid">
@@ -36,10 +32,8 @@
     </div>
 @endif
 
-<!-- Page Content -->
 <div class="container">
     {{ $slot }}
-</div>
 </div>
 </body>
 </html>
