@@ -35,7 +35,7 @@
                         @foreach($servers as $s)
                             <tr>
                                 <td class="nowrap">
-                                    @if(Session::has('show_server_value_hostname') && Session::get('show_server_value_hostname') === '1')
+                                    @if(Session::get('show_server_value_hostname') === 1)
                                         {{ $s->hostname }}
                                     @endif
                                 </td>
@@ -99,12 +99,12 @@
                                     @endif</td>
                                 <td class="text-nowrap"> {{ $s->owned_since }}</td>
                                 <td class="text-nowrap">
-                                    @if(Session::has('show_server_value_ip') && Session::get('show_server_value_ip') === '1')
+                                    @if(Session::get('show_server_value_ip') === 1)
                                         {{ $s->ipv4 }}
                                     @endif
                                 </td>
                                 <td class="text-nowrap">
-                                    @if(Session::has('show_server_value_ip') && Session::get('show_server_value_ip') === '1')
+                                    @if(Session::get('show_server_value_ip') === 1)
                                         {{ $s->ipv6 }}
                                     @endif
                                 </td>
