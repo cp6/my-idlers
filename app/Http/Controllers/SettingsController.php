@@ -47,6 +47,10 @@ class SettingsController extends Controller
         Session::put('show_servers_public', $request->show_servers_public);
         Session::put('show_server_value_ip', $request->show_server_value_ip);
         Session::put('show_server_value_hostname', $request->show_server_value_hostname);
+        Session::put('show_server_value_price', $request->show_server_value_price);
+        Session::put('show_server_value_yabs', $request->show_server_value_yabs);
+        Session::put('show_server_value_provider', $request->show_server_value_provider);
+        Session::put('show_server_value_location', $request->show_server_value_location);
         Session::save();
 
         return redirect()->route('settings.index')
