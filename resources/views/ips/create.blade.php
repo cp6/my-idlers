@@ -31,38 +31,23 @@
                 </div>
                 <div class="row">
                     <p>Attached to:</p>
-                    <div class="col-md-3 mb-3">
+                    <div class="col-12 col-md-6 mb-3">
                         <div class="input-group">
-                            <div class="input-group-prepend"><span class="input-group-text">Server</span></div>
-                            <select class="form-control" name="server_id">
-                                <option value="null"></option>
+                            <div class="input-group-prepend"><span class="input-group-text">Service</span></div>
+                            <select class="form-control" name="service_id">
                                 @foreach ($Servers as $server)
                                     <option value="{{ $server['id'] }}">
-                                        {{ $server['hostname'] }}
+                                        {{ $server['hostname'] }} (VPS)
                                     </option>
                                 @endforeach
-                            </select></div>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span class="input-group-text">Shared</span></div>
-                            <select class="form-control" name="shared_id">
-                                <option value="null"></option>
                                 @foreach ($Shareds as $shared)
                                     <option value="{{ $shared['id'] }}">
-                                        {{ $shared['hostname'] }}
+                                        {{ $shared['main_domain'] }} (shared)
                                     </option>
                                 @endforeach
-                            </select></div>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span class="input-group-text">Reseller</span></div>
-                            <select class="form-control" name="reseller_id">
-                                <option value="null"></option>
                                 @foreach ($Resellers as $reseller)
                                     <option value="{{ $reseller['id'] }}">
-                                        {{ $reseller['hostname'] }}
+                                        {{ $reseller['main_domain'] }} (reseller)
                                     </option>
                                 @endforeach
                             </select></div>
