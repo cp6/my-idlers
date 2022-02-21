@@ -13,7 +13,7 @@
     <div class="container" id="app">
         <x-delete-confirm-modal></x-delete-confirm-modal>
         <x-card class="shadow mt-3">
-            <a href="{{ route('dns.create') }}" class="btn btn-primary mb-3">Add IP</a>
+            <a href="{{ route('IPs.create') }}" class="btn btn-primary mb-3">Add IP</a>
             <x-success-alert></x-success-alert>
             <div class="table-responsive">
                 <table class="table table-bordered">
@@ -31,11 +31,11 @@
                                 <td class="text-nowrap">{{ $dns->is_ipv4}}</td>
                                 <td class="text-nowrap">{{ $dns->address}}</td>
                                 <td class="text-nowrap">
-                                    <form action="{{ route('dns.destroy', $dns->id) }}" method="POST">
-                                        <a href="{{ route('dns.show', $dns->id) }}"
+                                    <form action="{{ route('IPs.destroy', $dns->id) }}" method="POST">
+                                        <a href="{{ route('IPs.show', $dns->id) }}"
                                            class="text-body mx-1">
                                             <i class="fas fa-eye" title="view"></i></a>
-                                        <a href="{{ route('dns.edit', $dns->id) }}"
+                                        <a href="{{ route('IPs.edit', $dns->id) }}"
                                            class="text-body mx-1">
                                             <i class="fas fa-pen" title="edit"></i></a>
                                         @csrf
