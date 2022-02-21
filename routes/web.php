@@ -3,6 +3,7 @@
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\DNSController;
 use App\Http\Controllers\DomainsController;
+use App\Http\Controllers\IPsController;
 use App\Http\Controllers\LabelsController;
 use App\Http\Controllers\LocationsController;
 use App\Http\Controllers\MiscController;
@@ -41,7 +42,7 @@ Route::resource('dns', DNSController::class)->middleware(['auth']);
 
 Route::resource('domains', DomainsController::class)->middleware(['auth']);
 
-Route::resource('IPs', DomainsController::class)->middleware(['auth']);
+Route::resource('IPs', IPsController::class)->middleware(['auth']);
 
 Route::resource('labels', LabelsController::class)->middleware(['auth']);
 
