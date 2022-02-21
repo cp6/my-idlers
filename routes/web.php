@@ -41,6 +41,8 @@ Route::resource('dns', DNSController::class)->middleware(['auth']);
 
 Route::resource('domains', DomainsController::class)->middleware(['auth']);
 
+Route::resource('IPs', DomainsController::class)->middleware(['auth']);
+
 Route::resource('labels', LabelsController::class)->middleware(['auth']);
 
 Route::resource('locations', LocationsController::class)->middleware(['auth']);
