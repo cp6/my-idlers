@@ -31,4 +31,4 @@ class CreateMiscsTable extends Migration
     {
         Schema::dropIfExists('misc_services');
     }
-};
+}
