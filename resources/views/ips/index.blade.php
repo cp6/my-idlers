@@ -1,15 +1,19 @@
-@section('title') {{'IP addresses'}} @endsection
+@section('title') {{'IP Addresses'}} @endsection
 @section('style')
     <x-modal-style></x-modal-style>
 @endsection
+@section('scripts')
+    <script src="{{ asset('js/vue.min.js') }}"></script>
+    <script src="{{ asset('js/axios.min.js') }}"></script>
+@endsection
 <x-app-layout>
     <x-slot name="header">
-        {{ __('IP addresses') }}
+        {{ __('IP Addresses') }}
     </x-slot>
     <div class="container" id="app">
         <x-delete-confirm-modal></x-delete-confirm-modal>
         <x-card class="shadow mt-3">
-            <a href="{{ route('ips.create') }}" class="btn btn-primary mb-3">Add IP</a>
+            <a href="{{ route('dns.create') }}" class="btn btn-primary mb-3">Add IP</a>
             <x-success-alert></x-success-alert>
             <div class="table-responsive">
                 <table class="table table-bordered">
