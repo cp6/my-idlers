@@ -43,15 +43,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-12 col-md-3 mb-3">
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text">Has dedicated IP</span></div>
-                                <select class="form-control" name="has_dedicated_ip">
-                                    <option value="0">No</option>
-                                    <option value="1">Yes</option>
-                                </select></div>
-                        </div>
-                        <div class="col-12 col-md-3 mb-3">
+                        <div class="col-12 col-md-6 mb-3">
                             <div class="input-group">
                                 <div class="input-group-prepend"><span class="input-group-text">Dedicated IP</span></div>
                                 <input type="text" name="dedicated_ip" class="form-control"></div>

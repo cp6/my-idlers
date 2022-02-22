@@ -17,8 +17,6 @@ class CreateResellersTable extends Migration
             $table->char('id', 8)->unique();
             $table->tinyInteger('active')->default(1);
             $table->string('main_domain');
-            $table->tinyInteger('has_dedicated_ip')->default(0);
-            $table->string('ip')->nullable()->default(null);
             $table->integer('accounts')->default(1);
             $table->string('reseller_type')->nullable();
             $table->integer('provider_id')->default(9999);

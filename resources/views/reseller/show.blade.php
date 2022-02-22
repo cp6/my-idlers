@@ -34,7 +34,8 @@
                             </tr>
                             <tr>
                                 <td class="px-2 py-2 font-bold text-muted">Main domain</td>
-                                <td><a href="https://{{ $reseller->main_domain }}" class="text-decoration-none">{{ $reseller->main_domain }}</a></td>
+                                <td><a href="https://{{ $reseller->main_domain }}"
+                                       class="text-decoration-none">{{ $reseller->main_domain }}</a></td>
                             </tr>
                             <tr>
                                 <td class="px-2 py-2 font-bold text-muted">Location</td>
@@ -52,11 +53,20 @@
                             </tr>
                             <tr>
                                 <td class="px-2 py-2 font-bold text-muted">Has dedicated IP?</td>
-                                <td>{{ ($reseller->has_dedicated_ip)? 'Yes': 'No' }}</td>
+                                <td>
+                                    @if(isset($ip_address[0]->address))
+                                        Yes
+                                    @else
+                                        No
+                                    @endif
+                                </td>
                             </tr>
                             <tr>
                                 <td class="px-2 py-2 font-bold text-muted">IP</td>
-                                <td>{{ $reseller->ip }}</td>
+                                <td><code>@if(isset($ip_address[0]->address))
+                                            {{$ip_address[0]->address}}
+                                        @endif
+                                    </code></td>
                             </tr>
                             <tr>
                                 <td class="px-2 py-2 font-bold text-muted">Owned since</td>

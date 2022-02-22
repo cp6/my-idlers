@@ -51,13 +51,16 @@
                                         value="Webmin" {{ ($reseller[0]->reseller_type === 'Webmin') ? 'selected' : '' }}>
                                         Webmin
                                     </option>
-                                    <option value="Moss" {{ ($reseller[0]->reseller_type === 'Moss') ? 'selected' : '' }}>
+                                    <option
+                                        value="Moss" {{ ($reseller[0]->reseller_type === 'Moss') ? 'selected' : '' }}>
                                         Moss
                                     </option>
-                                    <option value="Other" {{ ($reseller[0]->reseller_type === 'Other') ? 'selected' : '' }}>
+                                    <option
+                                        value="Other" {{ ($reseller[0]->reseller_type === 'Other') ? 'selected' : '' }}>
                                         Other
                                     </option>
-                                    <option value="Plesk" {{ ($reseller[0]->reseller_type === 'Plesk') ? 'selected' : '' }}>
+                                    <option
+                                        value="Plesk" {{ ($reseller[0]->reseller_type === 'Plesk') ? 'selected' : '' }}>
                                         Plesk
                                     </option>
                                     <option
@@ -75,22 +78,13 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-12 col-md-3 mb-3">
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text">Has dedicated IP</span>
-                                </div>
-                                <select class="form-control" name="has_dedicated_ip">
-                                    <option value="0" {{ ($reseller[0]->has_dedicated_ip === 0) ? 'selected' : '' }}>No
-                                    </option>
-                                    <option value="1" {{ ($reseller[0]->has_dedicated_ip === 1) ? 'selected' : '' }}>Yes
-                                    </option>
-                                </select></div>
-                        </div>
-                        <div class="col-12 col-md-3 mb-3">
+                        <div class="col-12 col-md-6 mb-3">
                             <div class="input-group">
                                 <div class="input-group-prepend"><span class="input-group-text">Dedicated IP</span>
                                 </div>
-                                <input type="text" name="dedicated_ip" class="form-control" value="{{$reseller[0]->ip}}">
+                                <input type="text" name="dedicated_ip" class="form-control" value="
+@if(isset($ip_address[0]['address']))
+                                {{$ip_address[0]['address']}}@endif">
                             </div>
                         </div>
                     </div>
@@ -116,10 +110,12 @@
                             <div class="input-group">
                                 <div class="input-group-prepend"><span class="input-group-text">Term</span></div>
                                 <select class="form-control" id="payment_term" name="payment_term">
-                                    <option value="1" {{ ($reseller[0]->term === 1) ? 'selected' : '' }}>Monthly</option>
+                                    <option value="1" {{ ($reseller[0]->term === 1) ? 'selected' : '' }}>Monthly
+                                    </option>
                                     <option value="2" {{ ($reseller[0]->term === 2) ? 'selected' : '' }}>Quarterly
                                     </option>
-                                    <option value="3" {{ ($reseller[0]->term === 3) ? 'selected' : '' }}>Half annual (half
+                                    <option value="3" {{ ($reseller[0]->term === 3) ? 'selected' : '' }}>Half annual
+                                        (half
                                         year)
                                     </option>
                                     <option value="4" {{ ($reseller[0]->term === 4) ? 'selected' : '' }}>Annual (yearly)
@@ -200,7 +196,8 @@
                         <div class="col-12 col-lg-3 mb-4">
                             <div class="input-group">
                                 <div class="input-group-prepend"><span class="input-group-text">Domains</span></div>
-                                <input type="number" name="domains" class="form-control" value="{{$reseller[0]->domains_limit}}"
+                                <input type="number" name="domains" class="form-control"
+                                       value="{{$reseller[0]->domains_limit}}"
                                        min="1" max="9999">
                             </div>
                         </div>
@@ -214,7 +211,8 @@
                         <div class="col-12 col-lg-3 mb-4">
                             <div class="input-group">
                                 <div class="input-group-prepend"><span class="input-group-text">Disk</span></div>
-                                <input type="number" name="disk" class="form-control" value="{{$reseller[0]->disk_as_gb}}"
+                                <input type="number" name="disk" class="form-control"
+                                       value="{{$reseller[0]->disk_as_gb}}"
                                        min="1" max="99999">
                                 <div class="input-group-append"><span class="input-group-text">GB</span></div>
                             </div>
@@ -222,7 +220,8 @@
                         <div class="col-12 col-lg-3 mb-4">
                             <div class="input-group">
                                 <div class="input-group-prepend"><span class="input-group-text">Email</span></div>
-                                <input type="number" name="email" class="form-control" value="{{$reseller[0]->email_limit}}"
+                                <input type="number" name="email" class="form-control"
+                                       value="{{$reseller[0]->email_limit}}"
                                        min="1" max="99999">
                             </div>
                         </div>
@@ -241,7 +240,8 @@
                         <div class="col-12 col-lg-3 mb-4">
                             <div class="input-group">
                                 <div class="input-group-prepend"><span class="input-group-text">FTP</span></div>
-                                <input type="number" name="ftp" class="form-control" value="{{$reseller[0]->ftp_limit}}" min="1"
+                                <input type="number" name="ftp" class="form-control" value="{{$reseller[0]->ftp_limit}}"
+                                       min="1"
                                        max="99999">
                             </div>
                         </div>
@@ -254,7 +254,8 @@
                         </div>
                     </div>
                     <div class="form-check mt-2">
-                        <input class="form-check-input" name="is_active" type="checkbox" value="1" {{ ($reseller[0]->active === 1) ? 'checked' : '' }}>
+                        <input class="form-check-input" name="is_active" type="checkbox"
+                               value="1" {{ ($reseller[0]->active === 1) ? 'checked' : '' }}>
                         <label class="form-check-label">
                             I still have this server
                         </label>

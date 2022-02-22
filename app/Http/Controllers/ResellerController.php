@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\IPs;
 use App\Models\Labels;
 use App\Models\Locations;
 use App\Models\Pricing;
@@ -37,9 +38,8 @@ class ResellerController extends Controller
         $request->validate([
             'domain' => 'required|min:4',
             'reseller_type' => 'required',
-            'dedicated_ip' => 'present',
+            'dedicated_ip' => 'present|ip',
             'accounts' => 'numeric',
-            'has_dedicated_ip' => 'numeric',
             'server_type' => 'numeric',
             'ram' => 'numeric',
             'disk' => 'numeric',
@@ -66,8 +66,6 @@ class ResellerController extends Controller
             'main_domain' => $request->domain,
             'accounts' => $request->accounts,
             'reseller_type' => $request->reseller_type,
-            'has_dedicated_ip' => $request->has_dedicated_ip,
-            'ip' => $request->dedicated_ip,
             'provider_id' => $request->provider_id,
             'location_id' => $request->location_id,
             'disk' => $request->disk,
@@ -98,6 +96,18 @@ class ResellerController extends Controller
             'next_due_date' => $request->next_due_date,
         ]);
 
+        if (!is_null($request->dedicated_ip)) {
+            IPs::create(
+                [
+                    'id' => Str::random(8),
+                    'service_id' => $reseller_id,
+                    'address' => $request->dedicated_ip,
+                    'is_ipv4' => (filter_var($request->dedicated_ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) ? 0 : 1,
+                    'active' => 1
+                ]
+            );
+        }
+
         return redirect()->route('reseller.index')
             ->with('success', 'Reseller hosting created Successfully.');
     }
@@ -117,7 +127,11 @@ class ResellerController extends Controller
             ->where('l.service_id', '=', $reseller->id)
             ->get(['labels.label']);
 
-        return view('reseller.show', compact(['reseller', 'reseller_extras', 'labels']));
+        $ip_address = DB::table('ips as i')
+            ->where('i.service_id', '=', $reseller->id)
+            ->get();
+
+        return view('reseller.show', compact(['reseller', 'reseller_extras', 'labels', 'ip_address']));
     }
 
     public function edit(Reseller $reseller)
@@ -125,12 +139,16 @@ class ResellerController extends Controller
         $locations = DB::table('locations')->get(['*']);
         $providers = json_decode(DB::table('providers')->get(['*']), true);
 
+        $ip_address = json_decode(DB::table('ips as i')
+            ->where('i.service_id', '=', $reseller->id)
+            ->get(), true);
+
         $reseller = DB::table('reseller_hosting as s')
             ->join('pricings as p', 's.id', '=', 'p.service_id')
             ->where('s.id', '=', $reseller->id)
             ->get(['s.*', 'p.*']);
 
-        return view('reseller.edit', compact(['reseller', 'locations', 'providers']));
+        return view('reseller.edit', compact(['reseller', 'locations', 'providers', 'ip_address']));
     }
 
     public function update(Request $request, Reseller $reseller)
@@ -140,7 +158,6 @@ class ResellerController extends Controller
             'domain' => 'required|min:4',
             'reseller_type' => 'required',
             'dedicated_ip' => 'present',
-            'has_dedicated_ip' => 'numeric',
             'server_type' => 'numeric',
             'disk' => 'numeric',
             'os_id' => 'numeric',
@@ -163,8 +180,6 @@ class ResellerController extends Controller
             ->update([
                 'main_domain' => $request->domain,
                 'reseller_type' => $request->reseller_type,
-                'has_dedicated_ip' => $request->has_dedicated_ip,
-                'ip' => $request->dedicated_ip,
                 'provider_id' => $request->provider_id,
                 'location_id' => $request->location_id,
                 'disk' => $request->disk,
@@ -195,6 +210,17 @@ class ResellerController extends Controller
                 'next_due_date' => $request->next_due_date,
             ]);
 
+        $delete_ip = DB::table('ips')->where('service_id', '=', $request->id)->delete();
+
+        if (isset($request->dedicated_ip)) {
+            DB::insert('INSERT IGNORE INTO ips (id, address, service_id, is_ipv4) values (?, ?, ?, ?)', [
+                Str::random(8),
+                $request->dedicated_ip,
+                $request->id,
+                (filter_var($request->dedicated_ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) ? 0 : 1
+            ]);
+        }
+
         return redirect()->route('reseller.index')
             ->with('success', 'Reseller hosting updated Successfully.');
     }
@@ -207,9 +233,11 @@ class ResellerController extends Controller
         $items->delete();
 
         $p = new Pricing();
-        $p->deletePricing($reseller->id);
+        $p->deletePricing($id);
 
         Labels::deleteLabelsAssignedTo($id);
+
+        IPs::deleteIPsAssignedTo($id);
 
         return redirect()->route('reseller.index')
             ->with('success', 'Reseller hosting was deleted Successfully.');
