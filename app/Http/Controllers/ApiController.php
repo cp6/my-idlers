@@ -55,6 +55,11 @@ class ApiController extends Controller
             ->where('la.service_id', '=', $id)
             ->get(['l.*']);
 
+        $ip_addresses = DB::table('ips as i')
+            ->where('i.service_id', '=', $id)
+            ->get(['i.*']);
+
+        $server['ip_addresses'] = $ip_addresses;
         $server['yabs'] = $yabs;
         $server['disk_speed'] = $disk_speed;
         $server['network_speed'] = $network_speed;
