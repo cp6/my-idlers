@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\IPs;
 use App\Models\Labels;
 use App\Models\Locations;
 use App\Models\Pricing;
@@ -37,8 +38,6 @@ class SharedController extends Controller
         $request->validate([
             'domain' => 'required|min:4',
             'shared_type' => 'required',
-            'dedicated_ip' => 'present',
-            'has_dedicated_ip' => 'numeric',
             'server_type' => 'numeric',
             'ram' => 'numeric',
             'disk' => 'numeric',
@@ -64,8 +63,6 @@ class SharedController extends Controller
             'id' => $shared_id,
             'main_domain' => $request->domain,
             'shared_type' => $request->shared_type,
-            'has_dedicated_ip' => $request->has_dedicated_ip,
-            'ip' => $request->dedicated_ip,
             'provider_id' => $request->provider_id,
             'location_id' => $request->location_id,
             'disk' => $request->disk,
@@ -104,6 +101,18 @@ class SharedController extends Controller
             }
         }
 
+        if (!is_null($request->dedicated_ip)) {
+            IPs::create(
+                [
+                    'id' => Str::random(8),
+                    'service_id' => $shared_id,
+                    'address' => $request->dedicated_ip,
+                    'is_ipv4' => (filter_var($request->dedicated_ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) ? 0 : 1,
+                    'active' => 1
+                ]
+            );
+        }
+
         return redirect()->route('shared.index')
             ->with('success', 'Shared hosting created Successfully.');
     }
@@ -122,7 +131,11 @@ class SharedController extends Controller
             ->where('l.service_id', '=', $shared->id)
             ->get(['labels.label']);
 
-        return view('shared.show', compact(['shared', 'shared_extras', 'labels']));
+        $ip_address = DB::table('ips as i')
+            ->where('i.service_id', '=', $shared->id)
+            ->get();
+
+        return view('shared.show', compact(['shared', 'shared_extras', 'labels', 'ip_address']));
     }
 
     public function edit(Shared $shared)
@@ -134,12 +147,16 @@ class SharedController extends Controller
             ->where('l.service_id', '=', $shared->id)
             ->get(['labels.id', 'labels.label']);
 
+        $ip_address = json_decode(DB::table('ips as i')
+            ->where('i.service_id', '=', $shared->id)
+            ->get(), true);
+
         $shared = DB::table('shared_hosting as s')
             ->join('pricings as p', 's.id', '=', 'p.service_id')
             ->where('s.id', '=', $shared->id)
             ->get(['s.*', 'p.*']);
 
-        return view('shared.edit', compact(['shared', 'locations', 'providers', 'labels']));
+        return view('shared.edit', compact(['shared', 'locations', 'providers', 'labels', 'ip_address']));
     }
 
     public function update(Request $request, Shared $shared)
@@ -149,7 +166,6 @@ class SharedController extends Controller
             'domain' => 'required|min:4',
             'shared_type' => 'required',
             'dedicated_ip' => 'present',
-            'has_dedicated_ip' => 'numeric',
             'server_type' => 'numeric',
             'disk' => 'numeric',
             'os_id' => 'numeric',
@@ -172,8 +188,6 @@ class SharedController extends Controller
             ->update([
                 'main_domain' => $request->domain,
                 'shared_type' => $request->shared_type,
-                'has_dedicated_ip' => $request->has_dedicated_ip,
-                'ip' => $request->dedicated_ip,
                 'provider_id' => $request->provider_id,
                 'location_id' => $request->location_id,
                 'disk' => $request->disk,
@@ -214,6 +228,17 @@ class SharedController extends Controller
             }
         }
 
+        $delete_ip = DB::table('ips')->where('service_id', '=', $request->id)->delete();
+
+        if (isset($request->dedicated_ip)) {
+            DB::insert('INSERT IGNORE INTO ips (id, address, service_id, is_ipv4) values (?, ?, ?, ?)', [
+                Str::random(8),
+                $request->dedicated_ip,
+                $request->id,
+                (filter_var($request->dedicated_ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) ? 0 : 1
+            ]);
+        }
+
         return redirect()->route('shared.index')
             ->with('success', 'Shared hosting updated Successfully.');
     }
@@ -229,6 +254,8 @@ class SharedController extends Controller
         $p->deletePricing($shared->id);
 
         Labels::deleteLabelsAssignedTo($shared->id);
+
+        IPs::deleteIPsAssignedTo($shared->id);
 
         return redirect()->route('shared.index')
             ->with('success', 'Shared hosting was deleted Successfully.');

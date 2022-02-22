@@ -75,22 +75,12 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-12 col-md-3 mb-3">
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text">Has dedicated IP</span>
-                                </div>
-                                <select class="form-control" name="has_dedicated_ip">
-                                    <option value="0" {{ ($shared[0]->has_dedicated_ip === 0) ? 'selected' : '' }}>No
-                                    </option>
-                                    <option value="1" {{ ($shared[0]->has_dedicated_ip === 1) ? 'selected' : '' }}>Yes
-                                    </option>
-                                </select></div>
-                        </div>
-                        <div class="col-12 col-md-3 mb-3">
+                        <div class="col-12 col-md-6 mb-3">
                             <div class="input-group">
                                 <div class="input-group-prepend"><span class="input-group-text">Dedicated IP</span>
                                 </div>
-                                <input type="text" name="dedicated_ip" class="form-control" value="{{$shared[0]->ip}}">
+                                <input type="text" name="dedicated_ip" class="form-control"
+                                       value="@if(isset($ip_address[0]['address'])){{$ip_address[0]['address']}}@endif">
                             </div>
                         </div>
                     </div>

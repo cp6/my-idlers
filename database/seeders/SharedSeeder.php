@@ -20,8 +20,6 @@ class SharedSeeder extends Seeder
                 "active" => 1,
                 "main_domain" => "node.ai",
                 "shared_type" => "Direct Admin",
-                "has_dedicated_ip" => 0,
-                "ip" => null,
                 "bandwidth" => 3000,
                 "disk" => 45,
                 "disk_type" => 'GB',

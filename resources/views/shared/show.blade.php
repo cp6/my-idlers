@@ -52,11 +52,20 @@
                             </tr>
                             <tr>
                                 <td class="px-2 py-2 font-bold text-muted">Has dedicated IP?</td>
-                                <td>{{ ($shared->has_dedicated_ip)? 'Yes': 'No' }}</td>
+                                <td>
+                                    @if(isset($ip_address[0]->address))
+                                        Yes
+                                    @else
+                                        No
+                                    @endif
+                                </td>
                             </tr>
                             <tr>
                                 <td class="px-2 py-2 font-bold text-muted">IP</td>
-                                <td>{{ $shared->ip }}</td>
+                                <td><code>@if(isset($ip_address[0]->address))
+                                            {{$ip_address[0]->address}}
+                                        @endif
+                                    </code></td>
                             </tr>
                             <tr>
                                 <td class="px-2 py-2 font-bold text-muted">Owned since</td>

@@ -17,8 +17,6 @@ class CreateSharedsTable extends Migration
             $table->char('id', 8)->unique();
             $table->tinyInteger('active')->default(1);
             $table->string('main_domain');
-            $table->tinyInteger('has_dedicated_ip')->default(0);
-            $table->string('ip')->nullable()->default(null);
             $table->string('shared_type')->nullable();
             $table->integer('provider_id')->default(9999);
             $table->integer('location_id')->default(9999);
