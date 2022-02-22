@@ -28,6 +28,9 @@ Route::middleware('auth:api')->get('domains/{id}', 'App\Http\Controllers\ApiCont
 Route::middleware('auth:api')->get('servers', 'App\Http\Controllers\ApiController@getAllServers');
 Route::middleware('auth:api')->get('servers/{id}', 'App\Http\Controllers\ApiController@getServer');
 
+Route::middleware('auth:api')->get('IPs/', 'App\Http\Controllers\ApiController@getAllIPs');
+Route::middleware('auth:api')->get('IPs/{id}', 'App\Http\Controllers\ApiController@getIP');
+
 Route::middleware('auth:api')->get('labels/', 'App\Http\Controllers\ApiController@getAllLabels');
 Route::middleware('auth:api')->get('labels/{id}', 'App\Http\Controllers\ApiController@getLabel');
 

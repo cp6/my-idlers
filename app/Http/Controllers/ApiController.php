@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\IPs;
 use App\Models\Labels;
 use App\Models\NetworkSpeed;
 use App\Models\OS;
@@ -234,6 +235,20 @@ class ApiController extends Controller
             ->where('o.id', '=', $id)
             ->get()->toJson(JSON_PRETTY_PRINT);
         return response($os, 200);
+    }
+
+    protected function getAllIPs()
+    {
+        $ip = IPs::all()->toJson(JSON_PRETTY_PRINT);
+        return response($ip, 200);
+    }
+
+    protected function getIP($id)
+    {
+        $ip = DB::table('ips as i')
+            ->where('i.id', '=', $id)
+            ->get()->toJson(JSON_PRETTY_PRINT);
+        return response($ip, 200);
     }
 
     public function getAllProvidersTable(Request $request)
