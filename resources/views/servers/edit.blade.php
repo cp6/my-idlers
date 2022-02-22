@@ -52,20 +52,6 @@
                 </div>
                 <div class="row">
                     <div class="col-12 col-lg-3 mb-4">
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span class="input-group-text">IPv4</span></div>
-                            <input type="text" name="ipv4" class="form-control" minlength="4"
-                                   maxlength="124" value="{{ $server[0]->ipv4 }}">
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-3 mb-4">
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span class="input-group-text">IPv6</span></div>
-                            <input type="text" name="ipv6" class="form-control" minlength="4"
-                                   maxlength="124" value="{{ $server[0]->ipv6 }}">
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-3 mb-4">
                         <x-text-input>
                             <x-slot name="title">NS1</x-slot>
                             <x-slot name="name">ns1</x-slot>
@@ -228,7 +214,7 @@
                         </x-date-input>
                     </div>
                 </div>
-                <div class="row mb-3">
+                <div class="row">
                     <div class="col-12 col-lg-3 mb-4">
                         <x-labels-select>
                             <x-slot name="title">label</x-slot>
@@ -266,7 +252,19 @@
                         </x-labels-select>
                     </div>
                 </div>
-                <div class="form-check mt-2">
+                <div class="row">
+                    @foreach($ip_addresses as $ip)
+                        <div class="col-12 col-lg-3 mb-4">
+                            <x-text-input>
+                                <x-slot name="title">IP</x-slot>
+                                <x-slot name="name">ip{{{$loop->iteration}}}</x-slot>
+                                <x-slot name="max">255</x-slot>
+                                <x-slot name="value">{{ $ip['address'] }}</x-slot>
+                            </x-text-input>
+                        </div>
+                    @endforeach
+                </div>
+                <div class="form-check mt-3">
                     <input class="form-check-input" name="is_active" type="checkbox"
                            value="1" {{ ($server[0]->active === 1) ? 'checked' : '' }}>
                     <label class="form-check-label">

@@ -27,7 +27,6 @@ class ServersSeeder extends Seeder
                 "provider_id" => 90,
                 "location_id" => 35,
                 "bandwidth" => 1000,
-                "ipv4" => '127.0.0.1',
                 "cpu" => 1,
                 "ram" => 512,
                 "ram_type" => 'MB',
@@ -46,7 +45,6 @@ class ServersSeeder extends Seeder
                 "provider_id" => 90,
                 "location_id" => 71,
                 "bandwidth" => 2000,
-                "ipv4" => '127.0.0.1',
                 "cpu" => 1,
                 "ram" => 2048,
                 "ram_type" => 'MB',
@@ -88,5 +86,26 @@ class ServersSeeder extends Seeder
         ];
 
         DB::table('pricings')->insert($pricing);
+
+        $ips = [
+            [
+                "id" => Str::random(8),
+                "service_id" => $id1,
+                "address" => '127.0.0.1',
+                "is_ipv4" => 1,
+                "active" => 1,
+                "created_at" => Carbon::now()
+            ],
+            [
+                "id" => Str::random(8),
+                "service_id" => $id2,
+                "address" => '127.0.0.1',
+                "is_ipv4" => 1,
+                "active" => 1,
+                "created_at" => Carbon::now()
+            ],
+        ];
+
+        DB::table('ips')->insert($ips);
     }
 }

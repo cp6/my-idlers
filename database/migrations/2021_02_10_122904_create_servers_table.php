@@ -19,8 +19,6 @@ class CreateServersTable extends Migration
             $table->string('hostname');
             $table->string('ns1')->nullable()->default(null);
             $table->string('ns2')->nullable()->default(null);
-            $table->string('ipv4')->nullable()->default(null);
-            $table->string('ipv6')->nullable()->default(null);
             $table->tinyInteger('server_type')->default(1);
             $table->integer('os_id')->default(0);
             $table->integer('provider_id')->default(9999);

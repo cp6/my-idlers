@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\IPs;
 use App\Models\Labels;
 use App\Models\OS;
 use App\Models\Pricing;
@@ -54,7 +55,7 @@ class ServerController extends Controller
                 ->Join('os as o', 's.os_id', '=', 'o.id')
                 ->LeftJoin('yabs as y', 's.id', '=', 'y.server_id')
                 ->LeftJoin('disk_speed as ds', 'y.id', '=', 'ds.id')
-                ->get(['pr.currency', 'pr.price', 'pr.term', 'pr.as_usd', 'pr.next_due_date', 'pr.service_id', 'p.name as provider_name', 'l.name as location', 'o.name as os_name', 'y.*', 'y.id as yabs_id', 'ds.*','s.*']);
+                ->get(['pr.currency', 'pr.price', 'pr.term', 'pr.as_usd', 'pr.next_due_date', 'pr.service_id', 'p.name as provider_name', 'l.name as location', 'o.name as os_name', 'y.*', 'y.id as yabs_id', 'ds.*', 's.*']);
 
             return view('servers.public-index', compact('servers'));
         }
@@ -74,8 +75,8 @@ class ServerController extends Controller
 
         $request->validate([
             'hostname' => 'required|min:5',
-            'ipv4' => 'nullable|ipv4',
-            'ipv6' => 'nullable|ipv6',
+            'ip1' => 'nullable|ip',
+            'ip2' => 'nullable|ip',
             'service_type' => 'numeric',
             'server_type' => 'numeric',
             'ram' => 'numeric',
@@ -94,8 +95,6 @@ class ServerController extends Controller
         Server::create([
             'id' => $server_id,
             'hostname' => $request->hostname,
-            'ipv4' => $request->ipv4,
-            'ipv6' => $request->ipv6,
             'server_type' => $request->server_type,
             'os_id' => $request->os_id,
             'ssh' => $request->ssh_port,
@@ -114,6 +113,30 @@ class ServerController extends Controller
             'cpu' => $request->cpu,
             'was_promo' => $request->was_promo
         ]);
+
+        if (!is_null($request->ip1)) {
+            IPs::create(
+                [
+                    'id' => Str::random(8),
+                    'service_id' => $server_id,
+                    'address' => $request->ip1,
+                    'is_ipv4' => (filter_var($request->ip1, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) ? 0 : 1,
+                    'active' => 1
+                ]
+            );
+        }
+
+        if (!is_null($request->ip2)) {
+            IPs::create(
+                [
+                    'id' => Str::random(8),
+                    'service_id' => $server_id,
+                    'address' => $request->ip2,
+                    'is_ipv4' => (filter_var($request->ip2, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) ? 0 : 1,
+                    'active' => 1
+                ]
+            );
+        }
 
         $pricing = new Pricing();
 
@@ -156,14 +179,18 @@ class ServerController extends Controller
 
         $network_speeds = json_decode(DB::table('network_speed')
             ->where('network_speed.server_id', '=', $server->id)
-            ->get(),true);
+            ->get(), true);
+
+        $ip_addresses = json_decode(DB::table('ips as i')
+            ->where('i.service_id', '=', $server->id)
+            ->get(), true);
 
         $labels = DB::table('labels_assigned as l')
             ->join('labels', 'l.label_id', '=', 'labels.id')
             ->where('l.service_id', '=', $server->id)
             ->get(['labels.label']);
 
-        return view('servers.show', compact(['server', 'server_extras', 'network_speeds', 'labels']));
+        return view('servers.show', compact(['server', 'server_extras', 'network_speeds', 'labels', 'ip_addresses']));
     }
 
     public function edit(Server $server)
@@ -176,12 +203,17 @@ class ServerController extends Controller
             ->get(['labels.id', 'labels.label']);
 
         $os = DB::table('os')->get(['*']);
+
+        $ip_addresses = json_decode(DB::table('ips as i')
+            ->where('i.service_id', '=', $server->id)
+            ->get(), true);
+
         $server = DB::table('servers as s')
             ->join('pricings as p', 's.id', '=', 'p.service_id')
             ->where('s.id', '=', $server->id)
             ->get(['s.*', 'p.*']);
 
-        return view('servers.edit', compact(['server', 'locations', 'providers', 'os', 'labels']));
+        return view('servers.edit', compact(['server', 'locations', 'providers', 'os', 'labels', 'ip_addresses']));
     }
 
     public function update(Request $request, Server $server)
@@ -203,8 +235,6 @@ class ServerController extends Controller
             ->where('id', $request->server_id)
             ->update([
                 'hostname' => $request->hostname,
-                'ipv4' => $request->ipv4,
-                'ipv6' => $request->ipv6,
                 'server_type' => $request->server_type,
                 'os_id' => $request->os_id,
                 'ssh' => $request->ssh,
@@ -252,6 +282,20 @@ class ServerController extends Controller
             }
         }
 
+        $deleted = DB::table('ips')->where('service_id', '=', $server->id)->delete();
+
+        for ($i = 1; $i <= 8; $i++) {//Max of 8 ips
+            $obj = 'ip' . $i;
+            if (isset($request->$obj) && !is_null($request->$obj)) {
+                DB::insert('INSERT IGNORE INTO ips (id, address, service_id, is_ipv4) values (?, ?, ?, ?)', [
+                    Str::random(8),
+                    $request->$obj,
+                    $request->server_id,
+                    (filter_var($request->$obj, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) ? 0 : 1
+                ]);
+            }
+        }
+
         return redirect()->route('servers.index')
             ->with('success', 'Server Updated Successfully.');
     }
@@ -266,6 +310,8 @@ class ServerController extends Controller
         $p->deletePricing($server->id);
 
         Labels::deleteLabelsAssignedTo($server->id);
+
+        IPs::deleteIPsAssignedTo($server->id);
 
         return redirect()->route('servers.index')
             ->with('success', 'Server was deleted Successfully.');

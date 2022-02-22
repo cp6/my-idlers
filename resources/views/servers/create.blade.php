@@ -58,18 +58,19 @@
                     </div>
                 </div>
                 <div class="row">
+                    <p class="text-muted">If you need to add more IPs go <a href="{{route('IPs.create')}}" class="text-decoration-none">here</a>.</p>
                     <div class="col-12 col-lg-3 mb-4">
                         <div class="input-group">
-                            <div class="input-group-prepend"><span class="input-group-text">IPv4</span></div>
-                            <input type="text" id="ipv4" name="ipv4" class="form-control" minlength="4"
-                                   maxlength="124" v-model="ipv4_in">
+                            <div class="input-group-prepend"><span class="input-group-text">IP</span></div>
+                            <input type="text" name="ip1" class="form-control" minlength="4"
+                                   maxlength="255" v-model="ipv4_in">
                         </div>
                     </div>
                     <div class="col-12 col-lg-3 mb-4">
                         <div class="input-group">
-                            <div class="input-group-prepend"><span class="input-group-text">IPv6</span></div>
-                            <input type="text" id="ipv6" name="ipv6" class="form-control" minlength="4"
-                                   maxlength="124" v-model="ipv6_in">
+                            <div class="input-group-prepend"><span class="input-group-text">IP</span></div>
+                            <input type="text" name="ip2" class="form-control" minlength="4"
+                                   maxlength="255" v-model="ipv6_in">
                         </div>
                     </div>
                     <div class="col-12 col-lg-3 mb-4">

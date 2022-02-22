@@ -76,14 +76,17 @@
                                 <td class="px-2 py-2 font-bold text-muted">Bandwidth</td>
                                 <td>{{ $server_extras[0]->bandwidth }} GB</td>
                             </tr>
-                            <tr>
-                                <td class="px-2 py-2 font-bold text-muted">IPv4</td>
-                                <td><code>{{ $server_extras[0]->ipv4 }}</code></td>
-                            </tr>
-                            <tr>
-                                <td class="px-2 py-2 font-bold text-muted">IPv6</td>
-                                <td><code>{{ $server_extras[0]->ipv6 }}</code></td>
-                            </tr>
+                            @foreach($ip_addresses as $ip)
+                                <tr>
+                                    <td class="px-2 py-2 font-bold text-muted">@if($ip['is_ipv4'])
+                                            IPv4
+                                        @else
+                                            IPv6
+                                        @endif
+                                    </td>
+                                    <td><code>{{ $ip['address'] }}</code></td>
+                                </tr>
+                            @endforeach
                             <tr>
                                 <td class="px-2 py-2 font-bold text-muted">Was promo</td>
                                 <td>{{ ($server_extras[0]->was_promo === 1) ? 'Yes' : 'No' }}</td>
@@ -179,7 +182,8 @@
                             </table>
                         </div>
                     @else
-                        <p>Please <a href="{{ route('yabs.create') }}" class="text-decoration-none">add a YABs</a> to see Geekbench, disk and network speeds</p>
+                        <p>Please <a href="{{ route('yabs.create') }}" class="text-decoration-none">add a YABs</a> to
+                            see Geekbench, disk and network speeds</p>
                     @endif
                 </div>
             </div>
