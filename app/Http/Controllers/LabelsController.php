@@ -38,7 +38,16 @@ class LabelsController extends Controller
 
     public function show(Labels $label)
     {
-        return view('labels.show', compact(['label']));
+        $labels = DB::table('labels_assigned as las')
+            ->leftJoin('pricings as p', 'las.service_id', '=', 'p.service_id')
+            ->leftJoin('servers as s', 'las.service_id', '=', 's.id')
+            ->leftJoin('shared_hosting as sh', 'las.service_id', '=', 'sh.id')
+            ->leftJoin('reseller_hosting as r', 'las.service_id', '=', 'r.id')
+            ->leftJoin('domains as d', 'las.service_id', '=', 'd.id')
+            ->where('las.label_id', '=', $label->id)
+            ->get(['p.service_type', 'p.service_id', 's.hostname', 'sh.main_domain as shared', 'r.main_domain as reseller', 'd.domain', 'd.extension']);
+
+        return view('labels.show', compact(['label', 'labels']));
     }
 
     public function edit(Labels $label)
