@@ -39,7 +39,7 @@ class ResellerController extends Controller
         $request->validate([
             'domain' => 'required|min:4',
             'reseller_type' => 'required',
-            'dedicated_ip' => 'present|ip',
+            'dedicated_ip' => 'present',
             'accounts' => 'numeric',
             'server_type' => 'numeric',
             'ram' => 'numeric',
