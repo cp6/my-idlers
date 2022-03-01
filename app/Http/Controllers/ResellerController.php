@@ -9,6 +9,7 @@ use App\Models\Pricing;
 use App\Models\Providers;
 use App\Models\Reseller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -107,6 +108,10 @@ class ResellerController extends Controller
                 ]
             );
         }
+
+        Cache::forget('services_count');//Main page services_count cache
+        Cache::forget('due_soon');//Main page due_soon cache
+        Cache::forget('recently_added');//Main page recently_added cache
 
         return redirect()->route('reseller.index')
             ->with('success', 'Reseller hosting created Successfully.');
@@ -221,6 +226,10 @@ class ResellerController extends Controller
             ]);
         }
 
+        Cache::forget('services_count');//Main page services_count cache
+        Cache::forget('due_soon');//Main page due_soon cache
+        Cache::forget('recently_added');//Main page recently_added cache
+
         return redirect()->route('reseller.index')
             ->with('success', 'Reseller hosting updated Successfully.');
     }
@@ -238,6 +247,10 @@ class ResellerController extends Controller
         Labels::deleteLabelsAssignedTo($id);
 
         IPs::deleteIPsAssignedTo($id);
+
+        Cache::forget('services_count');//Main page services_count cache
+        Cache::forget('due_soon');//Main page due_soon cache
+        Cache::forget('recently_added');//Main page recently_added cache
 
         return redirect()->route('reseller.index')
             ->with('success', 'Reseller hosting was deleted Successfully.');

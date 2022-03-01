@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Settings;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
@@ -52,6 +53,8 @@ class SettingsController extends Controller
         Session::put('show_server_value_provider', $request->show_server_value_provider);
         Session::put('show_server_value_location', $request->show_server_value_location);
         Session::save();
+
+        Cache::forget('settings');//Main page settings cache
 
         return redirect()->route('settings.index')
             ->with('success', 'Settings Updated Successfully.');

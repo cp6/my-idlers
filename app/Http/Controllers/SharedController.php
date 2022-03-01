@@ -9,6 +9,7 @@ use App\Models\Pricing;
 use App\Models\Providers;
 use App\Models\Shared;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -112,6 +113,10 @@ class SharedController extends Controller
                 ]
             );
         }
+
+        Cache::forget('services_count');//Main page services_count cache
+        Cache::forget('due_soon');//Main page due_soon cache
+        Cache::forget('recently_added');//Main page recently_added cache
 
         return redirect()->route('shared.index')
             ->with('success', 'Shared hosting created Successfully.');
@@ -239,6 +244,10 @@ class SharedController extends Controller
             ]);
         }
 
+        Cache::forget('services_count');//Main page services_count cache
+        Cache::forget('due_soon');//Main page due_soon cache
+        Cache::forget('recently_added');//Main page recently_added cache
+
         return redirect()->route('shared.index')
             ->with('success', 'Shared hosting updated Successfully.');
     }
@@ -256,6 +265,10 @@ class SharedController extends Controller
         Labels::deleteLabelsAssignedTo($shared->id);
 
         IPs::deleteIPsAssignedTo($shared->id);
+
+        Cache::forget('services_count');//Main page services_count cache
+        Cache::forget('due_soon');//Main page due_soon cache
+        Cache::forget('recently_added');//Main page recently_added cache
 
         return redirect()->route('shared.index')
             ->with('success', 'Shared hosting was deleted Successfully.');

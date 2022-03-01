@@ -7,6 +7,7 @@ use App\Models\Labels;
 use App\Models\Pricing;
 use App\Models\Providers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -92,6 +93,10 @@ class DomainsController extends Controller
             }
         }
 
+        Cache::forget('services_count');//Main page services_count cache
+        Cache::forget('due_soon');//Main page due_soon cache
+        Cache::forget('recently_added');//Main page recently_added cache
+
         return redirect()->route('domains.index')
             ->with('success', 'Domain Created Successfully.');
     }
@@ -158,6 +163,10 @@ class DomainsController extends Controller
             }
         }
 
+        Cache::forget('services_count');//Main page services_count cache
+        Cache::forget('due_soon');//Main page due_soon cache
+        Cache::forget('recently_added');//Main page recently_added cache
+
         return redirect()->route('domains.index')
             ->with('success', 'Domain Updated Successfully.');
     }
@@ -172,6 +181,10 @@ class DomainsController extends Controller
         $p->deletePricing($domain->id);
 
         Labels::deleteLabelsAssignedTo($domain->id);
+
+        Cache::forget('services_count');//Main page services_count cache
+        Cache::forget('due_soon');//Main page due_soon cache
+        Cache::forget('recently_added');//Main page recently_added cache
 
         return redirect()->route('domains.index')
             ->with('success', 'Domain was deleted Successfully.');

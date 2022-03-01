@@ -11,6 +11,7 @@ use App\Models\Providers;
 use App\Models\Locations;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
@@ -161,6 +162,10 @@ class ServerController extends Controller
             }
         }
 
+        Cache::forget('services_count');//Main page services_count cache
+        Cache::forget('due_soon');//Main page due_soon cache
+        Cache::forget('recently_added');//Main page recently_added cache
+
         return redirect()->route('servers.index')
             ->with('success', 'Server Created Successfully.');
     }
@@ -296,6 +301,10 @@ class ServerController extends Controller
             }
         }
 
+        Cache::forget('services_count');//Main page services_count cache
+        Cache::forget('due_soon');//Main page due_soon cache
+        Cache::forget('recently_added');//Main page recently_added cache
+
         return redirect()->route('servers.index')
             ->with('success', 'Server Updated Successfully.');
     }
@@ -312,6 +321,10 @@ class ServerController extends Controller
         Labels::deleteLabelsAssignedTo($server->id);
 
         IPs::deleteIPsAssignedTo($server->id);
+
+        Cache::forget('services_count');//Main page services_count cache
+        Cache::forget('due_soon');//Main page due_soon cache
+        Cache::forget('recently_added');//Main page recently_added cache
 
         return redirect()->route('servers.index')
             ->with('success', 'Server was deleted Successfully.');
