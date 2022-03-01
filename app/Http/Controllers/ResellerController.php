@@ -109,6 +109,14 @@ class ResellerController extends Controller
             );
         }
 
+        $labels_array = [$request->label1, $request->label2, $request->label3, $request->label4];
+
+        for ($i = 1; $i <= 4; $i++) {
+            if (!is_null($labels_array[($i - 1)])) {
+                DB::insert('INSERT IGNORE INTO labels_assigned (label_id, service_id) values (?, ?)', [$labels_array[($i - 1)], $reseller_id]);
+            }
+        }
+
         Cache::forget('services_count');//Main page services_count cache
         Cache::forget('due_soon');//Main page due_soon cache
         Cache::forget('recently_added');//Main page recently_added cache
@@ -144,6 +152,11 @@ class ResellerController extends Controller
         $locations = DB::table('locations')->get(['*']);
         $providers = json_decode(DB::table('providers')->get(['*']), true);
 
+        $labels = DB::table('labels_assigned as l')
+            ->join('labels', 'l.label_id', '=', 'labels.id')
+            ->where('l.service_id', '=', $reseller->id)
+            ->get(['labels.id', 'labels.label']);
+
         $ip_address = json_decode(DB::table('ips as i')
             ->where('i.service_id', '=', $reseller->id)
             ->get(), true);
@@ -153,7 +166,7 @@ class ResellerController extends Controller
             ->where('s.id', '=', $reseller->id)
             ->get(['s.*', 'p.*']);
 
-        return view('reseller.edit', compact(['reseller', 'locations', 'providers', 'ip_address']));
+        return view('reseller.edit', compact(['reseller', 'locations', 'providers', 'ip_address', 'labels']));
     }
 
     public function update(Request $request, Reseller $reseller)
@@ -214,6 +227,16 @@ class ResellerController extends Controller
                 'usd_per_month' => $pricing->costAsPerMonth($as_usd, $request->payment_term),
                 'next_due_date' => $request->next_due_date,
             ]);
+
+        $deleted = DB::table('labels_assigned')->where('service_id', '=', $request->id)->delete();
+
+        $labels_array = [$request->label1, $request->label2, $request->label3, $request->label4];
+
+        for ($i = 1; $i <= 4; $i++) {
+            if (!is_null($labels_array[($i - 1)])) {
+                DB::insert('INSERT IGNORE INTO labels_assigned ( label_id, service_id) values (?, ?)', [$labels_array[($i - 1)], $request->id]);
+            }
+        }
 
         $delete_ip = DB::table('ips')->where('service_id', '=', $request->id)->delete();
 

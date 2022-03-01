@@ -253,6 +253,44 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row mb-3">
+                        <div class="col-12 col-lg-3 mb-4">
+                            <x-labels-select>
+                                <x-slot name="title">label</x-slot>
+                                <x-slot name="name">label1</x-slot>
+                                @if(isset($labels[0]->id))
+                                    <x-slot name="current">{{$labels[0]->id}}</x-slot>
+                                @endif
+                            </x-labels-select>
+                        </div>
+                        <div class="col-12 col-lg-3 mb-4">
+                            <x-labels-select>
+                                <x-slot name="title">label</x-slot>
+                                <x-slot name="name">label2</x-slot>
+                                @if(isset($labels[1]->id))
+                                    <x-slot name="current">{{$labels[1]->id}}</x-slot>
+                                @endif
+                            </x-labels-select>
+                        </div>
+                        <div class="col-12 col-lg-3 mb-4">
+                            <x-labels-select>
+                                <x-slot name="title">label</x-slot>
+                                <x-slot name="name">label3</x-slot>
+                                @if(isset($labels[2]->id))
+                                    <x-slot name="current">{{$labels[2]->id}}</x-slot>
+                                @endif
+                            </x-labels-select>
+                        </div>
+                        <div class="col-12 col-lg-3 mb-4">
+                            <x-labels-select>
+                                <x-slot name="title">label</x-slot>
+                                <x-slot name="name">label4</x-slot>
+                                @if(isset($labels[3]->id))
+                                    <x-slot name="current">{{$labels[3]->id}}</x-slot>
+                                @endif
+                            </x-labels-select>
+                        </div>
+                    </div>
                     <div class="form-check mt-2">
                         <input class="form-check-input" name="is_active" type="checkbox"
                                value="1" {{ ($reseller[0]->active === 1) ? 'checked' : '' }}>
