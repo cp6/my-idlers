@@ -34,16 +34,10 @@
                         </x-text-input>
                     </div>
                 </div>
-                <div class="row mt-2">
+                <div class="row my-3">
                     <div class="col-12 col-md-8">
-                        <x-text-input>
-                            <x-slot name="title">API key</x-slot>
-                            <x-slot name="name">api_key</x-slot>
-                            <x-slot name="max">255</x-slot>
-                            <x-slot name="value">{{ Auth::user()->api_token }}</x-slot>
-                        </x-text-input>
+                        API key: <code>{{ Auth::user()->api_token }}</code>
                     </div>
-                    <p class="text-muted mt-3">NOTE: API key cannot be updated</p>
                 </div>
                 <div class="row">
                     <div class="col-12 col-lg-4">
