@@ -18,6 +18,7 @@
                     <div class="table-responsive">
                         <table class="table table-borderless text-nowrap">
                             <tbody>
+                            @if(!empty($data))
                                 @foreach($data as $l)
                                     <tr>
                                     <td class="py-2 text-muted">
@@ -40,6 +41,11 @@
                                     </td>
                                     </tr>
                                 @endforeach
+                            @else
+                                <tr>
+                                    <td class="px-4 py-2 text-muted" colspan="3">No services found for {{ $provider->name }}</td>
+                                </tr>
+                            @endif
                             </tbody>
                         </table>
                     </div>
