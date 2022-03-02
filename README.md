@@ -29,6 +29,7 @@ removed.
 * Labels (titles/desc) system.
 * Misc services.
 * DNS CRUD.
+* Ip address CRUD.
 * Reseller hosting.
 * Added Operating systems to DB, Deleting and creating them now possible.
 * Make servers displayable public with config options to hide certain values.
@@ -133,13 +134,19 @@ All API requests must be appended with `api/` e.g `mydomain.com/api/servers/gYk8
 
 `shared/{id}`
 
-
-
 ## Notes
 
 **Public viewable listings**
 
 If enabled the public viewable table for your server listings is at `/servers/public`
+You can configure what you want viewable at ```/settings```
+
+**Due date / due soon**
+
+This is simply just a reminder. If the homepage is requested (viewed) when a service is over due date it will get reset
+to plus the term from the old due date.
+
+E.g if the term is a month then the due date gets updated to be 1 month from the old due date.
 
 **Supporting YABS commands:**
 
@@ -158,7 +165,6 @@ or
 [![My idlers screenshot1](https://cdn.write.corbpie.com/wp-content/uploads/2022/02/My-idlers-home-page-v2.png)](https://cdn.write.corbpie.com/wp-content/uploads/2022/02/My-idlers-home-page-v2.png)
 
 [![My idlers screenshot1](https://cdn.write.corbpie.com/wp-content/uploads/2022/02/My-idlers-locations-page-v2.png)](https://cdn.write.corbpie.com/wp-content/uploads/2022/02/My-idlers-locations-page-v2.png)
-
 
 ### Screenshots for versions before v2
 
