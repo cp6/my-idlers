@@ -9,11 +9,6 @@ use Illuminate\Support\Str;
 
 class ServersSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
         $id1 = Str::random(8);

@@ -8,11 +8,6 @@ use Illuminate\Support\Str;
 
 class LabelsSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
         $os = [
