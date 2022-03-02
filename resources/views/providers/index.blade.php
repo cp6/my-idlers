@@ -32,6 +32,9 @@
                             <td class="text-nowrap">{{ $provider->name }}</td>
                             <td class="text-nowrap">
                                 <form action="{{ route('providers.destroy', $provider->id) }}" method="POST">
+                                    <a href="{{ route('providers.show', $provider->id) }}"
+                                       class="text-body mx-1">
+                                        <i class="fas fa-eye" title="view"></i></a>
                                     <i class="fas fa-trash text-danger ms-3" @click="modalForm"
                                        id="btn-{{$provider->name}}" title="{{$provider->id}}"></i>
                                 </form>
