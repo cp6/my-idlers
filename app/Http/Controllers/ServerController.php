@@ -58,11 +58,12 @@ class ServerController extends Controller
                 ->Join('providers as p', 's.provider_id', '=', 'p.id')
                 ->Join('locations as l', 's.location_id', '=', 'l.id')
                 ->Join('os as o', 's.os_id', '=', 'o.id')
+                ->LeftJoin('ips as i', 's.id', '=', 'i.service_id')
                 ->LeftJoin('yabs as y', 's.id', '=', 'y.server_id')
                 ->LeftJoin('disk_speed as ds', 'y.id', '=', 'ds.id')
                 ->where('s.show_public', '=', 1)
-                ->get(['pr.currency', 'pr.price', 'pr.term', 'pr.as_usd', 'pr.next_due_date', 'pr.service_id', 'p.name as provider_name', 'l.name as location', 'o.name as os_name', 'y.*', 'y.id as yabs_id', 'ds.*', 's.*']);
-
+                ->get(['pr.currency', 'pr.price', 'pr.term', 'pr.as_usd', 'pr.next_due_date', 'pr.service_id', 'p.name as provider_name', 'l.name as location', 'o.name as os_name', 'y.*', 'y.id as yabs_id', 'ds.*', 's.*', 'i.address as ip', 'i.is_ipv4']);
+            
             return view('servers.public-index', compact('servers'));
         }
         return response()->view('errors.404', array("status" => 404, "title" => "Page not found", "message" => ""), 404);

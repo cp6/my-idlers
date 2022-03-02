@@ -9,7 +9,9 @@
                 <table class="table table-bordered">
                     <thead class="table-light">
                     <tr class="bg-gray-100 bg-">
-                        <th class="nowrap">Name</th>
+                        @if(Session::get('show_server_value_hostname') === 1)
+                            <th class="nowrap">Name</th>
+                        @endif
                         <th class="text-center"><i class="fas fa-box" title="Virt"></i></th>
                         <th class="text-center">OS</th>
                         <th class="text-center"><i class="fas fa-microchip" title="CPU"></i></th>
@@ -19,26 +21,28 @@
                         <th class="text-nowrap">Location</th>
                         <th class="text-nowrap">Provider</th>
                         <th class="text-nowrap">Price</th>
+                        <th class="text-nowrap">Had since</th>
                         <th class="text-nowrap">GB5 S</th>
                         <th class="text-nowrap">GB5 M</th>
                         <th class="text-nowrap">4k</th>
                         <th class="text-nowrap">64k</th>
                         <th class="text-nowrap">512k</th>
                         <th class="text-nowrap">1m</th>
-                        <th class="text-nowrap">Had since</th>
-                        <th class="text-nowrap">IPv4</th>
-                        <th class="text-nowrap">IPv6</th>
+                        @if(Session::get('show_server_value_ip') === 1)
+                            <th class="text-nowrap">IPv4</th>
+                            <th class="text-nowrap">IPv6</th>
+                        @endif
                     </tr>
                     </thead>
                     <tbody>
                     @if(!empty($servers))
                         @foreach($servers as $s)
                             <tr>
-                                <td class="nowrap">
-                                    @if(Session::get('show_server_value_hostname') === 1)
+                                @if(Session::get('show_server_value_hostname') === 1)
+                                    <td class="nowrap">
                                         {{ $s->hostname }}
-                                    @endif
-                                </td>
+                                    </td>
+                                @endif
                                 <td class="text-center">
                                     {{ App\Models\Server::serviceServerType($s->server_type) }}
                                 </td>
@@ -69,6 +73,7 @@
                                     @endif
                                 </td>
                                 <td class="text-nowrap">{{ $s->price }} {{$s->currency}} {{\App\Process::paymentTermIntToString($s->term)}}</td>
+                                <td class="text-nowrap"> {{ $s->owned_since }}</td>
                                 <td class="text-nowrap">
                                     @if(Session::get('show_server_value_yabs') === 1)
                                         {{$s->gb5_single}}
@@ -97,17 +102,18 @@
                                     @if(Session::get('show_server_value_yabs') === 1)
                                         {{$s->d_1m}}<small>{{$s->d_1m_type}}</small>
                                     @endif</td>
-                                <td class="text-nowrap"> {{ $s->owned_since }}</td>
-                                <td class="text-nowrap">
-                                    @if(Session::get('show_server_value_ip') === 1)
-                                        {{ $s->ipv4 }}
-                                    @endif
-                                </td>
-                                <td class="text-nowrap">
-                                    @if(Session::get('show_server_value_ip') === 1)
-                                        {{ $s->ipv6 }}
-                                    @endif
-                                </td>
+                                @if(Session::get('show_server_value_ip') === 1)
+                                    <td class="text-nowrap">
+                                        @if($s->is_ipv4 === 1)
+                                            {{ $s->ip }}
+                                        @endif
+                                    </td>
+                                    <td class="text-nowrap">
+                                        @if($s->is_ipv4 === 0)
+                                            {{ $s->ip }}
+                                        @endif
+                                    </td>
+                                @endif
                             </tr>
                         @endforeach
                     @else
