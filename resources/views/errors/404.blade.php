@@ -2,7 +2,7 @@
 @if(isset($status))
     {{$status}}
 @else
-    <h1>404</h1>
+    404
 @endif
 @endsection
 @section('style')
