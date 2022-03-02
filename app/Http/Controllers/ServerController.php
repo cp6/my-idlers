@@ -51,8 +51,8 @@ class ServerController extends Controller
         Session::put('show_server_value_provider', $settings[0]->show_server_value_provider);
         Session::put('show_server_value_location', $settings[0]->show_server_value_location);
         Session::save();
-
-        if ((Session::has('show_servers_public') && Session::get('show_servers_public') === 1) || Auth::check()) {
+        
+        if ((Session::get('show_servers_public') === 1)) {
             $servers = DB::table('servers as s')
                 ->Join('pricings as pr', 's.id', '=', 'pr.service_id')
                 ->Join('providers as p', 's.provider_id', '=', 'p.id')
@@ -60,6 +60,7 @@ class ServerController extends Controller
                 ->Join('os as o', 's.os_id', '=', 'o.id')
                 ->LeftJoin('yabs as y', 's.id', '=', 'y.server_id')
                 ->LeftJoin('disk_speed as ds', 'y.id', '=', 'ds.id')
+                ->where('s.show_public', '=', 1)
                 ->get(['pr.currency', 'pr.price', 'pr.term', 'pr.as_usd', 'pr.next_due_date', 'pr.service_id', 'p.name as provider_name', 'l.name as location', 'o.name as os_name', 'y.*', 'y.id as yabs_id', 'ds.*', 's.*']);
 
             return view('servers.public-index', compact('servers'));
@@ -116,7 +117,8 @@ class ServerController extends Controller
             'ns2' => $request->ns2,
             'bandwidth' => $request->bandwidth,
             'cpu' => $request->cpu,
-            'was_promo' => $request->was_promo
+            'was_promo' => $request->was_promo,
+            'show_public' => $request->show_public
         ]);
 
         if (!is_null($request->ip1)) {
@@ -262,7 +264,8 @@ class ServerController extends Controller
                 'bandwidth' => $request->bandwidth,
                 'cpu' => $request->cpu,
                 'was_promo' => $request->was_promo,
-                'active' => (isset($request->is_active)) ? 1 : 0
+                'active' => (isset($request->is_active)) ? 1 : 0,
+                'show_public' => (isset($request->show_public)) ? 1 : 0
             ]);
 
         $pricing = new Pricing();

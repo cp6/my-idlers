@@ -16,6 +16,7 @@ class CreateServersTable extends Migration
         Schema::create('servers', function (Blueprint $table) {
             $table->char('id', 8)->unique()->default(null);
             $table->tinyInteger('active')->default(1);
+            $table->tinyInteger('show_public')->default(0);
             $table->string('hostname');
             $table->string('ns1')->nullable()->default(null);
             $table->string('ns2')->nullable()->default(null);

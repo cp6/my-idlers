@@ -264,12 +264,26 @@
                         </div>
                     @endforeach
                 </div>
-                <div class="form-check mt-3">
-                    <input class="form-check-input" name="is_active" type="checkbox"
-                           value="1" {{ ($server[0]->active === 1) ? 'checked' : '' }}>
-                    <label class="form-check-label">
-                        I still have this server
-                    </label>
+                <div class="row mt-2">
+                    <div class="col-12 col-lg-6 mb-4">
+                        <div class="form-check">
+                            <input class="form-check-input" name="is_active" type="checkbox"
+                                   value="1" {{ ($server[0]->active === 1) ? 'checked' : '' }}>
+                            <label class="form-check-label">
+                                I still have this server
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 mb-4">
+                        <div class="form-check">
+                            <input class="form-check-input" name="show_public" type="checkbox"
+                                   value="1" {{ ($server[0]->show_public === 1) ? 'checked' : '' }}>
+                            <label class="form-check-label">
+                                Allow this data to be public <a href="{{route('settings.index')}}">restrict values
+                                    here</a>
+                            </label>
+                        </div>
+                    </div>
                 </div>
                 <div class="row mt-2">
                     <div class="col-12 col-lg-4">

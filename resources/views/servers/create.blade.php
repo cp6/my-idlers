@@ -237,7 +237,14 @@
                         </x-labels-select>
                     </div>
                 </div>
-
+                <div class="form-check">
+                    <input class="form-check-input" name="show_public" type="checkbox"
+                           value="1">
+                    <label class="form-check-label">
+                        Allow this data to be public <a href="{{route('settings.index')}}">restrict values
+                            here</a>
+                    </label>
+                </div>
                 <div class="row">
                     <div class="col-12 col-lg-4">
                         <x-submit-button>Insert server</x-submit-button>
