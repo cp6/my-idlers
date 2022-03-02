@@ -51,7 +51,7 @@ class ServerController extends Controller
         Session::put('show_server_value_provider', $settings[0]->show_server_value_provider);
         Session::put('show_server_value_location', $settings[0]->show_server_value_location);
         Session::save();
-        
+
         if ((Session::get('show_servers_public') === 1)) {
             $servers = DB::table('servers as s')
                 ->Join('pricings as pr', 's.id', '=', 'pr.service_id')
