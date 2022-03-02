@@ -200,7 +200,7 @@
                         <x-date-input>
                             <x-slot name="title">Owned since</x-slot>
                             <x-slot name="name">owned_since</x-slot>
-                            <x-slot name="value">{{Carbon\Carbon::now()->addDays(30)->format('Y-m-d') }}</x-slot>
+                            <x-slot name="value">{{Carbon\Carbon::now()->format('Y-m-d') }}</x-slot>
                         </x-date-input>
                     </div>
                     <div class="col-12 col-md-3 mb-3">
