@@ -45,7 +45,8 @@
                         </div>
                         <div class="col-12 col-md-3 mb-3">
                             <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text">Has dedicated IP</span></div>
+                                <div class="input-group-prepend"><span class="input-group-text">Has dedicated IP</span>
+                                </div>
                                 <select class="form-control" name="has_dedicated_ip">
                                     <option value="0">No</option>
                                     <option value="1">Yes</option>
@@ -53,141 +54,135 @@
                         </div>
                         <div class="col-12 col-md-3 mb-3">
                             <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text">Dedicated IP</span></div>
+                                <div class="input-group-prepend"><span class="input-group-text">Dedicated IP</span>
+                                </div>
                                 <input type="text" name="dedicated_ip" class="form-control"></div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-3 mb-3">
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text">Provider</span></div>
-                                <select class="form-control" name="provider_id">
-                                    @foreach ($Providers as $provider)
-                                        <option value="{{ $provider['id'] }}">
-                                            {{ $provider['name'] }}
-                                        </option>
-                                    @endforeach
-                                </select></div>
+                            <x-providers-select>
+                                <x-slot name="current">1</x-slot>
+                            </x-providers-select>
                         </div>
                         <div class="col-md-3 mb-3">
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text">Price</span></div>
-                                <input type="number" id="price" name="price" class="form-control" min="0" max="999"
-                                       step="0.01" required="" value="2.50"></div>
+                            <x-number-input>
+                                <x-slot name="title">Price</x-slot>
+                                <x-slot name="name">price</x-slot>
+                                <x-slot name="value">2.50</x-slot>
+                                <x-slot name="max">9999</x-slot>
+                                <x-slot name="step">0.01</x-slot>
+                                <x-slot name="required"></x-slot>
+                            </x-number-input>
                         </div>
                         <div class="col-md-3 mb-3">
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text">Term</span></div>
-                                <select class="form-control" id="payment_term" name="payment_term">
-                                    <option value="1" selected="">Monthly</option>
-                                    <option value="2">Quarterly</option>
-                                    <option value="3">Half annual (half year)</option>
-                                    <option value="4">Annual (yearly)</option>
-                                    <option value="5">Biennial (2 years)</option>
-                                    <option value="6">Triennial (3 years)</option>
-                                </select></div>
+                            <x-term-select></x-term-select>
                         </div>
                         <div class="col-md-3 mb-3">
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text">Currency</span></div>
-                                <select class="form-control" id="currency" name="currency">
-                                    <option value="AUD">AUD</option>
-                                    <option value="USD" selected="">USD</option>
-                                    <option value="GBP">GBP</option>
-                                    <option value="EUR">EUR</option>
-                                    <option value="NZD">NZD</option>
-                                    <option value="JPY">JPY</option>
-                                    <option value="CAD">CAD</option>
-                                </select></div>
+                            <x-currency-select></x-currency-select>
                         </div>
                     </div>
                     <div class="row mb-2">
                         <div class="col-12 col-md-3 mb-3">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">Location</span>
-                                </div>
-                                <select class="form-control" name="location_id">
-                                    @foreach ($Locations as $location)
-                                        <option value="{{ $location['id'] }}">
-                                            {{ $location['name'] }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
+                            <x-locations-select>
+                                <x-slot name="current">1</x-slot>
+                            </x-locations-select>
                         </div>
                         <div class="col-12 col-md-3 mb-3">
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text">Was promo</span></div>
-                                <select class="form-control" name="was_promo">
-                                    <option value="0">No</option>
-                                    <option value="1">Yes</option>
-                                </select></div>
+                            <x-yes-no-select>
+                                <x-slot name="title">Was promo</x-slot>
+                                <x-slot name="name">was_promo</x-slot>
+                                <x-slot name="value">1</x-slot>
+                            </x-yes-no-select>
                         </div>
                         <div class="col-12 col-md-3 mb-3">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">Owned since</span>
-                                </div>
-                                <input type="date" class="form-control" id="owned_since" name="owned_since" value="{{Carbon\Carbon::now()->subYear(1)->format('Y-m-d') }}"></div>
+                            <x-date-input>
+                                <x-slot name="title">Owned since</x-slot>
+                                <x-slot name="name">owned_since</x-slot>
+                                <x-slot name="value">{{Carbon\Carbon::now()->format('Y-m-d') }}</x-slot>
+                            </x-date-input>
                         </div>
-                        <div class="col-12 col-md-3">
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text">Next due date</span>
-                                </div>
-                                <input type="date" class="form-control next-dd" id="next_due_date" name="next_due_date" value="{{Carbon\Carbon::now()->addMonth(1)->format('Y-m-d') }}">
-                            </div>
+                        <div class="col-12 col-md-3 mb-3">
+                            <x-date-input>
+                                <x-slot name="title">Next due date</x-slot>
+                                <x-slot name="name">next_due_date</x-slot>
+                                <x-slot name="value">{{Carbon\Carbon::now()->addDays(30)->format('Y-m-d') }}</x-slot>
+                            </x-date-input>
                         </div>
                     </div>
                     <div class="row">
-                        <p>Limits:</p>
+                        <p class="text-muted"><b>Limits</b></p>
                         <div class="col-12 col-lg-3 mb-4">
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text">Domains</span></div>
-                                <input type="number" name="domains" class="form-control" value="10" min="1" max="9999">
-                            </div>
+                            <x-number-input>
+                                <x-slot name="title">Domains</x-slot>
+                                <x-slot name="name">domains</x-slot>
+                                <x-slot name="value">1</x-slot>
+                                <x-slot name="max">999999</x-slot>
+                                <x-slot name="step">1</x-slot>
+                                <x-slot name="value">10</x-slot>
+                            </x-number-input>
                         </div>
                         <div class="col-12 col-lg-3 mb-4">
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text">Sub domains</span></div>
-                                <input type="number" name="sub_domains" class="form-control" value="10" min="1" max="9999">
-                            </div>
+                            <x-number-input>
+                                <x-slot name="title">Sub domains</x-slot>
+                                <x-slot name="name">sub_domains</x-slot>
+                                <x-slot name="value">1</x-slot>
+                                <x-slot name="max">999999</x-slot>
+                                <x-slot name="step">1</x-slot>
+                                <x-slot name="value">20</x-slot>
+                            </x-number-input>
                         </div>
                         <div class="col-12 col-lg-3 mb-4">
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text">Disk</span></div>
-                                <input type="number" name="disk" class="form-control" value="20" min="1" max="99999">
-                                <div class="input-group-append"><span class="input-group-text">GB</span></div>
-                            </div>
+                            <x-number-input>
+                                <x-slot name="title">Disk GB</x-slot>
+                                <x-slot name="name">disk</x-slot>
+                                <x-slot name="value">1</x-slot>
+                                <x-slot name="max">999999</x-slot>
+                                <x-slot name="step">1</x-slot>
+                                <x-slot name="value">50</x-slot>
+                            </x-number-input>
                         </div>
                         <div class="col-12 col-lg-3 mb-4">
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text">Email</span></div>
-                                <input type="number" name="email" class="form-control" value="20" min="1" max="99999">
-                            </div>
+                            <x-number-input>
+                                <x-slot name="title">Email</x-slot>
+                                <x-slot name="name">Email</x-slot>
+                                <x-slot name="value">1</x-slot>
+                                <x-slot name="max">999999</x-slot>
+                                <x-slot name="step">1</x-slot>
+                                <x-slot name="value">100</x-slot>
+                            </x-number-input>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12 col-lg-3 mb-4">
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text">Bandwidth</span>
-                                </div>
-                                <input type="number" name="bandwidth" class="form-control" value="999" min="1"
-                                       max="99999">
-                                <div class="input-group-append"><span class="input-group-text">GB</span></div>
-                            </div>
+                            <x-number-input>
+                                <x-slot name="title">Bandwidth GB</x-slot>
+                                <x-slot name="name">bandwidth</x-slot>
+                                <x-slot name="value">1</x-slot>
+                                <x-slot name="max">999999</x-slot>
+                                <x-slot name="step">1</x-slot>
+                                <x-slot name="value">500</x-slot>
+                            </x-number-input>
                         </div>
                         <div class="col-12 col-lg-3 mb-4">
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text">FTP</span></div>
-                                <input type="number" name="ftp" class="form-control" value="99" min="1" max="99999">
-                            </div>
+                            <x-number-input>
+                                <x-slot name="title">ftp</x-slot>
+                                <x-slot name="name">ftp</x-slot>
+                                <x-slot name="value">1</x-slot>
+                                <x-slot name="max">999999</x-slot>
+                                <x-slot name="step">1</x-slot>
+                                <x-slot name="value">100</x-slot>
+                            </x-number-input>
                         </div>
                         <div class="col-12 col-lg-3 mb-4">
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text">DB</span></div>
-                                <input type="number" name="db" class="form-control" value="20" min="1" max="99999">
-                            </div>
+                            <x-number-input>
+                                <x-slot name="title">DB</x-slot>
+                                <x-slot name="name">db</x-slot>
+                                <x-slot name="value">1</x-slot>
+                                <x-slot name="max">999999</x-slot>
+                                <x-slot name="step">1</x-slot>
+                                <x-slot name="value">100</x-slot>
+                            </x-number-input>
                         </div>
                     </div>
                     <div class="row mb-3">
