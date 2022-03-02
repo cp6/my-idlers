@@ -90,167 +90,142 @@
                     </div>
                     <div class="row">
                         <div class="col-md-3 mb-3">
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text">Provider</span></div>
-                                <select class="form-control" name="provider_id">
-                                    <option value="0">Select provider</option>
-                                    @foreach ($providers as $pr)
-                                        <option
-                                            value="{{ $pr['id'] }}" {{ ( $pr['id'] === $reseller[0]->provider_id) ? 'selected' : '' }}> {{ $pr['name'] }} </option>
-                                    @endforeach
-                                </select></div>
+                            <x-providers-select>
+                                <x-slot name="current">{{$reseller[0]->provider_id}}</x-slot>
+                            </x-providers-select>
                         </div>
                         <div class="col-md-3 mb-3">
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text">Price</span></div>
-                                <input type="number" id="price" name="price" class="form-control" min="0" max="999"
-                                       step="0.01" required="" value="{{ $reseller[0]->price }}"></div>
+                            <x-number-input>
+                                <x-slot name="title">Price</x-slot>
+                                <x-slot name="name">price</x-slot>
+                                <x-slot name="value">{{$reseller[0]->price}}</x-slot>
+                                <x-slot name="max">9999</x-slot>
+                                <x-slot name="step">0.01</x-slot>
+                                <x-slot name="required"></x-slot>
+                            </x-number-input>
                         </div>
                         <div class="col-md-3 mb-3">
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text">Term</span></div>
-                                <select class="form-control" id="payment_term" name="payment_term">
-                                    <option value="1" {{ ($reseller[0]->term === 1) ? 'selected' : '' }}>Monthly
-                                    </option>
-                                    <option value="2" {{ ($reseller[0]->term === 2) ? 'selected' : '' }}>Quarterly
-                                    </option>
-                                    <option value="3" {{ ($reseller[0]->term === 3) ? 'selected' : '' }}>Half annual
-                                        (half
-                                        year)
-                                    </option>
-                                    <option value="4" {{ ($reseller[0]->term === 4) ? 'selected' : '' }}>Annual (yearly)
-                                    </option>
-                                    <option value="5" {{ ($reseller[0]->term === 5) ? 'selected' : '' }}>Biennial (2
-                                        years)
-                                    </option>
-                                    <option value="6" {{ ($reseller[0]->term === 6) ? 'selected' : '' }}>Triennial (3
-                                        years)
-                                    </option>
-                                </select></div>
+                            <x-term-select>
+                                <x-slot name="current">{{$reseller[0]->term}}</x-slot>
+                            </x-term-select>
                         </div>
                         <div class="col-md-3 mb-3">
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text">Currency</span></div>
-                                <select class="form-control" id="currency" name="currency">
-                                    <option value="AUD" {{ ($reseller[0]->currency === 'AUD') ? 'selected' : '' }}>AUD
-                                    </option>
-                                    <option value="USD" {{ ($reseller[0]->currency === 'USD') ? 'selected' : '' }}>USD
-                                    </option>
-                                    <option value="GBP" {{ ($reseller[0]->currency === 'GBP') ? 'selected' : '' }}>GBP
-                                    </option>
-                                    <option value="EUR" {{ ($reseller[0]->currency === 'EUR') ? 'selected' : '' }}>EUR
-                                    </option>
-                                    <option value="NZD" {{ ($reseller[0]->currency === 'NZD') ? 'selected' : '' }}>NZD
-                                    </option>
-                                    <option value="JPY" {{ ($reseller[0]->currency === 'JPY') ? 'selected' : '' }}>JPY
-                                    </option>
-                                    <option value="CAD" {{ ($reseller[0]->currency === 'CAD') ? 'selected' : '' }}>CAD
-                                    </option>
-                                </select></div>
+                            <x-currency-select>
+                                <x-slot name="current">{{$reseller[0]->currency}}</x-slot>
+                            </x-currency-select>
                         </div>
                     </div>
                     <div class="row mb-2">
                         <div class="col-12 col-md-3 mb-3">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">Location</span>
-                                </div>
-                                <select class="form-control" name="location_id">
-                                    <option value="999">Null</option>
-                                    @foreach ($locations as $loc)
-                                        <option
-                                            value="{{ $loc->id }}" {{ ( $loc->id === $reseller[0]->provider_id) ? 'selected' : '' }}> {{ $loc  ->name }} </option>
-                                    @endforeach
-                                </select>
-                            </div>
+                            <x-locations-select>
+                                <x-slot name="current">{{$reseller[0]->location_id}}</x-slot>
+                            </x-locations-select>
                         </div>
                         <div class="col-12 col-md-3 mb-3">
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text">Was promo</span></div>
-                                <select class="form-control" name="was_promo">
-                                    <option value="0" {{ ($reseller[0]->was_promo === 0) ? 'selected' : '' }}>No
-                                    </option>
-                                    <option value="1" {{ ($reseller[0]->was_promo === 1) ? 'selected' : '' }}>Yes
-                                    </option>
-                                </select></div>
+                            <x-yes-no-select>
+                                <x-slot name="title">Promo price</x-slot>
+                                <x-slot name="name">was_promo</x-slot>
+                                <x-slot name="value">{{ $reseller[0]->was_promo }}</x-slot>
+                            </x-yes-no-select>
                         </div>
                         <div class="col-12 col-md-3 mb-3">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">Owned since</span>
-                                </div>
-                                <input type="date" class="form-control" id="owned_since" name="owned_since"
-                                       value="{{ $reseller[0]->owned_since }}"></div>
+                            <x-date-input>
+                                <x-slot name="title">Owned since</x-slot>
+                                <x-slot name="name">owned_since</x-slot>
+                                <x-slot name="value">{{$reseller[0]->owned_since }}</x-slot>
+                            </x-date-input>
                         </div>
                         <div class="col-12 col-md-3 mb-3">
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text">Next due date</span>
-                                </div>
-                                <input type="date" class="form-control next-dd" id="next_due_date" name="next_due_date"
-                                       value="{{ $reseller[0]->next_due_date }}">
-                            </div>
+                            <x-date-input>
+                                <x-slot name="title">Next due date</x-slot>
+                                <x-slot name="name">next_due_date</x-slot>
+                                <x-slot name="value">{{$reseller[0]->next_due_date }}</x-slot>
+                            </x-date-input>
                         </div>
                     </div>
                     <div class="row">
-                        <p>Limits:</p>
+                        <p class="text-muted"><b>Limits</b></p>
                         <div class="col-12 col-lg-3 mb-4">
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text">Domains</span></div>
-                                <input type="number" name="domains" class="form-control"
-                                       value="{{$reseller[0]->domains_limit}}"
-                                       min="1" max="9999">
-                            </div>
+                            <x-number-input>
+                                <x-slot name="title">Accounts</x-slot>
+                                <x-slot name="name">accounts</x-slot>
+                                <x-slot name="value">1</x-slot>
+                                <x-slot name="max">999999</x-slot>
+                                <x-slot name="step">1</x-slot>
+                                <x-slot name="value">{{$reseller[0]->accounts}}</x-slot>
+                            </x-number-input>
                         </div>
                         <div class="col-12 col-lg-3 mb-4">
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text">Sub domains</span></div>
-                                <input type="number" name="sub_domains" class="form-control"
-                                       value="{{$reseller[0]->subdomains_limit}}" min="1" max="9999">
-                            </div>
+                            <x-number-input>
+                                <x-slot name="title">Domains</x-slot>
+                                <x-slot name="name">domains</x-slot>
+                                <x-slot name="value">1</x-slot>
+                                <x-slot name="max">999999</x-slot>
+                                <x-slot name="step">1</x-slot>
+                                <x-slot name="value">{{$reseller[0]->domains_limit}}</x-slot>
+                            </x-number-input>
                         </div>
                         <div class="col-12 col-lg-3 mb-4">
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text">Disk</span></div>
-                                <input type="number" name="disk" class="form-control"
-                                       value="{{$reseller[0]->disk_as_gb}}"
-                                       min="1" max="99999">
-                                <div class="input-group-append"><span class="input-group-text">GB</span></div>
-                            </div>
+                            <x-number-input>
+                                <x-slot name="title">Sub domains</x-slot>
+                                <x-slot name="name">sub_domains</x-slot>
+                                <x-slot name="value">1</x-slot>
+                                <x-slot name="max">999999</x-slot>
+                                <x-slot name="step">1</x-slot>
+                                <x-slot name="value">{{$reseller[0]->subdomains_limit}}</x-slot>
+                            </x-number-input>
                         </div>
                         <div class="col-12 col-lg-3 mb-4">
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text">Email</span></div>
-                                <input type="number" name="email" class="form-control"
-                                       value="{{$reseller[0]->email_limit}}"
-                                       min="1" max="99999">
-                            </div>
+                            <x-number-input>
+                                <x-slot name="title">Disk GB</x-slot>
+                                <x-slot name="name">disk</x-slot>
+                                <x-slot name="value">1</x-slot>
+                                <x-slot name="max">999999</x-slot>
+                                <x-slot name="step">1</x-slot>
+                                <x-slot name="value">{{$reseller[0]->disk_as_gb}}</x-slot>
+                            </x-number-input>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12 col-lg-3 mb-4">
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text">Bandwidth</span>
-                                </div>
-                                <input type="number" name="bandwidth" class="form-control"
-                                       value="{{$reseller[0]->bandwidth}}" min="1"
-                                       max="99999">
-                                <div class="input-group-append"><span class="input-group-text">GB</span></div>
-                            </div>
+                            <x-number-input>
+                                <x-slot name="title">Email</x-slot>
+                                <x-slot name="name">Email</x-slot>
+                                <x-slot name="value">1</x-slot>
+                                <x-slot name="max">999999</x-slot>
+                                <x-slot name="step">1</x-slot>
+                                <x-slot name="value">{{$reseller[0]->email_limit}}</x-slot>
+                            </x-number-input>
                         </div>
                         <div class="col-12 col-lg-3 mb-4">
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text">FTP</span></div>
-                                <input type="number" name="ftp" class="form-control" value="{{$reseller[0]->ftp_limit}}"
-                                       min="1"
-                                       max="99999">
-                            </div>
+                            <x-number-input>
+                                <x-slot name="title">Bandwidth GB</x-slot>
+                                <x-slot name="name">bandwidth</x-slot>
+                                <x-slot name="value">1</x-slot>
+                                <x-slot name="max">999999</x-slot>
+                                <x-slot name="step">1</x-slot>
+                                <x-slot name="value">{{$reseller[0]->bandwidth}}</x-slot>
+                            </x-number-input>
                         </div>
                         <div class="col-12 col-lg-3 mb-4">
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text">DB</span></div>
-                                <input type="number" name="db" class="form-control" value="{{$reseller[0]->db_limit}}"
-                                       min="1" max="99999">
-                            </div>
+                            <x-number-input>
+                                <x-slot name="title">ftp</x-slot>
+                                <x-slot name="name">ftp</x-slot>
+                                <x-slot name="value">1</x-slot>
+                                <x-slot name="max">999999</x-slot>
+                                <x-slot name="step">1</x-slot>
+                                <x-slot name="value">{{$reseller[0]->ftp_limit}}</x-slot>
+                            </x-number-input>
+                        </div>
+                        <div class="col-12 col-lg-3 mb-4">
+                            <x-number-input>
+                                <x-slot name="title">DB</x-slot>
+                                <x-slot name="name">db</x-slot>
+                                <x-slot name="value">1</x-slot>
+                                <x-slot name="max">999999</x-slot>
+                                <x-slot name="step">1</x-slot>
+                                <x-slot name="value">{{$reseller[0]->db_limit}}</x-slot>
+                            </x-number-input>
                         </div>
                     </div>
                     <div class="row mb-3">
