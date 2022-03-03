@@ -24,7 +24,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @if(!empty($misc))
+                    @if(!empty($misc[0]))
                         @foreach($misc as $m)
                             <tr>
                                 <td class="text-nowrap">{{$m->name}}</td>

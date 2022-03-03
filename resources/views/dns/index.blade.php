@@ -26,7 +26,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @if(!empty($dn))
+                    @if(!empty($dn[0]))
                         @foreach($dn as $dns)
                             <tr>
                                 <td class="text-nowrap">{{ $dns->dns_type}}</td>
