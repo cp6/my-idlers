@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Locations;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 
@@ -29,6 +30,8 @@ class LocationsController extends Controller
         Locations::create([
             'name' => $request->location_name
         ]);
+
+        Cache::forget('all_locations');
 
         return redirect()->route('locations.index')
             ->with('success', 'Location Created Successfully.');
@@ -61,6 +64,8 @@ class LocationsController extends Controller
         $items = Locations::find($location->id);
 
         $items->delete();
+
+        Cache::forget('all_locations');
 
         return redirect()->route('locations.index')
             ->with('success', 'Location was deleted Successfully.');
