@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Providers;
 use DataTables;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class ProvidersController extends Controller
@@ -29,6 +30,8 @@ class ProvidersController extends Controller
         Providers::create([
             'name' => $request->provider_name
         ]);
+
+        Cache::forget('all_providers');
 
         return redirect()->route('providers.index')
             ->with('success', 'Provider Created Successfully.');
@@ -61,6 +64,8 @@ class ProvidersController extends Controller
         $items = Providers::find($provider->id);
 
         $items->delete();
+
+        Cache::forget('all_providers');
 
         return redirect()->route('providers.index')
             ->with('success', 'Provider was deleted Successfully.');
