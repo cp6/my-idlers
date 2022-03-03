@@ -43,20 +43,12 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-12 col-md-3 mb-3">
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text">Has dedicated IP</span>
-                                </div>
-                                <select class="form-control" name="has_dedicated_ip">
-                                    <option value="0">No</option>
-                                    <option value="1">Yes</option>
-                                </select></div>
-                        </div>
-                        <div class="col-12 col-md-3 mb-3">
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text">Dedicated IP</span>
-                                </div>
-                                <input type="text" name="dedicated_ip" class="form-control"></div>
+                        <div class="col-12 col-md-6 mb-3">
+                            <x-text-input>
+                                <x-slot name="title">Dedicated IP</x-slot>
+                                <x-slot name="name">dedicated_ip</x-slot>
+                                <x-slot name="max">255</x-slot>
+                            </x-text-input>
                         </div>
                     </div>
                     <div class="row">
@@ -166,7 +158,7 @@
                         </div>
                         <div class="col-12 col-lg-3 mb-4">
                             <x-number-input>
-                                <x-slot name="title">ftp</x-slot>
+                                <x-slot name="title">FTP</x-slot>
                                 <x-slot name="name">ftp</x-slot>
                                 <x-slot name="value">1</x-slot>
                                 <x-slot name="max">999999</x-slot>
