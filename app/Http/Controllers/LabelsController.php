@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Labels;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -31,6 +32,8 @@ class LabelsController extends Controller
             'id' => Str::random(8),
             'label' => $request->label
         ]);
+
+        Cache::forget('all_labels');
 
         return redirect()->route('labels.index')
             ->with('success', 'Label Created Successfully.');
@@ -64,6 +67,8 @@ class LabelsController extends Controller
         $items->delete();
 
         Labels::deleteLabelAssignedAs($label_id);
+
+        Cache::forget('all_labels');
 
         return redirect()->route('labels.index')
             ->with('success', 'Label was deleted Successfully.');
