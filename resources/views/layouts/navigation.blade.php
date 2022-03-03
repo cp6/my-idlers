@@ -32,6 +32,7 @@
                        aria-expanded="false">More</a>
                     <ul class="dropdown-menu" aria-labelledby="dropdown09">
                         <li><a class="dropdown-item" href="{{route('dns.index')}}">DNS</a></li>
+                        <li><a class="dropdown-item" href="{{route('IPs.index')}}">IPs</a></li>
                         <li><a class="dropdown-item" href="{{route('locations.index')}}">Locations</a></li>
                         <li><a class="dropdown-item" href="{{route('os.index')}}">OS</a></li>
                         <li><a class="dropdown-item" href="{{route('providers.index')}}">Providers</a></li>
