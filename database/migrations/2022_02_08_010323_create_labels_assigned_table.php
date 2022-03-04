@@ -14,8 +14,9 @@ class CreateLabelsAssignedTable extends Migration
     public function up()
     {
         Schema::create('labels_assigned', function (Blueprint $table) {
-            $table->char('label_id', 8)->unique();
-            $table->char('service_id', 8)->unique();
+            $table->char('label_id', 8);
+            $table->char('service_id', 8);
+            $table->unique(['label_id','service_id'], 'uni');
         });
     }
 
