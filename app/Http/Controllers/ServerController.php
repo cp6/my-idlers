@@ -23,17 +23,27 @@ class ServerController extends Controller
 
     public function index()
     {
-        $servers = Cache::remember('all_servers', 1440, function () {
+        $servers = Cache::remember('all_active_servers', 1440, function () {
             return DB::table('servers as s')
                 ->join('pricings as pr', 's.id', '=', 'pr.service_id')
                 ->join('providers as p', 's.provider_id', '=', 'p.id')
                 ->join('locations as l', 's.location_id', '=', 'l.id')
                 ->join('os as o', 's.os_id', '=', 'o.id')
+                ->where('s.active', '=', 1)
                 ->get(['s.*', 'pr.currency', 'pr.price', 'pr.term', 'pr.as_usd', 'pr.next_due_date', 'p.name as provider_name', 'l.name as location', 'o.name as os_name']);
-
         });
 
-        return view('servers.index', compact(['servers']));
+        $non_active_servers = Cache::remember('non_active_servers', 1440, function () {
+            return DB::table('servers as s')
+                ->join('pricings as pr', 's.id', '=', 'pr.service_id')
+                ->join('providers as p', 's.provider_id', '=', 'p.id')
+                ->join('locations as l', 's.location_id', '=', 'l.id')
+                ->join('os as o', 's.os_id', '=', 'o.id')
+                ->where('s.active', '=', 0)
+                ->get(['s.*', 'pr.currency', 'pr.price', 'pr.term', 'pr.as_usd', 'p.name as provider_name', 'l.name as location', 'o.name as os_name']);
+        });
+
+        return view('servers.index', compact(['servers', 'non_active_servers']));
     }
 
     public function showServersPublic()
@@ -172,7 +182,8 @@ class ServerController extends Controller
         Cache::forget('services_count');//Main page services_count cache
         Cache::forget('due_soon');//Main page due_soon cache
         Cache::forget('recently_added');//Main page recently_added cache
-        Cache::forget('all_servers');//all servers cache
+        Cache::forget('all_active_servers');//all servers cache
+        Cache::forget('non_active_servers');//all servers cache
 
         return redirect()->route('servers.index')
             ->with('success', 'Server Created Successfully.');
@@ -313,7 +324,8 @@ class ServerController extends Controller
         Cache::forget('services_count');//Main page services_count cache
         Cache::forget('due_soon');//Main page due_soon cache
         Cache::forget('recently_added');//Main page recently_added cache
-        Cache::forget('all_servers');//all servers cache
+        Cache::forget('all_active_servers');//all servers cache
+        Cache::forget('non_active_servers');//all servers cache
 
         return redirect()->route('servers.index')
             ->with('success', 'Server Updated Successfully.');
@@ -335,7 +347,8 @@ class ServerController extends Controller
         Cache::forget('services_count');//Main page services_count cache
         Cache::forget('due_soon');//Main page due_soon cache
         Cache::forget('recently_added');//Main page recently_added cache
-        Cache::forget('all_servers');//all servers cache
+        Cache::forget('all_active_servers');//all servers cache
+        Cache::forget('non_active_servers');//all servers cache
 
         return redirect()->route('servers.index')
             ->with('success', 'Server was deleted Successfully.');
