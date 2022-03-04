@@ -41,7 +41,7 @@
                                 <td class="px-2 py-2 font-bold text-muted">Server</td>
                                 <td>
                                     @if(isset($dns->server_id))
-                                        <a href="{{route('servers.show', $dns->server_id )}}"></a>{{ $dns->server_id }}
+                                        <a href="{{route('servers.show', $dns->server_id )}}">{{ $dns->server_id }}</a>
                                     @endif
                                 </td>
                             </tr>
@@ -49,7 +49,7 @@
                                 <td class="px-2 py-2 font-bold text-muted">Shared</td>
                                 <td>
                                     @if(isset($dns->shared_id))
-                                        <a href="{{route('shared.show', $dns->shared_id )}}"></a>{{ $dns->shared_id }}
+                                        <a href="{{route('shared.show', $dns->shared_id )}}">{{ $dns->shared_id }}</a>
                                     @endif
                                 </td>
                             </tr>
@@ -57,7 +57,7 @@
                                 <td class="px-2 py-2 font-bold text-muted">Reseller</td>
                                 <td>
                                     @if(isset($dns->reseller_id))
-                                        <a href="{{route('resellers.show', $dns->reseller_id )}}"></a>{{ $dns->reseller_id }}
+                                        <a href="{{route('resellers.show', $dns->reseller_id )}}">{{ $dns->reseller_id }}</a>
                                     @endif
                                 </td>
                             </tr>
@@ -65,7 +65,7 @@
                                 <td class="px-2 py-2 font-bold text-muted">Domain</td>
                                 <td>
                                     @if(isset($dns->domain_id))
-                                        <a href="{{route('domains.show', $dns->domain_id )}}"></a>{{ $dns->domain_id }}
+                                        <a href="{{route('domains.show', $dns->domain_id )}}">{{ $dns->domain_id }}</a>
                                     @endif</td>
                             </tr>
                             <tr>
