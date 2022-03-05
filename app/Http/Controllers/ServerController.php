@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\IPs;
 use App\Models\Labels;
 use App\Models\OS;
 use App\Models\Pricing;
@@ -9,6 +10,8 @@ use App\Models\Server;
 use App\Models\Providers;
 use App\Models\Locations;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
@@ -20,13 +23,27 @@ class ServerController extends Controller
 
     public function index()
     {
-        $servers = DB::table('servers as s')
-            ->join('pricings as pr', 's.id', '=', 'pr.service_id')
-            ->join('providers as p', 's.provider_id', '=', 'p.id')
-            ->join('locations as l', 's.location_id', '=', 'l.id')
-            ->join('os as o', 's.os_id', '=', 'o.id')
-            ->get(['s.*', 'pr.currency', 'pr.price', 'pr.term', 'pr.as_usd', 'pr.next_due_date', 'p.name as provider_name', 'l.name as location', 'o.name as os_name']);
-        return view('servers.index', compact(['servers']));
+        $servers = Cache::remember('all_active_servers', 1440, function () {
+            return DB::table('servers as s')
+                ->join('pricings as pr', 's.id', '=', 'pr.service_id')
+                ->join('providers as p', 's.provider_id', '=', 'p.id')
+                ->join('locations as l', 's.location_id', '=', 'l.id')
+                ->join('os as o', 's.os_id', '=', 'o.id')
+                ->where('s.active', '=', 1)
+                ->get(['s.*', 'pr.currency', 'pr.price', 'pr.term', 'pr.as_usd', 'pr.next_due_date', 'p.name as provider_name', 'l.name as location', 'o.name as os_name']);
+        });
+
+        $non_active_servers = Cache::remember('non_active_servers', 1440, function () {
+            return DB::table('servers as s')
+                ->join('pricings as pr', 's.id', '=', 'pr.service_id')
+                ->join('providers as p', 's.provider_id', '=', 'p.id')
+                ->join('locations as l', 's.location_id', '=', 'l.id')
+                ->join('os as o', 's.os_id', '=', 'o.id')
+                ->where('s.active', '=', 0)
+                ->get(['s.*', 'pr.currency', 'pr.price', 'pr.term', 'pr.as_usd', 'p.name as provider_name', 'l.name as location', 'o.name as os_name']);
+        });
+
+        return view('servers.index', compact(['servers', 'non_active_servers']));
     }
 
     public function showServersPublic()
@@ -37,18 +54,25 @@ class ServerController extends Controller
 
         Session::put('timer_version_footer', $settings[0]->show_versions_footer);
         Session::put('show_servers_public', $settings[0]->show_servers_public);
+        Session::put('show_server_value_ip', $settings[0]->show_server_value_ip);
+        Session::put('show_server_value_hostname', $settings[0]->show_server_value_hostname);
+        Session::put('show_server_value_price', $settings[0]->show_server_value_price);
+        Session::put('show_server_value_yabs', $settings[0]->show_server_value_yabs);
+        Session::put('show_server_value_provider', $settings[0]->show_server_value_provider);
+        Session::put('show_server_value_location', $settings[0]->show_server_value_location);
         Session::save();
-       // dd(Session::all());
 
-        if (Session::has('show_servers_public') && Session::get('show_servers_public') === 1) {
+        if ((Session::get('show_servers_public') === 1)) {
             $servers = DB::table('servers as s')
                 ->Join('pricings as pr', 's.id', '=', 'pr.service_id')
                 ->Join('providers as p', 's.provider_id', '=', 'p.id')
                 ->Join('locations as l', 's.location_id', '=', 'l.id')
                 ->Join('os as o', 's.os_id', '=', 'o.id')
+                ->LeftJoin('ips as i', 's.id', '=', 'i.service_id')
                 ->LeftJoin('yabs as y', 's.id', '=', 'y.server_id')
                 ->LeftJoin('disk_speed as ds', 'y.id', '=', 'ds.id')
-                ->get(['s.*', 'pr.currency', 'pr.price', 'pr.term', 'pr.as_usd', 'pr.next_due_date', 'pr.service_id', 'p.name as provider_name', 'l.name as location', 'o.name as os_name', 'y.*', 'y.id as yabs_id', 'ds.*']);
+                ->where('s.show_public', '=', 1)
+                ->get(['pr.currency', 'pr.price', 'pr.term', 'pr.as_usd', 'pr.next_due_date', 'pr.service_id', 'p.name as provider_name', 'l.name as location', 'o.name as os_name', 'y.*', 'y.id as yabs_id', 'ds.*', 's.*', 'i.address as ip', 'i.is_ipv4']);
 
             return view('servers.public-index', compact('servers'));
         }
@@ -68,8 +92,8 @@ class ServerController extends Controller
 
         $request->validate([
             'hostname' => 'required|min:5',
-            'ipv4' => 'nullable|ipv4',
-            'ipv6' => 'nullable|ipv6',
+            'ip1' => 'nullable|ip',
+            'ip2' => 'nullable|ip',
             'service_type' => 'numeric',
             'server_type' => 'numeric',
             'ram' => 'numeric',
@@ -88,8 +112,6 @@ class ServerController extends Controller
         Server::create([
             'id' => $server_id,
             'hostname' => $request->hostname,
-            'ipv4' => $request->ipv4,
-            'ipv6' => $request->ipv6,
             'server_type' => $request->server_type,
             'os_id' => $request->os_id,
             'ssh' => $request->ssh_port,
@@ -106,8 +128,33 @@ class ServerController extends Controller
             'ns2' => $request->ns2,
             'bandwidth' => $request->bandwidth,
             'cpu' => $request->cpu,
-            'was_promo' => $request->was_promo
+            'was_promo' => $request->was_promo,
+            'show_public' => (isset($request->show_public)) ? 1 : 0
         ]);
+
+        if (!is_null($request->ip1)) {
+            IPs::create(
+                [
+                    'id' => Str::random(8),
+                    'service_id' => $server_id,
+                    'address' => $request->ip1,
+                    'is_ipv4' => (filter_var($request->ip1, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) ? 0 : 1,
+                    'active' => 1
+                ]
+            );
+        }
+
+        if (!is_null($request->ip2)) {
+            IPs::create(
+                [
+                    'id' => Str::random(8),
+                    'service_id' => $server_id,
+                    'address' => $request->ip2,
+                    'is_ipv4' => (filter_var($request->ip2, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) ? 0 : 1,
+                    'active' => 1
+                ]
+            );
+        }
 
         $pricing = new Pricing();
 
@@ -128,9 +175,15 @@ class ServerController extends Controller
 
         for ($i = 1; $i <= 4; $i++) {
             if (!is_null($labels_array[($i - 1)])) {
-                DB::insert('INSERT INTO labels_assigned (label_id, service_id) values (?, ?)', [$labels_array[($i - 1)], $server_id]);
+                DB::insert('INSERT IGNORE INTO labels_assigned (label_id, service_id) values (?, ?)', [$labels_array[($i - 1)], $server_id]);
             }
         }
+
+        Cache::forget('services_count');//Main page services_count cache
+        Cache::forget('due_soon');//Main page due_soon cache
+        Cache::forget('recently_added');//Main page recently_added cache
+        Cache::forget('all_active_servers');//all servers cache
+        Cache::forget('non_active_servers');//all servers cache
 
         return redirect()->route('servers.index')
             ->with('success', 'Server Created Successfully.');
@@ -143,15 +196,25 @@ class ServerController extends Controller
             ->join('providers as p', 's.provider_id', '=', 'p.id')
             ->join('locations as l', 's.location_id', '=', 'l.id')
             ->join('os as o', 's.os_id', '=', 'o.id')
+            ->Leftjoin('yabs as y', 's.id', '=', 'y.server_id')
+            ->Leftjoin('disk_speed as ds', 'y.id', '=', 'ds.id')
             ->where('s.id', '=', $server->id)
-            ->get(['s.*', 'p.name as provider_name', 'l.name as location', 'o.name as os_name', 'pr.*']);
+            ->get(['s.*', 'p.name as provider', 'l.name as location', 'o.name as os_name', 'pr.*', 'y.*', 'ds.*']);
+
+        $network_speeds = json_decode(DB::table('network_speed')
+            ->where('network_speed.server_id', '=', $server->id)
+            ->get(), true);
+
+        $ip_addresses = json_decode(DB::table('ips as i')
+            ->where('i.service_id', '=', $server->id)
+            ->get(), true);
 
         $labels = DB::table('labels_assigned as l')
             ->join('labels', 'l.label_id', '=', 'labels.id')
             ->where('l.service_id', '=', $server->id)
             ->get(['labels.label']);
 
-        return view('servers.show', compact(['server', 'server_extras', 'labels']));
+        return view('servers.show', compact(['server', 'server_extras', 'network_speeds', 'labels', 'ip_addresses']));
     }
 
     public function edit(Server $server)
@@ -164,12 +227,17 @@ class ServerController extends Controller
             ->get(['labels.id', 'labels.label']);
 
         $os = DB::table('os')->get(['*']);
+
+        $ip_addresses = json_decode(DB::table('ips as i')
+            ->where('i.service_id', '=', $server->id)
+            ->get(), true);
+
         $server = DB::table('servers as s')
             ->join('pricings as p', 's.id', '=', 'p.service_id')
             ->where('s.id', '=', $server->id)
             ->get(['s.*', 'p.*']);
 
-        return view('servers.edit', compact(['server', 'locations', 'providers', 'os', 'labels']));
+        return view('servers.edit', compact(['server', 'locations', 'providers', 'os', 'labels', 'ip_addresses']));
     }
 
     public function update(Request $request, Server $server)
@@ -183,7 +251,8 @@ class ServerController extends Controller
             'location_id' => 'numeric',
             'price' => 'numeric',
             'cpu' => 'numeric',
-            'was_promo' => 'numeric'
+            'was_promo' => 'numeric',
+            'next_due_date' => 'date'
         ]);
 
 
@@ -191,8 +260,6 @@ class ServerController extends Controller
             ->where('id', $request->server_id)
             ->update([
                 'hostname' => $request->hostname,
-                'ipv4' => $request->ipv4,
-                'ipv6' => $request->ipv6,
                 'server_type' => $request->server_type,
                 'os_id' => $request->os_id,
                 'ssh' => $request->ssh,
@@ -210,7 +277,8 @@ class ServerController extends Controller
                 'bandwidth' => $request->bandwidth,
                 'cpu' => $request->cpu,
                 'was_promo' => $request->was_promo,
-                'active' => (isset($request->is_active)) ? 1 : 0
+                'active' => (isset($request->is_active)) ? 1 : 0,
+                'show_public' => (isset($request->show_public)) ? 1 : 0
             ]);
 
         $pricing = new Pricing();
@@ -240,6 +308,26 @@ class ServerController extends Controller
             }
         }
 
+        $deleted = DB::table('ips')->where('service_id', '=', $server->id)->delete();
+
+        for ($i = 1; $i <= 8; $i++) {//Max of 8 ips
+            $obj = 'ip' . $i;
+            if (isset($request->$obj) && !is_null($request->$obj)) {
+                DB::insert('INSERT IGNORE INTO ips (id, address, service_id, is_ipv4) values (?, ?, ?, ?)', [
+                    Str::random(8),
+                    $request->$obj,
+                    $request->server_id,
+                    (filter_var($request->$obj, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) ? 0 : 1
+                ]);
+            }
+        }
+
+        Cache::forget('services_count');//Main page services_count cache
+        Cache::forget('due_soon');//Main page due_soon cache
+        Cache::forget('recently_added');//Main page recently_added cache
+        Cache::forget('all_active_servers');//all servers cache
+        Cache::forget('non_active_servers');//all servers cache
+
         return redirect()->route('servers.index')
             ->with('success', 'Server Updated Successfully.');
     }
@@ -254,6 +342,14 @@ class ServerController extends Controller
         $p->deletePricing($server->id);
 
         Labels::deleteLabelsAssignedTo($server->id);
+
+        IPs::deleteIPsAssignedTo($server->id);
+
+        Cache::forget('services_count');//Main page services_count cache
+        Cache::forget('due_soon');//Main page due_soon cache
+        Cache::forget('recently_added');//Main page recently_added cache
+        Cache::forget('all_active_servers');//all servers cache
+        Cache::forget('non_active_servers');//all servers cache
 
         return redirect()->route('servers.index')
             ->with('success', 'Server was deleted Successfully.');

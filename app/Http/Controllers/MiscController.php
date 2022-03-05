@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Misc;
 use App\Models\Pricing;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -66,6 +67,10 @@ class MiscController extends Controller
             'next_due_date' => $request->next_due_date,
         ]);
 
+        Cache::forget('services_count');//Main page services_count cache
+        Cache::forget('due_soon');//Main page due_soon cache
+        Cache::forget('recently_added');//Main page recently_added cache
+
         return redirect()->route('misc.index')
             ->with('success', 'Misc service created Successfully.');
     }
@@ -111,6 +116,10 @@ class MiscController extends Controller
                 'active' => (isset($request->is_active)) ? 1 : 0
             ]);
 
+        Cache::forget('services_count');//Main page services_count cache
+        Cache::forget('due_soon');//Main page due_soon cache
+        Cache::forget('recently_added');//Main page recently_added cache
+
         return redirect()->route('misc.index')
             ->with('success', 'Misc service updated Successfully.');
     }
@@ -123,6 +132,10 @@ class MiscController extends Controller
 
         $p = new Pricing();
         $p->deletePricing($misc->id);
+
+        Cache::forget('services_count');//Main page services_count cache
+        Cache::forget('due_soon');//Main page due_soon cache
+        Cache::forget('recently_added');//Main page recently_added cache
 
         return redirect()->route('misc.index')
             ->with('success', 'Misc service was deleted Successfully.');

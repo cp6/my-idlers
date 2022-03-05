@@ -9,5 +9,7 @@ class OS extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['name'];
+
     protected $table = 'os';
 }

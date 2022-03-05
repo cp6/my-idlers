@@ -8,6 +8,7 @@ use App\Process;
 use App\Models\DiskSpeed;
 use App\Models\NetworkSpeed;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -52,7 +53,7 @@ class YabsController extends Controller
             'output_date' => $yabs['output_date'],
             'cpu_cores' => $yabs['cpu_cores'],
             'cpu_freq' => $yabs['cpu_freq'],
-            'cpu' => $yabs['cpu'],
+            'cpu_model' => $yabs['cpu'],
             'ram' => $yabs['ram'],
             'ram_type' => $yabs['ram_type'],
             'ram_mb' => $yabs['ram_mb'],
@@ -108,6 +109,9 @@ class YabsController extends Controller
                 'has_yabs' => 1
             ]);
 
+        Cache::forget('all_active_servers');//all servers cache
+        Cache::forget('non_active_servers');//all servers cache
+
         return redirect()->route('yabs.index')
             ->with('success', 'Success inserting YABs');
     }
@@ -130,9 +134,18 @@ class YabsController extends Controller
     public function destroy(Yabs $yab)
     {
         $id = $yab->id;
-        $items = Yabs::find($id);
+        $yabs = Yabs::find($id);
+        $yabs->delete();
 
-        $items->delete();
+        $disk = DiskSpeed::find($id);
+        $disk->delete();
+
+        $network = NetworkSpeed::find($id);
+        $network->delete();
+
+        $update_server = DB::table('servers')
+            ->where('id', $yab->server_id)
+            ->update(['has_yabs' => 0]);
 
         return redirect()->route('yabs.index')
             ->with('success', 'YABs was deleted Successfully.');

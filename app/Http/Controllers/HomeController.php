@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Pricing;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use App\Process;
 use Illuminate\Support\Facades\Session;
@@ -28,23 +29,26 @@ class HomeController extends Controller
         $p = new Process();
         $p->startTimer();
 
-        $services_count = DB::table('pricings')
-            ->select('service_type', DB::raw('COUNT(*) as amount'))
-            ->groupBy('service_type')
-            ->where('active', '=', 1)
-            ->get();
+        $services_count = Cache::remember('services_count', 1440, function () {
+            return DB::table('pricings')
+                ->select('service_type', DB::raw('COUNT(*) as amount'))
+                ->groupBy('service_type')
+                ->where('active', '=', 1)
+                ->get();
+        });
 
-
-        $due_soon = DB::table('pricings as p')
-            ->leftJoin('servers as s', 'p.service_id', '=', 's.id')
-            ->leftJoin('shared_hosting as sh', 'p.service_id', '=', 'sh.id')
-            ->leftJoin('reseller_hosting as r', 'p.service_id', '=', 'r.id')
-            ->leftJoin('domains as d', 'p.service_id', '=', 'd.id')
-            ->leftJoin('misc_services as ms', 'p.service_id', '=', 'ms.id')
-            ->where('p.active', '=', 1)
-            ->orderBy('next_due_date', 'ASC')
-            ->limit(6)
-            ->get(['p.*', 's.hostname', 'd.domain', 'd.extension', 'r.main_domain as reseller', 'sh.main_domain', 'ms.name']);
+        $due_soon = Cache::remember('due_soon', 1440, function () {
+            return DB::table('pricings as p')
+                ->leftJoin('servers as s', 'p.service_id', '=', 's.id')
+                ->leftJoin('shared_hosting as sh', 'p.service_id', '=', 'sh.id')
+                ->leftJoin('reseller_hosting as r', 'p.service_id', '=', 'r.id')
+                ->leftJoin('domains as d', 'p.service_id', '=', 'd.id')
+                ->leftJoin('misc_services as ms', 'p.service_id', '=', 'ms.id')
+                ->where('p.active', '=', 1)
+                ->orderBy('next_due_date', 'ASC')
+                ->limit(6)
+                ->get(['p.*', 's.hostname', 'd.domain', 'd.extension', 'r.main_domain as reseller', 'sh.main_domain', 'ms.name']);
+        });
 
 
         //Check for past due date and refresh the due date if so:
@@ -64,24 +68,37 @@ class HomeController extends Controller
             $count++;
         }
 
+        Cache::put('due_soon', $due_soon);
 
-        $recently_added = DB::table('pricings as p')
-            ->leftJoin('servers as s', 'p.service_id', '=', 's.id')
-            ->leftJoin('shared_hosting as sh', 'p.service_id', '=', 'sh.id')
-            ->leftJoin('reseller_hosting as r', 'p.service_id', '=', 'r.id')
-            ->leftJoin('domains as d', 'p.service_id', '=', 'd.id')
-            ->leftJoin('misc_services as ms', 'p.service_id', '=', 'ms.id')
-            ->where('p.active', '=', 1)
-            ->orderBy('created_at', 'DESC')
-            ->limit(6)
-            ->get(['p.*', 's.hostname', 'd.domain', 'd.extension', 'r.main_domain as reseller', 'sh.main_domain', 'ms.name']);
+        $recently_added = Cache::remember('recently_added', 1440, function () {
+            return DB::table('pricings as p')
+                ->leftJoin('servers as s', 'p.service_id', '=', 's.id')
+                ->leftJoin('shared_hosting as sh', 'p.service_id', '=', 'sh.id')
+                ->leftJoin('reseller_hosting as r', 'p.service_id', '=', 'r.id')
+                ->leftJoin('domains as d', 'p.service_id', '=', 'd.id')
+                ->leftJoin('misc_services as ms', 'p.service_id', '=', 'ms.id')
+                ->where('p.active', '=', 1)
+                ->orderBy('created_at', 'DESC')
+                ->limit(6)
+                ->get(['p.*', 's.hostname', 'd.domain', 'd.extension', 'r.main_domain as reseller', 'sh.main_domain', 'ms.name']);
+        });
 
-        $settings = DB::table('settings')
-            ->where('id', '=', 1)
-            ->get();
+        $settings = Cache::remember('settings', 15, function () {
+            return DB::table('settings')
+                ->where('id', '=', 1)
+                ->get();
+        });
 
         Session::put('timer_version_footer', $settings[0]->show_versions_footer);
         Session::put('show_servers_public', $settings[0]->show_servers_public);
+        Session::put('show_server_value_ip', $settings[0]->show_server_value_ip);
+        Session::put('show_server_value_hostname', $settings[0]->show_server_value_hostname);
+        Session::put('show_server_value_price', $settings[0]->show_server_value_price);
+        Session::put('show_server_value_yabs', $settings[0]->show_server_value_yabs);
+        Session::put('show_server_value_provider', $settings[0]->show_server_value_provider);
+        Session::put('show_server_value_location', $settings[0]->show_server_value_location);
+        Session::put('default_currency', $settings[0]->default_currency);
+        Session::put('default_server_os', $settings[0]->default_server_os);
         Session::save();
 
         $pricing = json_decode(DB::table('pricings')->get(), true);
@@ -153,8 +170,6 @@ class HomeController extends Controller
             'newest' => $recently_added,
             'execution_time' => number_format($p->getTimeTaken(), 2)
         );
-
-        //dd($information);
 
         return view('home', compact('information'));
     }

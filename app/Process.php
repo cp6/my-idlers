@@ -182,8 +182,8 @@ class Process
             return array('error_id' => 10, 'error_message' => 'Issue writing/reading txt file');
         }
 
-        if (count($array) < 47) {
-            return array('error_id' => 9, 'error_message' => 'Less than 47 lines');
+        if (count($array) < 46) {
+            return array('error_id' => 9, 'error_message' => 'Less than 46 lines');
         }
 
         if (str_contains($array[0], "# ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## #\r")) {
@@ -192,7 +192,7 @@ class Process
             }
 
             $version_array = explode(' ', preg_replace('!\s+!', ' ', $this->trimRemoveR($array[2])));
-            if ($version_array[1] === 'v2021-12-28') {//YABs version
+            if ($version_array[1] === 'v2021-12-28' || $version_array[1] === 'v2022-02-18') {//YABs version
                 $cpu = $this->trimRemoveR(str_replace(':', '', strstr($array[10], ': ')));
                 $cpu_spec = explode(' ', strstr($array[11], ': '));//: 2 @ 3792.872 MHz
                 $cpu_cores = $cpu_spec[1];

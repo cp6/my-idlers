@@ -9,11 +9,6 @@ use Illuminate\Support\Str;
 
 class DomainsSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
         $id1 = Str::random(8);
@@ -26,7 +21,7 @@ class DomainsSeeder extends Seeder
                 "extension" => "ai",
                 "provider_id" => 59,
                 "owned_since" => '2013-01-12',
-                //"next_due_date" => Carbon::now()->addDays(30)->format('Y-m-d')
+                "created_at" => Carbon::now()
             ],
             [
                 "id" => $id2,
@@ -34,7 +29,7 @@ class DomainsSeeder extends Seeder
                 "extension" => "club",
                 "provider_id" => 59,
                 "owned_since" => '2016-04-25',
-                //"next_due_date" => Carbon::now()->addDays(30)->format('Y-m-d')
+                "created_at" => Carbon::now()
             ]
         ];
 

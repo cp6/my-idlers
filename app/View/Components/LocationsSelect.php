@@ -3,6 +3,7 @@
 namespace App\View\Components;
 
 use App\Models\Locations;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\View\Component;
 
 class LocationsSelect extends Component
@@ -14,8 +15,11 @@ class LocationsSelect extends Component
      */
     public function render()
     {
+        $all_locations = Cache::rememberForever('all_locations', function () {
+            return Locations::all();
+        });
         return view('components.locations-select', [
-            'locations' => Locations::all()
+            'locations' => $all_locations
         ]);
     }
 }

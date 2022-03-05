@@ -66,7 +66,13 @@ class DNSController extends Controller
     public function show(DNS $dn)
     {
         $dns = DNS::findOrFail($dn->id);
-        return view('dns.show', compact(['dn', 'dns']));
+
+        $labels = DB::table('labels_assigned as l')
+            ->join('labels', 'l.label_id', '=', 'labels.id')
+            ->where('l.service_id', '=', $dn->id)
+            ->get(['labels.label']);
+
+        return view('dns.show', compact(['dn', 'dns', 'labels']));
     }
 
     public function edit(DNS $dn)

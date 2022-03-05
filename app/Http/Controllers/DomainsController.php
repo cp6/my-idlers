@@ -7,6 +7,7 @@ use App\Models\Labels;
 use App\Models\Pricing;
 use App\Models\Providers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -25,13 +26,19 @@ class DomainsController extends Controller
 
     public function show(Domains $domain)
     {
+
         $service_extras = DB::table('domains as d')
             ->join('providers as p', 'd.provider_id', '=', 'p.id')
             ->join('pricings as pr', 'd.id', '=', 'pr.service_id')
             ->where('d.id', '=', $domain->id)
             ->get(['d.*', 'p.name as provider_name', 'pr.*']);
 
-        return view('domains.show', compact(['domain', 'service_extras']));
+        $labels = DB::table('labels_assigned as l')
+            ->join('labels', 'l.label_id', '=', 'labels.id')
+            ->where('l.service_id', '=', $domain->id)
+            ->get(['labels.label']);
+
+        return view('domains.show', compact(['domain', 'service_extras', 'labels']));
     }
 
     public function create()
@@ -82,9 +89,13 @@ class DomainsController extends Controller
 
         for ($i = 1; $i <= 4; $i++) {
             if (!is_null($labels_array[($i - 1)])) {
-                DB::insert('INSERT INTO labels_assigned (label_id, service_id) values (?, ?)', [$labels_array[($i - 1)], $domain_id]);
+                DB::insert('INSERT IGNORE INTO labels_assigned (label_id, service_id) values (?, ?)', [$labels_array[($i - 1)], $domain_id]);
             }
         }
+
+        Cache::forget('services_count');//Main page services_count cache
+        Cache::forget('due_soon');//Main page due_soon cache
+        Cache::forget('recently_added');//Main page recently_added cache
 
         return redirect()->route('domains.index')
             ->with('success', 'Domain Created Successfully.');
@@ -152,6 +163,10 @@ class DomainsController extends Controller
             }
         }
 
+        Cache::forget('services_count');//Main page services_count cache
+        Cache::forget('due_soon');//Main page due_soon cache
+        Cache::forget('recently_added');//Main page recently_added cache
+
         return redirect()->route('domains.index')
             ->with('success', 'Domain Updated Successfully.');
     }
@@ -166,6 +181,10 @@ class DomainsController extends Controller
         $p->deletePricing($domain->id);
 
         Labels::deleteLabelsAssignedTo($domain->id);
+
+        Cache::forget('services_count');//Main page services_count cache
+        Cache::forget('due_soon');//Main page due_soon cache
+        Cache::forget('recently_added');//Main page recently_added cache
 
         return redirect()->route('domains.index')
             ->with('success', 'Domain was deleted Successfully.');

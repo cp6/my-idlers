@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\IPs;
 use App\Models\Labels;
 use App\Models\NetworkSpeed;
+use App\Models\OS;
 use App\Models\Pricing;
 use App\Models\Providers;
 use App\Models\Server;
@@ -18,7 +20,10 @@ class ApiController extends Controller
     {
         $servers = DB::table('servers as s')
             ->Join('pricings as p', 's.id', '=', 'p.service_id')
-            ->get(['s.*', 'p.id as price_id', 'p.currency', 'p.price', 'p.term', 'p.as_usd', 'p.usd_per_month', 'p.next_due_date'])->toJson(JSON_PRETTY_PRINT);
+            ->join('providers as pr', 's.provider_id', '=', 'pr.id')
+            ->join('locations as l', 's.location_id', '=', 'l.id')
+            ->join('os as o', 's.os_id', '=', 'o.id')
+            ->get(['s.*', 'p.id as price_id', 'p.currency', 'p.price', 'p.term', 'p.as_usd', 'p.usd_per_month', 'p.next_due_date', 'pr.name as provider', 'l.name as location','o.name as os'])->toJson(JSON_PRETTY_PRINT);
 
         return response($servers, 200);
     }
@@ -27,8 +32,11 @@ class ApiController extends Controller
     {
         $server = DB::table('servers as s')
             ->Join('pricings as p', 's.id', '=', 'p.service_id')
+            ->join('providers as pr', 's.provider_id', '=', 'pr.id')
+            ->join('locations as l', 's.location_id', '=', 'l.id')
+            ->join('os as o', 's.os_id', '=', 'o.id')
             ->where('s.id', '=', $id)
-            ->get(['s.*', 'p.id as price_id', 'p.currency', 'p.price', 'p.term', 'p.as_usd', 'p.usd_per_month', 'p.next_due_date']);
+            ->get(['s.*', 'p.id as price_id', 'p.currency', 'p.price', 'p.term', 'p.as_usd', 'p.usd_per_month', 'p.next_due_date', 'pr.name as provider', 'l.name as location','o.name as os']);
 
         $yabs = DB::table('yabs')
             ->where('yabs.server_id', '=', $id)
@@ -47,6 +55,11 @@ class ApiController extends Controller
             ->where('la.service_id', '=', $id)
             ->get(['l.*']);
 
+        $ip_addresses = DB::table('ips as i')
+            ->where('i.service_id', '=', $id)
+            ->get(['i.*']);
+
+        $server['ip_addresses'] = $ip_addresses;
         $server['yabs'] = $yabs;
         $server['disk_speed'] = $disk_speed;
         $server['network_speed'] = $network_speed;
@@ -213,6 +226,34 @@ class ApiController extends Controller
         $settings = DB::table('settings')
             ->get()->toJson(JSON_PRETTY_PRINT);
         return response($settings, 200);
+    }
+
+    protected function getAllOs()
+    {
+        $os = OS::all()->toJson(JSON_PRETTY_PRINT);
+        return response($os, 200);
+    }
+
+    protected function getOs($id)
+    {
+        $os = DB::table('os as o')
+            ->where('o.id', '=', $id)
+            ->get()->toJson(JSON_PRETTY_PRINT);
+        return response($os, 200);
+    }
+
+    protected function getAllIPs()
+    {
+        $ip = IPs::all()->toJson(JSON_PRETTY_PRINT);
+        return response($ip, 200);
+    }
+
+    protected function getIP($id)
+    {
+        $ip = DB::table('ips as i')
+            ->where('i.id', '=', $id)
+            ->get()->toJson(JSON_PRETTY_PRINT);
+        return response($ip, 200);
     }
 
     public function getAllProvidersTable(Request $request)
