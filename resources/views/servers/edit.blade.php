@@ -177,11 +177,11 @@
                         </x-number-input>
                     </div>
                     <div class="col-md-3 mb-3">
-                        <x-ram-type-select>
+                        <x-disk-type-select>
                             <x-slot name="title">Disk type</x-slot>
                             <x-slot name="name">disk_type</x-slot>
                             <x-slot name="value">{{$server[0]->disk_type}}</x-slot>
-                        </x-ram-type-select>
+                        </x-disk-type-select>
                     </div>
                 </div>
                 <div class="row">

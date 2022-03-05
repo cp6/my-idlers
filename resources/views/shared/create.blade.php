@@ -72,7 +72,7 @@
                         </div>
                         <div class="col-md-3 mb-3">
                             <x-currency-select>
-                                <x-slot name="current">USD</x-slot>
+                                <x-slot name="current">{{Session::get('default_currency')}}</x-slot>
                             </x-currency-select>
                         </div>
                     </div>

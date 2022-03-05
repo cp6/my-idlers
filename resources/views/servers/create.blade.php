@@ -45,16 +45,11 @@
                         </div>
                     </div>
                     <div class="col-12 col-lg-3 mb-4">
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span class="input-group-text">OS</span></div>
-                            <select class="form-control" name="os_id">
-                                @foreach ($Os as $oss)
-                                    <option value="{{ $oss['id'] }}">
-                                        {{ $oss['name'] }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
+                        <x-os-select>
+                            <x-slot name="title">OS</x-slot>
+                            <x-slot name="name">os_id</x-slot>
+                            <x-slot name="current">{{Session::get('default_server_os')}}</x-slot>
+                        </x-os-select>
                     </div>
                 </div>
                 <div class="row">
@@ -147,7 +142,7 @@
                     </div>
                     <div class="col-md-3 mb-3">
                         <x-currency-select>
-                            <x-slot name="current">USD</x-slot>
+                            <x-slot name="current">{{Session::get('default_currency')}}</x-slot>
                         </x-currency-select>
                     </div>
                 </div>
@@ -244,7 +239,7 @@
                            value="1">
                     <label class="form-check-label">
                         Allow this data to be public, restrict values
-                            in settings
+                        in settings
                     </label>
                 </div>
                 <div class="row">
