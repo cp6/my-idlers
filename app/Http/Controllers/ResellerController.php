@@ -136,7 +136,7 @@ class ResellerController extends Controller
             ->get(['s.*', 'p.name as provider_name', 'l.name as location', 'pr.*']);
 
         $labels = DB::table('labels_assigned as l')
-            ->join('labels', 'l.label_id', '=', 'labels.id')
+            ->LeftJoin('labels', 'l.label_id', '=', 'labels.id')
             ->where('l.service_id', '=', $reseller->id)
             ->get(['labels.label']);
 

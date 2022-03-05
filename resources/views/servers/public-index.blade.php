@@ -35,7 +35,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @if(!empty($servers))
+                    @if(!empty($servers[0]))
                         @foreach($servers as $s)
                             <tr>
                                 @if(Session::get('show_server_value_hostname') === 1)

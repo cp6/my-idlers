@@ -36,7 +36,6 @@
                                        class="text-body mx-1">
                                         <i class="fas fa-eye" title="view"></i></a>
                                     @csrf
-
                                     <i class="fas fa-trash text-danger ms-3" @click="modalForm"
                                        id="btn-{{$label->label}}" title="{{$label->id}}"></i>
                                 </form>
