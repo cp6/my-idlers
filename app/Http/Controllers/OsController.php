@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\OS;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class OsController extends Controller
 {
@@ -28,6 +29,8 @@ class OsController extends Controller
             'name' => $request->os_name
         ]);
 
+        Cache::forget('all_os');
+
         return redirect()->route('os.index')
             ->with('success', 'OS Created Successfully.');
     }
@@ -37,6 +40,8 @@ class OsController extends Controller
         $items = OS::find($o->id);
 
         $items->delete();
+
+        Cache::forget('all_os');
 
         return redirect()->route('os.index')
             ->with('success', 'OS was deleted Successfully.');
