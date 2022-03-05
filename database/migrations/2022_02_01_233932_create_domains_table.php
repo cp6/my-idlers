@@ -14,11 +14,7 @@ class CreateDomainsTable extends Migration
     public function up()
     {
         Schema::create('domains', function (Blueprint $table) {
-<<<<<<< HEAD
             $table->char('id', 8)->unique()->default(null);
-=======
-            $table->char('id', 8)->primary()->default(null);
->>>>>>> 972edfc66e6862c09c39b21902d4856409aa6157
             $table->string('domain');
             $table->tinyInteger('active')->default(1);
             $table->string('extension');

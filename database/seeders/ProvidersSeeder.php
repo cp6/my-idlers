@@ -9,14 +9,11 @@ use Illuminate\Support\Str;
 
 class ProvidersSeeder extends Seeder
 {
-<<<<<<< HEAD
     /**
      * Run the database seeds.
      *
      * @return void
      */
-=======
->>>>>>> 972edfc66e6862c09c39b21902d4856409aa6157
     public function run()
     {
 
