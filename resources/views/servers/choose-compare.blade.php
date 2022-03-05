@@ -1,4 +1,7 @@
 @section('title') {{'Choose servers'}} @endsection
+@section('scripts')
+    <script src="{{ asset('js/vue.min.js') }}"></script>
+@endsection
 <x-app-layout>
     <x-slot name="header">
         {{ __('Choose two servers to compare') }}
