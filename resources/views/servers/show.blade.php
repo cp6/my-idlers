@@ -66,11 +66,23 @@
                             </tr>
                             <tr>
                                 <td class="px-2 py-2 font-bold text-muted">RAM</td>
-                                <td>{{ $server_extras[0]->ram }} {{ $server_extras[0]->ram_type }}</td>
+                                <td>
+                                    @if(isset($server_extras[0]->ram))
+                                        {{ $server_extras[0]->ram }} {{ $server_extras[0]->ram_type }}
+                                    @else
+                                        {{ $server->ram }} {{ $server->ram_type }}
+                                    @endif
+                                </td>
                             </tr>
                             <tr>
                                 <td class="px-2 py-2 font-bold text-muted">Disk</td>
-                                <td>{{ $server_extras[0]->disk }} {{ $server_extras[0]->disk_type }}</td>
+                                <td>
+                                    @if(isset($server_extras[0]->disk))
+                                        {{ $server_extras[0]->disk }} {{ $server_extras[0]->disk_type }}
+                                    @else
+                                        {{ $server->disk }} {{ $server->disk_type }}
+                                    @endif
+                                </td>
                             </tr>
                             <tr>
                                 <td class="px-2 py-2 font-bold text-muted">Bandwidth</td>
