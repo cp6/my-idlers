@@ -10,4 +10,6 @@ class Settings extends Model
     use HasFactory;
 
     protected $table = 'settings';
+
+    protected $fillable = ['id', 'show_versions_footer', 'show_servers_public'];
 }
