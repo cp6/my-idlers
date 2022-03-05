@@ -14,13 +14,12 @@ class CreateServersTable extends Migration
     public function up()
     {
         Schema::create('servers', function (Blueprint $table) {
-            $table->char('id', 8)->unique()->default(null);
+            $table->char('id', 8)->primary()->default(null);
             $table->tinyInteger('active')->default(1);
+            $table->tinyInteger('show_public')->default(0);
             $table->string('hostname');
             $table->string('ns1')->nullable()->default(null);
             $table->string('ns2')->nullable()->default(null);
-            $table->string('ipv4')->nullable()->default(null);
-            $table->string('ipv6')->nullable()->default(null);
             $table->tinyInteger('server_type')->default(1);
             $table->integer('os_id')->default(0);
             $table->integer('provider_id')->default(9999);

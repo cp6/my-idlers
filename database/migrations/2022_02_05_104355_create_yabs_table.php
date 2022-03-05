@@ -13,7 +13,11 @@ class CreateYabsTable extends Migration
     public function up()
     {
         Schema::create('yabs', function (Blueprint $table) {
+<<<<<<< HEAD
             $table->char('id', 8)->unique();
+=======
+            $table->char('id', 8)->primary();
+>>>>>>> 972edfc66e6862c09c39b21902d4856409aa6157
             $table->char('server_id', 8);
             $table->boolean('has_ipv6')->default(false);
             $table->boolean('aes')->default(false);
@@ -21,7 +25,11 @@ class CreateYabsTable extends Migration
             $table->dateTime('output_date');
             $table->tinyInteger('cpu_cores');
             $table->float('cpu_freq');
+<<<<<<< HEAD
             $table->string('cpu');
+=======
+            $table->string('cpu_model');
+>>>>>>> 972edfc66e6862c09c39b21902d4856409aa6157
             $table->float('ram');
             $table->char('ram_type', 2);
             $table->float('ram_mb');
@@ -32,6 +40,10 @@ class CreateYabsTable extends Migration
             $table->integer('gb5_multi');
             $table->integer('gb5_id');
             $table->timestamps();
+<<<<<<< HEAD
+=======
+            $table->unique(['id','server_id'], 'uni');
+>>>>>>> 972edfc66e6862c09c39b21902d4856409aa6157
         });
     }
 

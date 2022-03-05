@@ -15,7 +15,11 @@ class CreateLabelsTable extends Migration
     {
         Schema::create('labels', function (Blueprint $table) {
             $table->char('id', 8)->primary()->default(null);
+<<<<<<< HEAD
             $table->string('label');
+=======
+            $table->string('label')->unique();
+>>>>>>> 972edfc66e6862c09c39b21902d4856409aa6157
             $table->timestamps();
         });
     }

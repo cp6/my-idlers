@@ -12,7 +12,11 @@ class CreateDiskSpeedTable extends Migration
     public function up()
     {
         Schema::create('disk_speed', function (Blueprint $table) {
+<<<<<<< HEAD
             $table->char('id', 8)->unique();
+=======
+            $table->char('id', 8)->primary();
+>>>>>>> 972edfc66e6862c09c39b21902d4856409aa6157
             $table->char('server_id',8);
             $table->float('d_4k');
             $table->char('d_4k_type',4);

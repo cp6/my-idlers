@@ -9,11 +9,14 @@ use Illuminate\Support\Str;
 
 class ServersSeeder extends Seeder
 {
+<<<<<<< HEAD
     /**
      * Run the database seeds.
      *
      * @return void
      */
+=======
+>>>>>>> 972edfc66e6862c09c39b21902d4856409aa6157
     public function run()
     {
         $id1 = Str::random(8);
@@ -25,9 +28,14 @@ class ServersSeeder extends Seeder
                 "hostname" => "la.node.ai",
                 "os_id" => 20,
                 "provider_id" => 90,
+<<<<<<< HEAD
                 "location_id" => 34,
                 "bandwidth" => 1000,
                 "ipv4" => '127.0.0.1',
+=======
+                "location_id" => 35,
+                "bandwidth" => 1000,
+>>>>>>> 972edfc66e6862c09c39b21902d4856409aa6157
                 "cpu" => 1,
                 "ram" => 512,
                 "ram_type" => 'MB',
@@ -44,9 +52,14 @@ class ServersSeeder extends Seeder
                 "hostname" => "sg.node.ai",
                 "os_id" => 20,
                 "provider_id" => 90,
+<<<<<<< HEAD
                 "location_id" => 70,
                 "bandwidth" => 2000,
                 "ipv4" => '127.0.0.1',
+=======
+                "location_id" => 71,
+                "bandwidth" => 2000,
+>>>>>>> 972edfc66e6862c09c39b21902d4856409aa6157
                 "cpu" => 1,
                 "ram" => 2048,
                 "ram_type" => 'MB',
@@ -88,5 +101,29 @@ class ServersSeeder extends Seeder
         ];
 
         DB::table('pricings')->insert($pricing);
+<<<<<<< HEAD
+=======
+
+        $ips = [
+            [
+                "id" => Str::random(8),
+                "service_id" => $id1,
+                "address" => '127.0.0.1',
+                "is_ipv4" => 1,
+                "active" => 1,
+                "created_at" => Carbon::now()
+            ],
+            [
+                "id" => Str::random(8),
+                "service_id" => $id2,
+                "address" => '127.0.0.1',
+                "is_ipv4" => 1,
+                "active" => 1,
+                "created_at" => Carbon::now()
+            ],
+        ];
+
+        DB::table('ips')->insert($ips);
+>>>>>>> 972edfc66e6862c09c39b21902d4856409aa6157
     }
 }

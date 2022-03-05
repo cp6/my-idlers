@@ -14,11 +14,17 @@ class CreateResellersTable extends Migration
     public function up()
     {
         Schema::create('reseller_hosting', function (Blueprint $table) {
+<<<<<<< HEAD
             $table->char('id', 8)->unique();
             $table->tinyInteger('active')->default(1);
             $table->string('main_domain');
             $table->tinyInteger('has_dedicated_ip')->default(0);
             $table->string('ip')->nullable()->default(null);
+=======
+            $table->char('id', 8)->primary();
+            $table->tinyInteger('active')->default(1);
+            $table->string('main_domain');
+>>>>>>> 972edfc66e6862c09c39b21902d4856409aa6157
             $table->integer('accounts')->default(1);
             $table->string('reseller_type')->nullable();
             $table->integer('provider_id')->default(9999);

@@ -14,10 +14,17 @@ class CreateMiscsTable extends Migration
     public function up()
     {
         Schema::create('misc_services', function (Blueprint $table) {
+<<<<<<< HEAD
             $table->char('id', 8)->unique();
             $table->string('name');
             $table->tinyInteger('active')->default(1);
             $table->date('owned_since');
+=======
+            $table->char('id', 8)->primary();
+            $table->string('name');
+            $table->tinyInteger('active')->default(1);
+            $table->date('owned_since')->nullable();
+>>>>>>> 972edfc66e6862c09c39b21902d4856409aa6157
             $table->timestamps();
         });
     }
@@ -31,4 +38,8 @@ class CreateMiscsTable extends Migration
     {
         Schema::dropIfExists('misc_services');
     }
+<<<<<<< HEAD
 };
+=======
+}
+>>>>>>> 972edfc66e6862c09c39b21902d4856409aa6157
