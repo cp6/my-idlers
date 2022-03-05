@@ -251,7 +251,8 @@ class ServerController extends Controller
             'location_id' => 'numeric',
             'price' => 'numeric',
             'cpu' => 'numeric',
-            'was_promo' => 'numeric'
+            'was_promo' => 'numeric',
+            'next_due_date' => 'date'
         ]);
 
 
