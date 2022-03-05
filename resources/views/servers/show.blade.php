@@ -60,8 +60,9 @@
                             </tr>
                             <tr>
                                 <td class="px-2 py-2 font-bold text-muted">CPU</td>
-                                <td>{{ $server_extras[0]->cpu }} @if($server_extras[0]->has_yabs)
-                                        <small>@</small> {{ $server_extras[0]->cpu_freq }}
+                                <td>
+                                    {{ $server_extras[0]->cpu }} @if($server_extras[0]->has_yabs)
+                                        <small>@</small> {{ $server_extras[0]->cpu_freq }} Ghz
                                     @endif</td>
                             </tr>
                             <tr>
