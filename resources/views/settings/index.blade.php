@@ -10,10 +10,10 @@
                     <p class="my-1">{{ $message }}</p>
                 </div>
             @endif
-                <x-back-button>
-                    <x-slot name="href">{{ route('/') }}</x-slot>
-                    Back to home
-                </x-back-button>
+            <x-back-button>
+                <x-slot name="href">{{ route('/') }}</x-slot>
+                Back to home
+            </x-back-button>
             <form action="{{ route('settings.update', 1) }}" method="POST">
                 @csrf
                 @method('PUT')
@@ -154,6 +154,24 @@
                                 </option>
                             </select>
                         </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12 col-md-4 mb-3">
+                        <x-os-select>
+                            <x-slot name="title">Default server OS</x-slot>
+                            <x-slot name="name">default_server_os</x-slot>
+                            <x-slot name="current">{{$setting[0]->default_server_os}}</x-slot>
+                        </x-os-select>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12 col-md-4 mb-3">
+                        <x-currency-select>
+                            <x-slot name="title">Default currency</x-slot>
+                            <x-slot name="name">default_currency</x-slot>
+                            <x-slot name="current">{{$setting[0]->default_currency}}</x-slot>
+                        </x-currency-select>
                     </div>
                 </div>
                 <div class="row">
