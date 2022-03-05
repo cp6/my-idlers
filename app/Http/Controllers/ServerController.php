@@ -129,7 +129,7 @@ class ServerController extends Controller
             'bandwidth' => $request->bandwidth,
             'cpu' => $request->cpu,
             'was_promo' => $request->was_promo,
-            'show_public' => $request->show_public
+            'show_public' => (isset($request->show_public)) ? 1 : 0
         ]);
 
         if (!is_null($request->ip1)) {
