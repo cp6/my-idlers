@@ -13,7 +13,7 @@ class CreateYabsTable extends Migration
     public function up()
     {
         Schema::create('yabs', function (Blueprint $table) {
-            $table->char('id', 8)->unique();
+            $table->char('id', 8)->primary();
             $table->char('server_id', 8);
             $table->boolean('has_ipv6')->default(false);
             $table->boolean('aes')->default(false);
@@ -32,6 +32,7 @@ class CreateYabsTable extends Migration
             $table->integer('gb5_multi');
             $table->integer('gb5_id');
             $table->timestamps();
+            $table->unique(['id','server_id'], 'uni');
         });
     }
 

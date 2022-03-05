@@ -14,7 +14,7 @@ class CreateSharedsTable extends Migration
     public function up()
     {
         Schema::create('shared_hosting', function (Blueprint $table) {
-            $table->char('id', 8)->unique();
+            $table->char('id', 8)->primary();
             $table->tinyInteger('active')->default(1);
             $table->string('main_domain');
             $table->string('shared_type')->nullable();

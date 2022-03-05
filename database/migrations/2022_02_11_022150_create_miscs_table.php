@@ -14,7 +14,7 @@ class CreateMiscsTable extends Migration
     public function up()
     {
         Schema::create('misc_services', function (Blueprint $table) {
-            $table->char('id', 8)->unique();
+            $table->char('id', 8)->primary();
             $table->string('name');
             $table->tinyInteger('active')->default(1);
             $table->date('owned_since')->nullable();

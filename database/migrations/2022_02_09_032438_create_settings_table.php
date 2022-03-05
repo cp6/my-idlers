@@ -14,7 +14,7 @@ class CreateSettingsTable extends Migration
     public function up()
     {
         Schema::create('settings', function (Blueprint $table) {
-            $table->integer('id')->default(1)->unique();
+            $table->integer('id')->default(1)->primary();
             $table->boolean('show_versions_footer')->default(true);
             $table->boolean('show_servers_public')->default(false);
             $table->boolean('show_server_value_ip')->default(false);

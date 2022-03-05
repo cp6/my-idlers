@@ -14,7 +14,7 @@ class CreateServersTable extends Migration
     public function up()
     {
         Schema::create('servers', function (Blueprint $table) {
-            $table->char('id', 8)->unique()->default(null);
+            $table->char('id', 8)->primary()->default(null);
             $table->tinyInteger('active')->default(1);
             $table->tinyInteger('show_public')->default(0);
             $table->string('hostname');
