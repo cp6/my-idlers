@@ -63,16 +63,16 @@
                                         <td class="text-center">{{$server->cpu}}</td>
                                         <td class="text-center">
                                             @if(isset($server->ram))
-                                                {{ $server->ram }} <small>{{$server->ram_type}}</small>
+                                                {{ $server->ram }}<small>{{$server->ram_type}}</small>
                                             @else
                                                 {{$server->ram_as_mb}}<small>MB</small>
                                             @endif
                                         </td>
                                         <td class="text-center">
                                             @if(isset($server->disk))
-                                                {{ $server->disk }} <small>{{$server->disk_type}}</small>
+                                                {{ $server->disk }}<small>{{$server->disk_type}}</small>
                                             @else
-                                                {{$server->disk}} <small>GB</small>
+                                                {{$server->disk}}<small>GB</small>
                                             @endif
                                         </td>
                                         <td class="text-nowrap">{{ $server->location }}</td>
