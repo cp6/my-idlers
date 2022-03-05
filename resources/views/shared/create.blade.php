@@ -71,7 +71,9 @@
                             <x-term-select></x-term-select>
                         </div>
                         <div class="col-md-3 mb-3">
-                            <x-currency-select></x-currency-select>
+                            <x-currency-select>
+                                <x-slot name="current">USD</x-slot>
+                            </x-currency-select>
                         </div>
                     </div>
                     <div class="row mb-2">
