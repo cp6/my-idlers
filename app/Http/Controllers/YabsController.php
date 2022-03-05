@@ -8,6 +8,7 @@ use App\Process;
 use App\Models\DiskSpeed;
 use App\Models\NetworkSpeed;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -107,6 +108,9 @@ class YabsController extends Controller
                 'cpu' => $yabs['cpu_cores'],
                 'has_yabs' => 1
             ]);
+
+        Cache::forget('all_active_servers');//all servers cache
+        Cache::forget('non_active_servers');//all servers cache
 
         return redirect()->route('yabs.index')
             ->with('success', 'Success inserting YABs');
