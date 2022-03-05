@@ -31,6 +31,7 @@
                     <a href="{{ route('servers.create') }}" class="btn btn-primary mb-3">Add server</a>
                     <a href="{{ route('servers-compare-choose') }}" class="btn btn-primary mb-3 ms-2">Compare
                         servers</a>
+                    <a href="{{ route('yabs.create') }}" class="btn btn-primary mb-3 ms-2">Add a YABs</a>
                     <x-success-alert></x-success-alert>
                     <div class="table-responsive">
                         <table class="table table-bordered">
@@ -61,8 +62,8 @@
                                         <td class="text-center">{!!App\Models\Server::osIntToIcon($server->os_id, $server->os_name)!!}</td>
                                         <td class="text-center">{{$server->cpu}}</td>
                                         <td class="text-center">
-                                            @if($server->ram_as_mb > 1024)
-                                                {{ number_format(($server->ram_as_mb / 1000),0) }}<small>GB</small>
+                                            @if(isset($server->ram))
+                                                {{ $server->ram }} <small>{{$server->ram_type}}</small>
                                             @else
                                                 {{$server->ram_as_mb}}<small>MB</small>
                                             @endif
