@@ -22,7 +22,7 @@ class CreateNetworkSpeedTable extends Migration
             $table->char('receive_type', 4);
             $table->float('receive_as_mbps');
             $table->timestamps();
-            $table->unique(['id','server_id'], 'uni');
+            $table->unique(['id','server_id', 'location'], 'uni');
         });
     }
 
