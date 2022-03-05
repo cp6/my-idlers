@@ -58,7 +58,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <p class="text-muted">If you need to add more IPs go <a href="{{route('IPs.create')}}" class="text-decoration-none">here</a>.</p>
+                    <p class="text-muted">If you need to add more IPs go to /IPs after creation.</p>
                     <div class="col-12 col-lg-3 mb-4">
                         <div class="input-group">
                             <div class="input-group-prepend"><span class="input-group-text">IP</span></div>
@@ -152,7 +152,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <p class="text-muted">Note adding a YABs output will overwrite Ram, disk and CPU.</p>
+                    <p class="text-muted">Note adding a YABs output will overwrite Ram, disk and CPU values.</p>
                     <div class="col-md-3 mb-3">
                         <x-number-input>
                             <x-slot name="title">Ram</x-slot>
@@ -243,8 +243,8 @@
                     <input class="form-check-input" name="show_public" type="checkbox"
                            value="1">
                     <label class="form-check-label">
-                        Allow this data to be public <a href="{{route('settings.index')}}">restrict values
-                            here</a>
+                        Allow this data to be public, restrict values
+                            in settings
                     </label>
                 </div>
                 <div class="row">

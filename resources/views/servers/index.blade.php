@@ -69,10 +69,10 @@
                                             @endif
                                         </td>
                                         <td class="text-center">
-                                            @if($server->disk > 1000)
-                                                {{ number_format(($server->disk / 1000),1) }}<small>TB</small>
+                                            @if(isset($server->disk))
+                                                {{ $server->disk }} <small>{{$server->disk_type}}</small>
                                             @else
-                                                {{$server->disk}}<small>GB</small>
+                                                {{$server->disk}} <small>GB</small>
                                             @endif
                                         </td>
                                         <td class="text-nowrap">{{ $server->location }}</td>
