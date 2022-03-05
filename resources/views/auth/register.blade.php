@@ -4,7 +4,7 @@
         <!-- Validation Errors -->
         <x-auth-validation-errors class="mb-4" :errors="$errors"/>
 
-        <h3 class="text-center mb-4">Register to My idlers</h3>
+        <h3 class="text-center mb-4">My idlers Register</h3>
         <form method="POST" action="{{ route('register') }}">
         @csrf
 
