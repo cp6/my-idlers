@@ -91,6 +91,14 @@ class HomeController extends Controller
 
         Session::put('timer_version_footer', $settings[0]->show_versions_footer);
         Session::put('show_servers_public', $settings[0]->show_servers_public);
+        Session::put('show_server_value_ip', $settings[0]->show_server_value_ip);
+        Session::put('show_server_value_hostname', $settings[0]->show_server_value_hostname);
+        Session::put('show_server_value_price', $settings[0]->show_server_value_price);
+        Session::put('show_server_value_yabs', $settings[0]->show_server_value_yabs);
+        Session::put('show_server_value_provider', $settings[0]->show_server_value_provider);
+        Session::put('show_server_value_location', $settings[0]->show_server_value_location);
+        Session::put('default_currency', $settings[0]->default_currency);
+        Session::put('default_server_os', $settings[0]->default_server_os);
         Session::save();
 
         $pricing = json_decode(DB::table('pricings')->get(), true);

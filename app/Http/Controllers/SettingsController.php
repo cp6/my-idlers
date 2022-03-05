@@ -28,7 +28,9 @@ class SettingsController extends Controller
             'show_server_value_provider' => 'required|boolean',
             'show_server_value_location' => 'required|boolean',
             'show_server_value_price' => 'required|boolean',
-            'show_server_value_yabs' => 'required|boolean'
+            'show_server_value_yabs' => 'required|boolean',
+            'default_currency' => 'required',
+            'default_server_os' => 'required'
         ]);
 
         DB::table('settings')
@@ -41,7 +43,9 @@ class SettingsController extends Controller
                 'show_server_value_provider' => $request->show_server_value_provider,
                 'show_server_value_location' => $request->show_server_value_location,
                 'show_server_value_price' => $request->show_server_value_price,
-                'show_server_value_yabs' => $request->show_server_value_yabs
+                'show_server_value_yabs' => $request->show_server_value_yabs,
+                'default_currency' => $request->default_currency,
+                'default_server_os' => $request->default_server_os
             ]);
 
         Session::put('timer_version_footer', $request->show_versions_footer);
@@ -52,6 +56,8 @@ class SettingsController extends Controller
         Session::put('show_server_value_yabs', $request->show_server_value_yabs);
         Session::put('show_server_value_provider', $request->show_server_value_provider);
         Session::put('show_server_value_location', $request->show_server_value_location);
+        Session::put('default_currency', $request->default_currency);
+        Session::put('default_server_os', $request->default_server_os);
         Session::save();
 
         Cache::forget('settings');//Main page settings cache
