@@ -60,14 +60,11 @@ removed.
 * Assign labels
 * Assign server type (KVM, OVZ, LXC & dedi)
 * Easy to edit values
-* Order by table
-* Tally/stats card
 
 ## Install
 
-* `git clone https://github.com/cp6/my-idlers.git` into your directory of choice
+* Run `git clone https://github.com/cp6/my-idlers.git` into your directory of choice
 * Run `composer install`
-
 * Run `cp .env.example .env`
 * Edit (If needed) MySQL details in .env
 * Run `php artisan key:generate`
@@ -179,8 +176,8 @@ or
 
 [![My idlers screenshot1](https://cdn.write.corbpie.com/wp-content/uploads/2022/03/My-idlers-v2-labels.jpg)](https://cdn.write.corbpie.com/wp-content/uploads/2022/03/My-idlers-v2-labels.jpg)
 
-##Looking for a project sponsor
+## Looking for a project sponsor
 
-Am seeking atleast a 1GB ram, Nvme VPS to host a demo installation of My idlers. In return you will get your provider as the default selection in the create forms, as well as screenshots.
+I am seeking at least a 1GB ram, Nvme VPS to host a demo installation of My idlers. In return you will get your provider as the default selection in the create forms, as well as in screenshots.
 
 [![My idlers screenshot1](https://cdn.write.corbpie.com/wp-content/uploads/2022/03/My-idlers-v2-default-provider-sponsor-position.png)](https://cdn.write.corbpie.com/wp-content/uploads/2022/03/My-idlers-v2-default-provider-sponsor-position.png)
