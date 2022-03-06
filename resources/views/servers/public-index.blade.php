@@ -50,8 +50,8 @@
                                 <td class="text-center">{{$s->cpu}}</td>
                                 <td class="text-nowrap">{{$s->cpu_freq}}</td>
                                 <td class="text-nowrap">
-                                    @if($s->ram_as_mb > 1024)
-                                        {{ number_format(($s->ram_as_mb / 1000),0) }}<small>GB</small>
+                                    @if(isset($s->ram))
+                                        {{ $s->ram}}<small>{{ $s->ram_type}}</small>
                                     @else
                                         {{$s->ram_as_mb}}<small>MB</small>
                                     @endif
