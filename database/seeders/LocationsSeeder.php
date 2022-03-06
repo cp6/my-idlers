@@ -71,6 +71,9 @@ class LocationsSeeder extends Seeder
                 "name" => "Denver, USA",
             ),
             array(
+                "name" => "Dhaka, Bangladesh",
+            ),
+            array(
                 "name" => "Dublin, Ireland",
             ),
             array(
