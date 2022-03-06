@@ -18,6 +18,11 @@ class LabelsSeeder extends Seeder
             ],
             [
                 "id" => Str::random(8),
+                "label" => "Kubernetes",
+                "created_at" => date('Y-m-d H:i:s')
+            ],
+            [
+                "id" => Str::random(8),
                 "label" => "Apache2",
                 "created_at" => date('Y-m-d H:i:s')
             ],
