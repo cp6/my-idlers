@@ -22,6 +22,7 @@ class ProvidersSeeder extends Seeder
             ['name' => "BudgetNode"],
             ['name' => "BuyVM"],
             ['name' => "CloudCone"],
+            ['name' => "Cloud Five Limited"],
             ['name' => "Clouvider"],
             ['name' => "Cloudways"],
             ['name' => "CrownCloud"],

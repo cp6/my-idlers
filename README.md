@@ -7,6 +7,8 @@ Despite what the name infers this self hosted web app isn't just for storing idl
 a [YABs](https://github.com/masonr/yet-another-bench-script) output you can get disk & network speed values along with
 GeekBench 5 scores to do easier comparing and sorting.
 
+[![Generic badge](https://img.shields.io/badge/version-2.0-blue.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Laravel-9.0-red.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/PHP-8.1-purple.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Bootstrap-5.1-pink.svg)](https://shields.io/)
+
 ## V2 notes
 
 V2 build is a complete overhaul of My idlers with the project being moved onto the Laravel framework. This will simplify
@@ -15,9 +17,9 @@ development and most of the features from the original build will be present in 
 Using Laravel will bring in an API endpoint and the possibilities to show servers publicly with certain parameters
 removed.
 
-[Old version live demo](https://myidlers.srv3r.com/)
+## Project sponsor
 
-[![Generic badge](https://img.shields.io/badge/version-2.0-blue.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Laravel-9.0-red.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/PHP-8.1-purple.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Bootstrap-5.1-pink.svg)](https://shields.io/)
+[Cloud Five Limited](https://cloud-v.net/) for providing the hosting for demo installation.
 
 ## 2.0 changes:
 
@@ -168,16 +170,10 @@ or
 
 [![My idlers screenshot1](https://cdn.write.corbpie.com/wp-content/uploads/2022/03/My-idlers-v2-YABs.jpg)](https://cdn.write.corbpie.com/wp-content/uploads/2022/03/My-idlers-v2-YABs.jpg)
 
-[![My idlers screenshot1](https://cdn.write.corbpie.com/wp-content/uploads/2022/03/My-idlers-v2-add-server.jpg)](https://cdn.write.corbpie.com/wp-content/uploads/2022/03/My-idlers-v2-add-server.jpg)
+[![My idlers screenshot1](https://cdn.write.corbpie.com/wp-content/uploads/2022/03/My-idlers-v2-add-server_2.png)](https://cdn.write.corbpie.com/wp-content/uploads/2022/03/My-idlers-v2-add-server_2.png)
 
 [![My idlers screenshot1](https://cdn.write.corbpie.com/wp-content/uploads/2022/03/My-idlers-v2-servers-compare.jpg)](https://cdn.write.corbpie.com/wp-content/uploads/2022/03/My-idlers-v2-servers-compare.jpg)
 
 [![My idlers screenshot1](https://cdn.write.corbpie.com/wp-content/uploads/2022/03/My-idlers-v2-Ips.jpg)](https://cdn.write.corbpie.com/wp-content/uploads/2022/03/My-idlers-v2-Ips.jpg)
 
 [![My idlers screenshot1](https://cdn.write.corbpie.com/wp-content/uploads/2022/03/My-idlers-v2-labels.jpg)](https://cdn.write.corbpie.com/wp-content/uploads/2022/03/My-idlers-v2-labels.jpg)
-
-## Looking for a project sponsor
-
-I am seeking at least a 1GB ram, Nvme VPS to host a demo installation of My idlers. In return you will get your provider as the default selection in the create forms, as well as in screenshots.
-
-[![My idlers screenshot1](https://cdn.write.corbpie.com/wp-content/uploads/2022/03/My-idlers-v2-default-provider-sponsor-position.png)](https://cdn.write.corbpie.com/wp-content/uploads/2022/03/My-idlers-v2-default-provider-sponsor-position.png)
