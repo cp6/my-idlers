@@ -15,7 +15,7 @@ class CreateIPsTable extends Migration
             $table->tinyInteger('is_ipv4')->default(1);
             $table->tinyInteger('active')->default(1);
             $table->timestamps();
-            $table->unique(['service_id','address'], 'uni');
+            $table->unique(['service_id','address'], 'ips_u1');
         });
     }
 

@@ -32,7 +32,7 @@ class CreateYabsTable extends Migration
             $table->integer('gb5_multi');
             $table->integer('gb5_id');
             $table->timestamps();
-            $table->unique(['id','server_id'], 'uni');
+            $table->unique(['id','server_id'], 'yabs_u1');
         });
     }
 
