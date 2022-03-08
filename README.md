@@ -41,7 +41,7 @@ removed.
 
 ## Requires
 
-* PHP 8 (compatible with 8.1)
+* PHP 8 (minimum, compatible with 8.1)
 
 ## Features
 
