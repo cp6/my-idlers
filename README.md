@@ -42,7 +42,6 @@ removed.
 ## Requires
 
 * PHP 8 (compatible with 8.1)
-* MySQL server
 
 ## Features
 
