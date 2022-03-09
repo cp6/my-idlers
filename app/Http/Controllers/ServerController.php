@@ -52,14 +52,14 @@ class ServerController extends Controller
             ->where('id', '=', 1)
             ->get();
 
-        Session::put('timer_version_footer', $settings[0]->show_versions_footer);
-        Session::put('show_servers_public', $settings[0]->show_servers_public);
-        Session::put('show_server_value_ip', $settings[0]->show_server_value_ip);
-        Session::put('show_server_value_hostname', $settings[0]->show_server_value_hostname);
-        Session::put('show_server_value_price', $settings[0]->show_server_value_price);
-        Session::put('show_server_value_yabs', $settings[0]->show_server_value_yabs);
-        Session::put('show_server_value_provider', $settings[0]->show_server_value_provider);
-        Session::put('show_server_value_location', $settings[0]->show_server_value_location);
+        Session::put('timer_version_footer', $settings[0]->show_versions_footer ?? 1);
+        Session::put('show_servers_public', $settings[0]->show_servers_public ?? 0);
+        Session::put('show_server_value_ip', $settings[0]->show_server_value_ip ?? 0);
+        Session::put('show_server_value_hostname', $settings[0]->show_server_value_hostname ?? 0);
+        Session::put('show_server_value_price', $settings[0]->show_server_value_price ?? 0);
+        Session::put('show_server_value_yabs', $settings[0]->show_server_value_yabs ?? 0);
+        Session::put('show_server_value_provider', $settings[0]->show_server_value_provider ?? 0);
+        Session::put('show_server_value_location', $settings[0]->show_server_value_location ?? 0);
         Session::save();
 
         if ((Session::get('show_servers_public') === 1)) {

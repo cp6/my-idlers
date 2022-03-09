@@ -105,18 +105,18 @@ class HomeController extends Controller
                 ->get();
         });
 
-        Session::put('timer_version_footer', $settings[0]->show_versions_footer);
-        Session::put('show_servers_public', $settings[0]->show_servers_public);
-        Session::put('show_server_value_ip', $settings[0]->show_server_value_ip);
-        Session::put('show_server_value_hostname', $settings[0]->show_server_value_hostname);
-        Session::put('show_server_value_price', $settings[0]->show_server_value_price);
-        Session::put('show_server_value_yabs', $settings[0]->show_server_value_yabs);
-        Session::put('show_server_value_provider', $settings[0]->show_server_value_provider);
-        Session::put('show_server_value_location', $settings[0]->show_server_value_location);
-        Session::put('default_currency', $settings[0]->default_currency);
-        Session::put('default_server_os', $settings[0]->default_server_os);
-        Session::put('due_soon_amount',  $settings[0]->due_soon_amount);
-        Session::put('recently_added_amount',  $settings[0]->recently_added_amount);
+        Session::put('timer_version_footer', $settings[0]->show_versions_footer ?? 1);
+        Session::put('show_servers_public', $settings[0]->show_servers_public ?? 0);
+        Session::put('show_server_value_ip', $settings[0]->show_server_value_ip ?? 0);
+        Session::put('show_server_value_hostname', $settings[0]->show_server_value_hostname ?? 0);
+        Session::put('show_server_value_price', $settings[0]->show_server_value_price ?? 0);
+        Session::put('show_server_value_yabs', $settings[0]->show_server_value_yabs ?? 0);
+        Session::put('show_server_value_provider', $settings[0]->show_server_value_provider ?? 0);
+        Session::put('show_server_value_location', $settings[0]->show_server_value_location ?? 0);
+        Session::put('default_currency', $settings[0]->default_currency ?? 'USD');
+        Session::put('default_server_os', $settings[0]->default_server_os ?? 1);
+        Session::put('due_soon_amount',  $settings[0]->due_soon_amount ?? 6);
+        Session::put('recently_added_amount',  $settings[0]->recently_added_amount ?? 6);
         Session::save();
 
         $pricing = json_decode(DB::table('pricings')->get(), true);
