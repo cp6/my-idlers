@@ -39,15 +39,9 @@
                         </div>
                     </div>
                     <div class="col-12 col-lg-3 mb-4">
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span class="input-group-text">OS</span></div>
-                            <select class="form-control" name="os_id">
-                                @foreach ($os as $item)
-                                    <option
-                                        value="{{ $item->id }}" {{ ( $item->id == $server[0]->os_id) ? 'selected' : '' }}> {{ $item->name }} </option>
-                                @endforeach
-                            </select>
-                        </div>
+                        <x-os-select>
+                            <x-slot name="current">{{$server[0]->os_id}}</x-slot>
+                        </x-os-select>
                     </div>
                 </div>
                 <div class="row">
@@ -186,20 +180,11 @@
                 </div>
                 <div class="row">
                     <div class="col-12 col-md-4 mb-3">
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">Location</span>
-                            </div>
-                            <select class="form-control" name="location_id">
-                                <option value="999">Null</option>
-                                @foreach ($locations as $item)
-                                    <option
-                                        value="{{ $item->id }}" {{ ( $item->id === $server[0]->location_id) ? 'selected' : '' }}> {{ $item->name }} </option>
-                                @endforeach
-                            </select>
-                        </div>
+                        <x-locations-select>
+                            <x-slot name="current">{{$server[0]->location_id}}</x-slot>
+                        </x-locations-select>
                     </div>
-                    <div class="col-12 col-md-3">
+                    <div class="col-12 col-md-3 mb-3">
                         <x-date-input>
                             <x-slot name="title">Owned since</x-slot>
                             <x-slot name="name">owned_since</x-slot>

@@ -81,7 +81,7 @@
                                         <td class="text-nowrap">
                                             {{now()->diffInDays(Carbon\Carbon::parse($server->next_due_date))}}
                                             <small>days</small></td>
-                                        <td class="text-center"> {{ $server->owned_since }}</td>
+                                        <td class="text-nowrap"> {{ $server->owned_since }}</td>
                                         <td class="text-nowrap">
                                             <form action="{{ route('servers.destroy', $server->id) }}" method="POST">
                                                 <a href="{{ route('servers.show', $server->id) }}"
