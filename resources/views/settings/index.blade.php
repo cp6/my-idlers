@@ -174,6 +174,30 @@
                         </x-currency-select>
                     </div>
                 </div>
+                <div class="row mt-3">
+                    <div class="col-12 col-md-4 mb-3">
+                        <x-number-input>
+                            <x-slot name="title">Due soon amount to show</x-slot>
+                            <x-slot name="name">due_soon_amount</x-slot>
+                            <x-slot name="step">1</x-slot>
+                            <x-slot name="min">0</x-slot>
+                            <x-slot name="max">12</x-slot>
+                            <x-slot name="value">{{$setting[0]->due_soon_amount}}</x-slot>
+                        </x-number-input>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12 col-md-4 mb-3">
+                        <x-number-input>
+                            <x-slot name="title">Recently added amount to show</x-slot>
+                            <x-slot name="name">recently_added_amount</x-slot>
+                            <x-slot name="step">1</x-slot>
+                            <x-slot name="min">0</x-slot>
+                            <x-slot name="max">12</x-slot>
+                            <x-slot name="value">{{$setting[0]->recently_added_amount}}</x-slot>
+                        </x-number-input>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-12 col-lg-4">
                         <x-submit-button>Update settings</x-submit-button>

@@ -204,148 +204,152 @@
                     </div>
                 </div>
 
-
-                <h3 class="my-3">Due soon</h3>
-                @if(!empty($information['due_soon']))
-                    <div class="card shadow mt-3">
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered">
-                                    <thead class="table-light">
-                                    <tr>
-                                        <th class="text-nowrap">Name</th>
-                                        <th class="text-nowrap">Type</th>
-                                        <th class="text-nowrap">Due</th>
-                                        <th class="text-nowrap">Price</th>
-                                        <th class="text-nowrap"></th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    @foreach($information['due_soon'] as $due_soon)
+                @if(Session::get('due_soon_amount') > 0)
+                    <h3 class="my-3">Due soon</h3>
+                    @if(!empty($information['due_soon']))
+                        <div class="card shadow mt-3">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead class="table-light">
                                         <tr>
-                                            <td class="text-nowrap">
-                                                @if($due_soon->service_type === 1)
-                                                    {{$due_soon->hostname}}
-                                                @elseif($due_soon->service_type === 2)
-                                                    {{$due_soon->main_domain}}
-                                                @elseif($due_soon->service_type === 3)
-                                                    {{$due_soon->reseller}}
-                                                @elseif($due_soon->service_type === 4)
-                                                    {{$due_soon->domain}}.{{$due_soon->extension}}
-                                                @elseif($due_soon->service_type === 5)
-                                                    {{$due_soon->name}}
-                                                @endif
-                                            </td>
-                                            <td class="text-nowrap">
-                                                @if($due_soon->service_type === 1)
-                                                    VPS
-                                                @elseif($due_soon->service_type === 2)
-                                                    Shared
-                                                @elseif($due_soon->service_type === 3)
-                                                    Reseller
-                                                @elseif($due_soon->service_type === 4)
-                                                    Domain
-                                                @elseif($due_soon->service_type === 5)
-                                                    Misc
-                                                @endif
-                                            </td>
-                                            <td class="text-nowrap">
-                                                {{Carbon\Carbon::parse($due_soon->next_due_date)->diffForHumans()}}</td>
-                                            <td class="text-nowrap">{{$due_soon->price}} {{$due_soon->currency}} {{\App\Process::paymentTermIntToString($due_soon->term)}}</td>
-                                            <td class="text-nowrap text-center">
-                                                @if($due_soon->service_type === 1)
-                                                    <a href="{{ route('servers.show', $due_soon->service_id) }}"
-                                                       class="text-body mx-1"><i class="fas fa-eye"
-                                                                                 title="view"></i></a>
-                                                @elseif($due_soon->service_type === 2)
-                                                    <a href="{{ route('shared.show', $due_soon->service_id) }}"
-                                                       class="text-body mx-1"><i class="fas fa-eye"
-                                                                                 title="view"></i></a>
-                                                @elseif($due_soon->service_type === 3)
-                                                    <a href="{{ route('reseller.show', $due_soon->service_id) }}"
-                                                       class="text-body mx-1"><i class="fas fa-eye"
-                                                                                 title="view"></i></a>
-                                                @elseif($due_soon->service_type === 4)
-                                                    <a href="{{ route('domains.show', $due_soon->service_id) }}"
-                                                       class="text-body mx-1"><i class="fas fa-eye"
-                                                                                 title="view"></i></a>
-                                                @elseif($due_soon->service_type === 5)
-                                                    <a href="{{ route('misc.show', $due_soon->service_id) }}"
-                                                       class="text-body mx-1"><i class="fas fa-eye"
-                                                                                 title="view"></i></a>
-                                                @endif
-                                            </td>
+                                            <th class="text-nowrap">Name</th>
+                                            <th class="text-nowrap">Type</th>
+                                            <th class="text-nowrap">Due</th>
+                                            <th class="text-nowrap">Price</th>
+                                            <th class="text-nowrap"></th>
                                         </tr>
-                                    @endforeach
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                        @foreach($information['due_soon'] as $due_soon)
+                                            <tr>
+                                                <td class="text-nowrap">
+                                                    @if($due_soon->service_type === 1)
+                                                        {{$due_soon->hostname}}
+                                                    @elseif($due_soon->service_type === 2)
+                                                        {{$due_soon->main_domain}}
+                                                    @elseif($due_soon->service_type === 3)
+                                                        {{$due_soon->reseller}}
+                                                    @elseif($due_soon->service_type === 4)
+                                                        {{$due_soon->domain}}.{{$due_soon->extension}}
+                                                    @elseif($due_soon->service_type === 5)
+                                                        {{$due_soon->name}}
+                                                    @endif
+                                                </td>
+                                                <td class="text-nowrap">
+                                                    @if($due_soon->service_type === 1)
+                                                        VPS
+                                                    @elseif($due_soon->service_type === 2)
+                                                        Shared
+                                                    @elseif($due_soon->service_type === 3)
+                                                        Reseller
+                                                    @elseif($due_soon->service_type === 4)
+                                                        Domain
+                                                    @elseif($due_soon->service_type === 5)
+                                                        Misc
+                                                    @endif
+                                                </td>
+                                                <td class="text-nowrap">
+                                                    {{Carbon\Carbon::parse($due_soon->next_due_date)->diffForHumans()}}</td>
+                                                <td class="text-nowrap">{{$due_soon->price}} {{$due_soon->currency}} {{\App\Process::paymentTermIntToString($due_soon->term)}}</td>
+                                                <td class="text-nowrap text-center">
+                                                    @if($due_soon->service_type === 1)
+                                                        <a href="{{ route('servers.show', $due_soon->service_id) }}"
+                                                           class="text-body mx-1"><i class="fas fa-eye"
+                                                                                     title="view"></i></a>
+                                                    @elseif($due_soon->service_type === 2)
+                                                        <a href="{{ route('shared.show', $due_soon->service_id) }}"
+                                                           class="text-body mx-1"><i class="fas fa-eye"
+                                                                                     title="view"></i></a>
+                                                    @elseif($due_soon->service_type === 3)
+                                                        <a href="{{ route('reseller.show', $due_soon->service_id) }}"
+                                                           class="text-body mx-1"><i class="fas fa-eye"
+                                                                                     title="view"></i></a>
+                                                    @elseif($due_soon->service_type === 4)
+                                                        <a href="{{ route('domains.show', $due_soon->service_id) }}"
+                                                           class="text-body mx-1"><i class="fas fa-eye"
+                                                                                     title="view"></i></a>
+                                                    @elseif($due_soon->service_type === 5)
+                                                        <a href="{{ route('misc.show', $due_soon->service_id) }}"
+                                                           class="text-body mx-1"><i class="fas fa-eye"
+                                                                                     title="view"></i></a>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                        </tbody>
+                                    </table>
 
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    @endif
                 @endif
 
-                <h3 class="mt-4">Recently added</h3>
-                @if(!empty($information['newest']))
-                    <div class="card shadow mt-3">
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered">
-                                    <thead class="table-light">
-                                    <tr>
-                                        <th class="text-nowrap">Name</th>
-                                        <th class="text-nowrap">Type</th>
-                                        <th class="text-nowrap">Added</th>
-                                        <th class="text-nowrap">Price</th>
-                                        <th class="text-nowrap"></th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    @foreach($information['newest'] as $new)
+                @if(Session::get('recently_added_amount') > 0)
+                    <h3 class="mt-4">Recently added</h3>
+                    @if(!empty($information['newest']))
+                        <div class="card shadow mt-3">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead class="table-light">
                                         <tr>
-                                            <td class="text-nowrap">
-                                                @if($new->service_type === 1)
-                                                    {{$new->hostname}}
-                                                @elseif($new->service_type === 2)
-                                                    {{$new->main_domain}}
-                                                @elseif($new->service_type === 3)
-                                                    {{$new->reseller}}
-                                                @elseif($new->service_type === 4)
-                                                    {{$new->domain}}.{{$new->extension}}
-                                                @elseif($new->service_type === 5)
-                                                    {{$new->name}}
-                                                @endif
-                                            </td>
-                                            <td class="text-nowrap">
-                                                @if($new->service_type === 1)
-                                                    VPS
-                                                @elseif($new->service_type === 2)
-                                                    Shared
-                                                @elseif($new->service_type === 3)
-                                                    Reseller
-                                                @elseif($new->service_type === 4)
-                                                    Domain
-                                                @elseif($new->service_type === 5)
-                                                    Misc
-                                                @endif
-                                            </td>
-                                            <td class="text-nowrap">{{Carbon\Carbon::parse($new->created_at)->diffForHumans()}}</td>
-                                            <td class="text-nowrap">{{$new->price}} {{$new->currency}} {{\App\Process::paymentTermIntToString($new->term)}}</td>
-                                            <td class="text-nowrap text-center">
-                                                <a href="{{ route('servers.show', $new->service_id) }}"
-                                                   class="text-body mx-1">
-                                                    <i class="fas fa-eye" title="view"></i>
-                                                </a>
-                                            </td>
+                                            <th class="text-nowrap">Name</th>
+                                            <th class="text-nowrap">Type</th>
+                                            <th class="text-nowrap">Added</th>
+                                            <th class="text-nowrap">Price</th>
+                                            <th class="text-nowrap"></th>
                                         </tr>
-                                    @endforeach
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                        @foreach($information['newest'] as $new)
+                                            <tr>
+                                                <td class="text-nowrap">
+                                                    @if($new->service_type === 1)
+                                                        {{$new->hostname}}
+                                                    @elseif($new->service_type === 2)
+                                                        {{$new->main_domain}}
+                                                    @elseif($new->service_type === 3)
+                                                        {{$new->reseller}}
+                                                    @elseif($new->service_type === 4)
+                                                        {{$new->domain}}.{{$new->extension}}
+                                                    @elseif($new->service_type === 5)
+                                                        {{$new->name}}
+                                                    @endif
+                                                </td>
+                                                <td class="text-nowrap">
+                                                    @if($new->service_type === 1)
+                                                        VPS
+                                                    @elseif($new->service_type === 2)
+                                                        Shared
+                                                    @elseif($new->service_type === 3)
+                                                        Reseller
+                                                    @elseif($new->service_type === 4)
+                                                        Domain
+                                                    @elseif($new->service_type === 5)
+                                                        Misc
+                                                    @endif
+                                                </td>
+                                                <td class="text-nowrap">{{Carbon\Carbon::parse($new->created_at)->diffForHumans()}}</td>
+                                                <td class="text-nowrap">{{$new->price}} {{$new->currency}} {{\App\Process::paymentTermIntToString($new->term)}}</td>
+                                                <td class="text-nowrap text-center">
+                                                    <a href="{{ route('servers.show', $new->service_id) }}"
+                                                       class="text-body mx-1">
+                                                        <i class="fas fa-eye" title="view"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                        </tbody>
+                                    </table>
 
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    @endif
                 @endif
+
                 @if(Session::has('timer_version_footer') && Session::get('timer_version_footer') === 1)
                     <p class="text-muted mt-4 text-end"><small>Page took {{$information['execution_time']}} seconds,
                             Built on Laravel v{{ Illuminate\Foundation\Application::VERSION }} (PHP v{{ PHP_VERSION }}

@@ -46,7 +46,7 @@ class HomeController extends Controller
                 ->leftJoin('misc_services as ms', 'p.service_id', '=', 'ms.id')
                 ->where('p.active', '=', 1)
                 ->orderBy('next_due_date', 'ASC')
-                ->limit(6)
+                ->limit(Session::get('due_soon_amount'))
                 ->get(['p.*', 's.hostname', 'd.domain', 'd.extension', 'r.main_domain as reseller', 'sh.main_domain', 'ms.name']);
         });
 
@@ -95,7 +95,7 @@ class HomeController extends Controller
                 ->leftJoin('misc_services as ms', 'p.service_id', '=', 'ms.id')
                 ->where('p.active', '=', 1)
                 ->orderBy('created_at', 'DESC')
-                ->limit(6)
+                ->limit(Session::get('recently_added_amount'))
                 ->get(['p.*', 's.hostname', 'd.domain', 'd.extension', 'r.main_domain as reseller', 'sh.main_domain', 'ms.name']);
         });
 
@@ -115,6 +115,8 @@ class HomeController extends Controller
         Session::put('show_server_value_location', $settings[0]->show_server_value_location);
         Session::put('default_currency', $settings[0]->default_currency);
         Session::put('default_server_os', $settings[0]->default_server_os);
+        Session::put('due_soon_amount',  $settings[0]->due_soon_amount);
+        Session::put('recently_added_amount',  $settings[0]->recently_added_amount);
         Session::save();
 
         $pricing = json_decode(DB::table('pricings')->get(), true);
