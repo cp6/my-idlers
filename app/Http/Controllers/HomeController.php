@@ -50,6 +50,22 @@ class HomeController extends Controller
                 ->get(['p.*', 's.hostname', 'd.domain', 'd.extension', 'r.main_domain as reseller', 'sh.main_domain', 'ms.name']);
         });
 
+        $server_summary = Cache::remember('servers_summary', 1440, function () {
+            $cpu_sum = DB::table('servers')->get()->where('active', '=', 1)->sum('cpu');
+            $ram_mb = DB::table('servers')->get()->where('active', '=', 1)->sum('ram_as_mb');
+            $disk_gb = DB::table('servers')->get()->where('active', '=', 1)->sum('disk_as_gb');
+            $bandwidth = DB::table('servers')->get()->where('active', '=', 1)->sum('bandwidth');
+            $locations_sum = DB::table('servers')->get()->where('active', '=', 1)->groupBy('location_id')->count();
+            $providers_sum = DB::table('servers')->get()->where('active', '=', 1)->groupBy('provider_id')->count();
+            return array(
+                'cpu_sum' => $cpu_sum,
+                'ram_mb_sum' => $ram_mb,
+                'disk_gb_sum' => $disk_gb,
+                'bandwidth_sum' => $bandwidth,
+                'locations_sum' => $locations_sum,
+                'providers_sum' => $providers_sum,
+            );
+        });
 
         //Check for past due date and refresh the due date if so:
         $pricing = new Pricing();
@@ -168,7 +184,8 @@ class HomeController extends Controller
             'total_cost_2_yearly' => number_format(($total_cost_yearly * 2), 2),
             'due_soon' => $due_soon,
             'newest' => $recently_added,
-            'execution_time' => number_format($p->getTimeTaken(), 2)
+            'execution_time' => number_format($p->getTimeTaken(), 2),
+            'servers_summary' => $server_summary
         );
 
         return view('home', compact('information'));

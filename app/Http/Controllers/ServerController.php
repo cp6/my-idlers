@@ -184,6 +184,7 @@ class ServerController extends Controller
         Cache::forget('recently_added');//Main page recently_added cache
         Cache::forget('all_active_servers');//all servers cache
         Cache::forget('non_active_servers');//all servers cache
+        Cache::forget('servers_summary');//servers summary cache
 
         return redirect()->route('servers.index')
             ->with('success', 'Server Created Successfully.');
@@ -327,6 +328,7 @@ class ServerController extends Controller
         Cache::forget('recently_added');//Main page recently_added cache
         Cache::forget('all_active_servers');//all servers cache
         Cache::forget('non_active_servers');//all servers cache
+        Cache::forget('servers_summary');//servers summary cache
 
         return redirect()->route('servers.index')
             ->with('success', 'Server Updated Successfully.');
@@ -350,6 +352,7 @@ class ServerController extends Controller
         Cache::forget('recently_added');//Main page recently_added cache
         Cache::forget('all_active_servers');//all servers cache
         Cache::forget('non_active_servers');//all servers cache
+        Cache::forget('servers_summary');//servers summary cache
 
         return redirect()->route('servers.index')
             ->with('success', 'Server was deleted Successfully.');

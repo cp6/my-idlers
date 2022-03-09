@@ -131,6 +131,79 @@
                     </div>
                 </div>
 
+                <div class="row mt-3">
+                    <div class="col-12 col-lg-2 mb-3">
+                        <div class="card">
+                            <div class="card-body text-center shadow">
+                                <div class="row">
+                                    <h4>{{$information['servers_summary']['cpu_sum']}}</h4>
+                                    <p>CPU</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-2 mb-3">
+                        <div class="card">
+                            <div class="card-body text-center shadow">
+                                <div class="row">
+                                    <h4>{{$information['servers_summary']['ram_mb_sum'] / 1000}} <small
+                                            class="text-muted">GB</small></h4>
+                                    <p>Ram</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-2 mb-3">
+                        <div class="card">
+                            <div class="card-body text-center shadow">
+                                <div class="row">
+                                    <h4>
+                                        @if($information['servers_summary']['disk_gb_sum'] >= 1000)
+                                            {{$information['servers_summary']['disk_gb_sum'] / 1000}} <small
+                                                class="text-muted">TB</small>
+                                        @else
+                                            {{$information['servers_summary']['disk_gb_sum']}} <small
+                                                class="text-muted">GB</small>
+                                        @endif
+                                    </h4>
+                                    <p>Disk</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-2 mb-3">
+                        <div class="card">
+                            <div class="card-body text-center shadow">
+                                <div class="row">
+                                    <h4>{{$information['servers_summary']['bandwidth_sum'] / 1000}} <small
+                                            class="text-muted">TB</small></h4>
+                                    <p>Bandwidth</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-2 mb-3">
+                        <div class="card">
+                            <div class="card-body text-center shadow">
+                                <div class="row">
+                                    <h4>{{$information['servers_summary']['locations_sum']}}</h4>
+                                    <p>Locations</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-2 mb-3">
+                        <div class="card">
+                            <div class="card-body text-center shadow">
+                                <div class="row">
+                                    <h4>{{$information['servers_summary']['providers_sum']}}</h4>
+                                    <p>Providers</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
 
                 <h3 class="my-3">Due soon</h3>
                 @if(!empty($information['due_soon']))
@@ -181,15 +254,25 @@
                                             <td class="text-nowrap">{{$due_soon->price}} {{$due_soon->currency}} {{\App\Process::paymentTermIntToString($due_soon->term)}}</td>
                                             <td class="text-nowrap text-center">
                                                 @if($due_soon->service_type === 1)
-                                                    <a href="{{ route('servers.show', $due_soon->service_id) }}" class="text-body mx-1"><i class="fas fa-eye" title="view"></i></a>
+                                                    <a href="{{ route('servers.show', $due_soon->service_id) }}"
+                                                       class="text-body mx-1"><i class="fas fa-eye"
+                                                                                 title="view"></i></a>
                                                 @elseif($due_soon->service_type === 2)
-                                                    <a href="{{ route('shared.show', $due_soon->service_id) }}" class="text-body mx-1"><i class="fas fa-eye" title="view"></i></a>
+                                                    <a href="{{ route('shared.show', $due_soon->service_id) }}"
+                                                       class="text-body mx-1"><i class="fas fa-eye"
+                                                                                 title="view"></i></a>
                                                 @elseif($due_soon->service_type === 3)
-                                                    <a href="{{ route('reseller.show', $due_soon->service_id) }}" class="text-body mx-1"><i class="fas fa-eye" title="view"></i></a>
+                                                    <a href="{{ route('reseller.show', $due_soon->service_id) }}"
+                                                       class="text-body mx-1"><i class="fas fa-eye"
+                                                                                 title="view"></i></a>
                                                 @elseif($due_soon->service_type === 4)
-                                                    <a href="{{ route('domains.show', $due_soon->service_id) }}" class="text-body mx-1"><i class="fas fa-eye" title="view"></i></a>
+                                                    <a href="{{ route('domains.show', $due_soon->service_id) }}"
+                                                       class="text-body mx-1"><i class="fas fa-eye"
+                                                                                 title="view"></i></a>
                                                 @elseif($due_soon->service_type === 5)
-                                                    <a href="{{ route('misc.show', $due_soon->service_id) }}" class="text-body mx-1"><i class="fas fa-eye" title="view"></i></a>
+                                                    <a href="{{ route('misc.show', $due_soon->service_id) }}"
+                                                       class="text-body mx-1"><i class="fas fa-eye"
+                                                                                 title="view"></i></a>
                                                 @endif
                                             </td>
                                         </tr>
