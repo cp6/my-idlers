@@ -174,7 +174,7 @@
                         <div class="col-12 col-lg-3 mb-4">
                             <x-number-input>
                                 <x-slot name="title">Email</x-slot>
-                                <x-slot name="name">Email</x-slot>
+                                <x-slot name="name">email</x-slot>
                                 <x-slot name="value">1</x-slot>
                                 <x-slot name="max">999999</x-slot>
                                 <x-slot name="step">1</x-slot>
