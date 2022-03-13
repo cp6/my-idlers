@@ -55,7 +55,7 @@ class DNSController extends Controller
 
         for ($i = 1; $i <= 4; $i++) {
             if (!is_null($labels_array[($i - 1)])) {
-                DB::insert('INSERT IGNORE INTO labels_assigned (label_id, service_id) values (?, ?)', [$labels_array[($i - 1)], $dns_id]);
+                DB::insert('INSERT INTO labels_assigned (label_id, service_id) values (?, ?)', [$labels_array[($i - 1)], $dns_id]);
             }
         }
 
@@ -115,7 +115,7 @@ class DNSController extends Controller
 
         for ($i = 1; $i <= 4; $i++) {
             if (!is_null($labels_array[($i - 1)])) {
-                DB::insert('INSERT IGNORE INTO labels_assigned ( label_id, service_id) values (?, ?)', [$labels_array[($i - 1)], $dn->id]);
+                DB::insert('INSERT INTO labels_assigned ( label_id, service_id) values (?, ?)', [$labels_array[($i - 1)], $dn->id]);
             }
         }
 

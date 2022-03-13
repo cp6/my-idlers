@@ -113,7 +113,7 @@ class ResellerController extends Controller
 
         for ($i = 1; $i <= 4; $i++) {
             if (!is_null($labels_array[($i - 1)])) {
-                DB::insert('INSERT IGNORE INTO labels_assigned (label_id, service_id) values (?, ?)', [$labels_array[($i - 1)], $reseller_id]);
+                DB::insert('INSERT INTO labels_assigned (label_id, service_id) values (?, ?)', [$labels_array[($i - 1)], $reseller_id]);
             }
         }
 
@@ -234,14 +234,14 @@ class ResellerController extends Controller
 
         for ($i = 1; $i <= 4; $i++) {
             if (!is_null($labels_array[($i - 1)])) {
-                DB::insert('INSERT IGNORE INTO labels_assigned ( label_id, service_id) values (?, ?)', [$labels_array[($i - 1)], $request->id]);
+                DB::insert('INSERT INTO labels_assigned ( label_id, service_id) values (?, ?)', [$labels_array[($i - 1)], $request->id]);
             }
         }
 
         $delete_ip = DB::table('ips')->where('service_id', '=', $request->id)->delete();
 
         if (isset($request->dedicated_ip)) {
-            DB::insert('INSERT IGNORE INTO ips (id, address, service_id, is_ipv4) values (?, ?, ?, ?)', [
+            DB::insert('INSERT INTO ips (id, address, service_id, is_ipv4) values (?, ?, ?, ?)', [
                 Str::random(8),
                 $request->dedicated_ip,
                 $request->id,
