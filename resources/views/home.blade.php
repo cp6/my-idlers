@@ -146,7 +146,8 @@
                         <div class="card">
                             <div class="card-body text-center shadow">
                                 <div class="row">
-                                    <h4>{{$information['servers_summary']['ram_mb_sum'] / 1024}} <small
+                                    <h4>{{number_format($information['servers_summary']['ram_mb_sum'] / 1024, 2)}}
+                                        <small
                                             class="text-muted">GB</small></h4>
                                     <p>Ram</p>
                                 </div>
@@ -159,7 +160,8 @@
                                 <div class="row">
                                     <h4>
                                         @if($information['servers_summary']['disk_gb_sum'] >= 1000)
-                                            {{$information['servers_summary']['disk_gb_sum'] / 1024}} <small
+                                            {{number_format($information['servers_summary']['disk_gb_sum'] / 1024,2)}}
+                                            <small
                                                 class="text-muted">TB</small>
                                         @else
                                             {{$information['servers_summary']['disk_gb_sum']}} <small
@@ -175,7 +177,8 @@
                         <div class="card">
                             <div class="card-body text-center shadow">
                                 <div class="row">
-                                    <h4>{{$information['servers_summary']['bandwidth_sum'] / 1024}} <small
+                                    <h4>{{number_format($information['servers_summary']['bandwidth_sum'] / 1024,2)}}
+                                        <small
                                             class="text-muted">TB</small></h4>
                                     <p>Bandwidth</p>
                                 </div>
