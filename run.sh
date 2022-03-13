@@ -3,7 +3,7 @@
 # TODO: global env vars aren't used.
 cat > /app/.env.production << EOF
 APP_NAME=MyIdlers
-APP_DEBUG=true
+APP_DEBUG=false
 APP_KEY=
 
 DB_CONNECTION=mysql
