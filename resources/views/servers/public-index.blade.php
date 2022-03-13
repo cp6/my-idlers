@@ -58,7 +58,7 @@
                                 </td>
                                 <td class="text-nowrap">
                                     @if($s->disk > 1000)
-                                        {{ number_format(($s->disk / 1000),1) }}<small>TB</small>
+                                        {{ number_format(($s->disk / 1024),1) }}<small>TB</small>
                                     @else
                                         {{$s->disk}}<small>GB</small>
                                     @endif

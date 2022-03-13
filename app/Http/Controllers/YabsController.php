@@ -101,10 +101,10 @@ class YabsController extends Controller
             ->update([
                 'ram' => $yabs['ram'],
                 'ram_type' => $yabs['ram_type'],
-                'ram_as_mb' => ($yabs['ram_type'] === 'GB') ? ($yabs['ram'] * 1000) : $yabs['ram'],
+                'ram_as_mb' => ($yabs['ram_type'] === 'GB') ? ($yabs['ram'] * 1024) : $yabs['ram'],
                 'disk' => $yabs['disk'],
                 'disk_type' => $yabs['disk_type'],
-                'disk_as_gb' => ($yabs['disk_type'] === 'TB') ? ($yabs['disk'] * 1000) : $yabs['disk'],
+                'disk_as_gb' => ($yabs['disk_type'] === 'TB') ? ($yabs['disk'] * 1024) : $yabs['disk'],
                 'cpu' => $yabs['cpu_cores'],
                 'has_yabs' => 1
             ]);

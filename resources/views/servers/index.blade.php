@@ -148,14 +148,14 @@
                                         <td class="text-center">{{$server->cpu}}</td>
                                         <td class="text-center">
                                             @if($server->ram_as_mb > 1024)
-                                                {{ number_format(($server->ram_as_mb / 1000),0) }}<small>GB</small>
+                                                {{ number_format(($server->ram_as_mb / 1024),0) }}<small>GB</small>
                                             @else
                                                 {{$server->ram_as_mb}}<small>MB</small>
                                             @endif
                                         </td>
                                         <td class="text-center">
                                             @if($server->disk > 1000)
-                                                {{ number_format(($server->disk / 1000),1) }}<small>TB</small>
+                                                {{ number_format(($server->disk / 1024),1) }}<small>TB</small>
                                             @else
                                                 {{$server->disk}}<small>GB</small>
                                             @endif

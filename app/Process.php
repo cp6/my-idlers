@@ -94,9 +94,9 @@ class Process
     private function GBpstoMBps(string $gbps, bool $format = false): float
     {//Gigabits to Megabits
         if ($format) {
-            return (float)number_format(((float)$gbps * 1000), 3);
+            return (float)number_format(((float)$gbps * 1024), 3);
         }
-        return (float)$gbps * 1000;
+        return (float)$gbps * 1024;
     }
 
     private function diskSpeedAsMbps(string $type, string $value): float
@@ -105,7 +105,7 @@ class Process
             return $this->GBpstoMBps($value);
         }
         if ($type === "KB/s") {
-            return (float)($value / 1000);
+            return (float)($value / 1024);
         }
         return $value;
     }
