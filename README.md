@@ -73,6 +73,18 @@ removed.
 * Run `php artisan migrate:fresh --seed` to create tables and seed data
 * Run `php artisan serve`
 
+## Run using Docker
+```
+docker run \
+  -p 8000:8000\
+  -e APP_URL=https://... \
+  -e DB_HOST=... \
+  -e DB_DATABASE=... \
+  -e DB_USERNAME=... \
+  -e DB_PASSWORD=... \
+  ghcr.io/m3nu/my-idlers:latest  # TODO: adjust after official image is set up!
+```
+
 ## API endpoints
 
 For GET requests the header must have `Accept: application/json` and your API token (found at `/account`)

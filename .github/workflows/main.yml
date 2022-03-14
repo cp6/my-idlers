@@ -1,0 +1,38 @@
+on:
+  # push:
+  # pull_request:
+  workflow_dispatch:
+    inputs:
+      debug_enabled:
+        description: 'Run the build with tmate debugging enabled'
+        required: false
+        default: false
+
+jobs:
+  build:
+    name: Build, push, and deploy
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Setup tmate debug session
+      uses: mxschmitt/action-tmate@v3
+      if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled }}
+
+    - name: Build container image
+      run: |
+        docker build \
+        --tag ghcr.io/cp6/my-idlers:$(echo $GITHUB_SHA | head -c7) \
+        --tag ghcr.io/cp6/my-idlers:latest \
+        .
+    - name: Container registry login
+      run: |
+        echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+      
+    - name: Push image to GitHub
+      if: github.ref == 'refs/heads/main'
+      run: |
+        docker push ghcr.io/cp6/my-idlers:$(echo $GITHUB_SHA | head -c7)
+        docker push ghcr.io/cp6/my-idlers:latest

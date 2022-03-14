@@ -1,7 +1,9 @@
 #!/bin/sh
 
-# TODO: global env vars aren't used.
-cat > /app/.env.production << EOF
+# Run setup only if .env file doesn't exist.
+if [ ! -e .env.production ]
+then
+cat > .env.production << EOF
 APP_NAME=MyIdlers
 APP_DEBUG=false
 APP_KEY=
@@ -12,10 +14,9 @@ DB_DATABASE=${DB_DATABASE}
 DB_USERNAME=${DB_USERNAME}
 DB_PASSWORD=${DB_PASSWORD}
 APP_URL=${APP_URL}
-ASSET_URL=${ASSET_URL}
 EOF
-
-# TODO: only run this once
-php artisan key:generate
+php artisan key:generate --no-interaction --force
 php artisan migrate:fresh --seed --force
+fi
+
 php artisan serve --host=0.0.0.0 --port=8000 --env=production
