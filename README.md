@@ -83,6 +83,7 @@ docker run \
   -e DB_USERNAME=... \
   -e DB_PASSWORD=... \
   ghcr.io/m3nu/my-idlers:latest  # TODO: adjust after official image is set up!
+docker exec ... php artisan migrate:fresh --seed --force  # Set up database one time
 ```
 
 ## API endpoints
