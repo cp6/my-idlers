@@ -8,7 +8,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /app
 COPY . .
-RUN composer install && \
-    cp .env.example .env
+RUN composer install
 
+ENV APP_ENV production
 ENTRYPOINT ["/app/run.sh"]
