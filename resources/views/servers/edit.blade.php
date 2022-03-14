@@ -141,7 +141,7 @@
                         <x-number-input>
                             <x-slot name="title">CPU</x-slot>
                             <x-slot name="name">cpu</x-slot>
-                            <x-slot name="value">2</x-slot>
+                            <x-slot name="value">{{$server[0]->cpu}}</x-slot>
                             <x-slot name="max">64</x-slot>
                             <x-slot name="step">1</x-slot>
                         </x-number-input>

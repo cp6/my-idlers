@@ -9,7 +9,7 @@
                             <div class="card-body text-center shadow">
                                 <div class="row">
                                     <h3>{{ $information['servers'] }}</h3>
-                                    <h5><a href="/servers" class="text-decoration-none">Servers</a></h5>
+                                    <h5><a href="servers" class="text-decoration-none">Servers</a></h5>
                                 </div>
                             </div>
                         </div>
@@ -19,7 +19,7 @@
                             <div class="card-body text-center shadow">
                                 <div class="row">
                                     <h3>{{ $information['shared'] }}</h3>
-                                    <h5><a href="/shared" class="text-decoration-none">Shared</a></h5>
+                                    <h5><a href="shared" class="text-decoration-none">Shared</a></h5>
                                 </div>
                             </div>
                         </div>
@@ -29,7 +29,7 @@
                             <div class="card-body text-center shadow">
                                 <div class="row">
                                     <h3>{{ $information['reseller'] }}</h3>
-                                    <h5><a href="/reseller" class="text-decoration-none">Reseller</a></h5>
+                                    <h5><a href="reseller" class="text-decoration-none">Reseller</a></h5>
                                 </div>
                             </div>
                         </div>
@@ -39,7 +39,7 @@
                             <div class="card-body text-center shadow">
                                 <div class="row">
                                     <h3>{{ $information['domains'] }}</h3>
-                                    <h5><a href="/domains" class="text-decoration-none">Domains</a></h5>
+                                    <h5><a href="domains" class="text-decoration-none">Domains</a></h5>
                                 </div>
                             </div>
                         </div>
@@ -49,7 +49,7 @@
                             <div class="card-body text-center shadow">
                                 <div class="row">
                                     <h3>{{ $information['misc'] }}</h3>
-                                    <h5><a href="/other" class="text-decoration-none">Misc</a></h5>
+                                    <h5><a href="other" class="text-decoration-none">Misc</a></h5>
                                 </div>
                             </div>
                         </div>
@@ -59,7 +59,7 @@
                             <div class="card-body text-center shadow">
                                 <div class="row">
                                     <h3>{{ $information['dns'] }}</h3>
-                                    <h5><a href="/dns" class="text-decoration-none">DNS</a></h5>
+                                    <h5><a href="dns" class="text-decoration-none">DNS</a></h5>
                                 </div>
                             </div>
                         </div>
