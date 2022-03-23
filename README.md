@@ -78,6 +78,7 @@ removed.
 docker run \
   -p 8000:8000\
   -e APP_URL=https://... \
+  -e APP_FORCE_SSL=true \
   -e DB_HOST=... \
   -e DB_DATABASE=... \
   -e DB_USERNAME=... \

@@ -27,6 +27,7 @@ return [
     */
 
     'env' => env('APP_ENV', 'production'),
+    'force_ssl' => (bool) env('APP_FORCE_SSL', false),
 
     /*
     |--------------------------------------------------------------------------
