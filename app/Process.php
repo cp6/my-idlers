@@ -192,7 +192,7 @@ class Process
             }
 
             $version_array = explode(' ', preg_replace('!\s+!', ' ', $this->trimRemoveR($array[2])));
-            if ($version_array[1] === 'v2021-12-28' || $version_array[1] === 'v2022-02-18') {//YABs version
+            if ($version_array[1] === 'v2021-12-28' || $version_array[1] === 'v2022-02-18' || $version_array[1] === 'v2022-04-30') {//YABs version
                 $cpu = $this->trimRemoveR(str_replace(':', '', strstr($array[10], ': ')));
                 $cpu_spec = explode(' ', strstr($array[11], ': '));//: 2 @ 3792.872 MHz
                 $cpu_cores = $cpu_spec[1];
