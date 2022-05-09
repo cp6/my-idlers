@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class OS extends Model
 {
@@ -12,4 +14,11 @@ class OS extends Model
     protected $fillable = ['name'];
 
     protected $table = 'os';
+
+    public static function allOS(): array
+    {
+        return Cache::remember("operating_systems", now()->addMonth(1), function () {
+            return DB::table('os')->get()->toArray();
+        });
+    }
 }

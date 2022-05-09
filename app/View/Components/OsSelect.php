@@ -10,11 +10,8 @@ class OsSelect extends Component
 {
     public function render()
     {
-        $all_os = Cache::rememberForever('all_os', function () {
-            return OS::all();
-        });
         return view('components.os-select', [
-            'os' => $all_os
+            'os' => OS::allOS()
         ]);
     }
 }

@@ -83,7 +83,7 @@ class ServerController extends Controller
     {
         $Providers = Providers::all();
         $Locations = Locations::all();
-        $Os = OS::all();
+        $Os = OS::allOS();
         return view('servers.create', compact(['Providers', 'Locations', 'Os']));
     }
 
