@@ -21,6 +21,22 @@
                     <div class="col-12 col-md-4 mb-3">
                         <div class="input-group">
                             <div class="input-group-prepend"><span
+                                    class="input-group-text">Use dark mode</span></div>
+                            <select class="form-control" name="dark_mode">
+                                <option value="1" {{ ($setting[0]->dark_mode === 1) ? 'selected' : '' }}>
+                                    Yes
+                                </option>
+                                <option value="0" {{ ($setting[0]->dark_mode === 0) ? 'selected' : '' }}>
+                                    No
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12 col-md-4 mb-3">
+                        <div class="input-group">
+                            <div class="input-group-prepend"><span
                                     class="input-group-text">Show versions footer</span></div>
                             <select class="form-control" name="show_versions_footer">
                                 <option value="1" {{ ($setting[0]->show_versions_footer === 1) ? 'selected' : '' }}>

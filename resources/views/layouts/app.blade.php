@@ -10,7 +10,12 @@
 
     <title>@yield('title') - @if (config()->has('app.name')) {{ config('app.name') }} @else My idlers @endif</title>
 
-    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
+    @if(Session::get('dark_mode'))
+        <link rel="stylesheet" href="{{ asset('css/bootstrap-dark.min.css') }}">
+    @else
+        <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
+    @endif
+
     <link rel="stylesheet" href="{{ asset('css/fa.min.css') }}">
 
     @yield('css_links')

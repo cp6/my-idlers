@@ -105,6 +105,7 @@ class HomeController extends Controller
                 ->get();
         });
 
+        Session::put('dark_mode', $settings[0]->dark_mode ?? 0);
         Session::put('timer_version_footer', $settings[0]->show_versions_footer ?? 1);
         Session::put('show_servers_public', $settings[0]->show_servers_public ?? 0);
         Session::put('show_server_value_ip', $settings[0]->show_server_value_ip ?? 0);

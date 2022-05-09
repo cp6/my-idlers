@@ -22,6 +22,7 @@ class SettingsController extends Controller
     public function update(Request $request, Settings $settings)
     {
         $request->validate([
+            'dark_mode' => 'required|boolean',
             'show_versions_footer' => 'required|boolean',
             'show_server_value_ip' => 'required|boolean',
             'show_server_value_hostname' => 'required|boolean',
@@ -38,6 +39,7 @@ class SettingsController extends Controller
         DB::table('settings')
             ->where('id', 1)
             ->update([
+                'dark_mode' => $request->dark_mode,
                 'show_versions_footer' => $request->show_versions_footer,
                 'show_servers_public' => $request->show_servers_public,
                 'show_server_value_ip' => $request->show_server_value_ip,
@@ -52,6 +54,7 @@ class SettingsController extends Controller
                 'recently_added_amount' => $request->recently_added_amount
             ]);
 
+        Session::put('dark_mode', $request->dark_mode ?? 1);
         Session::put('timer_version_footer', $request->show_versions_footer);
         Session::put('show_servers_public', $request->show_servers_public);
         Session::put('show_server_value_ip', $request->show_server_value_ip);
