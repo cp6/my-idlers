@@ -21,7 +21,7 @@ class CreateDomainsTable extends Migration
             $table->string('ns1')->nullable();
             $table->string('ns2')->nullable();
             $table->string('ns3')->nullable();
-            $table->integer('provider_id')->default(9999);
+            $table->unsignedBigInteger('provider_id')->default(9999);
             $table->date('owned_since')->nullable();
             $table->timestamps();
         });
