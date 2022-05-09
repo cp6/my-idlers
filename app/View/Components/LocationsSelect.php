@@ -15,9 +15,7 @@ class LocationsSelect extends Component
      */
     public function render()
     {
-        $all_locations = Cache::rememberForever('all_locations', function () {
-            return Locations::all();
-        });
+        $all_locations = Locations::allLocations();
         return view('components.locations-select', [
             'locations' => $all_locations
         ]);
