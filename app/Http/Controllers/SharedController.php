@@ -60,6 +60,31 @@ class SharedController extends Controller
 
         $shared_id = Str::random(8);
 
+        $pricing = new Pricing();
+
+        $as_usd = $pricing->convertToUSD($request->price, $request->currency);
+
+        Pricing::create([
+            'service_id' => $shared_id,
+            'service_type' => 2,
+            'currency' => $request->currency,
+            'price' => $request->price,
+            'term' => $request->payment_term,
+            'as_usd' => $as_usd,
+            'usd_per_month' => $pricing->costAsPerMonth($as_usd, $request->payment_term),
+            'next_due_date' => $request->next_due_date,
+        ]);
+
+        Labels::deleteLabelsAssignedTo($shared_id);
+
+        Labels::insertLabelsAssigned([$request->label1, $request->label2, $request->label3, $request->label4], $shared_id);
+
+        IPs::deleteIPsAssignedTo($shared_id);
+
+        if (!is_null($request->dedicated_ip)) {
+            IPs::insertIP($shared_id, $request->dedicated_ip);
+        }
+
         Shared::create([
             'id' => $shared_id,
             'main_domain' => $request->domain,
@@ -78,41 +103,6 @@ class SharedController extends Controller
             'ftp_limit' => $request->ftp,
             'db__limit' => $request->db
         ]);
-
-        $pricing = new Pricing();
-
-        $as_usd = $pricing->convertToUSD($request->price, $request->currency);
-
-        Pricing::create([
-            'service_id' => $shared_id,
-            'service_type' => 2,
-            'currency' => $request->currency,
-            'price' => $request->price,
-            'term' => $request->payment_term,
-            'as_usd' => $as_usd,
-            'usd_per_month' => $pricing->costAsPerMonth($as_usd, $request->payment_term),
-            'next_due_date' => $request->next_due_date,
-        ]);
-
-        $labels_array = [$request->label1, $request->label2, $request->label3, $request->label4];
-
-        for ($i = 1; $i <= 4; $i++) {
-            if (!is_null($labels_array[($i - 1)])) {
-                DB::insert('INSERT INTO labels_assigned (label_id, service_id) values (?, ?)', [$labels_array[($i - 1)], $shared_id]);
-            }
-        }
-
-        if (!is_null($request->dedicated_ip)) {
-            IPs::create(
-                [
-                    'id' => Str::random(8),
-                    'service_id' => $shared_id,
-                    'address' => $request->dedicated_ip,
-                    'is_ipv4' => (filter_var($request->dedicated_ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) ? 0 : 1,
-                    'active' => 1
-                ]
-            );
-        }
 
         Cache::forget('services_count');//Main page services_count cache
         Cache::forget('due_soon');//Main page due_soon cache
@@ -223,25 +213,14 @@ class SharedController extends Controller
                 'next_due_date' => $request->next_due_date,
             ]);
 
-        $deleted = DB::table('labels_assigned')->where('service_id', '=', $request->id)->delete();
+        Labels::deleteLabelsAssignedTo($request->id);
 
-        $labels_array = [$request->label1, $request->label2, $request->label3, $request->label4];
+        Labels::insertLabelsAssigned([$request->label1, $request->label2, $request->label3, $request->label4], $request->id);
 
-        for ($i = 1; $i <= 4; $i++) {
-            if (!is_null($labels_array[($i - 1)])) {
-                DB::insert('INSERT INTO labels_assigned ( label_id, service_id) values (?, ?)', [$labels_array[($i - 1)], $request->id]);
-            }
-        }
-
-        $delete_ip = DB::table('ips')->where('service_id', '=', $request->id)->delete();
+        IPs::deleteIPsAssignedTo($request->id);
 
         if (isset($request->dedicated_ip)) {
-            DB::insert('INSERT INTO ips (id, address, service_id, is_ipv4) values (?, ?, ?, ?)', [
-                Str::random(8),
-                $request->dedicated_ip,
-                $request->id,
-                (filter_var($request->dedicated_ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) ? 0 : 1
-            ]);
+            IPs::insertIP($request->id, $request->dedicated_ip);
         }
 
         Cache::forget('services_count');//Main page services_count cache

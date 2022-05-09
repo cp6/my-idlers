@@ -109,6 +109,29 @@ class ServerController extends Controller
 
         $server_id = Str::random(8);
 
+        $pricing = new Pricing();
+
+        $as_usd = $pricing->convertToUSD($request->price, $request->currency);
+
+        Pricing::create([
+            'service_id' => $server_id,
+            'service_type' => 1,
+            'currency' => $request->currency,
+            'price' => $request->price,
+            'term' => $request->payment_term,
+            'as_usd' => $as_usd,
+            'usd_per_month' => $pricing->costAsPerMonth($as_usd, $request->payment_term),
+            'next_due_date' => $request->next_due_date,
+        ]);
+
+        if (!is_null($request->ip1)) {
+            IPs::insertIP($server_id, $request->ip1);
+        }
+
+        if (!is_null($request->ip2)) {
+            IPs::insertIP($server_id, $request->ip2);
+        }
+
         Server::create([
             'id' => $server_id,
             'hostname' => $request->hostname,
@@ -132,52 +155,7 @@ class ServerController extends Controller
             'show_public' => (isset($request->show_public)) ? 1 : 0
         ]);
 
-        if (!is_null($request->ip1)) {
-            IPs::create(
-                [
-                    'id' => Str::random(8),
-                    'service_id' => $server_id,
-                    'address' => $request->ip1,
-                    'is_ipv4' => (filter_var($request->ip1, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) ? 0 : 1,
-                    'active' => 1
-                ]
-            );
-        }
-
-        if (!is_null($request->ip2)) {
-            IPs::create(
-                [
-                    'id' => Str::random(8),
-                    'service_id' => $server_id,
-                    'address' => $request->ip2,
-                    'is_ipv4' => (filter_var($request->ip2, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) ? 0 : 1,
-                    'active' => 1
-                ]
-            );
-        }
-
-        $pricing = new Pricing();
-
-        $as_usd = $pricing->convertToUSD($request->price, $request->currency);
-
-        Pricing::create([
-            'service_id' => $server_id,
-            'service_type' => 1,
-            'currency' => $request->currency,
-            'price' => $request->price,
-            'term' => $request->payment_term,
-            'as_usd' => $as_usd,
-            'usd_per_month' => $pricing->costAsPerMonth($as_usd, $request->payment_term),
-            'next_due_date' => $request->next_due_date,
-        ]);
-
-        $labels_array = [$request->label1, $request->label2, $request->label3, $request->label4];
-
-        for ($i = 1; $i <= 4; $i++) {
-            if (!is_null($labels_array[($i - 1)])) {
-                DB::insert('INSERT INTO labels_assigned (label_id, service_id) values (?, ?)', [$labels_array[($i - 1)], $server_id]);
-            }
-        }
+        Labels::insertLabelsAssigned([$request->label1, $request->label2, $request->label3, $request->label4], $server_id);
 
         Cache::forget('services_count');//Main page services_count cache
         Cache::forget('due_soon');//Main page due_soon cache
@@ -256,9 +234,10 @@ class ServerController extends Controller
             'next_due_date' => 'date'
         ]);
 
+        $server_id = $request->server_id;
 
         DB::table('servers')
-            ->where('id', $request->server_id)
+            ->where('id', $server_id)
             ->update([
                 'hostname' => $request->hostname,
                 'server_type' => $request->server_type,
@@ -287,7 +266,7 @@ class ServerController extends Controller
         $as_usd = $pricing->convertToUSD($request->price, $request->currency);
 
         DB::table('pricings')
-            ->where('service_id', $request->server_id)
+            ->where('service_id', $server_id)
             ->update([
                 'service_type' => 1,
                 'currency' => $request->currency,
@@ -299,27 +278,16 @@ class ServerController extends Controller
                 'active' => (isset($request->is_active)) ? 1 : 0
             ]);
 
-        $deleted = DB::table('labels_assigned')->where('service_id', '=', $server->id)->delete();
+        Labels::deleteLabelsAssignedTo($server_id);
 
-        $labels_array = [$request->label1, $request->label2, $request->label3, $request->label4];
+        Labels::insertLabelsAssigned([$request->label1, $request->label2, $request->label3, $request->label4], $server_id);
 
-        for ($i = 1; $i <= 4; $i++) {
-            if (!is_null($labels_array[($i - 1)])) {
-                DB::insert('INSERT INTO labels_assigned ( label_id, service_id) values (?, ?)', [$labels_array[($i - 1)], $request->server_id]);
-            }
-        }
-
-        $deleted = DB::table('ips')->where('service_id', '=', $server->id)->delete();
+        IPs::deleteIPsAssignedTo($server_id);
 
         for ($i = 1; $i <= 8; $i++) {//Max of 8 ips
             $obj = 'ip' . $i;
             if (isset($request->$obj) && !is_null($request->$obj)) {
-                DB::insert('INSERT INTO ips (id, address, service_id, is_ipv4) values (?, ?, ?, ?)', [
-                    Str::random(8),
-                    $request->$obj,
-                    $request->server_id,
-                    (filter_var($request->$obj, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) ? 0 : 1
-                ]);
+                IPs::insertIP($server_id, $request->$obj);
             }
         }
 

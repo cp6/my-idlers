@@ -59,17 +59,6 @@ class DomainsController extends Controller
 
         $domain_id = Str::random(8);
 
-        Domains::create([
-            'id' => $domain_id,
-            'domain' => $request->domain,
-            'extension' => $request->extension,
-            'ns1' => $request->ns1,
-            'ns2' => $request->ns2,
-            'ns3' => $request->ns3,
-            'provider_id' => $request->provider_id,
-            'owned_since' => $request->owned_since
-        ]);
-
         $pricing = new Pricing();
 
         $as_usd = $pricing->convertToUSD($request->price, $request->currency);
@@ -85,13 +74,18 @@ class DomainsController extends Controller
             'next_due_date' => $request->next_due_date,
         ]);
 
-        $labels_array = [$request->label1, $request->label2, $request->label3, $request->label4];
+        Domains::create([
+            'id' => $domain_id,
+            'domain' => $request->domain,
+            'extension' => $request->extension,
+            'ns1' => $request->ns1,
+            'ns2' => $request->ns2,
+            'ns3' => $request->ns3,
+            'provider_id' => $request->provider_id,
+            'owned_since' => $request->owned_since
+        ]);
 
-        for ($i = 1; $i <= 4; $i++) {
-            if (!is_null($labels_array[($i - 1)])) {
-                DB::insert('INSERT INTO labels_assigned (label_id, service_id) values (?, ?)', [$labels_array[($i - 1)], $domain_id]);
-            }
-        }
+        Labels::insertLabelsAssigned([$request->label1, $request->label2, $request->label3, $request->label4], $domain_id);
 
         Cache::forget('services_count');//Main page services_count cache
         Cache::forget('due_soon');//Main page due_soon cache
@@ -125,17 +119,6 @@ class DomainsController extends Controller
             'price' => 'numeric'
         ]);
 
-        $domain->update([
-            'domain' => $request->domain,
-            'extension' => $request->extension,
-            'ns1' => $request->ns1,
-            'ns2' => $request->ns2,
-            'ns3' => $request->ns3,
-            'provider_id' => $request->provider_id,
-            'owned_since' => $request->owned_since,
-            'active' => (isset($request->is_active)) ? 1 : 0
-        ]);
-
         $pricing = new Pricing();
 
         $as_usd = $pricing->convertToUSD($request->price, $request->currency);
@@ -153,15 +136,20 @@ class DomainsController extends Controller
                 'active' => (isset($request->is_active)) ? 1 : 0
             ]);
 
-        $deleted = DB::table('labels_assigned')->where('service_id', '=', $domain->id)->delete();
+        $domain->update([
+            'domain' => $request->domain,
+            'extension' => $request->extension,
+            'ns1' => $request->ns1,
+            'ns2' => $request->ns2,
+            'ns3' => $request->ns3,
+            'provider_id' => $request->provider_id,
+            'owned_since' => $request->owned_since,
+            'active' => (isset($request->is_active)) ? 1 : 0
+        ]);
 
-        $labels_array = [$request->label1, $request->label2, $request->label3, $request->label4];
+        Labels::deleteLabelsAssignedTo($domain->id);
 
-        for ($i = 1; $i <= 4; $i++) {
-            if (!is_null($labels_array[($i - 1)])) {
-                DB::insert('INSERT INTO labels_assigned ( label_id, service_id) values (?, ?)', [$labels_array[($i - 1)], $domain->id]);
-            }
-        }
+        Labels::insertLabelsAssigned([$request->label1, $request->label2, $request->label3, $request->label4], $domain->id);
 
         Cache::forget('services_count');//Main page services_count cache
         Cache::forget('due_soon');//Main page due_soon cache

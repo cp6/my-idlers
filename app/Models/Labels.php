@@ -23,5 +23,14 @@ class Labels extends Model
     {
         DB::table('labels_assigned')->where('label_id', '=', $label_id)->delete();
     }
-    
+
+    public static function insertLabelsAssigned(array $labels_array, string $service_id)
+    {
+        for ($i = 1; $i <= 4; $i++) {
+            if (!is_null($labels_array[($i - 1)])) {
+                DB::insert('INSERT INTO labels_assigned (label_id, service_id) values (?, ?)', [$labels_array[($i - 1)], $service_id]);
+            }
+        }
+    }
+
 }

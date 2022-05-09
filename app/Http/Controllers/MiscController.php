@@ -46,12 +46,6 @@ class MiscController extends Controller
 
         $ms_id = Str::random(8);
 
-        Misc::create([
-            'id' => $ms_id,
-            'name' => $request->name,
-            'owned_since' => $request->owned_since
-        ]);
-
         $pricing = new Pricing();
 
         $as_usd = $pricing->convertToUSD($request->price, $request->currency);
@@ -65,6 +59,12 @@ class MiscController extends Controller
             'as_usd' => $as_usd,
             'usd_per_month' => $pricing->costAsPerMonth($as_usd, $request->payment_term),
             'next_due_date' => $request->next_due_date,
+        ]);
+
+        Misc::create([
+            'id' => $ms_id,
+            'name' => $request->name,
+            'owned_since' => $request->owned_since
         ]);
 
         Cache::forget('services_count');//Main page services_count cache
