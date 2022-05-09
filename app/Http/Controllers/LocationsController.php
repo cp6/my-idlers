@@ -12,7 +12,7 @@ class LocationsController extends Controller
 {
     public function index()
     {
-        $locations = Locations::all();
+        $locations = Locations::allLocations();
         return view('locations.index', compact(['locations']));
     }
 
