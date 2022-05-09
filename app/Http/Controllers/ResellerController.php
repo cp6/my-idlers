@@ -28,7 +28,7 @@ class ResellerController extends Controller
 
     public function create()
     {
-        $Providers = Providers::all();
+        $Providers = Providers::allProviders();
         $Locations = Locations::all();
         return view('reseller.create', compact(['Providers', 'Locations']));
     }

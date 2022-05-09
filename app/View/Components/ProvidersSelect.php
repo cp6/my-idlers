@@ -16,9 +16,7 @@ class ProvidersSelect extends Component
      */
     public function render()
     {
-        $all_providers = Cache::rememberForever('all_providers', function () {
-            return Providers::all();
-        });
+        $all_providers = Providers::allProviders();
         return view('components.providers-select', [
             'providers' => $all_providers
         ]);

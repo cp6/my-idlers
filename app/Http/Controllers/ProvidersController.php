@@ -12,7 +12,7 @@ class ProvidersController extends Controller
 {
     public function index()
     {
-        $providers = Providers::all();
+        $providers = Providers::allProviders();
         return view('providers.index', compact(['providers']));
     }
 
@@ -31,7 +31,7 @@ class ProvidersController extends Controller
             'name' => $request->provider_name
         ]);
 
-        Cache::forget('all_providers');
+        Cache::forget('providers');
 
         return redirect()->route('providers.index')
             ->with('success', 'Provider Created Successfully.');
@@ -65,7 +65,7 @@ class ProvidersController extends Controller
 
         $items->delete();
 
-        Cache::forget('all_providers');
+        Cache::forget('providers');
 
         return redirect()->route('providers.index')
             ->with('success', 'Provider was deleted Successfully.');

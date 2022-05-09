@@ -43,7 +43,7 @@ class DomainsController extends Controller
 
     public function create()
     {
-        $Providers = Providers::all();
+        $Providers = Providers::allProviders();
         return view('domains.create', compact('Providers'));
     }
 

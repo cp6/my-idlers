@@ -81,7 +81,7 @@ class ServerController extends Controller
 
     public function create()
     {
-        $Providers = Providers::all();
+        $Providers = Providers::allProviders();
         $Locations = Locations::all();
         $Os = OS::allOS();
         return view('servers.create', compact(['Providers', 'Locations', 'Os']));

@@ -28,7 +28,7 @@ class SharedController extends Controller
 
     public function create()
     {
-        $Providers = Providers::all();
+        $Providers = Providers::allProviders();
         $Locations = Locations::all();
         return view('shared.create', compact(['Providers', 'Locations']));
     }
