@@ -10,6 +10,7 @@ use App\Models\Domains;
 use App\Models\Shared;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -59,6 +60,8 @@ class DNSController extends Controller
             }
         }
 
+        Cache::forget('dns_count');
+
         return redirect()->route('dns.index')
             ->with('success', 'DNS Created Successfully.');
     }
@@ -87,7 +90,7 @@ class DNSController extends Controller
             ->where('l.service_id', '=', $dn->id)
             ->get(['labels.id', 'labels.label']);
 
-        return view('dns.edit', compact(['dn', 'labels','Servers', 'Domains', 'Shareds', 'Resellers']));
+        return view('dns.edit', compact(['dn', 'labels', 'Servers', 'Domains', 'Shareds', 'Resellers']));
     }
 
     public function update(Request $request, DNS $dn)
@@ -129,6 +132,8 @@ class DNSController extends Controller
         $items = DNS::find($id);
 
         $items->delete();
+
+        Cache::forget('dns_count');
 
         Labels::deleteLabelsAssignedTo($id);
 

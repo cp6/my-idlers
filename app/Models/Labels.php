@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class Labels extends Model
@@ -31,6 +32,13 @@ class Labels extends Model
                 DB::insert('INSERT INTO labels_assigned (label_id, service_id) values (?, ?)', [$labels_array[($i - 1)], $service_id]);
             }
         }
+    }
+
+    public static function labelsCount()
+    {
+        return Cache::remember('labels_count', now()->addMonth(1), function () {
+            return DB::table('labels')->count();
+        });
     }
 
 }

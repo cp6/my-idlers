@@ -34,6 +34,7 @@ class LabelsController extends Controller
         ]);
 
         Cache::forget('all_labels');
+        Cache::forget('labels_count');
 
         return redirect()->route('labels.index')
             ->with('success', 'Label Created Successfully.');
@@ -65,6 +66,8 @@ class LabelsController extends Controller
         $items = Labels::find($label_id);
 
         $items->delete();
+
+        Cache::forget('labels_count');
 
         Labels::deleteLabelAssignedAs($label_id);
 
