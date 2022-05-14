@@ -78,6 +78,9 @@
                                 <option value="5" {{ ($server[0]->server_type === 5) ? 'selected' : '' }}>
                                     SEMI-DEDI
                                 </option>
+                                <option value="6" {{ ($server[0]->server_type === 6) ? 'selected' : '' }}>
+                                    VMware
+                                </option>
                             </select></div>
                     </div>
                     <div class="col-12 col-lg-3 mb-4">

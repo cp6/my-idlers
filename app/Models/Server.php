@@ -27,6 +27,8 @@ class Server extends Model
             return "DEDI";
         } elseif ($type === 4) {
             return "LXC";
+        } elseif ($type === 6) {
+            return "VMware";
         } else {
             return "SEMI-DEDI";
         }

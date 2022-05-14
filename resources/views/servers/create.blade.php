@@ -93,6 +93,7 @@
                                 <option value="3">DEDI</option>
                                 <option value="4">LXC</option>
                                 <option value="5">SEMI-DEDI</option>
+                                <option value="6">VMware</option>
                             </select></div>
                     </div>
                     <div class="col-12 col-lg-3 mb-4">
