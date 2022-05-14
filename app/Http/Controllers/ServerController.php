@@ -195,15 +195,6 @@ class ServerController extends Controller
 
     public function edit(Server $server)
     {
-        $locations = DB::table('locations')->get(['*']);
-        $providers = DB::table('providers')->get(['*']);
-        $labels = DB::table('labels_assigned as l')
-            ->join('labels', 'l.label_id', '=', 'labels.id')
-            ->where('l.service_id', '=', $server->id)
-            ->get(['labels.id', 'labels.label']);
-
-        $os = DB::table('os')->get(['*']);
-
         $ip_addresses = json_decode(DB::table('ips as i')
             ->where('i.service_id', '=', $server->id)
             ->get(), true);
@@ -213,7 +204,7 @@ class ServerController extends Controller
             ->where('s.id', '=', $server->id)
             ->get(['s.*', 'p.*']);
 
-        return view('servers.edit', compact(['server', 'locations', 'providers', 'os', 'labels', 'ip_addresses']));
+        return view('servers.edit', compact(['server','ip_addresses']));
     }
 
     public function update(Request $request, Server $server)
