@@ -4,7 +4,7 @@
         @if (Route::has('login'))
             @auth
                 <div class="row mt-4">
-                    <div class="col-12 col-lg-2 mb-3">
+                    <div class="col-6 col-lg-2 mb-3">
                         <div class="card">
                             <div class="card-body text-center shadow">
                                 <div class="row">
@@ -14,7 +14,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-lg-2 mb-3">
+                    <div class="col-6 col-lg-2 mb-3">
                         <div class="card">
                             <div class="card-body text-center shadow">
                                 <div class="row">
@@ -24,7 +24,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-lg-2 mb-3">
+                    <div class="col-6 col-lg-2 mb-3">
                         <div class="card">
                             <div class="card-body text-center shadow">
                                 <div class="row">
@@ -34,7 +34,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-lg-2 mb-3">
+                    <div class="col-6 col-lg-2 mb-3">
                         <div class="card">
                             <div class="card-body text-center shadow">
                                 <div class="row">
@@ -44,7 +44,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-lg-2 mb-3">
+                    <div class="col-6 col-lg-2 mb-3">
                         <div class="card">
                             <div class="card-body text-center shadow">
                                 <div class="row">
@@ -54,7 +54,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-lg-2 mb-3">
+                    <div class="col-6 col-lg-2 mb-3">
                         <div class="card">
                             <div class="card-body text-center shadow">
                                 <div class="row">
@@ -132,7 +132,7 @@
                 </div>
 
                 <div class="row mt-3">
-                    <div class="col-12 col-lg-2 mb-3">
+                    <div class="col-6 col-lg-2 mb-3">
                         <div class="card">
                             <div class="card-body text-center shadow">
                                 <div class="row">
@@ -142,7 +142,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-lg-2 mb-3">
+                    <div class="col-6 col-lg-2 mb-3">
                         <div class="card">
                             <div class="card-body text-center shadow">
                                 <div class="row">
@@ -154,7 +154,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-lg-2 mb-3">
+                    <div class="col-6 col-lg-2 mb-3">
                         <div class="card">
                             <div class="card-body text-center shadow">
                                 <div class="row">
@@ -173,7 +173,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-lg-2 mb-3">
+                    <div class="col-6 col-lg-2 mb-3">
                         <div class="card">
                             <div class="card-body text-center shadow">
                                 <div class="row">
@@ -185,7 +185,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-lg-2 mb-3">
+                    <div class="col-6 col-lg-2 mb-3">
                         <div class="card">
                             <div class="card-body text-center shadow">
                                 <div class="row">
@@ -195,7 +195,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-lg-2 mb-3">
+                    <div class="col-6 col-lg-2 mb-3">
                         <div class="card">
                             <div class="card-body text-center shadow">
                                 <div class="row">
