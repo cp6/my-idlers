@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -33,6 +34,15 @@ class IPs extends Model
                 'active' => 1
             ]
         );
+    }
+
+    public static function ipsForServer(string $server_id)
+    {
+        return Cache::remember("ip_addresses.$server_id", now()->addHour(1), function () use ($server_id) {
+            return json_decode(DB::table('ips as i')
+                ->where('i.service_id', '=', $server_id)
+                ->get(), true);
+        });
     }
 
 }

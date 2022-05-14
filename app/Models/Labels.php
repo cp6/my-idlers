@@ -41,4 +41,14 @@ class Labels extends Model
         });
     }
 
+    public static function labelsForService(string $service_id)
+    {
+        return Cache::remember("labels_for_service.$service_id", now()->addMinute(1), function () use ($service_id) {
+            return DB::table('labels_assigned as l')
+                ->join('labels', 'l.label_id', '=', 'labels.id')
+                ->where('l.service_id', '=', $service_id)
+                ->get(['labels.label']);
+        });
+    }
+
 }
