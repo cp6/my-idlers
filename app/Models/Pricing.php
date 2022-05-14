@@ -78,11 +78,11 @@ class Pricing extends Model
         DB::table('pricings')->where('service_id', '=', $id)->delete();
     }
 
-    public function insertPricing(int $type, string $server_id, string $currency, float $price, int $term, float $as_usd, string $next_due_date, int $is_active = 1)
+    public function insertPricing(int $type, string $service_id, string $currency, float $price, int $term, float $as_usd, string $next_due_date, int $is_active = 1)
     {
         return self::create([
             'service_type' => $type,
-            'service_id' => $server_id,
+            'service_id' => $service_id,
             'currency' => $currency,
             'price' => $price,
             'term' => $term,
@@ -91,6 +91,21 @@ class Pricing extends Model
             'next_due_date' => $next_due_date,
             'active' => ($is_active) ? 1 : 0
         ]);
+    }
+
+    public function updatePricing(string $service_id, string $currency, float $price, int $term, float $as_usd, string $next_due_date, int $is_active = 1)
+    {
+        return DB::table('pricings')
+            ->where('service_id', $service_id)
+            ->update([
+                'currency' => $currency,
+                'price' => $price,
+                'term' => $term,
+                'as_usd' => $as_usd,
+                'usd_per_month' => $this->costAsPerMonth($as_usd, $term),
+                'next_due_date' => $next_due_date,
+                'active' => ($is_active) ? 1 : 0
+            ]);
     }
 
     public static function allPricing()
