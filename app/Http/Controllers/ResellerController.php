@@ -66,16 +66,7 @@ class ResellerController extends Controller
 
         $as_usd = $pricing->convertToUSD($request->price, $request->currency);
 
-        Pricing::create([
-            'service_id' => $reseller_id,
-            'service_type' => 3,
-            'currency' => $request->currency,
-            'price' => $request->price,
-            'term' => $request->payment_term,
-            'as_usd' => $as_usd,
-            'usd_per_month' => $pricing->costAsPerMonth($as_usd, $request->payment_term),
-            'next_due_date' => $request->next_due_date,
-        ]);
+        $pricing->insertPricing(3, $reseller_id, $request->currency, $request->price, $request->payment_term, $as_usd, $request->next_due_date);
 
         if (!is_null($request->dedicated_ip)) {
             IPs::insertIP($reseller_id, $request->dedicated_ip);

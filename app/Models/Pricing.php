@@ -4,7 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class Pricing extends Model
 {
@@ -74,5 +76,28 @@ class Pricing extends Model
     public function deletePricing($id): void
     {
         DB::table('pricings')->where('service_id', '=', $id)->delete();
+    }
+
+    public function insertPricing(int $type, string $server_id, string $currency, float $price, int $term, float $as_usd, string $next_due_date, int $is_active = 1)
+    {
+        return self::create([
+            'service_type' => $type,
+            'service_id' => $server_id,
+            'currency' => $currency,
+            'price' => $price,
+            'term' => $term,
+            'as_usd' => $as_usd,
+            'usd_per_month' => $this->costAsPerMonth($as_usd, $term),
+            'next_due_date' => $next_due_date,
+            'active' => ($is_active) ? 1 : 0
+        ]);
+    }
+
+    public static function allPricing()
+    {
+        return Cache::remember('all_pricing', now()->addWeek(1), function () {
+            return DB::table('pricings')
+                ->get();
+        });
     }
 }

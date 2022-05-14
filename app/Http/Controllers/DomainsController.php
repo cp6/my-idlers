@@ -63,16 +63,7 @@ class DomainsController extends Controller
 
         $as_usd = $pricing->convertToUSD($request->price, $request->currency);
 
-        Pricing::create([
-            'service_id' => $domain_id,
-            'service_type' => 4,
-            'currency' => $request->currency,
-            'price' => $request->price,
-            'term' => $request->payment_term,
-            'as_usd' => $as_usd,
-            'usd_per_month' => $pricing->costAsPerMonth($as_usd, $request->payment_term),
-            'next_due_date' => $request->next_due_date,
-        ]);
+        $pricing->insertPricing(4, $domain_id, $request->currency, $request->price, $request->payment_term, $as_usd, $request->next_due_date);
 
         Domains::create([
             'id' => $domain_id,
