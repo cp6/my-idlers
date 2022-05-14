@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DNS;
+use App\Models\Labels;
 use App\Models\Pricing;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -120,7 +122,9 @@ class HomeController extends Controller
         Session::put('recently_added_amount',  $settings[0]->recently_added_amount ?? 6);
         Session::save();
 
-        $pricing = json_decode(DB::table('pricings')->get(), true);
+        $all_pricing = Pricing::allPricing();
+
+        $pricing = json_decode($all_pricing, true);
 
         $total_cost_weekly = $total_cost_pm = $inactive_count = 0;
         foreach ($pricing as $price) {
@@ -177,8 +181,8 @@ class HomeController extends Controller
             'shared' => $shared_count,
             'reseller' => $reseller_count,
             'misc' => $other_count,
-            'labels' => DB::table('labels')->count(),
-            'dns' => DB::table('d_n_s')->count(),
+            'labels' => Labels::labelsCount(),
+            'dns' => DNS::dnsCount(),
             'total_services' => $total_services,
             'total_inactive' => $inactive_count,
             'total_cost_weekly' => number_format($total_cost_weekly, 2),
