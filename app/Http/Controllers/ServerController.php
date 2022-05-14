@@ -23,7 +23,7 @@ class ServerController extends Controller
 
     public function index()
     {
-        $servers = Cache::remember('all_active_servers', 1440, function () {
+        $servers = Cache::remember('all_active_servers', now()->addMonth(1), function () {
             return DB::table('servers as s')
                 ->join('pricings as pr', 's.id', '=', 'pr.service_id')
                 ->join('providers as p', 's.provider_id', '=', 'p.id')
@@ -33,7 +33,7 @@ class ServerController extends Controller
                 ->get(['s.*', 'pr.currency', 'pr.price', 'pr.term', 'pr.as_usd', 'pr.next_due_date', 'p.name as provider_name', 'l.name as location', 'o.name as os_name']);
         });
 
-        $non_active_servers = Cache::remember('non_active_servers', 1440, function () {
+        $non_active_servers = Cache::remember('non_active_servers', now()->addMonth(1), function () {
             return DB::table('servers as s')
                 ->join('pricings as pr', 's.id', '=', 'pr.service_id')
                 ->join('providers as p', 's.provider_id', '=', 'p.id')
