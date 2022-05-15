@@ -16,35 +16,22 @@ class DomainsController extends Controller
 
     public function index()
     {
-        $domains = DB::table('domains as d')
-            ->join('providers as p', 'd.provider_id', '=', 'p.id')
-            ->join('pricings as pr', 'd.id', '=', 'pr.service_id')
-            ->get(['d.*', 'p.name as provider_name', 'pr.*']);
+        $domains = Domains::domainsDataIndexPage();
 
         return view('domains.index', compact(['domains']));
     }
 
     public function show(Domains $domain)
     {
-
-        $service_extras = DB::table('domains as d')
-            ->join('providers as p', 'd.provider_id', '=', 'p.id')
-            ->join('pricings as pr', 'd.id', '=', 'pr.service_id')
-            ->where('d.id', '=', $domain->id)
-            ->get(['d.*', 'p.name as provider_name', 'pr.*']);
-
-        $labels = DB::table('labels_assigned as l')
-            ->join('labels', 'l.label_id', '=', 'labels.id')
-            ->where('l.service_id', '=', $domain->id)
-            ->get(['labels.label']);
+        $service_extras = Domains::domainsDataShowPage($domain->id);
+        $labels = Labels::labelsForService($domain->id);
 
         return view('domains.show', compact(['domain', 'service_extras', 'labels']));
     }
 
     public function create()
     {
-        $Providers = Providers::allProviders();
-        return view('domains.create', compact('Providers'));
+        return view('domains.create');
     }
 
     public function store(Request $request)
@@ -88,15 +75,9 @@ class DomainsController extends Controller
 
     public function edit(Domains $domain)
     {
-        $domain_info = DB::table('domains as d')
-            ->join('pricings as pr', 'd.id', '=', 'pr.service_id')
-            ->where('d.id', '=', $domain->id)
-            ->get(['d.*', 'pr.*']);
+        $domain_info = Domains::domainsDataEditPage($domain->id);
 
-        $labels = DB::table('labels_assigned as l')
-            ->join('labels', 'l.label_id', '=', 'labels.id')
-            ->where('l.service_id', '=', $domain->id)
-            ->get(['labels.id', 'labels.label']);
+        $labels = Labels::labelsForService($domain->id);
 
         return view('domains.edit', compact(['domain', 'domain_info', 'labels']));
     }
@@ -131,6 +112,7 @@ class DomainsController extends Controller
 
         Labels::insertLabelsAssigned([$request->label1, $request->label2, $request->label3, $request->label4], $domain->id);
 
+        Cache::forget("labels_for_service.{$domain->id}");
         Cache::forget('services_count');//Main page services_count cache
         Cache::forget('due_soon');//Main page due_soon cache
         Cache::forget('recently_added');//Main page recently_added cache
