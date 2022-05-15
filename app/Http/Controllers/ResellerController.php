@@ -17,11 +17,7 @@ class ResellerController extends Controller
 {
     public function index()
     {
-        $resellers = DB::table('reseller_hosting as s')
-            ->join('providers as p', 's.provider_id', '=', 'p.id')
-            ->join('locations as l', 's.location_id', '=', 'l.id')
-            ->join('pricings as pr', 's.id', '=', 'pr.service_id')
-            ->get(['s.*', 'p.name as provider_name', 'pr.*', 'l.name as location']);
+        $resellers = Reseller::resellerDataIndexPage();
 
         return view('reseller.index', compact(['resellers']));
     }
@@ -94,9 +90,7 @@ class ResellerController extends Controller
             'db_limit' => $request->db
         ]);
 
-        Cache::forget('services_count');//Main page services_count cache
-        Cache::forget('due_soon');//Main page due_soon cache
-        Cache::forget('recently_added');//Main page recently_added cache
+        Reseller::resllerRelatedCacheForget();
 
         return redirect()->route('reseller.index')
             ->with('success', 'Reseller hosting created Successfully.');
@@ -105,45 +99,23 @@ class ResellerController extends Controller
 
     public function show(Reseller $reseller)
     {
-        $reseller_extras = DB::table('reseller_hosting as s')
-            ->join('pricings as pr', 's.id', '=', 'pr.service_id')
-            ->join('providers as p', 's.provider_id', '=', 'p.id')
-            ->join('locations as l', 's.location_id', '=', 'l.id')
-            ->where('s.id', '=', $reseller->id)
-            ->get(['s.*', 'p.name as provider_name', 'l.name as location', 'pr.*']);
+        $reseller_extras = Reseller::resellerDataShowPage($reseller->id);
 
-        $labels = DB::table('labels_assigned as l')
-            ->LeftJoin('labels', 'l.label_id', '=', 'labels.id')
-            ->where('l.service_id', '=', $reseller->id)
-            ->get(['labels.label']);
+        $labels = Labels::labelsForService($reseller->id);
 
-        $ip_address = DB::table('ips as i')
-            ->where('i.service_id', '=', $reseller->id)
-            ->get();
-
+        $ip_address = IPs::ipsForServer($reseller->id);
         return view('reseller.show', compact(['reseller', 'reseller_extras', 'labels', 'ip_address']));
     }
 
     public function edit(Reseller $reseller)
     {
-        $locations = DB::table('locations')->get(['*']);
-        $providers = json_decode(DB::table('providers')->get(['*']), true);
+        $labels = Labels::labelsForService($reseller->id);
 
-        $labels = DB::table('labels_assigned as l')
-            ->join('labels', 'l.label_id', '=', 'labels.id')
-            ->where('l.service_id', '=', $reseller->id)
-            ->get(['labels.id', 'labels.label']);
+        $ip_address = IPs::ipsForServer($reseller->id);
 
-        $ip_address = json_decode(DB::table('ips as i')
-            ->where('i.service_id', '=', $reseller->id)
-            ->get(), true);
+        $reseller = Reseller::resellerDataEditPage($reseller->id);
 
-        $reseller = DB::table('reseller_hosting as s')
-            ->join('pricings as p', 's.id', '=', 'p.service_id')
-            ->where('s.id', '=', $reseller->id)
-            ->get(['s.*', 'p.*']);
-
-        return view('reseller.edit', compact(['reseller', 'locations', 'providers', 'ip_address', 'labels']));
+        return view('reseller.edit', compact(['reseller', 'ip_address', 'labels']));
     }
 
     public function update(Request $request, Reseller $reseller)
@@ -206,9 +178,9 @@ class ResellerController extends Controller
             IPs::insertIP($request->id, $request->dedicated_ip);
         }
 
-        Cache::forget('services_count');//Main page services_count cache
-        Cache::forget('due_soon');//Main page due_soon cache
-        Cache::forget('recently_added');//Main page recently_added cache
+        Cache::forget("labels_for_service.{$request->id}");
+
+        Reseller::resllerRelatedCacheForget();
 
         return redirect()->route('reseller.index')
             ->with('success', 'Reseller hosting updated Successfully.');
@@ -228,9 +200,7 @@ class ResellerController extends Controller
 
         IPs::deleteIPsAssignedTo($id);
 
-        Cache::forget('services_count');//Main page services_count cache
-        Cache::forget('due_soon');//Main page due_soon cache
-        Cache::forget('recently_added');//Main page recently_added cache
+        Reseller::resllerRelatedCacheForget();
 
         return redirect()->route('reseller.index')
             ->with('success', 'Reseller hosting was deleted Successfully.');
