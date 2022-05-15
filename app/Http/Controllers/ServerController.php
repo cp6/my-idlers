@@ -4,21 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\IPs;
 use App\Models\Labels;
-use App\Models\OS;
 use App\Models\Pricing;
 use App\Models\Server;
-use App\Models\Providers;
-use App\Models\Locations;
 use App\Models\Settings;
 use App\Models\Yabs;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
 
 class ServerController extends Controller
 {
@@ -251,6 +245,7 @@ class ServerController extends Controller
         $server1_network = Yabs::serverCompareNetwork($server1_data[0]->yabs_id);
 
         $server2_data = Server::serverCompareData($server2);
+
         if (count($server2_data) === 0) {
             return response()->view('errors.404', array("status" => 404, "title" => "Page not found", "message" => "No server with YABs data was found for id '$server2'"), 404);
         }
