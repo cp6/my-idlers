@@ -39,22 +39,7 @@ class ProvidersController extends Controller
 
     public function show(Providers $provider)
     {
-        $servers = DB::table('servers as s')
-            ->where('s.provider_id', '=', $provider->id)
-            ->get(['s.id', 's.hostname'])
-            ->toArray();
-
-        $shared = DB::table('shared_hosting as s')
-            ->where('s.provider_id', '=', $provider->id)
-            ->get(['s.id', 's.main_domain as main_domain_shared'])
-            ->toArray();
-
-        $reseller = DB::table('reseller_hosting as r')
-            ->where('r.provider_id', '=', $provider->id)
-            ->get(['r.id', 'r.main_domain as main_domain_reseller'])
-            ->toArray();
-
-        $data = array_merge($servers, $shared, $reseller);
+        $data = Providers::showServicesForProvider($provider->id);
 
         return view('providers.show', compact(['provider', 'data']));
     }
