@@ -17,14 +17,6 @@ class Reseller extends Model
 
     public $incrementing = false;
 
-
-    public static function resllerRelatedCacheForget(): void
-    {
-        Cache::forget('services_count');//Main page services_count cache
-        Cache::forget('due_soon');//Main page due_soon cache
-        Cache::forget('recently_added');//Main page recently_added cache
-    }
-
     public static function resellerDataIndexPage()
     {
         return DB::table('reseller_hosting as s')

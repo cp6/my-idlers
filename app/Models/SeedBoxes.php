@@ -17,14 +17,6 @@ class SeedBoxes extends Model
 
     protected $fillable = ['id', 'active', 'title', 'hostname', 'seed_box_type', 'provider_id', 'location_id', 'bandwidth', 'port_speed', 'disk', 'disk_type', 'disk_as_gb', 'was_promo', 'owned_since'];
 
-    public static function seedBoxRelatedCacheForget(): void
-    {
-        Cache::forget('services_count');//Main page services_count cache
-        Cache::forget('due_soon');//Main page due_soon cache
-        Cache::forget('recently_added');//Main page recently_added cache
-        Cache::forget('all_pricing');//All pricing
-    }
-
     public static function seedBoxesDataIndexPage()
     {
         return DB::table('seedboxes as s')
