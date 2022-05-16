@@ -9,6 +9,8 @@ GeekBench 5 scores to do easier comparing and sorting.
 
 [![Generic badge](https://img.shields.io/badge/version-2.1.0-blue.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Laravel-9.0-red.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/PHP-8.1-purple.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Bootstrap-5.1-pink.svg)](https://shields.io/)
 
+[demo site](https://demo.myidlers.com/) **Note:** Create, Update and Delete are disabled.
+
 ## Project sponsor
 
 [Cloud Five Limited](https://cloud-v.net/) for providing the hosting for demo installation.
