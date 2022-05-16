@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Home;
 use App\Models\Misc;
 use App\Models\Pricing;
 use Illuminate\Http\Request;
@@ -58,9 +59,7 @@ class MiscController extends Controller
             'owned_since' => $request->owned_since
         ]);
 
-        Cache::forget('services_count');//Main page services_count cache
-        Cache::forget('due_soon');//Main page due_soon cache
-        Cache::forget('recently_added');//Main page recently_added cache
+        Home::homePageCacheForget();
 
         return redirect()->route('misc.index')
             ->with('success', 'Misc service created Successfully.');
@@ -97,9 +96,7 @@ class MiscController extends Controller
 
         $pricing->updatePricing($misc->id, $request->currency, $request->price, $request->payment_term, $as_usd, $request->next_due_date);
 
-        Cache::forget('services_count');//Main page services_count cache
-        Cache::forget('due_soon');//Main page due_soon cache
-        Cache::forget('recently_added');//Main page recently_added cache
+        Home::homePageCacheForget();
 
         return redirect()->route('misc.index')
             ->with('success', 'Misc service updated Successfully.');
@@ -114,9 +111,7 @@ class MiscController extends Controller
         $p = new Pricing();
         $p->deletePricing($misc->id);
 
-        Cache::forget('services_count');//Main page services_count cache
-        Cache::forget('due_soon');//Main page due_soon cache
-        Cache::forget('recently_added');//Main page recently_added cache
+        Home::homePageCacheForget();
 
         return redirect()->route('misc.index')
             ->with('success', 'Misc service was deleted Successfully.');

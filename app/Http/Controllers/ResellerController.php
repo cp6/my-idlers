@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Home;
 use App\Models\IPs;
 use App\Models\Labels;
 use App\Models\Locations;
@@ -90,7 +91,7 @@ class ResellerController extends Controller
             'db_limit' => $request->db
         ]);
 
-        Reseller::resllerRelatedCacheForget();
+        Home::homePageCacheForget();
 
         return redirect()->route('reseller.index')
             ->with('success', 'Reseller hosting created Successfully.');
@@ -180,7 +181,7 @@ class ResellerController extends Controller
 
         Cache::forget("labels_for_service.{$request->id}");
 
-        Reseller::resllerRelatedCacheForget();
+        Home::homePageCacheForget();
 
         return redirect()->route('reseller.index')
             ->with('success', 'Reseller hosting updated Successfully.');
@@ -200,7 +201,7 @@ class ResellerController extends Controller
 
         IPs::deleteIPsAssignedTo($id);
 
-        Reseller::resllerRelatedCacheForget();
+        Home::homePageCacheForget();
 
         return redirect()->route('reseller.index')
             ->with('success', 'Reseller hosting was deleted Successfully.');

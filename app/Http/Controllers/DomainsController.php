@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Domains;
+use App\Models\Home;
 use App\Models\Labels;
 use App\Models\Pricing;
 use App\Models\Providers;
@@ -65,9 +66,7 @@ class DomainsController extends Controller
 
         Labels::insertLabelsAssigned([$request->label1, $request->label2, $request->label3, $request->label4], $domain_id);
 
-        Cache::forget('services_count');//Main page services_count cache
-        Cache::forget('due_soon');//Main page due_soon cache
-        Cache::forget('recently_added');//Main page recently_added cache
+        Home::homePageCacheForget();
 
         return redirect()->route('domains.index')
             ->with('success', 'Domain Created Successfully.');
@@ -113,9 +112,7 @@ class DomainsController extends Controller
         Labels::insertLabelsAssigned([$request->label1, $request->label2, $request->label3, $request->label4], $domain->id);
 
         Cache::forget("labels_for_service.{$domain->id}");
-        Cache::forget('services_count');//Main page services_count cache
-        Cache::forget('due_soon');//Main page due_soon cache
-        Cache::forget('recently_added');//Main page recently_added cache
+        Home::homePageCacheForget();
 
         return redirect()->route('domains.index')
             ->with('success', 'Domain Updated Successfully.');
@@ -132,9 +129,7 @@ class DomainsController extends Controller
 
         Labels::deleteLabelsAssignedTo($domain->id);
 
-        Cache::forget('services_count');//Main page services_count cache
-        Cache::forget('due_soon');//Main page due_soon cache
-        Cache::forget('recently_added');//Main page recently_added cache
+        Home::homePageCacheForget();
 
         return redirect()->route('domains.index')
             ->with('success', 'Domain was deleted Successfully.');

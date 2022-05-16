@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Home;
 use App\Models\IPs;
 use App\Models\Labels;
 use App\Models\Pricing;
@@ -72,7 +73,7 @@ class SeedBoxesController extends Controller
             'was_promo' => $request->was_promo
         ]);
 
-        SeedBoxes::seedBoxRelatedCacheForget();
+        Home::homePageCacheForget();
 
         return redirect()->route('seedboxes.index')
             ->with('success', 'Seed box created Successfully.');
@@ -144,7 +145,7 @@ class SeedBoxesController extends Controller
 
         Cache::forget("labels_for_service.{$seedbox->id}");
 
-        SeedBoxes::seedBoxRelatedCacheForget();
+        Home::homePageCacheForget();
 
         return redirect()->route('seedboxes.index')
             ->with('success', 'Seed box updated Successfully.');
@@ -161,7 +162,7 @@ class SeedBoxesController extends Controller
 
         Labels::deleteLabelsAssignedTo($seedbox_id);
 
-        SeedBoxes::seedBoxRelatedCacheForget();
+        Home::homePageCacheForget();
 
         return redirect()->route('seedboxes.index')
             ->with('success', 'Seed box was deleted Successfully.');

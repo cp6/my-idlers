@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Home;
 use App\Models\IPs;
 use App\Models\Labels;
 use App\Models\Pricing;
@@ -87,7 +88,7 @@ class SharedController extends Controller
             'db__limit' => $request->db
         ]);
 
-        Shared::sharedRelatedCacheForget();
+        Home::homePageCacheForget();
 
         return redirect()->route('shared.index')
             ->with('success', 'Shared hosting created Successfully.');
@@ -177,7 +178,7 @@ class SharedController extends Controller
             IPs::insertIP($request->id, $request->dedicated_ip);
         }
 
-        Shared::sharedRelatedCacheForget();
+        Home::homePageCacheForget();
 
         return redirect()->route('shared.index')
             ->with('success', 'Shared hosting updated Successfully.');
@@ -197,7 +198,7 @@ class SharedController extends Controller
 
         IPs::deleteIPsAssignedTo($shared_id);
 
-        Shared::sharedRelatedCacheForget();
+        Home::homePageCacheForget();
 
         return redirect()->route('shared.index')
             ->with('success', 'Shared hosting was deleted Successfully.');
