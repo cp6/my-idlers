@@ -10,7 +10,7 @@ class OsController extends Controller
 {
     public function index()
     {
-        $os = OS::all();
+        $os = OS::allOS();
         return view('os.index', compact(['os']));
     }
 
@@ -29,7 +29,7 @@ class OsController extends Controller
             'name' => $request->os_name
         ]);
 
-        Cache::forget('all_os');
+        Cache::forget('operating_systems');
 
         return redirect()->route('os.index')
             ->with('success', 'OS Created Successfully.');
@@ -41,7 +41,7 @@ class OsController extends Controller
 
         $items->delete();
 
-        Cache::forget('all_os');
+        Cache::forget('operating_systems');
 
         return redirect()->route('os.index')
             ->with('success', 'OS was deleted Successfully.');

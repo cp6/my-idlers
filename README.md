@@ -1,47 +1,39 @@
 # My idlers
 
-A web app for displaying, organizing and storing information about servers (VPS), shared & reseller hosting, domains,
+A web app for displaying, organizing and storing information about servers (VPS), shared & reseller hosting, seed boxes, domains,
 DNS and misc services.
 
 Despite what the name infers this self hosted web app isn't just for storing idling server information. By using
 a [YABs](https://github.com/masonr/yet-another-bench-script) output you can get disk & network speed values along with
 GeekBench 5 scores to do easier comparing and sorting.
 
-[![Generic badge](https://img.shields.io/badge/version-2.0-blue.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Laravel-9.0-red.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/PHP-8.1-purple.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Bootstrap-5.1-pink.svg)](https://shields.io/)
+[![Generic badge](https://img.shields.io/badge/version-2.1.0-blue.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Laravel-9.0-red.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/PHP-8.1-purple.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Bootstrap-5.1-pink.svg)](https://shields.io/)
 
-## V2 notes
-
-V2 build is a complete overhaul of My idlers with the project being moved onto the Laravel framework. This will simplify
-development and most of the features from the original build will be present in V2.
-
-Using Laravel will bring in an API endpoint and the possibilities to show servers publicly with certain parameters
-removed.
+[demo site](https://demo.myidlers.com/) **Note:** Create, Update and Delete are disabled.
 
 ## Project sponsor
 
 [Cloud Five Limited](https://cloud-v.net/) for providing the hosting for demo installation.
 
-## 2.0 changes:
+## 2.1.0 changes:
 
-**Unfortunately you cannot migrate your current install to the new 2.0 version**
-
-* Laravel framework (version 9).
-* Breeze authentication.
-* API GET for any of the CRUD data.
-* Labels (titles/desc) CRUD.
-* Misc services CRUD.
-* DNS CRUD.
-* Ip address CRUD.
-* Reseller hosting.
-* Added Operating systems to DB, Deleting and creating them now possible.
-* Make servers displayable public with config options to hide certain values.
-* Vue JS used where possible.
-* Datatables used on large tables (Locations, labels, and providers).
-* Added caching for home page and servers
+* Added Seedbox CRUD
+* Added dark mode (settings option. Bootstrap-Night https://vinorodrigues.github.io/bootstrap-dark-5/)
+* Added some foreign keys for certain tables
+* Added functions for IP and label assignments
+* Added functions to forget (clear) cache, preventing chunks of duplicate code
+* Added VMware to server virt select dropdown options
+* Added Kharkiv and Sao Paulo to locations seeder
+* Updated Controllers with DB calls and logic moved to relevant Model
+* Updated YABs inserts for version v2022-05-06
+* Updated DB calls to use caching
+* Updated Home blade info cards to be col-6 instead of 12 when on mobile
+* Updated home page view links on recently added
+* Fixed YABs insert error not displaying
 
 ## Requires
 
-* PHP 8 (minimum, compatible with 8.1)
+* PHP 8 (8.1 recommended)
 
 ## Features
 
@@ -73,7 +65,16 @@ removed.
 * Run `php artisan migrate:fresh --seed` to create tables and seed data
 * Run `php artisan serve`
 
+## Update
+
+If you have at least version 2.0 installed:
+
+* Run `git clone https://github.com/cp6/my-idlers.git`
+* Run `composer install`
+* Run `php artisan migrate`
+
 ## Run using Docker
+
 ```
 docker run \
   -p 8000:8000\
@@ -139,6 +140,10 @@ All API requests must be appended with `api/` e.g `mydomain.com/api/servers/gYk8
 `reseller/`
 
 `reseller/{id}`
+
+`seedbox/`
+
+`seedbox/{id}`
 
 `settings/`
 

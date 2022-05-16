@@ -21,9 +21,9 @@ class CreateServersTable extends Migration
             $table->string('ns1')->nullable()->default(null);
             $table->string('ns2')->nullable()->default(null);
             $table->tinyInteger('server_type')->default(1);
-            $table->integer('os_id')->default(0);
-            $table->integer('provider_id')->default(9999);
-            $table->integer('location_id')->default(9999);
+            $table->unsignedBigInteger('os_id')->default(0);
+            $table->unsignedBigInteger('provider_id')->default(9999);
+            $table->unsignedBigInteger('location_id')->default(9999);
             $table->integer('ssh')->nullable()->default(22);
             $table->integer('bandwidth')->nullable();
             $table->integer('ram')->default(1024);

@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Home;
 use App\Models\IPs;
 use App\Models\Labels;
-use App\Models\Locations;
 use App\Models\Pricing;
-use App\Models\Providers;
 use App\Models\Shared;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -17,20 +16,14 @@ class SharedController extends Controller
 {
     public function index()
     {
-        $shared = DB::table('shared_hosting as s')
-            ->join('providers as p', 's.provider_id', '=', 'p.id')
-            ->join('locations as l', 's.location_id', '=', 'l.id')
-            ->join('pricings as pr', 's.id', '=', 'pr.service_id')
-            ->get(['s.*', 'p.name as provider_name', 'pr.*', 'l.name as location']);
+        $shared = Shared::sharedDataIndexPage();
 
         return view('shared.index', compact(['shared']));
     }
 
     public function create()
     {
-        $Providers = Providers::all();
-        $Locations = Locations::all();
-        return view('shared.create', compact(['Providers', 'Locations']));
+        return view('shared.create');
     }
 
     public function store(Request $request)
@@ -60,6 +53,22 @@ class SharedController extends Controller
 
         $shared_id = Str::random(8);
 
+        $pricing = new Pricing();
+
+        $as_usd = $pricing->convertToUSD($request->price, $request->currency);
+
+        $pricing->insertPricing(2, $shared_id, $request->currency, $request->price, $request->payment_term, $as_usd, $request->next_due_date);
+
+        Labels::deleteLabelsAssignedTo($shared_id);
+
+        Labels::insertLabelsAssigned([$request->label1, $request->label2, $request->label3, $request->label4], $shared_id);
+
+        IPs::deleteIPsAssignedTo($shared_id);
+
+        if (!is_null($request->dedicated_ip)) {
+            IPs::insertIP($shared_id, $request->dedicated_ip);
+        }
+
         Shared::create([
             'id' => $shared_id,
             'main_domain' => $request->domain,
@@ -79,44 +88,7 @@ class SharedController extends Controller
             'db__limit' => $request->db
         ]);
 
-        $pricing = new Pricing();
-
-        $as_usd = $pricing->convertToUSD($request->price, $request->currency);
-
-        Pricing::create([
-            'service_id' => $shared_id,
-            'service_type' => 2,
-            'currency' => $request->currency,
-            'price' => $request->price,
-            'term' => $request->payment_term,
-            'as_usd' => $as_usd,
-            'usd_per_month' => $pricing->costAsPerMonth($as_usd, $request->payment_term),
-            'next_due_date' => $request->next_due_date,
-        ]);
-
-        $labels_array = [$request->label1, $request->label2, $request->label3, $request->label4];
-
-        for ($i = 1; $i <= 4; $i++) {
-            if (!is_null($labels_array[($i - 1)])) {
-                DB::insert('INSERT INTO labels_assigned (label_id, service_id) values (?, ?)', [$labels_array[($i - 1)], $shared_id]);
-            }
-        }
-
-        if (!is_null($request->dedicated_ip)) {
-            IPs::create(
-                [
-                    'id' => Str::random(8),
-                    'service_id' => $shared_id,
-                    'address' => $request->dedicated_ip,
-                    'is_ipv4' => (filter_var($request->dedicated_ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) ? 0 : 1,
-                    'active' => 1
-                ]
-            );
-        }
-
-        Cache::forget('services_count');//Main page services_count cache
-        Cache::forget('due_soon');//Main page due_soon cache
-        Cache::forget('recently_added');//Main page recently_added cache
+        Home::homePageCacheForget();
 
         return redirect()->route('shared.index')
             ->with('success', 'Shared hosting created Successfully.');
@@ -124,44 +96,24 @@ class SharedController extends Controller
 
     public function show(Shared $shared)
     {
-        $shared_extras = DB::table('shared_hosting as s')
-            ->join('pricings as pr', 's.id', '=', 'pr.service_id')
-            ->join('providers as p', 's.provider_id', '=', 'p.id')
-            ->join('locations as l', 's.location_id', '=', 'l.id')
-            ->where('s.id', '=', $shared->id)
-            ->get(['s.*', 'p.name as provider_name', 'l.name as location', 'pr.*']);
+        $shared_extras = Shared::sharedDataShowPage($shared->id);
 
-        $labels = DB::table('labels_assigned as l')
-            ->join('labels', 'l.label_id', '=', 'labels.id')
-            ->where('l.service_id', '=', $shared->id)
-            ->get(['labels.label']);
+        $labels = Labels::labelsForService($shared->id);
 
-        $ip_address = DB::table('ips as i')
-            ->where('i.service_id', '=', $shared->id)
-            ->get();
+        $ip_address = IPs::ipsForServer($shared->id);
 
         return view('shared.show', compact(['shared', 'shared_extras', 'labels', 'ip_address']));
     }
 
     public function edit(Shared $shared)
     {
-        $locations = DB::table('locations')->get(['*']);
-        $providers = json_decode(DB::table('providers')->get(['*']), true);
-        $labels = DB::table('labels_assigned as l')
-            ->join('labels', 'l.label_id', '=', 'labels.id')
-            ->where('l.service_id', '=', $shared->id)
-            ->get(['labels.id', 'labels.label']);
+        $labels = Labels::labelsForService($shared->id);
 
-        $ip_address = json_decode(DB::table('ips as i')
-            ->where('i.service_id', '=', $shared->id)
-            ->get(), true);
+        $ip_address = IPs::ipsForServer($shared->id);
 
-        $shared = DB::table('shared_hosting as s')
-            ->join('pricings as p', 's.id', '=', 'p.service_id')
-            ->where('s.id', '=', $shared->id)
-            ->get(['s.*', 'p.*']);
+        $shared = Shared::sharedEditDataPage($shared->id);
 
-        return view('shared.edit', compact(['shared', 'locations', 'providers', 'labels', 'ip_address']));
+        return view('shared.edit', compact(['shared', 'labels', 'ip_address']));
     }
 
     public function update(Request $request, Shared $shared)
@@ -212,41 +164,21 @@ class SharedController extends Controller
 
         $as_usd = $pricing->convertToUSD($request->price, $request->currency);
 
-        DB::table('pricings')
-            ->where('service_id', $request->id)
-            ->update([
-                'currency' => $request->currency,
-                'price' => $request->price,
-                'term' => $request->payment_term,
-                'as_usd' => $as_usd,
-                'usd_per_month' => $pricing->costAsPerMonth($as_usd, $request->payment_term),
-                'next_due_date' => $request->next_due_date,
-            ]);
+        $pricing->updatePricing($request->id, $request->currency, $request->price, $request->payment_term, $as_usd, $request->next_due_date);
 
-        $deleted = DB::table('labels_assigned')->where('service_id', '=', $request->id)->delete();
+        Labels::deleteLabelsAssignedTo($request->id);
 
-        $labels_array = [$request->label1, $request->label2, $request->label3, $request->label4];
+        Labels::insertLabelsAssigned([$request->label1, $request->label2, $request->label3, $request->label4], $request->id);
 
-        for ($i = 1; $i <= 4; $i++) {
-            if (!is_null($labels_array[($i - 1)])) {
-                DB::insert('INSERT INTO labels_assigned ( label_id, service_id) values (?, ?)', [$labels_array[($i - 1)], $request->id]);
-            }
-        }
+        Cache::forget("labels_for_service.{$request->id}");
 
-        $delete_ip = DB::table('ips')->where('service_id', '=', $request->id)->delete();
+        IPs::deleteIPsAssignedTo($request->id);
 
         if (isset($request->dedicated_ip)) {
-            DB::insert('INSERT INTO ips (id, address, service_id, is_ipv4) values (?, ?, ?, ?)', [
-                Str::random(8),
-                $request->dedicated_ip,
-                $request->id,
-                (filter_var($request->dedicated_ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) ? 0 : 1
-            ]);
+            IPs::insertIP($request->id, $request->dedicated_ip);
         }
 
-        Cache::forget('services_count');//Main page services_count cache
-        Cache::forget('due_soon');//Main page due_soon cache
-        Cache::forget('recently_added');//Main page recently_added cache
+        Home::homePageCacheForget();
 
         return redirect()->route('shared.index')
             ->with('success', 'Shared hosting updated Successfully.');
@@ -254,21 +186,19 @@ class SharedController extends Controller
 
     public function destroy(Shared $shared)
     {
-        $id = $shared->id;
-        $items = Shared::find($id);
+        $shared_id = $shared->id;
+        $items = Shared::find($shared_id);
 
         $items->delete();
 
         $p = new Pricing();
-        $p->deletePricing($shared->id);
+        $p->deletePricing($shared_id);
 
-        Labels::deleteLabelsAssignedTo($shared->id);
+        Labels::deleteLabelsAssignedTo($shared_id);
 
-        IPs::deleteIPsAssignedTo($shared->id);
+        IPs::deleteIPsAssignedTo($shared_id);
 
-        Cache::forget('services_count');//Main page services_count cache
-        Cache::forget('due_soon');//Main page due_soon cache
-        Cache::forget('recently_added');//Main page recently_added cache
+        Home::homePageCacheForget();
 
         return redirect()->route('shared.index')
             ->with('success', 'Shared hosting was deleted Successfully.');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Home;
 use App\Models\IPs;
 use App\Models\Labels;
 use App\Models\Locations;
@@ -17,19 +18,15 @@ class ResellerController extends Controller
 {
     public function index()
     {
-        $resellers = DB::table('reseller_hosting as s')
-            ->join('providers as p', 's.provider_id', '=', 'p.id')
-            ->join('locations as l', 's.location_id', '=', 'l.id')
-            ->join('pricings as pr', 's.id', '=', 'pr.service_id')
-            ->get(['s.*', 'p.name as provider_name', 'pr.*', 'l.name as location']);
+        $resellers = Reseller::resellerDataIndexPage();
 
         return view('reseller.index', compact(['resellers']));
     }
 
     public function create()
     {
-        $Providers = Providers::all();
-        $Locations = Locations::all();
+        $Providers = Providers::allProviders();
+        $Locations = Locations::allLocations();
         return view('reseller.create', compact(['Providers', 'Locations']));
     }
 
@@ -62,6 +59,18 @@ class ResellerController extends Controller
 
         $reseller_id = Str::random(8);
 
+        $pricing = new Pricing();
+
+        $as_usd = $pricing->convertToUSD($request->price, $request->currency);
+
+        $pricing->insertPricing(3, $reseller_id, $request->currency, $request->price, $request->payment_term, $as_usd, $request->next_due_date);
+
+        if (!is_null($request->dedicated_ip)) {
+            IPs::insertIP($reseller_id, $request->dedicated_ip);
+        }
+
+        Labels::insertLabelsAssigned([$request->label1, $request->label2, $request->label3, $request->label4], $reseller_id);
+
         Reseller::create([
             'id' => $reseller_id,
             'main_domain' => $request->domain,
@@ -82,44 +91,7 @@ class ResellerController extends Controller
             'db_limit' => $request->db
         ]);
 
-        $pricing = new Pricing();
-
-        $as_usd = $pricing->convertToUSD($request->price, $request->currency);
-
-        Pricing::create([
-            'service_id' => $reseller_id,
-            'service_type' => 3,
-            'currency' => $request->currency,
-            'price' => $request->price,
-            'term' => $request->payment_term,
-            'as_usd' => $as_usd,
-            'usd_per_month' => $pricing->costAsPerMonth($as_usd, $request->payment_term),
-            'next_due_date' => $request->next_due_date,
-        ]);
-
-        if (!is_null($request->dedicated_ip)) {
-            IPs::create(
-                [
-                    'id' => Str::random(8),
-                    'service_id' => $reseller_id,
-                    'address' => $request->dedicated_ip,
-                    'is_ipv4' => (filter_var($request->dedicated_ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) ? 0 : 1,
-                    'active' => 1
-                ]
-            );
-        }
-
-        $labels_array = [$request->label1, $request->label2, $request->label3, $request->label4];
-
-        for ($i = 1; $i <= 4; $i++) {
-            if (!is_null($labels_array[($i - 1)])) {
-                DB::insert('INSERT INTO labels_assigned (label_id, service_id) values (?, ?)', [$labels_array[($i - 1)], $reseller_id]);
-            }
-        }
-
-        Cache::forget('services_count');//Main page services_count cache
-        Cache::forget('due_soon');//Main page due_soon cache
-        Cache::forget('recently_added');//Main page recently_added cache
+        Home::homePageCacheForget();
 
         return redirect()->route('reseller.index')
             ->with('success', 'Reseller hosting created Successfully.');
@@ -128,45 +100,23 @@ class ResellerController extends Controller
 
     public function show(Reseller $reseller)
     {
-        $reseller_extras = DB::table('reseller_hosting as s')
-            ->join('pricings as pr', 's.id', '=', 'pr.service_id')
-            ->join('providers as p', 's.provider_id', '=', 'p.id')
-            ->join('locations as l', 's.location_id', '=', 'l.id')
-            ->where('s.id', '=', $reseller->id)
-            ->get(['s.*', 'p.name as provider_name', 'l.name as location', 'pr.*']);
+        $reseller_extras = Reseller::resellerDataShowPage($reseller->id);
 
-        $labels = DB::table('labels_assigned as l')
-            ->LeftJoin('labels', 'l.label_id', '=', 'labels.id')
-            ->where('l.service_id', '=', $reseller->id)
-            ->get(['labels.label']);
+        $labels = Labels::labelsForService($reseller->id);
 
-        $ip_address = DB::table('ips as i')
-            ->where('i.service_id', '=', $reseller->id)
-            ->get();
-
+        $ip_address = IPs::ipsForServer($reseller->id);
         return view('reseller.show', compact(['reseller', 'reseller_extras', 'labels', 'ip_address']));
     }
 
     public function edit(Reseller $reseller)
     {
-        $locations = DB::table('locations')->get(['*']);
-        $providers = json_decode(DB::table('providers')->get(['*']), true);
+        $labels = Labels::labelsForService($reseller->id);
 
-        $labels = DB::table('labels_assigned as l')
-            ->join('labels', 'l.label_id', '=', 'labels.id')
-            ->where('l.service_id', '=', $reseller->id)
-            ->get(['labels.id', 'labels.label']);
+        $ip_address = IPs::ipsForServer($reseller->id);
 
-        $ip_address = json_decode(DB::table('ips as i')
-            ->where('i.service_id', '=', $reseller->id)
-            ->get(), true);
+        $reseller = Reseller::resellerDataEditPage($reseller->id);
 
-        $reseller = DB::table('reseller_hosting as s')
-            ->join('pricings as p', 's.id', '=', 'p.service_id')
-            ->where('s.id', '=', $reseller->id)
-            ->get(['s.*', 'p.*']);
-
-        return view('reseller.edit', compact(['reseller', 'locations', 'providers', 'ip_address', 'labels']));
+        return view('reseller.edit', compact(['reseller', 'ip_address', 'labels']));
     }
 
     public function update(Request $request, Reseller $reseller)
@@ -217,41 +167,21 @@ class ResellerController extends Controller
 
         $as_usd = $pricing->convertToUSD($request->price, $request->currency);
 
-        DB::table('pricings')
-            ->where('service_id', $request->id)
-            ->update([
-                'currency' => $request->currency,
-                'price' => $request->price,
-                'term' => $request->payment_term,
-                'as_usd' => $as_usd,
-                'usd_per_month' => $pricing->costAsPerMonth($as_usd, $request->payment_term),
-                'next_due_date' => $request->next_due_date,
-            ]);
+        $pricing->updatePricing($request->id, $request->currency, $request->price, $request->payment_term, $as_usd, $request->next_due_date);
 
-        $deleted = DB::table('labels_assigned')->where('service_id', '=', $request->id)->delete();
+        Labels::deleteLabelsAssignedTo($request->id);
 
-        $labels_array = [$request->label1, $request->label2, $request->label3, $request->label4];
+        Labels::insertLabelsAssigned([$request->label1, $request->label2, $request->label3, $request->label4], $request->id);
 
-        for ($i = 1; $i <= 4; $i++) {
-            if (!is_null($labels_array[($i - 1)])) {
-                DB::insert('INSERT INTO labels_assigned ( label_id, service_id) values (?, ?)', [$labels_array[($i - 1)], $request->id]);
-            }
-        }
-
-        $delete_ip = DB::table('ips')->where('service_id', '=', $request->id)->delete();
+        IPs::deleteIPsAssignedTo($request->id);
 
         if (isset($request->dedicated_ip)) {
-            DB::insert('INSERT INTO ips (id, address, service_id, is_ipv4) values (?, ?, ?, ?)', [
-                Str::random(8),
-                $request->dedicated_ip,
-                $request->id,
-                (filter_var($request->dedicated_ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) ? 0 : 1
-            ]);
+            IPs::insertIP($request->id, $request->dedicated_ip);
         }
 
-        Cache::forget('services_count');//Main page services_count cache
-        Cache::forget('due_soon');//Main page due_soon cache
-        Cache::forget('recently_added');//Main page recently_added cache
+        Cache::forget("labels_for_service.{$request->id}");
+
+        Home::homePageCacheForget();
 
         return redirect()->route('reseller.index')
             ->with('success', 'Reseller hosting updated Successfully.');
@@ -271,9 +201,7 @@ class ResellerController extends Controller
 
         IPs::deleteIPsAssignedTo($id);
 
-        Cache::forget('services_count');//Main page services_count cache
-        Cache::forget('due_soon');//Main page due_soon cache
-        Cache::forget('recently_added');//Main page recently_added cache
+        Home::homePageCacheForget();
 
         return redirect()->route('reseller.index')
             ->with('success', 'Reseller hosting was deleted Successfully.');

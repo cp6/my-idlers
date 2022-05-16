@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Home;
 use App\Models\Misc;
 use App\Models\Pricing;
 use Illuminate\Http\Request;
@@ -46,30 +47,19 @@ class MiscController extends Controller
 
         $ms_id = Str::random(8);
 
+        $pricing = new Pricing();
+
+        $as_usd = $pricing->convertToUSD($request->price, $request->currency);
+
+        $pricing->insertPricing(5, $ms_id, $request->currency, $request->price, $request->payment_term, $as_usd, $request->next_due_date);
+
         Misc::create([
             'id' => $ms_id,
             'name' => $request->name,
             'owned_since' => $request->owned_since
         ]);
 
-        $pricing = new Pricing();
-
-        $as_usd = $pricing->convertToUSD($request->price, $request->currency);
-
-        Pricing::create([
-            'service_id' => $ms_id,
-            'service_type' => 5,
-            'currency' => $request->currency,
-            'price' => $request->price,
-            'term' => $request->payment_term,
-            'as_usd' => $as_usd,
-            'usd_per_month' => $pricing->costAsPerMonth($as_usd, $request->payment_term),
-            'next_due_date' => $request->next_due_date,
-        ]);
-
-        Cache::forget('services_count');//Main page services_count cache
-        Cache::forget('due_soon');//Main page due_soon cache
-        Cache::forget('recently_added');//Main page recently_added cache
+        Home::homePageCacheForget();
 
         return redirect()->route('misc.index')
             ->with('success', 'Misc service created Successfully.');
@@ -104,21 +94,9 @@ class MiscController extends Controller
 
         $as_usd = $pricing->convertToUSD($request->price, $request->currency);
 
-        DB::table('pricings')
-            ->where('service_id', $misc->id)
-            ->update([
-                'currency' => $request->currency,
-                'price' => $request->price,
-                'term' => $request->payment_term,
-                'as_usd' => $as_usd,
-                'usd_per_month' => $pricing->costAsPerMonth($as_usd, $request->payment_term),
-                'next_due_date' => $request->next_due_date,
-                'active' => (isset($request->is_active)) ? 1 : 0
-            ]);
+        $pricing->updatePricing($misc->id, $request->currency, $request->price, $request->payment_term, $as_usd, $request->next_due_date);
 
-        Cache::forget('services_count');//Main page services_count cache
-        Cache::forget('due_soon');//Main page due_soon cache
-        Cache::forget('recently_added');//Main page recently_added cache
+        Home::homePageCacheForget();
 
         return redirect()->route('misc.index')
             ->with('success', 'Misc service updated Successfully.');
@@ -133,9 +111,7 @@ class MiscController extends Controller
         $p = new Pricing();
         $p->deletePricing($misc->id);
 
-        Cache::forget('services_count');//Main page services_count cache
-        Cache::forget('due_soon');//Main page due_soon cache
-        Cache::forget('recently_added');//Main page recently_added cache
+        Home::homePageCacheForget();
 
         return redirect()->route('misc.index')
             ->with('success', 'Misc service was deleted Successfully.');

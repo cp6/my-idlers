@@ -94,7 +94,9 @@ class LocationsSeeder extends Seeder
             ['name' => 'Washington, USA'],
             ['name' => 'Wellington, New Zealand'],
             ['name' => 'Zurich, Switzerland'],
-            ['name' => 'Quebec, Canada']
+            ['name' => 'Quebec, Canada'],
+            ['name' => 'Kharkiv, Ukraine'],
+            ['name' => 'Sao Paulo, Brazil'],
         ];
 
         DB::table('locations')->insert($locations);

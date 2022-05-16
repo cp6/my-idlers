@@ -192,24 +192,43 @@ class Process
             }
 
             $version_array = explode(' ', preg_replace('!\s+!', ' ', $this->trimRemoveR($array[2])));
-            if ($version_array[1] === 'v2021-12-28' || $version_array[1] === 'v2022-02-18' || $version_array[1] === 'v2022-04-30') {//YABs version
-                $cpu = $this->trimRemoveR(str_replace(':', '', strstr($array[10], ': ')));
-                $cpu_spec = explode(' ', strstr($array[11], ': '));//: 2 @ 3792.872 MHz
+            if ($version_array[1] === 'v2021-12-28' || $version_array[1] === 'v2022-02-18' || $version_array[1] === 'v2022-04-30' || $version_array[1] === 'v2022-05-06') {//YABs version
+                if ($version_array[1] === 'v2022-05-06') {
+                    $cpu = $this->trimRemoveR(str_replace(':', '', strstr($array[11], ': ')));
+                    $cpu_spec = explode(' ', strstr($array[12], ': '));//: 2 @ 3792.872 MHz
+                    $ram_line = $this->trimRemoveR(str_replace(':', '', strstr($array[15], ': ')));
+                    $ram = (float)$ram_line;
+                    $ram_type = $this->datatype($ram_line);
+                    $swap_line = $this->trimRemoveR(str_replace(':', '', strstr($array[16], ': ')));
+                    $swap = (float)$swap_line;
+                    $swap_type = $this->datatype($swap_line);
+                    $disk_line = $this->trimRemoveR(str_replace(':', '', strstr($array[17], ': ')));
+                    $disk = (float)$disk_line;
+                    $disk_type = $this->datatype($disk_line);
+                    $io_3 = explode(' ', preg_replace('!\s+!', ' ', $array[27]));
+                    $io_6 = explode(' ', preg_replace('!\s+!', ' ', $array[33]));
+                    (str_contains($array[13], 'Enabled')) ? $aes_ni = true : $aes_ni = false;
+                    (str_contains($array[14], 'Enabled')) ? $vm_amd_v = true : $vm_amd_v = false;
+                } else {
+                    $cpu = $this->trimRemoveR(str_replace(':', '', strstr($array[10], ': ')));
+                    $cpu_spec = explode(' ', strstr($array[11], ': '));//: 2 @ 3792.872 MHz
+                    $ram_line = $this->trimRemoveR(str_replace(':', '', strstr($array[14], ': ')));
+                    $ram = (float)$ram_line;
+                    $ram_type = $this->datatype($ram_line);
+                    $swap_line = $this->trimRemoveR(str_replace(':', '', strstr($array[15], ': ')));
+                    $swap = (float)$swap_line;
+                    $swap_type = $this->datatype($swap_line);
+                    $disk_line = $this->trimRemoveR(str_replace(':', '', strstr($array[16], ': ')));
+                    $disk = (float)$disk_line;
+                    $disk_type = $this->datatype($disk_line);
+                    $io_3 = explode(' ', preg_replace('!\s+!', ' ', $array[24]));
+                    $io_6 = explode(' ', preg_replace('!\s+!', ' ', $array[30]));
+                    (str_contains($array[12], 'Enabled')) ? $aes_ni = true : $aes_ni = false;
+                    (str_contains($array[13], 'Enabled')) ? $vm_amd_v = true : $vm_amd_v = false;
+                }
                 $cpu_cores = $cpu_spec[1];
                 $cpu_freq = $cpu_spec[3];
-                $ram_line = $this->trimRemoveR(str_replace(':', '', strstr($array[14], ': ')));
-                $ram = (float)$ram_line;
-                $ram_type = $this->datatype($ram_line);
-                $swap_line = $this->trimRemoveR(str_replace(':', '', strstr($array[15], ': ')));
-                $swap = (float)$swap_line;
-                $swap_type = $this->datatype($swap_line);
-                $disk_line = $this->trimRemoveR(str_replace(':', '', strstr($array[16], ': ')));
-                $disk = (float)$disk_line;
-                $disk_type = $this->datatype($disk_line);
-                $io_3 = explode(' ', preg_replace('!\s+!', ' ', $array[24]));
-                $io_6 = explode(' ', preg_replace('!\s+!', ' ', $array[30]));
-                (str_contains($array[12], 'Enabled')) ? $aes_ni = true : $aes_ni = false;
-                (str_contains($array[13], 'Enabled')) ? $vm_amd_v = true : $vm_amd_v = false;
+
 
                 $d4k_as_mbps = $this->diskSpeedAsMbps($io_3[3], $this->floatValue($io_3[2]));
                 $d64k_as_mbps = $this->diskSpeedAsMbps($io_3[7], $this->floatValue($io_3[6]));
@@ -231,48 +250,94 @@ class Process
                 );
 
                 if (isset($array[40])) {
-                    if ($array[45] === "Geekbench 5 Benchmark Test:\r") {
-                        //No ipv6
-                        //Has short ipv4 network speed testing (-r)
-                        $has_ipv6 = false;
-                        $start_st = 36;
-                        $end_st = 43;
-                        $gb_s = 49;
-                        $gb_m = 50;
-                        $gb_url = 51;
-                    } elseif ($array[45] === "Geekbench 4 Benchmark Test:\r") {
-                        return array('error_id' => 6, 'error_message' => 'GeekBench 5 only allowed');
-                    } elseif ($array[45] === "Geekbench 5 test failed. Run manually to determine cause.\r") {
-                        return array('error_id' => 7, 'error_message' => 'GeekBench test failed');
-                    } elseif ($array[40] === "Geekbench 5 Benchmark Test:\r") {
-                        //No ipv6
-                        //Has full ipv4 network speed testing
-                        $has_ipv6 = false;
-                        $start_st = 36;
-                        $end_st = 38;
-                        $gb_s = 44;
-                        $gb_m = 45;
-                        $gb_url = 46;
-                    } elseif ($array[40] === "iperf3 Network Speed Tests (IPv6):\r") {
-                        //HAS ipv6
-                        //Has short ipv4 & ipv6 network speed testing
-                        $has_ipv6 = true;
-                        $start_st = 36;
-                        $end_st = 38;
-                        $gb_s = 52;
-                        $gb_m = 53;
-                        $gb_url = 54;
-                    } elseif ($array[56] === "Geekbench 5 Benchmark Test:\r") {
-                        //HAS ipv6
-                        //Has full ipv4 & ipv6 network speed testing
-                        $has_ipv6 = true;
-                        $start_st = 36;
-                        $end_st = 43;
-                        $gb_s = 60;
-                        $gb_m = 61;
-                        $gb_url = 62;
+                    if ($version_array[1] === 'v2022-05-06') {
+                        if ($array[43] === "Geekbench 5 Benchmark Test:\r") {
+                            //No ipv6
+                            //Has short ipv4 network speed testing (-r)
+                            $has_ipv6 = false;
+                            $start_st = 39;
+                            $end_st = 41;
+                            $gb_s = 47;
+                            $gb_m = 48;
+                            $gb_url = 49;
+                        } elseif ($array[45] === "Geekbench 4 Benchmark Test:\r") {
+                            return array('error_id' => 6, 'error_message' => 'GeekBench 5 only allowed');
+                        } elseif ($array[45] === "Geekbench 5 test failed. Run manually to determine cause.\r") {
+                            return array('error_id' => 7, 'error_message' => 'GeekBench test failed');
+                        } elseif ($array[46] === "Geekbench 5 Benchmark Test:\r") {
+                            //No ipv6
+                            //Has full ipv4 network speed testing
+                            $has_ipv6 = false;
+                            $start_st = 39;
+                            $end_st = 44;
+                            $gb_s = 44;
+                            $gb_m = 45;
+                            $gb_url = 46;
+                        } elseif ($array[43] === "iperf3 Network Speed Tests (IPv6):\r") {
+                            //HAS ipv6
+                            //Has short ipv4 & ipv6 network speed testing
+                            $has_ipv6 = true;
+                            $start_st = 39;
+                            $end_st = 41;
+                            $gb_s = 55;
+                            $gb_m = 56;
+                            $gb_url = 57;
+                        } elseif ($array[56] === "Geekbench 5 Benchmark Test:\r") {
+                            //HAS ipv6
+                            //Has full ipv4 & ipv6 network speed testing
+                            $has_ipv6 = true;
+                            $start_st = 39;
+                            $end_st = 44;
+                            $gb_s = 60;
+                            $gb_m = 61;
+                            $gb_url = 62;
+                        } else {
+                            return array('error_id' => 5, 'error_message' => 'Not correct YABs command output');
+                        }
                     } else {
-                        return array('error_id' => 5, 'error_message' => 'Not correct YABs command output');
+                        if ($array[45] === "Geekbench 5 Benchmark Test:\r") {
+                            //No ipv6
+                            //Has short ipv4 network speed testing (-r)
+                            $has_ipv6 = false;
+                            $start_st = 36;
+                            $end_st = 43;
+                            $gb_s = 49;
+                            $gb_m = 50;
+                            $gb_url = 51;
+                        } elseif ($array[45] === "Geekbench 4 Benchmark Test:\r") {
+                            return array('error_id' => 6, 'error_message' => 'GeekBench 5 only allowed');
+                        } elseif ($array[45] === "Geekbench 5 test failed. Run manually to determine cause.\r") {
+                            return array('error_id' => 7, 'error_message' => 'GeekBench test failed');
+                        } elseif ($array[40] === "Geekbench 5 Benchmark Test:\r") {
+                            //No ipv6
+                            //Has full ipv4 network speed testing
+                            $has_ipv6 = false;
+                            $start_st = 36;
+                            $end_st = 38;
+                            $gb_s = 44;
+                            $gb_m = 45;
+                            $gb_url = 46;
+                        } elseif ($array[40] === "iperf3 Network Speed Tests (IPv6):\r") {
+                            //HAS ipv6
+                            //Has short ipv4 & ipv6 network speed testing
+                            $has_ipv6 = true;
+                            $start_st = 36;
+                            $end_st = 38;
+                            $gb_s = 52;
+                            $gb_m = 53;
+                            $gb_url = 54;
+                        } elseif ($array[56] === "Geekbench 5 Benchmark Test:\r") {
+                            //HAS ipv6
+                            //Has full ipv4 & ipv6 network speed testing
+                            $has_ipv6 = true;
+                            $start_st = 36;
+                            $end_st = 43;
+                            $gb_s = 60;
+                            $gb_m = 61;
+                            $gb_url = 62;
+                        } else {
+                            return array('error_id' => 5, 'error_message' => 'Not correct YABs command output');
+                        }
                     }
                 } else {
                     return array('error_id' => 4, 'error_message' => 'Not correct formatting');

@@ -12,7 +12,7 @@ class LocationsController extends Controller
 {
     public function index()
     {
-        $locations = Locations::all();
+        $locations = Locations::allLocations();
         return view('locations.index', compact(['locations']));
     }
 
@@ -31,7 +31,7 @@ class LocationsController extends Controller
             'name' => $request->location_name
         ]);
 
-        Cache::forget('all_locations');
+        Cache::forget('locations');
 
         return redirect()->route('locations.index')
             ->with('success', 'Location Created Successfully.');
@@ -65,7 +65,7 @@ class LocationsController extends Controller
 
         $items->delete();
 
-        Cache::forget('all_locations');
+        Cache::forget('locations');
 
         return redirect()->route('locations.index')
             ->with('success', 'Location was deleted Successfully.');

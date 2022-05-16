@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateResellersTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -13,23 +13,19 @@ class CreateResellersTable extends Migration
      */
     public function up()
     {
-        Schema::create('reseller_hosting', function (Blueprint $table) {
+        Schema::create('seedboxes', function (Blueprint $table) {
             $table->char('id', 8)->primary();
             $table->tinyInteger('active')->default(1);
-            $table->string('main_domain');
-            $table->integer('accounts')->default(1);
-            $table->string('reseller_type')->nullable();
+            $table->string('title');
+            $table->string('hostname')->nullable();
+            $table->string('seed_box_type')->nullable();
             $table->unsignedBigInteger('provider_id')->default(9999);
             $table->unsignedBigInteger('location_id')->default(9999);
             $table->integer('bandwidth')->nullable();
+            $table->integer('port_speed')->nullable();
             $table->integer('disk')->default(10);
             $table->char('disk_type', 2)->default('GB');
             $table->integer('disk_as_gb')->nullable()->default(0);
-            $table->integer('domains_limit')->nullable()->default(1);
-            $table->integer('subdomains_limit')->nullable()->default(1);
-            $table->integer('ftp_limit')->nullable()->default(1);
-            $table->integer('email_limit')->nullable()->default(1);
-            $table->integer('db_limit')->nullable()->default(1);
             $table->tinyInteger('was_promo')->default(0);
             $table->date('owned_since')->nullable();
             $table->timestamps();
@@ -43,6 +39,6 @@ class CreateResellersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('reseller_hosting');
+        Schema::dropIfExists('seedboxes');
     }
-}
+};

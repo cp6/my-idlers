@@ -18,8 +18,8 @@ class CreateSharedsTable extends Migration
             $table->tinyInteger('active')->default(1);
             $table->string('main_domain');
             $table->string('shared_type')->nullable();
-            $table->integer('provider_id')->default(9999);
-            $table->integer('location_id')->default(9999);
+            $table->unsignedBigInteger('provider_id')->default(9999);
+            $table->unsignedBigInteger('location_id')->default(9999);
             $table->integer('bandwidth')->nullable();
             $table->integer('disk')->default(10);
             $table->char('disk_type', 2)->default('GB');

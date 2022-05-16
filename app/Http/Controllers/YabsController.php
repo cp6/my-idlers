@@ -37,8 +37,8 @@ class YabsController extends Controller
         $yabs = $process->yabsOutputAsJson($request->server_id, $request->yabs);
 
         if (isset($yabs['error_id'])) {
-            return redirect()->route('yabs.index')
-                ->with('error', 'Problem inserting YABs. Error id ' . $yabs['error_id']);
+            return back()->withErrors(["yabs" => 'Problem inserting YABs. Error id ' . $yabs['error_id']])->withInput();
+            //return redirect()->route('yabs.index')->with('error', 'Problem inserting YABs. Error id ' . $yabs['error_id']);
         }
         //No errors, do insert
 

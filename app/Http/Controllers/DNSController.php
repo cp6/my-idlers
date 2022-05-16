@@ -10,6 +10,7 @@ use App\Models\Domains;
 use App\Models\Shared;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -51,13 +52,9 @@ class DNSController extends Controller
             'domain_id' => ($request->domain_id !== 'null') ? $request->domain_id : null
         ]);
 
-        $labels_array = [$request->label1, $request->label2, $request->label3, $request->label4];
+        Labels::insertLabelsAssigned([$request->label1, $request->label2, $request->label3, $request->label4], $dns_id);
 
-        for ($i = 1; $i <= 4; $i++) {
-            if (!is_null($labels_array[($i - 1)])) {
-                DB::insert('INSERT INTO labels_assigned (label_id, service_id) values (?, ?)', [$labels_array[($i - 1)], $dns_id]);
-            }
-        }
+        Cache::forget('dns_count');
 
         return redirect()->route('dns.index')
             ->with('success', 'DNS Created Successfully.');
@@ -87,7 +84,7 @@ class DNSController extends Controller
             ->where('l.service_id', '=', $dn->id)
             ->get(['labels.id', 'labels.label']);
 
-        return view('dns.edit', compact(['dn', 'labels','Servers', 'Domains', 'Shareds', 'Resellers']));
+        return view('dns.edit', compact(['dn', 'labels', 'Servers', 'Domains', 'Shareds', 'Resellers']));
     }
 
     public function update(Request $request, DNS $dn)
@@ -108,16 +105,9 @@ class DNSController extends Controller
             'domain_id' => ($request->domain_id !== 'null') ? $request->domain_id : null
         ]);
 
+        Labels::deleteLabelsAssignedTo($dn->id);
 
-        $deleted = DB::table('labels_assigned')->where('service_id', '=', $dn->id)->delete();
-
-        $labels_array = [$request->label1, $request->label2, $request->label3, $request->label4];
-
-        for ($i = 1; $i <= 4; $i++) {
-            if (!is_null($labels_array[($i - 1)])) {
-                DB::insert('INSERT INTO labels_assigned ( label_id, service_id) values (?, ?)', [$labels_array[($i - 1)], $dn->id]);
-            }
-        }
+        Labels::insertLabelsAssigned([$request->label1, $request->label2, $request->label3, $request->label4], $dn->id);
 
         return redirect()->route('dns.index')
             ->with('success', 'DNS updated Successfully.');
@@ -129,6 +119,8 @@ class DNSController extends Controller
         $items = DNS::find($id);
 
         $items->delete();
+
+        Cache::forget('dns_count');
 
         Labels::deleteLabelsAssignedTo($id);
 
