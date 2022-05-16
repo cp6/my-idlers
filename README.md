@@ -26,7 +26,8 @@ GeekBench 5 scores to do easier comparing and sorting.
 * Added Kharkiv and Sao Paulo to locations seeder
 * Updated Controllers with DB calls and logic moved to relevant Model
 * Updated YABs inserts for version v2022-05-06
-* Updated DB calls for caching
+* Updated DB calls to use caching
+* Updated Home blade info cards to be col-6 instead of 12 when on mobile
 * Updated home page view links on recently added
 * Fixed YABs insert error not displaying
 
