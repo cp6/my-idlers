@@ -21,27 +21,22 @@ removed.
 
 [Cloud Five Limited](https://cloud-v.net/) for providing the hosting for demo installation.
 
-## 2.0 changes:
+## 2.1.0 changes:
 
-**Unfortunately you cannot migrate your current install to the new 2.0 version**
-
-* Laravel framework (version 9).
-* Breeze authentication.
-* API GET for any of the CRUD data.
-* Labels (titles/desc) CRUD.
-* Misc services CRUD.
-* DNS CRUD.
-* Ip address CRUD.
-* Reseller hosting.
-* Added Operating systems to DB, Deleting and creating them now possible.
-* Make servers displayable public with config options to hide certain values.
-* Vue JS used where possible.
-* Datatables used on large tables (Locations, labels, and providers).
-* Added caching for home page and servers
+* Added Seedbox CRUD
+* Added dark mode (settings option. Bootstrap-Night https://vinorodrigues.github.io/bootstrap-dark-5/)
+* Added some foreign keys for certain tables
+* Added functions for IP and label assignments
+* Added functions to forget (clear) cache, preventing chunks of duplicate code
+* Added VMware to server virt select dropdown options
+* Added Kharkiv and Sao Paulo to locations seeder
+* Updated Controllers with DB calls and logic moved to relevant Model
+* Updated DB calls for caching
+* Updated home page view links on recently added
 
 ## Requires
 
-* PHP 8 (minimum, compatible with 8.1)
+* PHP 8 (8.1 recommended)
 
 ## Features
 
@@ -73,7 +68,16 @@ removed.
 * Run `php artisan migrate:fresh --seed` to create tables and seed data
 * Run `php artisan serve`
 
+## Update
+
+If you have at least version 2.0 installed:
+
+* Run `git clone https://github.com/cp6/my-idlers.git`
+* Run `composer install`
+* Run `php artisan migrate`
+
 ## Run using Docker
+
 ```
 docker run \
   -p 8000:8000\
@@ -139,6 +143,10 @@ All API requests must be appended with `api/` e.g `mydomain.com/api/servers/gYk8
 `reseller/`
 
 `reseller/{id}`
+
+`seedbox/`
+
+`seedbox/{id}`
 
 `settings/`
 
