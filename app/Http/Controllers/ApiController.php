@@ -142,6 +142,23 @@ class ApiController extends Controller
         return response($reseller, 200);
     }
 
+    protected function getAllSeedbox()
+    {
+        $reseller = DB::table('seedboxes as sb')
+            ->Join('pricings as p', 'sb.id', '=', 'p.service_id')
+            ->get(['sb.*', 'p.id as price_id', 'p.currency', 'p.price', 'p.term', 'p.as_usd', 'p.usd_per_month', 'p.next_due_date'])->toJson(JSON_PRETTY_PRINT);
+        return response($reseller, 200);
+    }
+
+    protected function getSeedbox($id)
+    {
+        $reseller = DB::table('seedboxes as sb')
+            ->Join('pricings as p', 'sb.id', '=', 'p.service_id')
+            ->where('sb.id', '=', $id)
+            ->get(['sb.*', 'p.id as price_id', 'p.currency', 'p.price', 'p.term', 'p.as_usd', 'p.usd_per_month', 'p.next_due_date'])->toJson(JSON_PRETTY_PRINT);
+        return response($reseller, 200);
+    }
+
     protected function getAllDomains()
     {
         $domains = DB::table('domains as d')

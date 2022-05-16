@@ -55,6 +55,9 @@ Route::middleware('auth:api')->get('providers/{id}', 'App\Http\Controllers\ApiCo
 Route::middleware('auth:api')->get('reseller/', 'App\Http\Controllers\ApiController@getAllReseller');
 Route::middleware('auth:api')->get('reseller/{id}', 'App\Http\Controllers\ApiController@getReseller');
 
+Route::middleware('auth:api')->get('seedbox/', 'App\Http\Controllers\ApiController@getAllSeedbox');
+Route::middleware('auth:api')->get('seedbox/{id}', 'App\Http\Controllers\ApiController@getSeedbox');
+
 Route::middleware('auth:api')->get('settings/', 'App\Http\Controllers\ApiController@getAllSettings');
 
 Route::middleware('auth:api')->get('shared/', 'App\Http\Controllers\ApiController@getAllShared');
