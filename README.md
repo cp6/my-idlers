@@ -9,14 +9,6 @@ GeekBench 5 scores to do easier comparing and sorting.
 
 [![Generic badge](https://img.shields.io/badge/version-2.0-blue.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Laravel-9.0-red.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/PHP-8.1-purple.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Bootstrap-5.1-pink.svg)](https://shields.io/)
 
-## V2 notes
-
-V2 build is a complete overhaul of My idlers with the project being moved onto the Laravel framework. This will simplify
-development and most of the features from the original build will be present in V2.
-
-Using Laravel will bring in an API endpoint and the possibilities to show servers publicly with certain parameters
-removed.
-
 ## Project sponsor
 
 [Cloud Five Limited](https://cloud-v.net/) for providing the hosting for demo installation.
