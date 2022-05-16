@@ -36,6 +36,7 @@
                         <li><a class="dropdown-item" href="{{route('locations.index')}}">Locations</a></li>
                         <li><a class="dropdown-item" href="{{route('os.index')}}">OS</a></li>
                         <li><a class="dropdown-item" href="{{route('providers.index')}}">Providers</a></li>
+                        <li><a class="dropdown-item" href="{{route('seedboxes.index')}}">Seedboxes</a></li>
                         <li><a class="dropdown-item" href="{{route('yabs.index')}}">YABs</a></li>
                         <li><a class="dropdown-item" href="{{route('settings.index')}}">Settings</a></li>
                         <li><a class="dropdown-item" href="{{route('account.index')}}">Account</a></li>

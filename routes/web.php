@@ -10,6 +10,7 @@ use App\Http\Controllers\MiscController;
 use App\Http\Controllers\OsController;
 use App\Http\Controllers\ProvidersController;
 use App\Http\Controllers\ResellerController;
+use App\Http\Controllers\SeedBoxesController;
 use App\Http\Controllers\ServerController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\SharedController;
@@ -62,6 +63,8 @@ Route::resource('servers', ServerController::class)->middleware(['auth']);
 
 
 Route::resource('settings', SettingsController::class)->middleware(['auth']);
+
+Route::resource('seedboxes', SeedBoxesController::class)->middleware(['auth']);
 
 Route::resource('shared', SharedController::class)->middleware(['auth']);
 
