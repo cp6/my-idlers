@@ -237,6 +237,8 @@
                                                         {{$due_soon->domain}}.{{$due_soon->extension}}
                                                     @elseif($due_soon->service_type === 5)
                                                         {{$due_soon->name}}
+                                                    @elseif($due_soon->service_type === 6)
+                                                        {{$due_soon->title}}
                                                     @endif
                                                 </td>
                                                 <td class="text-nowrap">
@@ -250,6 +252,8 @@
                                                         Domain
                                                     @elseif($due_soon->service_type === 5)
                                                         Misc
+                                                    @elseif($due_soon->service_type === 6)
+                                                        Seedbox
                                                     @endif
                                                 </td>
                                                 <td class="text-nowrap">
@@ -274,6 +278,10 @@
                                                                                      title="view"></i></a>
                                                     @elseif($due_soon->service_type === 5)
                                                         <a href="{{ route('misc.show', $due_soon->service_id) }}"
+                                                           class="text-body mx-1"><i class="fas fa-eye"
+                                                                                     title="view"></i></a>
+                                                    @elseif($due_soon->service_type === 6)
+                                                        <a href="{{ route('seedboxes.show', $due_soon->service_id) }}"
                                                            class="text-body mx-1"><i class="fas fa-eye"
                                                                                      title="view"></i></a>
                                                     @endif
@@ -319,6 +327,8 @@
                                                         {{$new->domain}}.{{$new->extension}}
                                                     @elseif($new->service_type === 5)
                                                         {{$new->name}}
+                                                    @elseif($new->service_type === 6)
+                                                        {{$new->title}}
                                                     @endif
                                                 </td>
                                                 <td class="text-nowrap">
@@ -332,15 +342,38 @@
                                                         Domain
                                                     @elseif($new->service_type === 5)
                                                         Misc
+                                                    @elseif($new->service_type === 6)
+                                                        Seedbox
                                                     @endif
                                                 </td>
                                                 <td class="text-nowrap">{{Carbon\Carbon::parse($new->created_at)->diffForHumans()}}</td>
                                                 <td class="text-nowrap">{{$new->price}} {{$new->currency}} {{\App\Process::paymentTermIntToString($new->term)}}</td>
                                                 <td class="text-nowrap text-center">
-                                                    <a href="{{ route('servers.show', $new->service_id) }}"
-                                                       class="text-body mx-1">
-                                                        <i class="fas fa-eye" title="view"></i>
-                                                    </a>
+                                                    @if($new->service_type === 1)
+                                                        <a href="{{ route('servers.show', $new->service_id) }}"
+                                                           class="text-body mx-1"><i class="fas fa-eye"
+                                                                                     title="view"></i></a>
+                                                    @elseif($new->service_type === 2)
+                                                        <a href="{{ route('shared.show', $new->service_id) }}"
+                                                           class="text-body mx-1"><i class="fas fa-eye"
+                                                                                     title="view"></i></a>
+                                                    @elseif($new->service_type === 3)
+                                                        <a href="{{ route('reseller.show', $new->service_id) }}"
+                                                           class="text-body mx-1"><i class="fas fa-eye"
+                                                                                     title="view"></i></a>
+                                                    @elseif($new->service_type === 4)
+                                                        <a href="{{ route('domains.show', $new->service_id) }}"
+                                                           class="text-body mx-1"><i class="fas fa-eye"
+                                                                                     title="view"></i></a>
+                                                    @elseif($new->service_type === 5)
+                                                        <a href="{{ route('misc.show', $new->service_id) }}"
+                                                           class="text-body mx-1"><i class="fas fa-eye"
+                                                                                     title="view"></i></a>
+                                                    @elseif($new->service_type === 6)
+                                                        <a href="{{ route('seedboxes.show', $new->service_id) }}"
+                                                           class="text-body mx-1"><i class="fas fa-eye"
+                                                                                     title="view"></i></a>
+                                                    @endif
                                                 </td>
                                             </tr>
                                         @endforeach
