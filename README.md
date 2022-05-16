@@ -1,13 +1,13 @@
 # My idlers
 
-A web app for displaying, organizing and storing information about servers (VPS), shared & reseller hosting, domains,
+A web app for displaying, organizing and storing information about servers (VPS), shared & reseller hosting, seed boxes, domains,
 DNS and misc services.
 
 Despite what the name infers this self hosted web app isn't just for storing idling server information. By using
 a [YABs](https://github.com/masonr/yet-another-bench-script) output you can get disk & network speed values along with
 GeekBench 5 scores to do easier comparing and sorting.
 
-[![Generic badge](https://img.shields.io/badge/version-2.0-blue.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Laravel-9.0-red.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/PHP-8.1-purple.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Bootstrap-5.1-pink.svg)](https://shields.io/)
+[![Generic badge](https://img.shields.io/badge/version-2.1.0-blue.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Laravel-9.0-red.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/PHP-8.1-purple.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Bootstrap-5.1-pink.svg)](https://shields.io/)
 
 ## Project sponsor
 
@@ -23,8 +23,10 @@ GeekBench 5 scores to do easier comparing and sorting.
 * Added VMware to server virt select dropdown options
 * Added Kharkiv and Sao Paulo to locations seeder
 * Updated Controllers with DB calls and logic moved to relevant Model
+* Updated YABs inserts for version v2022-05-06
 * Updated DB calls for caching
 * Updated home page view links on recently added
+* Fixed YABs insert error not displaying
 
 ## Requires
 
