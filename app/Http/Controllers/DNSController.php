@@ -52,13 +52,7 @@ class DNSController extends Controller
             'domain_id' => ($request->domain_id !== 'null') ? $request->domain_id : null
         ]);
 
-        $labels_array = [$request->label1, $request->label2, $request->label3, $request->label4];
-
-        for ($i = 1; $i <= 4; $i++) {
-            if (!is_null($labels_array[($i - 1)])) {
-                DB::insert('INSERT INTO labels_assigned (label_id, service_id) values (?, ?)', [$labels_array[($i - 1)], $dns_id]);
-            }
-        }
+        Labels::insertLabelsAssigned([$request->label1, $request->label2, $request->label3, $request->label4], $dns_id);
 
         Cache::forget('dns_count');
 
@@ -111,16 +105,9 @@ class DNSController extends Controller
             'domain_id' => ($request->domain_id !== 'null') ? $request->domain_id : null
         ]);
 
+        Labels::deleteLabelsAssignedTo($dn->id);
 
-        $deleted = DB::table('labels_assigned')->where('service_id', '=', $dn->id)->delete();
-
-        $labels_array = [$request->label1, $request->label2, $request->label3, $request->label4];
-
-        for ($i = 1; $i <= 4; $i++) {
-            if (!is_null($labels_array[($i - 1)])) {
-                DB::insert('INSERT INTO labels_assigned ( label_id, service_id) values (?, ?)', [$labels_array[($i - 1)], $dn->id]);
-            }
-        }
+        Labels::insertLabelsAssigned([$request->label1, $request->label2, $request->label3, $request->label4], $dn->id);
 
         return redirect()->route('dns.index')
             ->with('success', 'DNS updated Successfully.');
