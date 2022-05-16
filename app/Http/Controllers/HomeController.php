@@ -6,6 +6,7 @@ use App\Models\DNS;
 use App\Models\Home;
 use App\Models\Labels;
 use App\Models\Pricing;
+use App\Models\Settings;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -36,29 +37,12 @@ class HomeController extends Controller
 
         $recently_added = Home::recentlyAdded();
 
-        $settings = Cache::remember('settings', now()->addMinute(1), function () {
-            return DB::table('settings')
-                ->where('id', '=', 1)
-                ->get();
-        });
+        $settings = Settings::getSettings();
 
-        Session::put('dark_mode', $settings[0]->dark_mode ?? 0);
-        Session::put('timer_version_footer', $settings[0]->show_versions_footer ?? 1);
-        Session::put('show_servers_public', $settings[0]->show_servers_public ?? 0);
-        Session::put('show_server_value_ip', $settings[0]->show_server_value_ip ?? 0);
-        Session::put('show_server_value_hostname', $settings[0]->show_server_value_hostname ?? 0);
-        Session::put('show_server_value_price', $settings[0]->show_server_value_price ?? 0);
-        Session::put('show_server_value_yabs', $settings[0]->show_server_value_yabs ?? 0);
-        Session::put('show_server_value_provider', $settings[0]->show_server_value_provider ?? 0);
-        Session::put('show_server_value_location', $settings[0]->show_server_value_location ?? 0);
-        Session::put('default_currency', $settings[0]->default_currency ?? 'USD');
-        Session::put('default_server_os', $settings[0]->default_server_os ?? 1);
-        Session::put('due_soon_amount', $settings[0]->due_soon_amount ?? 6);
-        Session::put('recently_added_amount', $settings[0]->recently_added_amount ?? 6);
-        Session::save();
+        Settings::setSettingsToSession($settings);
 
         $all_pricing = Pricing::allPricing();
-        
+
         $services_count = json_decode($services_count, true);
 
         $servers_count = $domains_count = $shared_count = $reseller_count = $other_count = $seedbox_count = $total_services = 0;
