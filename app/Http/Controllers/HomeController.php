@@ -26,58 +26,37 @@ class HomeController extends Controller
         $p = new Process();
         $p->startTimer();
 
-        $services_count = Home::servicesCount();
-
-        $due_soon = Home::dueSoonData();
-
-        $server_summary = Home::serverSummary();
-
-        //Check for past due date and refresh the due date if so:
-        $due_soon = Home::doDueSoon($due_soon);
-
-        $recently_added = Home::recentlyAdded();
-
+        //Get & set the settings, 1 minute cache
         $settings = Settings::getSettings();
-
         Settings::setSettingsToSession($settings);
 
-        $all_pricing = Pricing::allPricing();
+        //Check for past due date and refresh the due date if so:
+        $due_soon = Home::doDueSoon(Home::dueSoonData());
 
-        $services_count = json_decode($services_count, true);
+        //Orders services most recently added first, cached with limit from settings
+        $recently_added = Home::recentlyAdded();
 
-        $servers_count = $domains_count = $shared_count = $reseller_count = $other_count = $seedbox_count = $total_services = 0;
+        //Get count tally for each of the services type
+        $service_count = Home::doServicesCount(Home::servicesCount());
 
-        foreach ($services_count as $sc) {
-            $total_services += $sc['amount'];
-            if ($sc['service_type'] === 1) {
-                $servers_count = $sc['amount'];
-            } else if ($sc['service_type'] === 2) {
-                $shared_count = $sc['amount'];
-            } else if ($sc['service_type'] === 3) {
-                $reseller_count = $sc['amount'];
-            } else if ($sc['service_type'] === 4) {
-                $domains_count = $sc['amount'];
-            } else if ($sc['service_type'] === 5) {
-                $other_count = $sc['amount'];
-            } else if ($sc['service_type'] === 6) {
-                $seedbox_count = $sc['amount'];
-            }
-        }
+        //Get pricing for weekly, monthly, yearly, 2 yearly
+        $pricing_breakdown = Home::breakdownPricing(Pricing::allPricing());
 
-        $pricing_breakdown = Home::breakdownPricing($all_pricing);
+        //Summary of servers specs
+        $server_summary = Home::serverSummary();
 
         $p->stopTimer();
 
         $information = array(
-            'servers' => $servers_count,
-            'domains' => $domains_count,
-            'shared' => $shared_count,
-            'reseller' => $reseller_count,
-            'misc' => $other_count,
-            'seedbox' => $seedbox_count,
+            'servers' => $service_count['servers'],
+            'domains' => $service_count['domains'],
+            'shared' => $service_count['shared'],
+            'reseller' => $service_count['reseller'],
+            'misc' => $service_count['other'],
+            'seedbox' => $service_count['seedbox'],
             'labels' => Labels::labelsCount(),
             'dns' => DNS::dnsCount(),
-            'total_services' => $total_services,
+            'total_services' => $service_count['total'],
             'total_inactive' => $pricing_breakdown['inactive_count'],
             'total_cost_weekly' => number_format($pricing_breakdown['total_cost_weekly'], 2),
             'total_cost_monthly' => number_format($pricing_breakdown['total_cost_montly'], 2),
