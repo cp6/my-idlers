@@ -10,13 +10,13 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^7.4|^8.0",
+        "php": "^8.0",
         "fruitcake/laravel-cors": "^2.2",
         "guzzlehttp/guzzle": "^7.4",
-        "laravel/framework": "^9.4",
+        "laravel/framework": "^9",
         "laravel/tinker": "^2.7",
         "laravel/ui": "^3.4",
-        "yajra/laravel-datatables-oracle": "~9.19",
+        "yajra/laravel-datatables-oracle": "~9.20",
         "ext-json": "*"
     },
     "require-dev": {
