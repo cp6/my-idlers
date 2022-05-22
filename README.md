@@ -9,6 +9,8 @@ GeekBench 5 scores to do easier comparing and sorting.
 
 [![Generic badge](https://img.shields.io/badge/version-2.1.0-blue.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Laravel-9.0-red.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/PHP-8.1-purple.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Bootstrap-5.1-pink.svg)](https://shields.io/)
 
+![My Idlers]([https://github.com/[username]/[reponame]/blob/[branch]/image.jpg?raw=true](https://raw.githubusercontent.com/cp6/my-idlers/main/public/My%20Idlers%20logo.jpg))
+
 [demo site](https://demo.myidlers.com/) **Note:** Create, Update and Delete are disabled.
 
 ## Project sponsor
@@ -183,6 +185,8 @@ or
 **Make sure YABs output starts at the first line which is:**
 
 ```# ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## #```
+
+Logo icons created by Freepik - Flaticon
 
 ## Screenshots for v2
 
