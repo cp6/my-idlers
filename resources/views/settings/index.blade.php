@@ -214,6 +214,13 @@
                         </x-number-input>
                     </div>
                 </div>
+                <div class="row mt-3">
+                    <div class="col-12 col-md-4 mb-3">
+                        <x-currency-select>
+                            <x-slot name="current">{{$setting[0]->dashboard_currency}}</x-slot>
+                        </x-currency-select>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-12 col-lg-4">
                         <x-submit-button>Update settings</x-submit-button>

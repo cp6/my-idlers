@@ -40,6 +40,7 @@ class Settings extends Model
         Session::put('default_server_os', $settings[0]->default_server_os ?? 1);
         Session::put('due_soon_amount', $settings[0]->due_soon_amount ?? 6);
         Session::put('recently_added_amount', $settings[0]->recently_added_amount ?? 6);
+        Session::put('dashboard_currency', $settings[0]->dashboard_currency ?? 'USD');
         Session::save();
     }
 

@@ -119,24 +119,29 @@ class Home extends Model
         $total_cost_weekly = $total_cost_pm = $inactive_count = 0;
         foreach ($pricing as $price) {
             if ($price['active'] === 1) {
+                if (Session::get('dashboard_currency') !== 'USD') {
+                    $the_price = Pricing::convertFromUSD($price['as_usd'], Session::get('dashboard_currency'));
+                } else {
+                    $the_price = $price['as_usd'];
+                }
                 if ($price['term'] === 1) {//1 month
-                    $total_cost_weekly += ($price['as_usd'] / 4);
-                    $total_cost_pm += $price['as_usd'];
+                    $total_cost_weekly += ($the_price / 4);
+                    $total_cost_pm += $the_price;
                 } elseif ($price['term'] === 2) {//3 months
-                    $total_cost_weekly += ($price['as_usd'] / 12);
-                    $total_cost_pm += ($price['as_usd'] / 3);
+                    $total_cost_weekly += ($the_price / 12);
+                    $total_cost_pm += ($the_price / 3);
                 } elseif ($price['term'] === 3) {// 6 month
-                    $total_cost_weekly += ($price['as_usd'] / 24);
-                    $total_cost_pm += ($price['as_usd'] / 6);
+                    $total_cost_weekly += ($the_price / 24);
+                    $total_cost_pm += ($the_price / 6);
                 } elseif ($price['term'] === 4) {// 1 year
-                    $total_cost_weekly += ($price['as_usd'] / 48);
-                    $total_cost_pm += ($price['as_usd'] / 12);
+                    $total_cost_weekly += ($the_price / 48);
+                    $total_cost_pm += ($the_price / 12);
                 } elseif ($price['term'] === 5) {//2 years
-                    $total_cost_weekly += ($price['as_usd'] / 96);
-                    $total_cost_pm += ($price['as_usd'] / 24);
+                    $total_cost_weekly += ($the_price / 96);
+                    $total_cost_pm += ($the_price / 24);
                 } elseif ($price['term'] === 6) {//3 years
-                    $total_cost_weekly += ($price['as_usd'] / 144);
-                    $total_cost_pm += ($price['as_usd'] / 36);
+                    $total_cost_weekly += ($the_price / 144);
+                    $total_cost_pm += ($the_price / 36);
                 }
             } else {
                 $inactive_count++;
