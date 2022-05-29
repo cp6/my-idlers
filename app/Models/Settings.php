@@ -18,7 +18,7 @@ class Settings extends Model
 
     public static function getSettings()
     {
-        return Cache::remember('settings', now()->addMinute(1), function () {
+        return Cache::remember('settings', now()->addWeek(1), function () {
             return DB::table('settings')
                 ->where('id', '=', 1)
                 ->get();
