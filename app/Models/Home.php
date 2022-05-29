@@ -19,6 +19,8 @@ class Home extends Model
         Cache::forget('due_soon');//Main page due_soon cache
         Cache::forget('recently_added');//Main page recently_added cache
         Cache::forget('all_pricing');//All the pricing
+        Cache::forget('services_count_all');
+        Cache::forget('pricing_breakdown');
     }
 
     public static function servicesCount()
@@ -161,36 +163,38 @@ class Home extends Model
 
     public static function doServicesCount($services_count): array
     {
-        $servers_count = $domains_count = $shared_count = $reseller_count = $other_count = $seedbox_count = $total_services = 0;
-
         $services_count = json_decode($services_count, true);
 
-        foreach ($services_count as $sc) {
-            $total_services += $sc['amount'];
-            if ($sc['service_type'] === 1) {
-                $servers_count = $sc['amount'];
-            } else if ($sc['service_type'] === 2) {
-                $shared_count = $sc['amount'];
-            } else if ($sc['service_type'] === 3) {
-                $reseller_count = $sc['amount'];
-            } else if ($sc['service_type'] === 4) {
-                $domains_count = $sc['amount'];
-            } else if ($sc['service_type'] === 5) {
-                $other_count = $sc['amount'];
-            } else if ($sc['service_type'] === 6) {
-                $seedbox_count = $sc['amount'];
+        return Cache::remember('services_count_all', now()->addWeek(1), function () use ($services_count) {
+            $servers_count = $domains_count = $shared_count = $reseller_count = $other_count = $seedbox_count = $total_services = 0;
+            foreach ($services_count as $sc) {
+                $total_services += $sc['amount'];
+                if ($sc['service_type'] === 1) {
+                    $servers_count = $sc['amount'];
+                } else if ($sc['service_type'] === 2) {
+                    $shared_count = $sc['amount'];
+                } else if ($sc['service_type'] === 3) {
+                    $reseller_count = $sc['amount'];
+                } else if ($sc['service_type'] === 4) {
+                    $domains_count = $sc['amount'];
+                } else if ($sc['service_type'] === 5) {
+                    $other_count = $sc['amount'];
+                } else if ($sc['service_type'] === 6) {
+                    $seedbox_count = $sc['amount'];
+                }
             }
-        }
 
-        return array(
-            'servers' => $servers_count,
-            'shared' => $shared_count,
-            'reseller' => $reseller_count,
-            'domains' => $domains_count,
-            'other' => $other_count,
-            'seedbox' => $seedbox_count,
-            'total' => $total_services
-        );
+            return array(
+                'servers' => $servers_count,
+                'shared' => $shared_count,
+                'reseller' => $reseller_count,
+                'domains' => $domains_count,
+                'other' => $other_count,
+                'seedbox' => $seedbox_count,
+                'total' => $total_services
+            );
+        });
+
     }
 
 

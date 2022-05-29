@@ -164,6 +164,8 @@ class Server extends Model
         Cache::forget('servers_summary');//servers summary cache
         Cache::forget('public_server_data');//public servers
         Cache::forget('all_pricing');//All pricing
+        Cache::forget('services_count_all');
+        Cache::forget('pricing_breakdown');
     }
 
     public static function serverSpecificCacheForget(string $server_id): void
