@@ -60,6 +60,7 @@ class SettingsController extends Controller
 
         Cache::forget('due_soon');//Main page due_soon cache
         Cache::forget('recently_added');//Main page recently_added cache
+        Cache::forget('pricing_breakdown');//Main page pricing breakdown
 
         Cache::forget('settings');//Main page settings cache
 
