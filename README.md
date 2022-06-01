@@ -13,7 +13,7 @@ GeekBench 5 scores to do easier comparing and sorting.
 
 [Demo site](https://demo.myidlers.com/) 
 
-**Note:** Create, Update and Delete are disabled.
+**Note:** Create, Update and Delete are disabled on demo site.
 
 ## Project sponsor
 
