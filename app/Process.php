@@ -171,6 +171,8 @@ class Process
     {
         $file_name = 'tempYabs.txt';
 
+        $allowed_versions = ['v2021-12-28', 'v2022-02-18', 'v2022-04-30', 'v2022-05-06', 'v2022-06-11'];
+
         Storage::disk('local')->put($file_name, $data_from_form);
 
         $file = Storage::disk('local')->get($file_name);
@@ -192,8 +194,8 @@ class Process
             }
 
             $version_array = explode(' ', preg_replace('!\s+!', ' ', $this->trimRemoveR($array[2])));
-            if ($version_array[1] === 'v2021-12-28' || $version_array[1] === 'v2022-02-18' || $version_array[1] === 'v2022-04-30' || $version_array[1] === 'v2022-05-06') {//YABs version
-                if ($version_array[1] === 'v2022-05-06') {
+            if (in_array($version_array[1], $allowed_versions, true)) {//YABs version is allowed
+                if ($version_array[1] === 'v2022-05-06' || $version_array[1] === 'v2022-06-11') {//These versions added in more responses
                     $cpu = $this->trimRemoveR(str_replace(':', '', strstr($array[11], ': ')));
                     $cpu_spec = explode(' ', strstr($array[12], ': '));//: 2 @ 3792.872 MHz
                     $ram_line = $this->trimRemoveR(str_replace(':', '', strstr($array[15], ': ')));
@@ -250,7 +252,7 @@ class Process
                 );
 
                 if (isset($array[40])) {
-                    if ($version_array[1] === 'v2022-05-06') {
+                    if ($version_array[1] === 'v2022-05-06' || $version_array[1] === 'v2022-06-11') {
                         if ($array[43] === "Geekbench 5 Benchmark Test:\r") {
                             //No ipv6
                             //Has short ipv4 network speed testing (-r)
