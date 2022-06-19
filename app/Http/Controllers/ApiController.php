@@ -13,6 +13,8 @@ use App\Models\Shared;
 use DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class ApiController extends Controller
 {
@@ -23,7 +25,7 @@ class ApiController extends Controller
             ->join('providers as pr', 's.provider_id', '=', 'pr.id')
             ->join('locations as l', 's.location_id', '=', 'l.id')
             ->join('os as o', 's.os_id', '=', 'o.id')
-            ->get(['s.*', 'p.id as price_id', 'p.currency', 'p.price', 'p.term', 'p.as_usd', 'p.usd_per_month', 'p.next_due_date', 'pr.name as provider', 'l.name as location','o.name as os'])->toJson(JSON_PRETTY_PRINT);
+            ->get(['s.*', 'p.id as price_id', 'p.currency', 'p.price', 'p.term', 'p.as_usd', 'p.usd_per_month', 'p.next_due_date', 'pr.name as provider', 'l.name as location', 'o.name as os'])->toJson(JSON_PRETTY_PRINT);
 
         return response($servers, 200);
     }
@@ -36,7 +38,7 @@ class ApiController extends Controller
             ->join('locations as l', 's.location_id', '=', 'l.id')
             ->join('os as o', 's.os_id', '=', 'o.id')
             ->where('s.id', '=', $id)
-            ->get(['s.*', 'p.id as price_id', 'p.currency', 'p.price', 'p.term', 'p.as_usd', 'p.usd_per_month', 'p.next_due_date', 'pr.name as provider', 'l.name as location','o.name as os']);
+            ->get(['s.*', 'p.id as price_id', 'p.currency', 'p.price', 'p.term', 'p.as_usd', 'p.usd_per_month', 'p.next_due_date', 'pr.name as provider', 'l.name as location', 'o.name as os']);
 
         $yabs = DB::table('yabs')
             ->where('yabs.server_id', '=', $id)
@@ -314,6 +316,97 @@ class ApiController extends Controller
                 break;
         }
         return response(array('ip' => null), 200);
+    }
+
+    protected function storeServer(Request $request)
+    {
+        $rules = array(
+            'hostname' => 'min:3',
+            'server_type' => 'required|integer',
+            'os_id' => 'required|integer',
+            'provider_id' => 'required|integer',
+            'location_id' => 'required|integer',
+            'ssh_port' => 'required|integer',
+            'ram' => 'required|integer',
+            'ram_as_mb' => 'required|integer',
+            'disk' => 'required|integer',
+            'disk_as_gb' => 'required|integer',
+            'cpu' => 'required|integer',
+            'bandwidth' => 'required|integer',
+            'was_promo' => 'required|integer',
+            'active' => 'required|integer',
+            'show_public' => 'required|integer',
+            'owned_since' => 'required|date',
+            'ram_type' => 'required|string|size:2',
+            'disk_type' => 'required|string|size:2',
+            'currency' => 'required|string|size:3',
+            'price' => 'required|numeric',
+            'payment_term' => 'required|integer',
+            'next_due_date' => 'date',
+        );
+
+        $messages = array(
+            'required' => ':attribute is required',
+            'min' => ':attribute must be longer than 3',
+            'integer' => ':attribute must be an integer',
+            'string' => ':attribute must be a string',
+            'size' => ':attribute must be exactly :size characters',
+            'numeric' => ':attribute must be a float',
+            'date' => ':attribute must be a date Y-m-d',
+        );
+
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+        if ($validator->fails()) {
+            return response()->json(['result' => 'fail', 'messages' => $validator->messages()], 400);
+        }
+
+        $server_id = Str::random(8);
+
+        $pricing = new Pricing();
+
+        $as_usd = $pricing->convertToUSD($request->price, $request->currency);
+
+        $pricing->insertPricing(1, $server_id, $request->currency, $request->price, $request->payment_term, $as_usd, $request->next_due_date);
+
+        if (!is_null($request->ip1)) {
+            IPs::insertIP($server_id, $request->ip1);
+        }
+
+        if (!is_null($request->ip2)) {
+            IPs::insertIP($server_id, $request->ip2);
+        }
+
+        $insert = Server::create([
+            'id' => $server_id,
+            'hostname' => $request->hostname,
+            'server_type' => $request->server_type,
+            'os_id' => $request->os_id,
+            'ssh_port' => $request->ssh_port,
+            'provider_id' => $request->provider_id,
+            'location_id' => $request->location_id,
+            'ram' => $request->ram,
+            'ram_type' => $request->ram_type,
+            'ram_as_mb' => ($request->ram_type === 'MB') ? $request->ram : ($request->ram * 1024),
+            'disk' => $request->disk,
+            'disk_type' => $request->disk_type,
+            'disk_as_gb' => ($request->disk_type === 'GB') ? $request->disk : ($request->disk * 1024),
+            'owned_since' => $request->owned_since,
+            'ns1' => $request->ns1,
+            'ns2' => $request->ns2,
+            'bandwidth' => $request->bandwidth,
+            'cpu' => $request->cpu,
+            'was_promo' => $request->was_promo,
+            'show_public' => (isset($request->show_public)) ? 1 : 0
+        ]);
+
+        Server::serverRelatedCacheForget();
+
+        if ($insert) {
+            return response()->json(array('result' => 'success', 'server_id' => $server_id), 200);
+        }
+
+        return response()->json(array('result' => 'fail', 'request' => $request->post()), 500);
     }
 
 }

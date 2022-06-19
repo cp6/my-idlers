@@ -162,6 +162,48 @@ All API requests must be appended with `api/` e.g `mydomain.com/api/servers/gYk8
 
 `shared/{id}`
 
+**POST requests**
+
+Create a server
+
+`/servers`
+
+Body content template
+
+```json
+{
+"active": 1,
+"show_public": 0,
+"hostname": "test.domain.com",
+"ns1": "ns1",
+"ns2": "ns2",
+"server_type": 1,
+"os_id": 2,
+"provider_id": 10,
+"location_id": 15,
+"ssh_port": 22,
+"bandwidth": 2000,
+"ram": 2024,
+"ram_type": "MB",
+"ram_as_mb": 2024,
+"disk": 30,
+"disk_type": "GB",
+"disk_as_gb": 30,
+"cpu": 2,
+"has_yabs": 0,
+"was_promo": 1,
+"ip1": "127.0.0.1",
+"ip2": null,
+"owned_since": "2022-01-01",
+"currency": "USD",
+"price": 4.00,
+"payment_term": 1,
+"as_usd": 4.00,
+"usd_per_month": 4.00,
+"next_due_date": "2022-02-01"
+}
+```
+
 ## Notes
 
 **Public viewable listings**

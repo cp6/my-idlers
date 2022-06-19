@@ -28,6 +28,10 @@ Route::middleware('auth:api')->get('domains/{id}', 'App\Http\Controllers\ApiCont
 Route::middleware('auth:api')->get('servers', 'App\Http\Controllers\ApiController@getAllServers');
 Route::middleware('auth:api')->get('servers/{id}', 'App\Http\Controllers\ApiController@getServer');
 
+Route::middleware('auth:api')->post('servers', 'App\Http\Controllers\ApiController@storeServer');
+Route::middleware('auth:api')->put('servers/{id}', 'App\Http\Controllers\ApiController@updateServer');
+Route::middleware('auth:api')->delete('servers/{id}', 'App\Http\Controllers\ApiController@destroyServer');
+
 Route::middleware('auth:api')->get('IPs/', 'App\Http\Controllers\ApiController@getAllIPs');
 Route::middleware('auth:api')->get('IPs/{id}', 'App\Http\Controllers\ApiController@getIP');
 
