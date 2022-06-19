@@ -7,7 +7,7 @@ Despite what the name infers this self hosted web app isn't just for storing idl
 a [YABs](https://github.com/masonr/yet-another-bench-script) output you can get disk & network speed values along with
 GeekBench 5 scores to do easier comparing and sorting.
 
-[![Generic badge](https://img.shields.io/badge/version-2.1.0-blue.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Laravel-9.0-red.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/PHP-8.1-purple.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Bootstrap-5.1-pink.svg)](https://shields.io/)
+[![Generic badge](https://img.shields.io/badge/version-2.1.1-blue.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Laravel-9.0-red.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/PHP-8.1-purple.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Bootstrap-5.1-pink.svg)](https://shields.io/)
 
 <img src="https://raw.githubusercontent.com/cp6/my-idlers/main/public/My%20Idlers%20logo.jpg" width="128" height="128" />
 
@@ -19,25 +19,16 @@ GeekBench 5 scores to do easier comparing and sorting.
 
 [Cloud Five Limited](https://cloud-v.net/) for providing the hosting for demo installation.
 
-## 2.1.0 changes:
+## 2.1.1 changes (19th June 2022):
 
-* Added Seedbox CRUD
-* Added dark mode (settings option. Bootstrap-Night https://vinorodrigues.github.io/bootstrap-dark-5/)
-* Added some foreign keys for certain tables
-* Added functions for IP and label assignments
-* Added functions to forget (clear) cache, preventing chunks of duplicate code
-* Added VMware to server virt select dropdown options
-* Added Kharkiv and Sao Paulo to locations seeder
-* Updated Controllers with DB calls and logic moved to relevant Model
-* Updated YABs inserts for version v2022-05-06
-* Updated DB calls to use caching
-* Updated Home blade info cards to be col-6 instead of 12 when on mobile
-* Updated home page view links on recently added
-* Fixed YABs insert error not displaying
+* Added compatability for YABs version v2022-06-11
+* Added Create, Update and Delete servers with API
+* Added Update pricing with API
+* Updated YABs compatible versions check
 
 ## Requires
 
-* PHP 8 (8.1 recommended)
+* PHP 8.1
 
 ## Features
 
@@ -203,6 +194,61 @@ Body content template
 "next_due_date": "2022-02-01"
 }
 ```
+
+**PUT requests**
+
+Update a server
+
+`/servers/ID`
+
+Body content template
+
+```json
+{
+"active": 1,
+"show_public": 0,
+"hostname": "test.domain.com",
+"ns1": "ns1",
+"ns2": "ns2",
+"server_type": 1,
+"os_id": 2,
+"provider_id": 10,
+"location_id": 15,
+"ssh_port": 22,
+"bandwidth": 2000,
+"ram": 2024,
+"ram_type": "MB",
+"ram_as_mb": 2024,
+"disk": 30,
+"disk_type": "GB",
+"disk_as_gb": 30,
+"cpu": 2,
+"has_yabs": 0,
+"was_promo": 1,
+"owned_since": "2022-01-01"
+}
+```
+
+Update pricing
+
+`/pricing/ID`
+
+Body content template
+
+```json
+{
+    "price": 10.50,
+    "currency": "USD",
+    "term" : 1
+}
+```
+
+**DELETE requests**
+
+Delete a server
+
+`/servers/ID`
+
 
 ## Notes
 
