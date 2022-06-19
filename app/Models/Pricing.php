@@ -14,6 +14,27 @@ class Pricing extends Model
 
     protected $fillable = ['service_id', 'service_type', 'currency', 'price', 'term', 'as_usd', 'usd_per_month', 'next_due_date'];
 
+    public static function convertFromUSD(string $amount, string $convert_to): float
+    {//Code rates update from an API??
+        if ($convert_to === 'AUD') {
+            return (1.39 * $amount);
+        } elseif ($convert_to === "USD") {
+            return $amount;
+        } elseif ($convert_to === "GBP") {
+            return (0.79 * $amount);
+        } elseif ($convert_to === "EUR") {
+            return (0.93 * $amount);
+        } elseif ($convert_to === "NZD") {
+            return (1.53 * $amount);
+        } elseif ($convert_to === "JPY") {
+            return (127.12 * $amount);
+        } elseif ($convert_to === "CAD") {
+            return (1.27 * $amount);
+        } else {
+            return $amount;
+        }
+    }
+
     public function convertToUSD(string $amount, string $convert_from): float
     {
         if ($convert_from === 'AUD') {

@@ -33,7 +33,8 @@ class SettingsController extends Controller
             'default_currency' => 'required',
             'default_server_os' => 'required',
             'due_soon_amount' => 'required|integer|between:0,12',
-            'recently_added_amount' => 'required|integer|between:0,12'
+            'recently_added_amount' => 'required|integer|between:0,12',
+            'currency' => 'required|string|size:3'
         ]);
 
         DB::table('settings')
@@ -51,13 +52,15 @@ class SettingsController extends Controller
                 'default_currency' => $request->default_currency,
                 'default_server_os' => $request->default_server_os,
                 'due_soon_amount' => $request->due_soon_amount,
-                'recently_added_amount' => $request->recently_added_amount
+                'recently_added_amount' => $request->recently_added_amount,
+                'dashboard_currency' => $request->currency,
             ]);
 
         Settings::setSettingsToSession($settings);
 
         Cache::forget('due_soon');//Main page due_soon cache
         Cache::forget('recently_added');//Main page recently_added cache
+        Cache::forget('pricing_breakdown');//Main page pricing breakdown
 
         Cache::forget('settings');//Main page settings cache
 

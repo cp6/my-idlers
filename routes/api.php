@@ -28,6 +28,10 @@ Route::middleware('auth:api')->get('domains/{id}', 'App\Http\Controllers\ApiCont
 Route::middleware('auth:api')->get('servers', 'App\Http\Controllers\ApiController@getAllServers');
 Route::middleware('auth:api')->get('servers/{id}', 'App\Http\Controllers\ApiController@getServer');
 
+Route::middleware('auth:api')->post('servers', 'App\Http\Controllers\ApiController@storeServer');
+Route::middleware('auth:api')->put('servers/{id}', 'App\Http\Controllers\ApiController@updateServer');
+Route::middleware('auth:api')->delete('servers/{id}', 'App\Http\Controllers\ApiController@destroyServer');
+
 Route::middleware('auth:api')->get('IPs/', 'App\Http\Controllers\ApiController@getAllIPs');
 Route::middleware('auth:api')->get('IPs/{id}', 'App\Http\Controllers\ApiController@getIP');
 
@@ -48,6 +52,7 @@ Route::middleware('auth:api')->get('os/{id}', 'App\Http\Controllers\ApiControlle
 
 Route::middleware('auth:api')->get('pricing/', 'App\Http\Controllers\ApiController@getAllPricing');
 Route::middleware('auth:api')->get('pricing/{id}', 'App\Http\Controllers\ApiController@getPricing');
+Route::middleware('auth:api')->put('pricing/{id}', 'App\Http\Controllers\ApiController@updatePricing');
 
 Route::middleware('auth:api')->get('providers/', 'App\Http\Controllers\ApiController@getAllProviders');
 Route::middleware('auth:api')->get('providers/{id}', 'App\Http\Controllers\ApiController@getProvider');

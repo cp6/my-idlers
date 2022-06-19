@@ -65,7 +65,8 @@ class HomeController extends Controller
             'due_soon' => $due_soon,
             'newest' => $recently_added,
             'execution_time' => number_format($p->getTimeTaken(), 2),
-            'servers_summary' => $server_summary
+            'servers_summary' => $server_summary,
+            'currency' => Session::get('dashboard_currency')
         );
 
         return view('home', compact('information'));

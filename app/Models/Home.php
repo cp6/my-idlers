@@ -19,6 +19,8 @@ class Home extends Model
         Cache::forget('due_soon');//Main page due_soon cache
         Cache::forget('recently_added');//Main page recently_added cache
         Cache::forget('all_pricing');//All the pricing
+        Cache::forget('services_count_all');
+        Cache::forget('pricing_breakdown');
     }
 
     public static function servicesCount()
@@ -116,74 +118,83 @@ class Home extends Model
     {
         $pricing = json_decode($all_pricing, true);
 
-        $total_cost_weekly = $total_cost_pm = $inactive_count = 0;
-        foreach ($pricing as $price) {
-            if ($price['active'] === 1) {
-                if ($price['term'] === 1) {//1 month
-                    $total_cost_weekly += ($price['as_usd'] / 4);
-                    $total_cost_pm += $price['as_usd'];
-                } elseif ($price['term'] === 2) {//3 months
-                    $total_cost_weekly += ($price['as_usd'] / 12);
-                    $total_cost_pm += ($price['as_usd'] / 3);
-                } elseif ($price['term'] === 3) {// 6 month
-                    $total_cost_weekly += ($price['as_usd'] / 24);
-                    $total_cost_pm += ($price['as_usd'] / 6);
-                } elseif ($price['term'] === 4) {// 1 year
-                    $total_cost_weekly += ($price['as_usd'] / 48);
-                    $total_cost_pm += ($price['as_usd'] / 12);
-                } elseif ($price['term'] === 5) {//2 years
-                    $total_cost_weekly += ($price['as_usd'] / 96);
-                    $total_cost_pm += ($price['as_usd'] / 24);
-                } elseif ($price['term'] === 6) {//3 years
-                    $total_cost_weekly += ($price['as_usd'] / 144);
-                    $total_cost_pm += ($price['as_usd'] / 36);
+        return Cache::remember('pricing_breakdown', now()->addWeek(1), function () use ($pricing) {
+            $total_cost_weekly = $total_cost_pm = $inactive_count = 0;
+            foreach ($pricing as $price) {
+                if ($price['active'] === 1) {
+                    if (Session::get('dashboard_currency') !== 'USD') {
+                        $the_price = Pricing::convertFromUSD($price['as_usd'], Session::get('dashboard_currency'));
+                    } else {
+                        $the_price = $price['as_usd'];
+                    }
+                    if ($price['term'] === 1) {//1 month
+                        $total_cost_weekly += ($the_price / 4);
+                        $total_cost_pm += $the_price;
+                    } elseif ($price['term'] === 2) {//3 months
+                        $total_cost_weekly += ($the_price / 12);
+                        $total_cost_pm += ($the_price / 3);
+                    } elseif ($price['term'] === 3) {// 6 month
+                        $total_cost_weekly += ($the_price / 24);
+                        $total_cost_pm += ($the_price / 6);
+                    } elseif ($price['term'] === 4) {// 1 year
+                        $total_cost_weekly += ($the_price / 48);
+                        $total_cost_pm += ($the_price / 12);
+                    } elseif ($price['term'] === 5) {//2 years
+                        $total_cost_weekly += ($the_price / 96);
+                        $total_cost_pm += ($the_price / 24);
+                    } elseif ($price['term'] === 6) {//3 years
+                        $total_cost_weekly += ($the_price / 144);
+                        $total_cost_pm += ($the_price / 36);
+                    }
+                } else {
+                    $inactive_count++;
                 }
-            } else {
-                $inactive_count++;
             }
-        }
-        $total_cost_yearly = ($total_cost_pm * 12);
+            $total_cost_yearly = ($total_cost_pm * 12);
 
-        return array(
-            'total_cost_weekly' => $total_cost_weekly,
-            'total_cost_montly' => $total_cost_pm,
-            'total_cost_yearly' => $total_cost_yearly,
-            'inactive_count' => $inactive_count,
-        );
+            return array(
+                'total_cost_weekly' => $total_cost_weekly,
+                'total_cost_montly' => $total_cost_pm,
+                'total_cost_yearly' => $total_cost_yearly,
+                'inactive_count' => $inactive_count,
+            );
+        });
     }
 
     public static function doServicesCount($services_count): array
     {
-        $servers_count = $domains_count = $shared_count = $reseller_count = $other_count = $seedbox_count = $total_services = 0;
-
         $services_count = json_decode($services_count, true);
 
-        foreach ($services_count as $sc) {
-            $total_services += $sc['amount'];
-            if ($sc['service_type'] === 1) {
-                $servers_count = $sc['amount'];
-            } else if ($sc['service_type'] === 2) {
-                $shared_count = $sc['amount'];
-            } else if ($sc['service_type'] === 3) {
-                $reseller_count = $sc['amount'];
-            } else if ($sc['service_type'] === 4) {
-                $domains_count = $sc['amount'];
-            } else if ($sc['service_type'] === 5) {
-                $other_count = $sc['amount'];
-            } else if ($sc['service_type'] === 6) {
-                $seedbox_count = $sc['amount'];
+        return Cache::remember('services_count_all', now()->addWeek(1), function () use ($services_count) {
+            $servers_count = $domains_count = $shared_count = $reseller_count = $other_count = $seedbox_count = $total_services = 0;
+            foreach ($services_count as $sc) {
+                $total_services += $sc['amount'];
+                if ($sc['service_type'] === 1) {
+                    $servers_count = $sc['amount'];
+                } else if ($sc['service_type'] === 2) {
+                    $shared_count = $sc['amount'];
+                } else if ($sc['service_type'] === 3) {
+                    $reseller_count = $sc['amount'];
+                } else if ($sc['service_type'] === 4) {
+                    $domains_count = $sc['amount'];
+                } else if ($sc['service_type'] === 5) {
+                    $other_count = $sc['amount'];
+                } else if ($sc['service_type'] === 6) {
+                    $seedbox_count = $sc['amount'];
+                }
             }
-        }
 
-        return array(
-            'servers' => $servers_count,
-            'shared' => $shared_count,
-            'reseller' => $reseller_count,
-            'domains' => $domains_count,
-            'other' => $other_count,
-            'seedbox' => $seedbox_count,
-            'total' => $total_services
-        );
+            return array(
+                'servers' => $servers_count,
+                'shared' => $shared_count,
+                'reseller' => $reseller_count,
+                'domains' => $domains_count,
+                'other' => $other_count,
+                'seedbox' => $seedbox_count,
+                'total' => $total_services
+            );
+        });
+
     }
 
 

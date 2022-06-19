@@ -71,7 +71,7 @@
                         <div class="card">
                             <div class="card-body text-center shadow">
                                 <div class="row">
-                                    <h4>{{$information['total_cost_weekly']}} <small class="text-muted">USD</small></h4>
+                                    <h4>{{$information['total_cost_weekly']}} <small class="text-muted">{{$information['currency']}}</small></h4>
                                     <p>Weekly cost</p>
                                 </div>
                             </div>
@@ -81,7 +81,7 @@
                         <div class="card">
                             <div class="card-body text-center shadow">
                                 <div class="row">
-                                    <h4>{{$information['total_cost_monthly']}} <small class="text-muted">USD</small>
+                                    <h4>{{$information['total_cost_monthly']}} <small class="text-muted">{{$information['currency']}}</small>
                                     </h4>
                                     <p>Monthly cost</p>
                                 </div>
@@ -92,7 +92,7 @@
                         <div class="card">
                             <div class="card-body text-center shadow">
                                 <div class="row">
-                                    <h4>{{$information['total_cost_yearly']}} <small class="text-muted">USD</small></h4>
+                                    <h4>{{$information['total_cost_yearly']}} <small class="text-muted">{{$information['currency']}}</small></h4>
                                     <p>Yearly cost</p>
                                 </div>
                             </div>
@@ -102,7 +102,7 @@
                         <div class="card">
                             <div class="card-body text-center shadow">
                                 <div class="row">
-                                    <h4>{{$information['total_cost_2_yearly']}} <small class="text-muted">USD</small>
+                                    <h4>{{$information['total_cost_2_yearly']}} <small class="text-muted">{{$information['currency']}}</small>
                                     </h4>
                                     <p>2 yearly cost</p>
                                 </div>

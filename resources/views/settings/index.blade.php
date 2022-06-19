@@ -18,7 +18,7 @@
                 @csrf
                 @method('PUT')
                 <div class="row mt-2">
-                    <div class="col-12 col-md-4 mb-3">
+                    <div class="col-12 col-md-6 mb-3">
                         <div class="input-group">
                             <div class="input-group-prepend"><span
                                     class="input-group-text">Use dark mode</span></div>
@@ -32,9 +32,7 @@
                             </select>
                         </div>
                     </div>
-                </div>
-                <div class="row mt-2">
-                    <div class="col-12 col-md-4 mb-3">
+                    <div class="col-12 col-md-6 mb-3">
                         <div class="input-group">
                             <div class="input-group-prepend"><span
                                     class="input-group-text">Show versions footer</span></div>
@@ -50,7 +48,45 @@
                     </div>
                 </div>
                 <div class="row mt-3">
-                    <div class="col-12 col-md-4 mb-3">
+                    <div class="col-12 col-md-6 mb-3">
+                        <x-os-select>
+                            <x-slot name="title">Default server OS</x-slot>
+                            <x-slot name="name">default_server_os</x-slot>
+                            <x-slot name="current">{{$setting[0]->default_server_os}}</x-slot>
+                        </x-os-select>
+                    </div>
+                    <div class="col-12 col-md-6 mb-3">
+                        <x-currency-select>
+                            <x-slot name="title">Default currency</x-slot>
+                            <x-slot name="name">default_currency</x-slot>
+                            <x-slot name="current">{{$setting[0]->default_currency}}</x-slot>
+                        </x-currency-select>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12 col-md-6 mb-3">
+                        <x-number-input>
+                            <x-slot name="title">Due soon amount to show</x-slot>
+                            <x-slot name="name">due_soon_amount</x-slot>
+                            <x-slot name="step">1</x-slot>
+                            <x-slot name="min">0</x-slot>
+                            <x-slot name="max">12</x-slot>
+                            <x-slot name="value">{{$setting[0]->due_soon_amount}}</x-slot>
+                        </x-number-input>
+                    </div>
+                    <div class="col-12 col-md-6 mb-3">
+                        <x-number-input>
+                            <x-slot name="title">Recently added amount to show</x-slot>
+                            <x-slot name="name">recently_added_amount</x-slot>
+                            <x-slot name="step">1</x-slot>
+                            <x-slot name="min">0</x-slot>
+                            <x-slot name="max">12</x-slot>
+                            <x-slot name="value">{{$setting[0]->recently_added_amount}}</x-slot>
+                        </x-number-input>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12 col-md-6 mb-3">
                         <div class="input-group">
                             <div class="input-group-prepend"><span
                                     class="input-group-text">Show servers to public</span></div>
@@ -64,10 +100,16 @@
                             </select>
                         </div>
                     </div>
+                    <div class="col-12 col-md-6 mb-3">
+                        <x-currency-select>
+                            <x-slot name="title">Home page currency</x-slot>
+                            <x-slot name="current">{{$setting[0]->dashboard_currency}}</x-slot>
+                        </x-currency-select>
+                    </div>
                 </div>
-                <p>Only if <i>show_servers_public</i> is <b>YES</b> do these apply:</p>
+                <p>Only if <i>Show servers to public</i> is <b>YES</b> do these apply:</p>
                 <div class="row mt-3">
-                    <div class="col-12 col-md-4 mb-3">
+                    <div class="col-12 col-md-6 mb-3">
                         <div class="input-group">
                             <div class="input-group-prepend"><span
                                     class="input-group-text">Show servers IP's</span></div>
@@ -81,9 +123,7 @@
                             </select>
                         </div>
                     </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-12 col-md-4 mb-3">
+                    <div class="col-12 col-md-6 mb-3">
                         <div class="input-group">
                             <div class="input-group-prepend"><span
                                     class="input-group-text">Show servers hostname</span></div>
@@ -101,7 +141,7 @@
                     </div>
                 </div>
                 <div class="row mt-3">
-                    <div class="col-12 col-md-4 mb-3">
+                    <div class="col-12 col-md-6 mb-3">
                         <div class="input-group">
                             <div class="input-group-prepend"><span
                                     class="input-group-text">Show servers provider</span></div>
@@ -117,9 +157,7 @@
                             </select>
                         </div>
                     </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-12 col-md-4 mb-3">
+                    <div class="col-12 col-md-6 mb-3">
                         <div class="input-group">
                             <div class="input-group-prepend"><span
                                     class="input-group-text">Show servers location</span></div>
@@ -137,7 +175,7 @@
                     </div>
                 </div>
                 <div class="row mt-3">
-                    <div class="col-12 col-md-4 mb-3">
+                    <div class="col-12 col-md-6 mb-3">
                         <div class="input-group">
                             <div class="input-group-prepend"><span
                                     class="input-group-text">Show servers price</span></div>
@@ -153,9 +191,7 @@
                             </select>
                         </div>
                     </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-12 col-md-4 mb-3">
+                    <div class="col-12 col-md-6 mb-3">
                         <div class="input-group">
                             <div class="input-group-prepend"><span
                                     class="input-group-text">Show servers YABs</span></div>
@@ -170,48 +206,6 @@
                                 </option>
                             </select>
                         </div>
-                    </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-12 col-md-4 mb-3">
-                        <x-os-select>
-                            <x-slot name="title">Default server OS</x-slot>
-                            <x-slot name="name">default_server_os</x-slot>
-                            <x-slot name="current">{{$setting[0]->default_server_os}}</x-slot>
-                        </x-os-select>
-                    </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-12 col-md-4 mb-3">
-                        <x-currency-select>
-                            <x-slot name="title">Default currency</x-slot>
-                            <x-slot name="name">default_currency</x-slot>
-                            <x-slot name="current">{{$setting[0]->default_currency}}</x-slot>
-                        </x-currency-select>
-                    </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-12 col-md-4 mb-3">
-                        <x-number-input>
-                            <x-slot name="title">Due soon amount to show</x-slot>
-                            <x-slot name="name">due_soon_amount</x-slot>
-                            <x-slot name="step">1</x-slot>
-                            <x-slot name="min">0</x-slot>
-                            <x-slot name="max">12</x-slot>
-                            <x-slot name="value">{{$setting[0]->due_soon_amount}}</x-slot>
-                        </x-number-input>
-                    </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-12 col-md-4 mb-3">
-                        <x-number-input>
-                            <x-slot name="title">Recently added amount to show</x-slot>
-                            <x-slot name="name">recently_added_amount</x-slot>
-                            <x-slot name="step">1</x-slot>
-                            <x-slot name="min">0</x-slot>
-                            <x-slot name="max">12</x-slot>
-                            <x-slot name="value">{{$setting[0]->recently_added_amount}}</x-slot>
-                        </x-number-input>
                     </div>
                 </div>
                 <div class="row">
