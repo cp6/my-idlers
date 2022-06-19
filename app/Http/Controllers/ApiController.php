@@ -336,6 +336,8 @@ class ApiController extends Controller
             'was_promo' => 'required|integer',
             'active' => 'required|integer',
             'show_public' => 'required|integer',
+            'ip1' => 'ip',
+            'ip2' => 'ip',
             'owned_since' => 'required|date',
             'ram_type' => 'required|string|size:2',
             'disk_type' => 'required|string|size:2',
@@ -352,6 +354,7 @@ class ApiController extends Controller
             'string' => ':attribute must be a string',
             'size' => ':attribute must be exactly :size characters',
             'numeric' => ':attribute must be a float',
+            'ip' => ':attribute must be a valid IP address',
             'date' => ':attribute must be a date Y-m-d',
         );
 
@@ -404,6 +407,81 @@ class ApiController extends Controller
 
         if ($insert) {
             return response()->json(array('result' => 'success', 'server_id' => $server_id), 200);
+        }
+
+        return response()->json(array('result' => 'fail', 'request' => $request->post()), 500);
+    }
+
+    public function destroyServer(Request $request)
+    {
+        $items = Server::find($request->id);
+
+        (!is_null($items)) ? $result = $items->delete() : $result = false;
+
+        $p = new Pricing();
+        $p->deletePricing($request->id);
+
+        Labels::deleteLabelsAssignedTo($request->id);
+        IPs::deleteIPsAssignedTo($request->id);
+        Server::serverRelatedCacheForget();
+
+        if ($result) {
+            return response()->json(array('result' => 'success'), 200);
+        }
+
+        return response()->json(array('result' => 'fail'), 500);
+    }
+
+    public function updateServer(Request $request, Server $server)
+    {
+        $rules = array(
+            'hostname' => 'string|min:3',
+            'server_type' => 'integer',
+            'os_id' => 'integer',
+            'provider_id' => 'integer',
+            'location_id' => 'integer',
+            'ssh_port' => 'integer',
+            'ram' => 'integer',
+            'ram_as_mb' => 'integer',
+            'disk' => 'integer',
+            'disk_as_gb' => 'integer',
+            'cpu' => 'integer',
+            'bandwidth' => 'integer',
+            'was_promo' => 'integer',
+            'active' => 'integer',
+            'show_public' => 'integer',
+            'owned_since' => 'date',
+            'ram_type' => 'string|size:2',
+            'disk_type' => 'string|size:2',
+            'currency' => 'string|size:3',
+            'price' => 'numeric',
+            'payment_term' => 'integer',
+            'next_due_date' => 'date',
+        );
+
+        $messages = array(
+            'required' => ':attribute is required',
+            'min' => ':attribute must be longer than 3',
+            'integer' => ':attribute must be an integer',
+            'string' => ':attribute must be a string',
+            'size' => ':attribute must be exactly :size characters',
+            'numeric' => ':attribute must be a float',
+            'date' => ':attribute must be a date Y-m-d',
+        );
+
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+        if ($validator->fails()) {
+            return response()->json(['result' => 'fail', 'messages' => $validator->messages()], 400);
+        }
+
+        $server_update = Server::where('id', $request->id)->update(request()->all());
+
+        Server::serverRelatedCacheForget();
+        Server::serverSpecificCacheForget($request->id);
+
+        if ($server_update) {
+            return response()->json(array('result' => 'success', 'server_id' => $request->id), 200);
         }
 
         return response()->json(array('result' => 'fail', 'request' => $request->post()), 500);
