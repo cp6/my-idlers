@@ -52,6 +52,7 @@ Route::middleware('auth:api')->get('os/{id}', 'App\Http\Controllers\ApiControlle
 
 Route::middleware('auth:api')->get('pricing/', 'App\Http\Controllers\ApiController@getAllPricing');
 Route::middleware('auth:api')->get('pricing/{id}', 'App\Http\Controllers\ApiController@getPricing');
+Route::middleware('auth:api')->put('pricing/{id}', 'App\Http\Controllers\ApiController@updatePricing');
 
 Route::middleware('auth:api')->get('providers/', 'App\Http\Controllers\ApiController@getAllProviders');
 Route::middleware('auth:api')->get('providers/{id}', 'App\Http\Controllers\ApiController@getProvider');

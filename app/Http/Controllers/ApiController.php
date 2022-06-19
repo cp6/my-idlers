@@ -12,6 +12,7 @@ use App\Models\Server;
 use App\Models\Shared;
 use DataTables;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -432,7 +433,7 @@ class ApiController extends Controller
         return response()->json(array('result' => 'fail'), 500);
     }
 
-    public function updateServer(Request $request, Server $server)
+    public function updateServer(Request $request)
     {
         $rules = array(
             'hostname' => 'string|min:3',
@@ -481,6 +482,49 @@ class ApiController extends Controller
         Server::serverSpecificCacheForget($request->id);
 
         if ($server_update) {
+            return response()->json(array('result' => 'success', 'server_id' => $request->id), 200);
+        }
+
+        return response()->json(array('result' => 'fail', 'request' => $request->post()), 500);
+    }
+
+    public function updatePricing(Request $request)
+    {
+        $rules = array(
+            'price' => 'required|numeric',
+            'currency' => 'required|string|size:3',
+            'term' => 'required|integer',
+            'active' => 'integer',
+            'next_due_date' => 'date',
+        );
+
+        $messages = array(
+            'required' => ':attribute is required',
+            'integer' => ':attribute must be an integer',
+            'string' => ':attribute must be a string',
+            'size' => ':attribute must be exactly :size characters',
+            'numeric' => ':attribute must be a float',
+            'date' => ':attribute must be a date Y-m-d',
+        );
+
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+        if ($validator->fails()) {
+            return response()->json(['result' => 'fail', 'messages' => $validator->messages()], 400);
+        }
+
+        $pricing = new Pricing();
+
+        $request->as_usd = $pricing->convertToUSD($request->price, $request->currency);
+
+        $request->usd_per_month = $pricing->costAsPerMonth($request->as_usd, $request->term);
+
+        $price_update = Pricing::where('id', $request->id)->update(request()->all());
+
+        Cache::forget("all_pricing");
+        Server::serverRelatedCacheForget();
+
+        if ($price_update) {
             return response()->json(array('result' => 'success', 'server_id' => $request->id), 200);
         }
 
