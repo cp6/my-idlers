@@ -20,7 +20,7 @@
                                 </tr>
                                 <tr>
                                     <td class="px-4 py-2 font-bold">CPU</td>
-                                    <td>{{ $yab[0]->cpu_cores }} @ {{$yab[0]->cpu_freq}} Ghz</td>
+                                    <td>{{ $yab[0]->cpu_cores }} @ {{$yab[0]->cpu_freq}} Mhz</td>
                                 </tr>
                                 <tr>
                                     <td class="px-4 py-2 font-bold">CPU type</td>

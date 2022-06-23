@@ -55,9 +55,9 @@
                         </tr>
                         <tr>
                             <td class="td-nowrap">CPU freq</td>
-                            <td class="td-nowrap">{{$server1_data[0]->cpu_freq}}<span class="data-type">Ghz</span></td>
-                            {!! \App\Models\Server::tableRowCompare($server1_data[0]->cpu_freq, $server2_data[0]->cpu_freq, 'Ghz') !!}
-                            <td class="td-nowrap">{{$server2_data[0]->cpu_freq}}<span class="data-type">Ghz</span></td>
+                            <td class="td-nowrap">{{$server1_data[0]->cpu_freq}}<span class="data-type">Mhz</span></td>
+                            {!! \App\Models\Server::tableRowCompare($server1_data[0]->cpu_freq, $server2_data[0]->cpu_freq, 'Mhz') !!}
+                            <td class="td-nowrap">{{$server2_data[0]->cpu_freq}}<span class="data-type">Mhz</span></td>
                         </tr>
                         <tr>
                             <td class="td-nowrap">Ram</td>

@@ -15,7 +15,7 @@
                         <th class="text-center"><i class="fas fa-box" title="Virt"></i></th>
                         <th class="text-center">OS</th>
                         <th class="text-center"><i class="fas fa-microchip" title="CPU"></i></th>
-                        <th class="text-center">Ghz</th>
+                        <th class="text-center">Mhz</th>
                         <th class="text-center"><i class="fas fa-memory" title="ram"></i></th>
                         <th class="text-center"><i class="fas fa-compact-disc" title="disk"></i></th>
                         <th class="text-nowrap">Location</th>
