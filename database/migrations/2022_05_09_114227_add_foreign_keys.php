@@ -37,7 +37,7 @@ class AddForeignKeys extends Migration
         });
 
         Schema::table('yabs', function (Blueprint $table) {
-            $table->foreign('server_id', 'yabs_fk_servers')->references('id')->on('servers')->onDelete('cascade');
+            $table->foreign('server_id', 'yabs_fk_servers')->references('id')->on('servers');
         });
 
         Schema::table('disk_speed', function (Blueprint $table) {
