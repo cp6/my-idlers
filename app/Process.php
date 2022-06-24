@@ -184,6 +184,8 @@ class Process
             return array('error_id' => 10, 'error_message' => 'Issue writing/reading txt file');
         }
 
+        //dd($array);
+
         if (count($array) < 46) {
             return array('error_id' => 9, 'error_message' => 'Less than 46 lines');
         }
@@ -275,6 +277,15 @@ class Process
                             $gb_s = 44;
                             $gb_m = 45;
                             $gb_url = 46;
+                        } elseif ($array[47] === "Geekbench 5 Benchmark Test:\r") {
+                            //No ipv6
+                            //Has full ipv4 network speed testing
+                            $has_ipv6 = false;
+                            $start_st = 39;
+                            $end_st = 45;
+                            $gb_s = 51;
+                            $gb_m = 52;
+                            $gb_url = 53;
                         } elseif ($array[43] === "iperf3 Network Speed Tests (IPv6):\r") {
                             //HAS ipv6
                             //Has short ipv4 & ipv6 network speed testing
@@ -293,6 +304,15 @@ class Process
                             $gb_s = 60;
                             $gb_m = 61;
                             $gb_url = 62;
+                        }elseif ($array[59] === "Geekbench 5 Benchmark Test:\r") {
+                            //HAS ipv6
+                            //Has full ipv4 & ipv6 network speed testing
+                            $has_ipv6 = true;
+                            $start_st = 39;
+                            $end_st = 45;
+                            $gb_s = 63;
+                            $gb_m = 64;
+                            $gb_url = 65;
                         } else {
                             return array('error_id' => 5, 'error_message' => 'Not correct YABs command output');
                         }
