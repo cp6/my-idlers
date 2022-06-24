@@ -133,15 +133,8 @@ class YabsController extends Controller
 
     public function destroy(Yabs $yab)
     {
-        $id = $yab->id;
-        $yabs = Yabs::find($id);
+        $yabs = Yabs::find($yab->id);
         $yabs->delete();
-
-        $disk = DiskSpeed::find($id);
-        $disk->delete();
-
-        $network = NetworkSpeed::find($id);
-        $network->delete();
 
         $update_server = DB::table('servers')
             ->where('id', $yab->server_id)
