@@ -49,7 +49,7 @@
                             <div class="card-body text-center shadow">
                                 <div class="row">
                                     <h3>{{ $information['misc'] }}</h3>
-                                    <h5><a href="other" class="text-decoration-none">Misc</a></h5>
+                                    <h5><a href="misc" class="text-decoration-none">Misc</a></h5>
                                 </div>
                             </div>
                         </div>
