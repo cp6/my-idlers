@@ -32,8 +32,7 @@
                         @foreach($domains as $domain)
                             <tr>
                                 <td class="text-nowrap"><a href="https://{{ $domain->domain }}.{{$domain->extension}}"
-                                                           class="text-decoration-none">{{ $domain->domain }}
-                                        .{{$domain->extension}}</a></td>
+                                                           class="text-decoration-none">{{ $domain->domain }}.{{$domain->extension}}</a></td>
                                 <td class="text-nowrap">{{ $domain->owned_since}}</td>
                                 <td class="text-nowrap">{{ now()->diffInDays($domain->next_due_date) }} <small>days</small>
                                 </td>
