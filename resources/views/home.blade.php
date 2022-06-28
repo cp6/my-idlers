@@ -71,7 +71,10 @@
                         <div class="card">
                             <div class="card-body text-center shadow">
                                 <div class="row">
-                                    <h4>{{$information['total_cost_weekly']}} <small class="text-muted">{{$information['currency']}}</small></h4>
+                                    <h4>
+                                        {{$information['total_cost_weekly']}}
+                                        <small class="text-muted">{{$information['currency']}}</small>
+                                    </h4>
                                     <p>Weekly cost</p>
                                 </div>
                             </div>
@@ -81,7 +84,9 @@
                         <div class="card">
                             <div class="card-body text-center shadow">
                                 <div class="row">
-                                    <h4>{{$information['total_cost_monthly']}} <small class="text-muted">{{$information['currency']}}</small>
+                                    <h4>
+                                        {{$information['total_cost_monthly']}}
+                                        <small class="text-muted">{{$information['currency']}}</small>
                                     </h4>
                                     <p>Monthly cost</p>
                                 </div>
@@ -92,7 +97,10 @@
                         <div class="card">
                             <div class="card-body text-center shadow">
                                 <div class="row">
-                                    <h4>{{$information['total_cost_yearly']}} <small class="text-muted">{{$information['currency']}}</small></h4>
+                                    <h4>
+                                        {{$information['total_cost_yearly']}}
+                                        <small class="text-muted">{{$information['currency']}}</small>
+                                    </h4>
                                     <p>Yearly cost</p>
                                 </div>
                             </div>
@@ -102,7 +110,9 @@
                         <div class="card">
                             <div class="card-body text-center shadow">
                                 <div class="row">
-                                    <h4>{{$information['total_cost_2_yearly']}} <small class="text-muted">{{$information['currency']}}</small>
+                                    <h4>
+                                        {{$information['total_cost_2_yearly']}}
+                                        <small class="text-muted">{{$information['currency']}}</small>
                                     </h4>
                                     <p>2 yearly cost</p>
                                 </div>
@@ -388,8 +398,9 @@
 
                 @if(Session::has('timer_version_footer') && Session::get('timer_version_footer') === 1)
                     <p class="text-muted mt-4 text-end"><small>Page took {{$information['execution_time']}} seconds,
-                            Built on Laravel v{{ Illuminate\Foundation\Application::VERSION }} (PHP v{{ PHP_VERSION }}
-                            )</small>
+                            Built on Laravel v{{ Illuminate\Foundation\Application::VERSION }} (PHP v{{ PHP_VERSION }}),
+                            Rates By <a href="https://www.exchangerate-api.com">Exchange Rate API</a>
+                        </small>
                     </p>
                 @endif
     </div>

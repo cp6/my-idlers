@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Log;
 
 class Pricing extends Model
 {
@@ -14,46 +15,49 @@ class Pricing extends Model
 
     protected $fillable = ['service_id', 'service_type', 'currency', 'price', 'term', 'as_usd', 'usd_per_month', 'next_due_date'];
 
-    public static function convertFromUSD(string $amount, string $convert_to): float
-    {//Code rates update from an API??
-        if ($convert_to === 'AUD') {
-            return (1.39 * $amount);
-        } elseif ($convert_to === "USD") {
-            return $amount;
-        } elseif ($convert_to === "GBP") {
-            return (0.79 * $amount);
-        } elseif ($convert_to === "EUR") {
-            return (0.93 * $amount);
-        } elseif ($convert_to === "NZD") {
-            return (1.53 * $amount);
-        } elseif ($convert_to === "JPY") {
-            return (127.12 * $amount);
-        } elseif ($convert_to === "CAD") {
-            return (1.27 * $amount);
-        } else {
-            return $amount;
+    private static function refreshRates(): object
+    {
+        if (Cache::has("currency_rates")) {
+            return Cache::get("currency_rates");
         }
+        $response_json = file_get_contents("https://open.er-api.com/v6/latest/USD");
+        if (false === $response_json) {
+            Log::error("do file_get_contents failed");
+            return (object)null;
+        }
+        try {
+            $response = json_decode($response_json);
+            if ('success' === $response->result) {
+                return Cache::remember("currency_rates", now()->addWeek(1), function () use ($response) {
+                    return $response->rates;
+                });
+            }
+            Log::error("server response is " . $response->result . ", expecting success");
+        } catch (Exception $e) {
+            Log::error("failed to request v6.exchangerate-api.com", ['err' => $e]);
+        }
+        return (object)null;
+    }
+
+    private static function getRates($currency): float
+    {
+        $rate = self::refreshRates()->$currency;
+        return $rate === null ? 1.00 : $rate;
+    }
+
+    public static function getCurrencyList(): array
+    {
+        return array_keys((array)self::refreshRates());
+    }
+
+    public static function convertFromUSD(string $amount, string $convert_to): float
+    {
+        return $amount * self::getRates($convert_to);
     }
 
     public function convertToUSD(string $amount, string $convert_from): float
     {
-        if ($convert_from === 'AUD') {
-            return (0.76 * $amount);
-        } elseif ($convert_from === "USD") {
-            return $amount;
-        } elseif ($convert_from === "GBP") {
-            return (1.35 * $amount);
-        } elseif ($convert_from === "EUR") {
-            return (1.23 * $amount);
-        } elseif ($convert_from === "NZD") {
-            return (0.72 * $amount);
-        } elseif ($convert_from === "JPY") {
-            return (0.0097 * $amount);
-        } elseif ($convert_from === "CAD") {
-            return (0.78 * $amount);
-        } else {
-            return 1.00;
-        }
+        return $amount / self::getRates($convert_from);
     }
 
     public function costAsPerMonth(string $cost, int $term): float
@@ -140,7 +144,7 @@ class Pricing extends Model
     public static function pricingForService(string $service_id)
     {
         return Cache::remember("service_pricing.$service_id", now()->addWeek(1), function () use ($service_id) {
-            return  DB::table('servers as s')
+            return DB::table('servers as s')
                 ->join('pricings as p', 's.id', '=', 'p.service_id')
                 ->where('s.id', '=', $service_id)
                 ->get(['s.*', 'p.*']);
