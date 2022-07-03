@@ -92,6 +92,7 @@ class Home extends Model
     {
         $pricing = new Pricing();
         $count = $altered_due_soon = 0;
+        $server_due_date_changed = false;
         foreach ($due_soon as $service) {
             if (Carbon::createFromFormat('Y-m-d', $service->next_due_date)->isPast()) {
                 $months = $pricing->termAsMonths($service->term);//Get months for term to update the next due date to
@@ -101,10 +102,18 @@ class Home extends Model
                     ->update(['next_due_date' => $new_due_date]);
                 $due_soon[$count]->next_due_date = $new_due_date;//Update array being sent to view
                 $altered_due_soon = 1;
+                if ($service->service_type === 1) {
+                    $server_due_date_changed = true;
+                    Server::serverSpecificCacheForget($service->service_id);
+                }
             } else {
                 break;//Break because if this date isnt past than the ones after it in the loop wont be either
             }
             $count++;
+        }
+
+        if ($server_due_date_changed) {
+            Server::serverRelatedCacheForget();
         }
 
         if ($altered_due_soon === 1) {//Made changes to due soon so re-write it
