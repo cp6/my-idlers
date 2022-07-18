@@ -16,7 +16,7 @@
                                 <tbody>
                                 <tr>
                                     <td class="px-4 py-2 font-bold">Server</td>
-                                    <td><a href="{{route('servers.show', ['server' => $yab[0]->server_id])}}" class="text-decoration-none">{{ $yab[0]->hostname }}</a></td>
+                                    <td><a href="{{route('servers.show', ['server' => $yab[0]->server_id])}}" class="text-decoration-none">{{ $yab[0]->server->hostname }}</a></td>
                                 </tr>
                                 <tr>
                                     <td class="px-4 py-2 font-bold">CPU</td>
@@ -75,10 +75,10 @@
                                            class="text-decoration-none">{{ $yab[0]->gb5_multi }}</a></td>
                                 </tr>
                                 <tr>
-                                    <td class="px-4 py-2 font-bold">Tested</td>
+                                    <td class="px-4 py-2 font-bold">Test ran</td>
                                     <td>
                                         @if(!is_null($yab[0]->output_date))
-                                            {{date_format(new DateTime($yab[0]->output_date), 'jS F Y')}}
+                                            {{date_format(new DateTime($yab[0]->output_date), 'g:ia D jS F Y')}}
                                         @endif
                                     </td>
                                 </tr>
@@ -93,25 +93,25 @@
                                 <td class="py-2">Disk speeds:</td>
                             </tr>
                             <tr>
-                                <td class="px-4 py-2"><b>4k</b> {{$yab[0]->d_4k}}
-                                    <small>{{$yab[0]->d_4k_type}}</small></td>
+                                <td class="px-4 py-2"><b>4k</b> {{$yab[0]->disk_speed->d_4k}}
+                                    <small>{{$yab[0]->disk_speed->d_4k_type}}</small></td>
                             </tr>
                             <tr>
-                                <td class="px-4 py-2"><b>64k</b> {{$yab[0]->d_64k}}
-                                    <small>{{$yab[0]->d_64k_type}}</small></td>
+                                <td class="px-4 py-2"><b>64k</b> {{$yab[0]->disk_speed->d_64k}}
+                                    <small>{{$yab[0]->disk_speed->d_64k_type}}</small></td>
                             </tr>
                             <tr>
-                                <td class="px-4 py-2"><b>512k</b> {{$yab[0]->d_512k}}
+                                <td class="px-4 py-2"><b>512k</b> {{$yab[0]->disk_speed->d_512k}}
                                     <small>{{$yab[0]->d_512k_type}}</small></td>
                             </tr>
                             <tr>
-                                <td class="px-4 py-2"><b>1m</b> {{$yab[0]->d_1m}} <small>{{$yab[0]->d_1m_type}}</small>
+                                <td class="px-4 py-2"><b>1m</b> {{$yab[0]->disk_speed->d_1m}} <small>{{$yab[0]->disk_speed->d_1m_type}}</small>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="py-2">Network speed (location|send|receive):</td>
                             </tr>
-                            @foreach($network as $speed_test)
+                            @foreach($yab[0]->network_speed as $speed_test)
                                 <tr>
                                     <td class="px-4 py-2 text-nowrap">
                                         <b>{{$speed_test->location}}</b> {{$speed_test->send}}

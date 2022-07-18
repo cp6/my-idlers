@@ -35,4 +35,35 @@ class Yabs extends Model
         });
     }
 
+    public static function yabs(string $yabs_id)
+    {
+        return Cache::remember("yabs.$yabs_id", now()->addMonth(1), function () use ($yabs_id) {
+            return self::where('id', $yabs_id)->with(['server', 'disk_speed', 'network_speed'])
+                ->get();
+        });
+    }
+
+    public static function allYabs()
+    {
+        return Cache::remember("all_yabs", now()->addMonth(1), function () {
+            return self::with(['server', 'disk_speed', 'network_speed'])
+                ->get();
+        });
+    }
+
+    public function server()
+    {
+        return $this->hasOne(Server::class, 'id', 'server_id');
+    }
+
+    public function disk_speed()
+    {
+        return $this->hasOne(DiskSpeed::class, 'id', 'id');
+    }
+
+    public function network_speed()
+    {
+        return $this->hasMany(NetworkSpeed::class, 'id', 'id');
+    }
+
 }

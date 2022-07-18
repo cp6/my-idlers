@@ -249,4 +249,11 @@ class Server extends Model
         });
     }
 
+    public static function serverYabsAmount(string $server_id): int
+    {
+        return DB::table('yabs')
+            ->where('server_id', '=', $server_id)
+            ->get()->count();
+    }
+
 }
