@@ -10,6 +10,7 @@
         <div class="card shadow mt-3">
             <div class="card-body">
                 <a href="{{ route('servers.index') }}" class="btn btn-primary mb-3">Servers home</a>
+                @if(count($all_servers) >= 2)
                 <div class="row">
                     <div class="col-12 col-lg-6">
                         <div class="input-group">
@@ -28,7 +29,7 @@
                             <div class="input-group-prepend"><span class="input-group-text">Server2</span></div>
                             <select class="form-control" name="server2" @change="changeServer2($event)">
                                 @foreach ($all_servers as $server)
-                                    <option value="{{ $server['id'] }}">
+                                    <option value="{{ $server['id'] }}" {{($loop->index === 1)?'selected':''}}>
                                         {{ $server['hostname'] }}
                                     </option>
                                 @endforeach
@@ -36,13 +37,10 @@
                         </div>
                     </div>
                 </div>
-                <!--
-                <div class="input-group mt-4">
-                    <div class="input-group-prepend"><span class="input-group-text">URL</span></div>
-                    <input type="text" class="form-control" id="url" v-model="url_input" disabled>
-                </div>
--->
                 <a v-bind:href="full_url" class="btn btn-success mt-4">View comparison table</a>
+                @else
+                    <p class="text-danger">You need to have added a YABs to at least 2 servers to use this feature</p>
+                @endif
             </div>
         </div>
         @if(Session::has('timer_version_footer') && Session::get('timer_version_footer') === 1)
@@ -55,10 +53,10 @@
             el: "#app",
             data: {
                 "base_url": "servers-compare/",
-                "full_url": "",
+                "full_url": "{{route('servers.compare', ['server1' => $all_servers[0]->id, 'server2' => $all_servers[1]->id])}}",
                 "url_input": "",
-                "server1": "",
-                "server2": "",
+                "server1": "{{$all_servers[0]->id ?? ''}}",
+                "server2": "{{$all_servers[1]->id ?? ''}}",
             },
             methods: {
                 changeServer1: function changeServer1(event) {

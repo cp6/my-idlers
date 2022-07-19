@@ -8,13 +8,9 @@
             <div class="row">
                 <div class="col-12 col-md-6 mb-2">
                     <h2>{{ $shared->main_domain }}</h2>
-                    <code>@foreach($labels as $label)
-                            @if($loop->last)
-                                {{$label->label}}
-                            @else
-                                {{$label->label}},
-                            @endif
-                        @endforeach</code>
+                    @foreach($shared->labels as $label)
+                        <span class="badge bg-primary mx-1">{{$label->label->label}}</span>
+                    @endforeach
                 </div>
                 <div class="col-12 col-md-6 text-md-end">
                     <h6 class="text-muted pe-lg-4">{{ $shared->id }}</h6>
@@ -34,26 +30,26 @@
                             </tr>
                             <tr>
                                 <td class="px-2 py-2 font-bold text-muted">Location</td>
-                                <td>{{ $shared_extras[0]->location }}</td>
+                                <td>{{ $shared->location->name }}</td>
                             </tr>
                             <tr>
                                 <td class="px-2 py-2 font-bold text-muted">Provider</td>
-                                <td>{{ $shared_extras[0]->provider_name }}</td>
+                                <td>{{ $shared->provider->name }}</td>
                             </tr>
                             <tr>
                                 <td class="px-2 py-2 font-bold text-muted">Price</td>
-                                <td>{{ $shared_extras[0]->price }} {{ $shared_extras[0]->currency }}
-                                    <small>{{\App\Process::paymentTermIntToString($shared_extras[0]->term)}}</small>
+                                <td>{{ $shared->price->price }} {{ $shared->price->currency }}
+                                    <small>{{\App\Process::paymentTermIntToString($shared->price->term)}}</small>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="px-2 py-2 font-bold text-muted">Was promo</td>
-                                <td>{{ ($shared_extras[0]->was_promo === 1) ? 'Yes' : 'No' }}</td>
+                                <td>{{ ($shared->was_promo === 1) ? 'Yes' : 'No' }}</td>
                             </tr>
                             <tr>
                                 <td class="px-2 py-2 font-bold text-muted">Has dedicated IP?</td>
                                 <td>
-                                    @if(isset($ip_address[0]->address))
+                                    @if(isset($shared->ips[0]->address))
                                         Yes
                                     @else
                                         No
@@ -62,8 +58,8 @@
                             </tr>
                             <tr>
                                 <td class="px-2 py-2 font-bold text-muted">IP</td>
-                                <td><code>@if(isset($ip_address[0]->address))
-                                            {{$ip_address[0]->address}}
+                                <td><code>@if(isset($shared->ips[0]->address))
+                                            {{$shared->ips[0]->address}}
                                         @endif
                                     </code></td>
                             </tr>
@@ -77,8 +73,8 @@
                             </tr>
                             <tr>
                                 <td class="px-2 py-2 font-bold text-muted">Next due date</td>
-                                <td>{{Carbon\Carbon::parse($shared_extras[0]->next_due_date)->diffForHumans()}}
-                                    ({{Carbon\Carbon::parse($shared_extras[0]->next_due_date)->format('d/m/Y')}})
+                                <td>{{Carbon\Carbon::parse($shared->price->next_due_date)->diffForHumans()}}
+                                    ({{Carbon\Carbon::parse($shared->price->next_due_date)->format('d/m/Y')}})
                                 </td>
                             </tr>
                             <tr>

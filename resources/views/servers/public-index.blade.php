@@ -46,12 +46,12 @@
                                 <td class="text-center">
                                     {{ App\Models\Server::serviceServerType($s->server_type) }}
                                 </td>
-                                <td class="text-center">{!!App\Models\Server::osIntToIcon($s->os_id, $s->os_name)!!}</td>
+                                <td class="text-center">{!!App\Models\Server::osIntToIcon($s->os->id, $s->os->name)!!}</td>
                                 <td class="text-center">{{$s->cpu}}</td>
-                                <td class="text-nowrap">{{$s->cpu_freq}}</td>
+                                <td class="text-nowrap">{{$s->yabs[0]->cpu_freq}}</td>
                                 <td class="text-nowrap">
-                                    @if(isset($s->ram))
-                                        {{ $s->ram}}<small>{{ $s->ram_type}}</small>
+                                    @if(isset($s->yabs[0]->ram))
+                                        {{ $s->yabs[0]->ram}}<small>{{ $s->yabs[0]->ram_type}}</small>
                                     @else
                                         {{$s->ram_as_mb}}<small>MB</small>
                                     @endif
@@ -65,52 +65,52 @@
                                 </td>
                                 <td class="text-nowrap">
                                     @if(Session::get('show_server_value_location') === 1)
-                                        {{ $s->location }}
+                                        {{ $s->location->name }}
                                     @endif</td>
                                 <td class="text-nowrap">
                                     @if(Session::get('show_server_value_provider') === 1)
-                                        {{ $s->provider_name }}
+                                        {{ $s->provider->name }}
                                     @endif
                                 </td>
-                                <td class="text-nowrap">{{ $s->price }} {{$s->currency}} {{\App\Process::paymentTermIntToString($s->term)}}</td>
+                                <td class="text-nowrap">{{ $s->price->price }} {{$s->currency}} {{\App\Process::paymentTermIntToString($s->price->term)}}</td>
                                 <td class="text-nowrap"> {{ $s->owned_since }}</td>
                                 <td class="text-nowrap">
                                     @if(Session::get('show_server_value_yabs') === 1)
-                                        {{$s->gb5_single}}
+                                        {{$s->yabs[0]->gb5_single}}
                                     @endif
                                 </td>
                                 <td class="text-nowrap">
                                     @if(Session::get('show_server_value_yabs') === 1)
-                                        {{$s->gb5_multi}}
+                                        {{$s->yabs[0]->gb5_multi}}
                                     @endif
                                 </td>
                                 <td class="text-nowrap">
                                     @if(Session::get('show_server_value_yabs') === 1)
-                                        {{$s->d_4k}}<small>{{$s->d_4k_type}}</small>
+                                        {{$s->yabs[0]->disk_speed->d_4k}}<small>{{$s->yabs[0]->disk_speed->d_4k_type}}</small>
                                     @endif
                                 </td>
                                 <td class="text-nowrap">
                                     @if(Session::get('show_server_value_yabs') === 1)
-                                        {{$s->d_64k}}<small>{{$s->d_64k_type}}</small>
+                                        {{$s->yabs[0]->disk_speed->d_64k}}<small>{{$s->yabs[0]->disk_speed->d_64k_type}}</small>
                                     @endif
                                 </td>
                                 <td class="text-nowrap">
                                     @if(Session::get('show_server_value_yabs') === 1)
-                                        {{$s->d_512k}}<small>{{$s->d_512k_type}}</small>
+                                        {{$s->yabs[0]->disk_speed->d_512k}}<small>{{$s->yabs[0]->disk_speed->d_512k_type}}</small>
                                     @endif</td>
                                 <td class="text-nowrap">
                                     @if(Session::get('show_server_value_yabs') === 1)
-                                        {{$s->d_1m}}<small>{{$s->d_1m_type}}</small>
+                                        {{$s->yabs[0]->disk_speed->d_1m}}<small>{{$s->yabs[0]->disk_speed->d_1m_type}}</small>
                                     @endif</td>
                                 @if(Session::get('show_server_value_ip') === 1)
                                     <td class="text-nowrap">
-                                        @if($s->is_ipv4 === 1)
-                                            {{ $s->ip }}
+                                        @if($s->ips[0]->is_ipv4 === 1)
+                                            {{ $s->ips[0]->address }}
                                         @endif
                                     </td>
                                     <td class="text-nowrap">
-                                        @if($s->is_ipv4 === 0)
-                                            {{ $s->ip }}
+                                        @if($s->ips[0]->is_ipv6 === 1)
+                                            {{ $s->ips[0]->address }}
                                         @endif
                                     </td>
                                 @endif

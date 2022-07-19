@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Process;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
@@ -20,6 +21,48 @@ class Server extends Model
      * @var mixed
      */
     private $id;
+
+    public static function allServers()
+    {//All servers and relationships (no using joins)
+        return Cache::remember("all_servers", now()->addMonth(1), function () {
+            return Server::with(['location', 'provider', 'os', 'price', 'ips', 'yabs', 'yabs.disk_speed', 'yabs.network_speed', 'labels', 'labels.label'])->get();
+        });
+    }
+
+    public static function server(string $server_id)
+    {//Single server and relationships (no using joins)
+        return Cache::remember("server.$server_id", now()->addMonth(1), function () use ($server_id) {
+            return Server::where('id', $server_id)
+                ->with(['location', 'provider', 'os', 'price', 'ips', 'yabs', 'yabs.disk_speed', 'yabs.network_speed', 'labels', 'labels.label'])->get();
+        });
+    }
+
+    public static function allActiveServers()
+    {//All ACTIVE servers and relationships replaces activeServersDataIndexPage()
+        return Cache::remember("all_active_servers", now()->addMonth(1), function () {
+            return Server::where('active', '=', 1)
+                ->with(['location', 'provider', 'os', 'price', 'ips', 'yabs', 'yabs.disk_speed', 'yabs.network_speed', 'labels', 'labels.label'])
+                ->get();
+        });
+    }
+
+    public static function allNonActiveServers()
+    {//All NON ACTIVE servers and relationships replaces nonActiveServersDataIndexPage()
+        return Cache::remember("non_active_servers", now()->addMonth(1), function () {
+            return Server::where('active', '=', 0)
+                ->with(['location', 'provider', 'os', 'price', 'ips', 'yabs', 'yabs.disk_speed', 'yabs.network_speed', 'labels', 'labels.label'])
+                ->get();
+        });
+    }
+
+    public static function allPublicServers()
+    {//server data that will be publicly viewable (values in settings)
+        return Cache::remember("public_server_data", now()->addMonth(1), function () {
+            return Server::where('show_public', '=', 1)
+                ->with(['location', 'provider', 'os', 'price', 'ips', 'yabs', 'yabs.disk_speed', 'yabs.network_speed', 'labels', 'labels.label'])
+                ->get();
+        });
+    }
 
     public static function serviceServerType($type)
     {
@@ -158,11 +201,12 @@ class Server extends Model
 
     public static function serverRelatedCacheForget(): void
     {
+        Cache::forget('all_servers');//All servers
         Cache::forget('services_count');//Main page services_count cache
         Cache::forget('due_soon');//Main page due_soon cache
         Cache::forget('recently_added');//Main page recently_added cache
-        Cache::forget('all_active_servers');//all servers cache
-        Cache::forget('non_active_servers');//all servers cache
+        Cache::forget('all_active_servers');//all active servers cache
+        Cache::forget('non_active_servers');//all non active servers cache
         Cache::forget('servers_summary');//servers summary cache
         Cache::forget('public_server_data');//public servers
         Cache::forget('all_pricing');//All pricing
@@ -172,81 +216,50 @@ class Server extends Model
 
     public static function serverSpecificCacheForget(string $server_id): void
     {
-        Cache::forget("server_show_data.$server_id");//data for show
-        Cache::forget("ip_addresses.$server_id");//ips for server
-        Cache::forget("labels_for_service.$server_id");//labels for server
+        Cache::forget("server.$server_id");//Will replace one below
         Cache::forget("service_pricing.$server_id");//Pricing
     }
 
-    public static function activeServersDataIndexPage()
-    {
-        return Cache::remember('all_active_servers', now()->addMonth(1), function () {
-            return DB::table('servers as s')
-                ->join('pricings as pr', 's.id', '=', 'pr.service_id')
-                ->join('providers as p', 's.provider_id', '=', 'p.id')
-                ->join('locations as l', 's.location_id', '=', 'l.id')
-                ->join('os as o', 's.os_id', '=', 'o.id')
-                ->where('s.active', '=', 1)
-                ->get(['s.*', 'pr.currency', 'pr.price', 'pr.term', 'pr.as_usd', 'pr.next_due_date', 'p.name as provider_name', 'l.name as location', 'o.name as os_name']);
-        });
+    public static function serverYabsAmount(string $server_id): int
+    {//Returns amount of YABs a server has
+        return DB::table('yabs')
+            ->where('server_id', '=', $server_id)
+            ->get()->count();
     }
 
-    public static function nonActiveServersDataIndexPage()
+    public function yabs()
     {
-        return Cache::remember('non_active_servers', now()->addMonth(1), function () {
-            return DB::table('servers as s')
-                ->join('pricings as pr', 's.id', '=', 'pr.service_id')
-                ->join('providers as p', 's.provider_id', '=', 'p.id')
-                ->join('locations as l', 's.location_id', '=', 'l.id')
-                ->join('os as o', 's.os_id', '=', 'o.id')
-                ->where('s.active', '=', 0)
-                ->get(['s.*', 'pr.currency', 'pr.price', 'pr.term', 'pr.as_usd', 'p.name as provider_name', 'l.name as location', 'o.name as os_name']);
-        });
+        return $this->hasMany(Yabs::class, 'server_id', 'id');
     }
 
-    public static function serverDataShowPage(string $server_id)
+    public function ips()
     {
-        return Cache::remember("server_show_data.$server_id", now()->addDay(1), function () use ($server_id) {
-            return DB::table('servers as s')
-                ->join('pricings as pr', 's.id', '=', 'pr.service_id')
-                ->join('providers as p', 's.provider_id', '=', 'p.id')
-                ->join('locations as l', 's.location_id', '=', 'l.id')
-                ->join('os as o', 's.os_id', '=', 'o.id')
-                ->Leftjoin('yabs as y', 's.id', '=', 'y.server_id')
-                ->Leftjoin('disk_speed as ds', 'y.id', '=', 'ds.id')
-                ->where('s.id', '=', $server_id)
-                ->get(['s.*', 'p.name as provider', 'l.name as location', 'o.name as os_name', 'pr.*', 'y.*', 'ds.*']);
-        });
+        return $this->hasMany(IPs::class, 'service_id', 'id');
     }
 
-    public static function publicServerData()
+    public function location()
     {
-        return Cache::remember('public_server_data', now()->addMonth(1), function () {
-            return DB::table('servers as s')
-                ->Join('pricings as pr', 's.id', '=', 'pr.service_id')
-                ->Join('providers as p', 's.provider_id', '=', 'p.id')
-                ->Join('locations as l', 's.location_id', '=', 'l.id')
-                ->Join('os as o', 's.os_id', '=', 'o.id')
-                ->LeftJoin('ips as i', 's.id', '=', 'i.service_id')
-                ->LeftJoin('yabs as y', 's.id', '=', 'y.server_id')
-                ->LeftJoin('disk_speed as ds', 'y.id', '=', 'ds.id')
-                ->where('s.show_public', '=', 1)
-                ->get(['pr.currency', 'pr.price', 'pr.term', 'pr.as_usd', 'pr.next_due_date', 'pr.service_id', 'p.name as provider_name', 'l.name as location', 'o.name as os_name', 'y.*', 'y.id as yabs_id', 'ds.*', 's.*', 'i.address as ip', 'i.is_ipv4']);
-        });
+        return $this->hasOne(Locations::class, 'id', 'location_id');
     }
 
-    public static function serverCompareData(string $server_id)
+    public function provider()
     {
-        return Cache::remember("server_compare.$server_id", now()->addMonth(1), function () use ($server_id) {
-            return DB::table('servers as s')
-                ->join('pricings as pr', 's.id', '=', 'pr.service_id')
-                ->join('providers as p', 's.provider_id', '=', 'p.id')
-                ->join('locations as l', 's.location_id', '=', 'l.id')
-                ->Join('yabs as y', 's.id', '=', 'y.server_id')
-                ->Join('disk_speed as ds', 'y.id', '=', 'ds.id')
-                ->where('s.id', '=', $server_id)
-                ->get(['s.*', 'p.name as provider_name', 'l.name as location', 'pr.*', 'y.*', 'y.id as yabs_id', 'ds.*']);
-        });
+        return $this->hasOne(Providers::class, 'id', 'provider_id');
+    }
+
+    public function os()
+    {
+        return $this->hasOne(OS::class, 'id', 'os_id');
+    }
+
+    public function price()
+    {
+        return $this->hasOne(Pricing::class, 'service_id', 'id');
+    }
+
+    public function labels()
+    {
+        return $this->hasMany(LabelsAssigned::class, 'service_id', 'id');
     }
 
 }

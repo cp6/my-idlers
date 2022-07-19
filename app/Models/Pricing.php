@@ -141,13 +141,4 @@ class Pricing extends Model
         });
     }
 
-    public static function pricingForService(string $service_id)
-    {
-        return Cache::remember("service_pricing.$service_id", now()->addWeek(1), function () use ($service_id) {
-            return DB::table('servers as s')
-                ->join('pricings as p', 's.id', '=', 'p.service_id')
-                ->where('s.id', '=', $service_id)
-                ->get(['s.*', 'p.*']);
-        });
-    }
 }

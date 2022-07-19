@@ -12,7 +12,7 @@
                     Back to shared hosting
                 </a>
                 <x-auth-validation-errors></x-auth-validation-errors>
-                <form action="{{ route('shared.update', $shared[0]->service_id) }}" method="POST">
+                <form action="{{ route('shared.update', $shared[0]->id) }}" method="POST">
                     @csrf
                     @method('PUT')
                     <div class="row mt-3">
@@ -27,7 +27,7 @@
                             </div>
                         </div>
                         <div class="col-12 col-lg-3 mb-4">
-                            <input type="hidden" name="id" value="{{$shared[0]->service_id}}">
+                            <input type="hidden" name="id" value="{{$shared[0]->id}}">
                             <div class="input-group">
                                 <div class="input-group-prepend"><span class="input-group-text">Type</span></div>
                                 <select class="form-control" id="shared_type" name="shared_type">
@@ -80,21 +80,21 @@
                                 <x-slot name="title">Dedicated IP</x-slot>
                                 <x-slot name="name">dedicated_ip</x-slot>
                                 <x-slot name="max">255</x-slot>
-                                <x-slot name="value">@if(isset($ip_address[0]['address'])) {{$ip_address[0]['address']}}@endif</x-slot>
+                                <x-slot name="value">@if(isset($shared[0]->ips[0]->address)) {{$shared[0]->ips[0]->address}}@endif</x-slot>
                             </x-text-input>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-3 mb-3">
                             <x-providers-select>
-                                <x-slot name="current">{{$shared[0]->provider_id}}</x-slot>
+                                <x-slot name="current">{{$shared[0]->provider->id}}</x-slot>
                             </x-providers-select>
                         </div>
                         <div class="col-md-3 mb-3">
                             <x-number-input>
                                 <x-slot name="title">Price</x-slot>
                                 <x-slot name="name">price</x-slot>
-                                <x-slot name="value">{{$shared[0]->price}}</x-slot>
+                                <x-slot name="value">{{$shared[0]->price->price}}</x-slot>
                                 <x-slot name="max">9999</x-slot>
                                 <x-slot name="step">0.01</x-slot>
                                 <x-slot name="required"></x-slot>
@@ -102,19 +102,19 @@
                         </div>
                         <div class="col-md-3 mb-3">
                             <x-term-select>
-                                <x-slot name="current">{{$shared[0]->term}}</x-slot>
+                                <x-slot name="current">{{$shared[0]->price->term}}</x-slot>
                             </x-term-select>
                         </div>
                         <div class="col-md-3 mb-3">
                             <x-currency-select>
-                                <x-slot name="current">{{$shared[0]->currency}}</x-slot>
+                                <x-slot name="current">{{$shared[0]->price->currency}}</x-slot>
                             </x-currency-select>
                         </div>
                     </div>
                     <div class="row mb-2">
                         <div class="col-12 col-md-3 mb-3">
                             <x-locations-select>
-                                <x-slot name="current">{{$shared[0]->location_id}}</x-slot>
+                                <x-slot name="current">{{$shared[0]->location->id}}</x-slot>
                             </x-locations-select>
                         </div>
                         <div class="col-12 col-md-3 mb-3">
@@ -135,7 +135,7 @@
                             <x-date-input>
                                 <x-slot name="title">Next due date</x-slot>
                                 <x-slot name="name">next_due_date</x-slot>
-                                <x-slot name="value">{{$shared[0]->next_due_date }}</x-slot>
+                                <x-slot name="value">{{$shared[0]->price->next_due_date }}</x-slot>
                             </x-date-input>
                         </div>
                     </div>
@@ -219,8 +219,8 @@
                             <x-labels-select>
                                 <x-slot name="title">label</x-slot>
                                 <x-slot name="name">label1</x-slot>
-                                @if(isset($labels[0]->id))
-                                    <x-slot name="current">{{$labels[0]->id}}</x-slot>
+                                @if(isset($shared[0]->labels[0]->label->id))
+                                    <x-slot name="current">{{$shared[0]->labels[0]->label->id}}</x-slot>
                                 @endif
                             </x-labels-select>
                         </div>
@@ -228,8 +228,8 @@
                             <x-labels-select>
                                 <x-slot name="title">label</x-slot>
                                 <x-slot name="name">label2</x-slot>
-                                @if(isset($labels[1]->id))
-                                    <x-slot name="current">{{$labels[1]->id}}</x-slot>
+                                @if(isset($shared[0]->labels[1]->label->id))
+                                    <x-slot name="current">{{$shared[0]->labels[1]->label->id}}</x-slot>
                                 @endif
                             </x-labels-select>
                         </div>
@@ -237,8 +237,8 @@
                             <x-labels-select>
                                 <x-slot name="title">label</x-slot>
                                 <x-slot name="name">label3</x-slot>
-                                @if(isset($labels[2]->id))
-                                    <x-slot name="current">{{$labels[2]->id}}</x-slot>
+                                @if(isset($shared[0]->labels[2]->label->id))
+                                    <x-slot name="current">{{$shared[0]->labels[2]->label->id}}</x-slot>
                                 @endif
                             </x-labels-select>
                         </div>
@@ -246,8 +246,8 @@
                             <x-labels-select>
                                 <x-slot name="title">label</x-slot>
                                 <x-slot name="name">label4</x-slot>
-                                @if(isset($labels[3]->id))
-                                    <x-slot name="current">{{$labels[3]->id}}</x-slot>
+                                @if(isset($shared[0]->labels[3]->label->id))
+                                    <x-slot name="current">{{$shared[0]->labels[3]->label->id}}</x-slot>
                                 @endif
                             </x-labels-select>
                         </div>

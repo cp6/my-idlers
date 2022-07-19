@@ -16,8 +16,7 @@ class SharedController extends Controller
 {
     public function index()
     {
-        $shared = Shared::sharedDataIndexPage();
-
+        $shared = Shared::allSharedHosting();
         return view('shared.index', compact(['shared']));
     }
 
@@ -28,7 +27,6 @@ class SharedController extends Controller
 
     public function store(Request $request)
     {
-
         $request->validate([
             'domain' => 'required|min:4',
             'shared_type' => 'required',
@@ -54,17 +52,13 @@ class SharedController extends Controller
         $shared_id = Str::random(8);
 
         $pricing = new Pricing();
-
         $as_usd = $pricing->convertToUSD($request->price, $request->currency);
-
         $pricing->insertPricing(2, $shared_id, $request->currency, $request->price, $request->payment_term, $as_usd, $request->next_due_date);
 
         Labels::deleteLabelsAssignedTo($shared_id);
-
         Labels::insertLabelsAssigned([$request->label1, $request->label2, $request->label3, $request->label4], $shared_id);
 
         IPs::deleteIPsAssignedTo($shared_id);
-
         if (!is_null($request->dedicated_ip)) {
             IPs::insertIP($shared_id, $request->dedicated_ip);
         }
@@ -88,6 +82,7 @@ class SharedController extends Controller
             'db__limit' => $request->db
         ]);
 
+        Cache::forget('all_shared');
         Home::homePageCacheForget();
 
         return redirect()->route('shared.index')
@@ -96,24 +91,14 @@ class SharedController extends Controller
 
     public function show(Shared $shared)
     {
-        $shared_extras = Shared::sharedDataShowPage($shared->id);
-
-        $labels = Labels::labelsForService($shared->id);
-
-        $ip_address = IPs::ipsForServer($shared->id);
-
-        return view('shared.show', compact(['shared', 'shared_extras', 'labels', 'ip_address']));
+        $shared = Shared::sharedHosting($shared->id)[0];
+        return view('shared.show', compact(['shared']));
     }
 
     public function edit(Shared $shared)
     {
-        $labels = Labels::labelsForService($shared->id);
-
-        $ip_address = IPs::ipsForServer($shared->id);
-
-        $shared = Shared::sharedEditDataPage($shared->id);
-
-        return view('shared.edit', compact(['shared', 'labels', 'ip_address']));
+        $shared = Shared::sharedHosting($shared->id);
+        return view('shared.edit', compact(['shared']));
     }
 
     public function update(Request $request, Shared $shared)
@@ -161,23 +146,20 @@ class SharedController extends Controller
             ]);
 
         $pricing = new Pricing();
-
         $as_usd = $pricing->convertToUSD($request->price, $request->currency);
-
         $pricing->updatePricing($request->id, $request->currency, $request->price, $request->payment_term, $as_usd, $request->next_due_date);
 
         Labels::deleteLabelsAssignedTo($request->id);
-
         Labels::insertLabelsAssigned([$request->label1, $request->label2, $request->label3, $request->label4], $request->id);
-
         Cache::forget("labels_for_service.{$request->id}");
 
         IPs::deleteIPsAssignedTo($request->id);
-
         if (isset($request->dedicated_ip)) {
             IPs::insertIP($request->id, $request->dedicated_ip);
         }
 
+        Cache::forget("shared_hosting.{$request->id}");
+        Cache::forget('all_shared');
         Home::homePageCacheForget();
 
         return redirect()->route('shared.index')
@@ -188,7 +170,6 @@ class SharedController extends Controller
     {
         $shared_id = $shared->id;
         $items = Shared::find($shared_id);
-
         $items->delete();
 
         $p = new Pricing();
@@ -198,6 +179,8 @@ class SharedController extends Controller
 
         IPs::deleteIPsAssignedTo($shared_id);
 
+        Cache::forget("shared_hosting.$shared_id");
+        Cache::forget('all_shared');
         Home::homePageCacheForget();
 
         return redirect()->route('shared.index')

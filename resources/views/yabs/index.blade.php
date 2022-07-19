@@ -14,6 +14,7 @@
         <x-delete-confirm-modal></x-delete-confirm-modal>
         <x-card class="shadow mt-3">
             <a href="{{ route('yabs.create') }}" class="btn btn-primary mb-3">Add YABs</a>
+            <a href="{{ route('yabs.compare-choose') }}" class="btn btn-success mb-3">Compare YABs</a>
             <x-errors-alert></x-errors-alert>
             <x-success-alert></x-success-alert>
                 <div class="table-responsive">
@@ -40,7 +41,7 @@
                         @if(!empty($yabs))
                             @foreach($yabs as $yab)
                                 <tr>
-                                    <td><a href="servers/{{$yab->server_id}}" class="text-decoration-none">{{ $yab->hostname }}</a></td>
+                                    <td><a href="servers/{{$yab->server_id}}" class="text-decoration-none">{{ $yab->server->hostname }}</a></td>
                                     <td><span title="{{$yab->cpu_model}}">{{ $yab->cpu_cores }}</span></td>
                                     <td><span title="{{$yab->cpu_model}}">{{ $yab->cpu_freq }}<small>Mhz</small></span></td>
                                     <td>{{ $yab->ram }}<small>{{ $yab->ram_type }}</small></td>
@@ -53,10 +54,10 @@
                                             No
                                         @endif
                                     </td>
-                                    <td>{{ $yab->d_4k }}<small>{{ $yab->d_4k_type }}</small></td>
-                                    <td>{{ $yab->d_64k }}<small>{{ $yab->d_64k_type }}</small></td>
-                                    <td>{{ $yab->d_512k }}<small>{{ $yab->d_512k_type }}</small></td>
-                                    <td>{{ $yab->d_1m }}<small>{{ $yab->d_1m_type }}</small></td>
+                                    <td>{{ $yab->disk_speed->d_4k }}<small>{{ $yab->disk_speed->d_4k_type }}</small></td>
+                                    <td>{{ $yab->disk_speed->d_64k }}<small>{{ $yab->disk_speed->d_64k_type }}</small></td>
+                                    <td>{{ $yab->disk_speed->d_512k }}<small>{{ $yab->disk_speed->d_512k_type }}</small></td>
+                                    <td>{{ $yab->disk_speed->d_1m }}<small>{{ $yab->disk_speed->d_1m_type }}</small></td>
                                     <td>{{ date_format(new DateTime($yab->output_date), 'Y-m-d g:i a') }}</small></td>
                                     <td class="text-nowrap">
                                         <form action="{{ route('yabs.destroy', $yab->id) }}" method="POST">
@@ -66,7 +67,7 @@
                                             </a>
 
                                             <i class="fas fa-trash text-danger ms-3" @click="modalForm"
-                                               id="btn-{{$yab->hostname}}" title="{{$yab->id}}"></i>
+                                               id="btn-{{$yab->server->hostname}}" title="{{$yab->id}}"></i>
                                         </form>
                                     </td>
                                 </tr>

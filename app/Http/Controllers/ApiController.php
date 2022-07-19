@@ -309,6 +309,7 @@ class ApiController extends Controller
                 if (isset($data['0']['ip'])) {
                     return response(array('ip' => $data['0']['ip']), 200);
                 }
+                break;
             case "AAAA":
                 $data = dns_get_record($domainname, DNS_AAAA);
                 if (isset($data['0']['ipv6'])) {

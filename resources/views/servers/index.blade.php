@@ -59,7 +59,7 @@
                                         <td class="text-center">
                                             {{ App\Models\Server::serviceServerType($server->server_type) }}
                                         </td>
-                                        <td class="text-center">{!!App\Models\Server::osIntToIcon($server->os_id, $server->os_name)!!}</td>
+                                        <td class="text-center">{!!App\Models\Server::osIntToIcon($server->os->id, $server->os->name)!!}</td>
                                         <td class="text-center">{{$server->cpu}}</td>
                                         <td class="text-center">
                                             @if(isset($server->ram))
@@ -75,9 +75,9 @@
                                                 {{$server->disk}}<small>GB</small>
                                             @endif
                                         </td>
-                                        <td class="text-nowrap">{{ $server->location }}</td>
-                                        <td class="text-nowrap">{{ $server->provider_name }}</td>
-                                        <td class="text-nowrap">{{ $server->price }} {{$server->currency}} {{\App\Process::paymentTermIntToString($server->term)}}</td>
+                                        <td class="text-nowrap">{{ $server->location->name }}</td>
+                                        <td class="text-nowrap">{{ $server->provider->name }}</td>
+                                        <td class="text-nowrap">{{ $server->price->price }} {{$server->price->currency}} {{\App\Process::paymentTermIntToString($server->price->term)}}</td>
                                         <td class="text-nowrap">
                                             {{now()->diffInDays(Carbon\Carbon::parse($server->next_due_date), false)}}
                                             <small>days</small></td>
@@ -144,7 +144,7 @@
                                         <td class="text-center">
                                             {{ App\Models\Server::serviceServerType($server->server_type) }}
                                         </td>
-                                        <td class="text-center">{!!App\Models\Server::osIntToIcon($server->os_id, $server->os_name)!!}</td>
+                                        <td class="text-center">{!!App\Models\Server::osIntToIcon($server->os->id, $server->os->name)!!}</td>
                                         <td class="text-center">{{$server->cpu}}</td>
                                         <td class="text-center">
                                             @if($server->ram_as_mb > 1024)
@@ -160,9 +160,9 @@
                                                 {{$server->disk}}<small>GB</small>
                                             @endif
                                         </td>
-                                        <td class="text-nowrap">{{ $server->location }}</td>
-                                        <td class="text-nowrap">{{ $server->provider_name }}</td>
-                                        <td class="text-nowrap">{{ $server->price }} {{$server->currency}} {{\App\Process::paymentTermIntToString($server->term)}}</td>
+                                        <td class="text-nowrap">{{ $server->location->name }}</td>
+                                        <td class="text-nowrap">{{ $server->provider->name }}</td>
+                                        <td class="text-nowrap">{{ $server->price->price }} {{$server->price->currency}} {{\App\Process::paymentTermIntToString($server->price->term)}}</td>
                                         <td class="text-center"> {{ $server->owned_since }}</td>
                                         <td class="text-nowrap">
                                             <form action="{{ route('servers.destroy', $server->id) }}" method="POST">

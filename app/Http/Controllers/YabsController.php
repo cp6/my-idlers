@@ -16,11 +16,7 @@ class YabsController extends Controller
 {
     public function index()
     {
-        $yabs = DB::table('yabs as y')
-            ->join('servers as s', 'y.server_id', '=', 's.id')
-            ->Join('disk_speed as ds', 'y.id', '=', 'ds.id')
-            ->get(['y.*', 's.hostname', 'ds.*']);
-
+        $yabs = Yabs::allYabs();
         return view('yabs.index', compact(['yabs']));
     }
 
@@ -38,7 +34,6 @@ class YabsController extends Controller
 
         if (isset($yabs['error_id'])) {
             return back()->withErrors(["yabs" => 'Problem inserting YABs. Error id ' . $yabs['error_id']])->withInput();
-            //return redirect()->route('yabs.index')->with('error', 'Problem inserting YABs. Error id ' . $yabs['error_id']);
         }
         //No errors, do insert
 
@@ -111,6 +106,7 @@ class YabsController extends Controller
 
         Cache::forget('all_active_servers');//all servers cache
         Cache::forget('non_active_servers');//all servers cache
+        Cache::forget('all_yabs');//Forget the all YABs cache
 
         return redirect()->route('yabs.index')
             ->with('success', 'Success inserting YABs');
@@ -118,17 +114,8 @@ class YabsController extends Controller
 
     public function show(Yabs $yab)
     {
-        $yab = DB::table('yabs as y')
-            ->join('servers as s', 'y.server_id', '=', 's.id')
-            ->join('disk_speed as ds', 'y.id', '=', 'ds.id')
-            ->where('y.id', '=', $yab->id)
-            ->get(['y.*', 's.hostname', 'ds.*']);
-
-        $network = DB::table('network_speed')
-            ->where('id', '=', $yab[0]->id)
-            ->get();
-
-        return view('yabs.show', compact(['yab', 'network']));
+        $yab = Yabs::yabs($yab->id);
+        return view('yabs.show', compact(['yab']));
     }
 
     public function destroy(Yabs $yab)
@@ -136,11 +123,40 @@ class YabsController extends Controller
         $yabs = Yabs::find($yab->id);
         $yabs->delete();
 
-        $update_server = DB::table('servers')
-            ->where('id', $yab->server_id)
-            ->update(['has_yabs' => 0]);
+        if (Server::serverYabsAmount($yab->server_id) === 0) {
+            DB::table('servers')
+                ->where('id', $yab->server_id)
+                ->update(['has_yabs' => 0]);
+        }
+
+        Cache::forget('all_yabs');
+        Cache::forget("yabs.{$yab->id}");
 
         return redirect()->route('yabs.index')
             ->with('success', 'YABs was deleted Successfully.');
     }
+
+    public function chooseYabsCompare()
+    {
+        $all_yabs = Yabs::allYabs();
+        return view('yabs.choose-compare', compact('all_yabs'));
+    }
+
+    public function compareYabs($yabs1, $yabs2)
+    {
+        $yabs1_data = Yabs::yabs($yabs1);
+
+        if (count($yabs1_data) === 0) {
+            return response()->view('errors.404', array("status" => 404, "title" => "Page not found", "message" => "No YABs data was found for id '$yabs1'"), 404);
+        }
+
+        $yabs2_data = Yabs::yabs($yabs2);
+
+        if (count($yabs2_data) === 0) {
+            return response()->view('errors.404', array("status" => 404, "title" => "Page not found", "message" => "No YABs data was found for id '$server2'"), 404);
+        }
+
+        return view('yabs.compare', compact('yabs1_data', 'yabs2_data'));
+    }
+
 }
