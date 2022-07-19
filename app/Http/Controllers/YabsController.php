@@ -159,4 +159,11 @@ class YabsController extends Controller
         return view('yabs.compare', compact('yabs1_data', 'yabs2_data'));
     }
 
+    public function yabsToJson(Yabs $yab): array
+    {
+        $all_yabs = Yabs::yabs($yab->id)[0];
+        return Yabs::buildYabsArray($all_yabs);
+    }
+
+
 }
