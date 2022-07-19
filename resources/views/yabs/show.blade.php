@@ -5,10 +5,9 @@
     </x-slot>
     <div class="container">
         <x-card class="shadow mt-3">
-            <x-back-button>
-                <x-slot name="href">{{ route('yabs.index') }}</x-slot>
-                Go back
-            </x-back-button>
+            <x-back-btn>
+                <x-slot name="route">{{ route('yabs.index') }}</x-slot>
+            </x-back-btn>
                 <div class="row">
                     <div class="'col-12 col-lg-6">
                         <div class="table-responsive">
