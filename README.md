@@ -7,7 +7,7 @@ Despite what the name infers this self hosted web app isn't just for storing idl
 a [YABs](https://github.com/masonr/yet-another-bench-script) output you can get disk & network speed values along with
 GeekBench 5 scores to do easier comparing and sorting.
 
-[![Generic badge](https://img.shields.io/badge/version-2.1.1-blue.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Laravel-9.0-red.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/PHP-8.1-purple.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Bootstrap-5.1-pink.svg)](https://shields.io/)
+[![Generic badge](https://img.shields.io/badge/version-2.1.2-blue.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Laravel-9.0-red.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/PHP-8.1-purple.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Bootstrap-5.1-pink.svg)](https://shields.io/)
 
 <img src="https://raw.githubusercontent.com/cp6/my-idlers/main/public/My%20Idlers%20logo.jpg" width="128" height="128" />
 
@@ -19,12 +19,17 @@ GeekBench 5 scores to do easier comparing and sorting.
 
 [Cloud Five Limited](https://cloud-v.net/) for providing the hosting for demo installation.
 
-## 2.1.1 changes (19th June 2022):
+## 2.1.2 changes (19th July 2022):
 
-* Added compatability for YABs version v2022-06-11
-* Added Create, Update and Delete servers with API
-* Added Update pricing with API
-* Updated YABs compatible versions check
+* Added YABs compare page
+* Added caching for YABs
+* Added LabelsAssigned model
+* Updated Server model to use relationships
+* Updated Shared model to use relationships
+* Updated Shared model to use caching
+* Updated Table model to have table name defined
+* Fixed server compare initial selection
+* Fixed switch in getIpForDomain()
 
 ## Requires
 
