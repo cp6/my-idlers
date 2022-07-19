@@ -44,20 +44,20 @@
                                     <td>{{ $row->main_domain }}</td>
                                     <td>{{ $row->reseller_type }}</td>
                                     <td>{{ $row->accounts }}</td>
-                                    <td class="text-nowrap">{{ $row->location }}</td>
-                                    <td class="text-nowrap">{{ $row->provider_name }}</td>
+                                    <td class="text-nowrap">{{ $row->location->name }}</td>
+                                    <td class="text-nowrap">{{ $row->provider->name }}</td>
                                     <td>{{ $row->disk_as_gb }} <small>GB</small></td>
-                                    <td>{{ $row->price }} {{$row->currency}} {{\App\Process::paymentTermIntToString($row->term)}}</td>
-                                    <td>{{Carbon\Carbon::parse($row->next_due_date)->diffForHumans()}}</td>
+                                    <td>{{ $row->price->price }} {{$row->price->currency}} {{\App\Process::paymentTermIntToString($row->price->term)}}</td>
+                                    <td>{{Carbon\Carbon::parse($row->price->next_due_date)->diffForHumans()}}</td>
                                     <td class="text-nowrap">{{ $row->owned_since }}</td>
                                     <td class="text-nowrap">
-                                        <form action="{{ route('reseller.destroy', $row->service_id) }}" method="POST">
-                                            <a href="{{ route('reseller.show', $row->service_id) }}"
+                                        <form action="{{ route('reseller.destroy', $row->id) }}" method="POST">
+                                            <a href="{{ route('reseller.show', $row->id) }}"
                                                class="text-body mx-1"><i class="fas fa-eye" title="view"></i></a>
-                                            <a href="{{ route('reseller.edit', $row->service_id) }}"
+                                            <a href="{{ route('reseller.edit', $row->id) }}"
                                                class="text-body mx-1"><i class="fas fa-pen" title="edit"></i></a>
                                             <i class="fas fa-trash text-danger ms-3" @click="modalForm"
-                                               id="btn-{{$row->main_domain}}" title="{{$row->service_id}}"></i>
+                                               id="btn-{{$row->main_domain}}" title="{{$row->id}}"></i>
                                         </form>
                                     </td>
                                 </tr>
