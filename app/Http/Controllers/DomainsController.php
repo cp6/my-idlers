@@ -14,20 +14,16 @@ use Illuminate\Support\Str;
 
 class DomainsController extends Controller
 {
-
     public function index()
     {
-        $domains = Domains::domainsDataIndexPage();
-
+        $domains = Domains::allDomains();
         return view('domains.index', compact(['domains']));
     }
 
     public function show(Domains $domain)
-    {
-        $service_extras = Domains::domainsDataShowPage($domain->id);
-        $labels = Labels::labelsForService($domain->id);
-
-        return view('domains.show', compact(['domain', 'service_extras', 'labels']));
+    {//Need to modern
+        $domain_info = Domains::domain($domain->id)[0];
+        return view('domains.show', compact(['domain_info']));
     }
 
     public function create()
@@ -46,11 +42,8 @@ class DomainsController extends Controller
         ]);
 
         $domain_id = Str::random(8);
-
         $pricing = new Pricing();
-
         $as_usd = $pricing->convertToUSD($request->price, $request->currency);
-
         $pricing->insertPricing(4, $domain_id, $request->currency, $request->price, $request->payment_term, $as_usd, $request->next_due_date);
 
         Domains::create([
@@ -66,6 +59,7 @@ class DomainsController extends Controller
 
         Labels::insertLabelsAssigned([$request->label1, $request->label2, $request->label3, $request->label4], $domain_id);
 
+        Cache::forget("all_domains");
         Home::homePageCacheForget();
 
         return redirect()->route('domains.index')
@@ -74,11 +68,8 @@ class DomainsController extends Controller
 
     public function edit(Domains $domain)
     {
-        $domain_info = Domains::domainsDataEditPage($domain->id);
-
-        $labels = Labels::labelsForService($domain->id);
-
-        return view('domains.edit', compact(['domain', 'domain_info', 'labels']));
+        $domain_info = Domains::domain($domain->id)[0];
+        return view('domains.edit', compact(['domain_info']));
     }
 
     public function update(Request $request, Domains $domain)
@@ -91,9 +82,7 @@ class DomainsController extends Controller
         ]);
 
         $pricing = new Pricing();
-
         $as_usd = $pricing->convertToUSD($request->price, $request->currency);
-
         $pricing->updatePricing($domain->id, $request->currency, $request->price, $request->payment_term, $as_usd, $request->next_due_date);
 
         $domain->update([
@@ -108,9 +97,10 @@ class DomainsController extends Controller
         ]);
 
         Labels::deleteLabelsAssignedTo($domain->id);
-
         Labels::insertLabelsAssigned([$request->label1, $request->label2, $request->label3, $request->label4], $domain->id);
 
+        Cache::forget("all_domains");
+        Cache::forget("domain.{$domain->id}");
         Cache::forget("labels_for_service.{$domain->id}");
         Home::homePageCacheForget();
 
@@ -121,7 +111,6 @@ class DomainsController extends Controller
     public function destroy(Domains $domain)
     {
         $items = Domains::find($domain->id);
-
         $items->delete();
 
         $p = new Pricing();
@@ -129,6 +118,8 @@ class DomainsController extends Controller
 
         Labels::deleteLabelsAssignedTo($domain->id);
 
+        Cache::forget("all_domains");
+        Cache::forget("domain.{$domain->id}");
         Home::homePageCacheForget();
 
         return redirect()->route('domains.index')
