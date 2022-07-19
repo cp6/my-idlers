@@ -19,9 +19,9 @@ class ServerController extends Controller
 
     public function index()
     {
-        $servers = Server::activeServersDataIndexPage();
+        $servers = Server::allActiveServers();
 
-        $non_active_servers = Server::nonActiveServersDataIndexPage();
+        $non_active_servers = Server::allNonActiveServers();
 
         return view('servers.index', compact(['servers', 'non_active_servers']));
     }
@@ -41,7 +41,7 @@ class ServerController extends Controller
         Session::save();
 
         if ((Session::get('show_servers_public') === 1)) {
-            $servers = Server::publicServerData();
+            $servers = Server::allPublicServers();
             return view('servers.public-index', compact('servers'));
         }
         return response()->view('errors.404', array("status" => 404, "title" => "Page not found", "message" => ""), 404);
@@ -121,24 +121,16 @@ class ServerController extends Controller
 
     public function show(Server $server)
     {
-        $server_extras = Server::serverDataShowPage($server->id);
+        $server_data = Server::server($server->id)[0];
 
-        $network_speeds = Yabs::networkSpeedsForServer($server->id);
-
-        $ip_addresses = IPs::ipsForServer($server->id);
-
-        $labels = Labels::labelsForService($server->id);
-
-        return view('servers.show', compact(['server', 'server_extras', 'network_speeds', 'labels', 'ip_addresses']));
+        return view('servers.show', compact(['server_data']));
     }
 
     public function edit(Server $server)
     {
-        $ip_addresses = IPs::ipsForServer($server->id);
+        $server_data = Server::server($server->id)[0];
 
-        $server = Pricing::pricingForService($server->id);
-
-        return view('servers.edit', compact(['server', 'ip_addresses']));
+        return view('servers.edit', compact(['server_data']));
     }
 
     public function update(Request $request, Server $server)
@@ -229,28 +221,24 @@ class ServerController extends Controller
     }
 
     public function chooseCompare()
-    {
+    {//NOTICE: Selecting servers is not cached yet
         $all_servers = Server::where('has_yabs', 1)->get();
         return view('servers.choose-compare', compact('all_servers'));
     }
 
     public function compareServers($server1, $server2)
     {
-        $server1_data = Server::serverCompareData($server1);
+        $server1_data = Server::server($server1);
 
-        if (count($server1_data) === 0) {
+        if (!isset($server1_data[0]->yabs[0])) {
             return response()->view('errors.404', array("status" => 404, "title" => "Page not found", "message" => "No server with YABs data was found for id '$server1'"), 404);
         }
 
-        $server1_network = Yabs::serverCompareNetwork($server1_data[0]->yabs_id);
+        $server2_data = Server::server($server2);
 
-        $server2_data = Server::serverCompareData($server2);
-
-        if (count($server2_data) === 0) {
+        if (!isset($server2_data[0]->yabs[0])) {
             return response()->view('errors.404', array("status" => 404, "title" => "Page not found", "message" => "No server with YABs data was found for id '$server2'"), 404);
         }
-
-        $server2_network = Yabs::serverCompareNetwork($server2_data[0]->yabs_id);
-        return view('servers.compare', compact('server1_data', 'server2_data', 'server1_network', 'server2_network'));
+        return view('servers.compare', compact('server1_data', 'server2_data'));
     }
 }
