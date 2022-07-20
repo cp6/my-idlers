@@ -14,10 +14,7 @@ class MiscController extends Controller
 {
     public function index()
     {
-        $misc = DB::table('misc_services as d')
-            ->join('pricings as pr', 'd.id', '=', 'pr.service_id')
-            ->get(['d.*', 'pr.*']);
-
+        $misc = Misc::allMisc();
         return view('misc.index', compact(['misc']));
     }
 
@@ -28,12 +25,8 @@ class MiscController extends Controller
 
     public function show(Misc $misc)
     {
-        $service_extras = DB::table('misc_services as m')
-            ->join('pricings as p', 'm.id', '=', 'p.service_id')
-            ->where('m.id', '=', $misc->id)
-            ->get(['m.*', 'p.*']);
-
-        return view('misc.show', compact(['misc', 'service_extras']));
+        $misc_data = Misc::misc($misc->id)[0];
+        return view('misc.show', compact(['misc_data']));
     }
 
     public function store(Request $request)
@@ -45,20 +38,19 @@ class MiscController extends Controller
             'next_due_date' => 'required|date'
         ]);
 
-        $ms_id = Str::random(8);
+        $misc_id = Str::random(8);
 
         $pricing = new Pricing();
-
         $as_usd = $pricing->convertToUSD($request->price, $request->currency);
-
-        $pricing->insertPricing(5, $ms_id, $request->currency, $request->price, $request->payment_term, $as_usd, $request->next_due_date);
+        $pricing->insertPricing(5, $misc_id, $request->currency, $request->price, $request->payment_term, $as_usd, $request->next_due_date);
 
         Misc::create([
-            'id' => $ms_id,
+            'id' => $misc_id,
             'name' => $request->name,
             'owned_since' => $request->owned_since
         ]);
 
+        Cache::forget("all_misc");
         Home::homePageCacheForget();
 
         return redirect()->route('misc.index')
@@ -67,12 +59,8 @@ class MiscController extends Controller
 
     public function edit(Misc $misc)
     {
-        $misc = DB::table('misc_services as s')
-            ->join('pricings as p', 's.id', '=', 'p.service_id')
-            ->where('s.id', '=', $misc->id)
-            ->get(['s.*', 'p.*']);
-
-        return view('misc.edit', compact('misc'));
+        $misc_data = Misc::misc($misc->id)[0];
+        return view('misc.edit', compact('misc_data'));
     }
 
     public function update(Request $request, Misc $misc)
@@ -91,11 +79,11 @@ class MiscController extends Controller
             ]);
 
         $pricing = new Pricing();
-
         $as_usd = $pricing->convertToUSD($request->price, $request->currency);
-
         $pricing->updatePricing($misc->id, $request->currency, $request->price, $request->payment_term, $as_usd, $request->next_due_date);
 
+        Cache::forget("all_misc");
+        Cache::forget("misc.{$misc->id}");
         Home::homePageCacheForget();
 
         return redirect()->route('misc.index')
@@ -105,12 +93,13 @@ class MiscController extends Controller
     public function destroy(Misc $misc)
     {
         $items = Misc::find($misc->id);
-
         $items->delete();
 
         $p = new Pricing();
         $p->deletePricing($misc->id);
 
+        Cache::forget("all_misc");
+        Cache::forget("misc.{$misc->id}");
         Home::homePageCacheForget();
 
         return redirect()->route('misc.index')
