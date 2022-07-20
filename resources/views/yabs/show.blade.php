@@ -18,6 +18,14 @@
                                     <td><a href="{{route('servers.show', ['server' => $yab[0]->server_id])}}" class="text-decoration-none">{{ $yab[0]->server->hostname }}</a></td>
                                 </tr>
                                 <tr>
+                                    <td class="px-4 py-2 font-bold">Uptime</td>
+                                    <td>{{ $yab[0]->uptime }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-2 font-bold">Distro</td>
+                                    <td>{{ $yab[0]->distro }}</td>
+                                </tr>
+                                <tr>
                                     <td class="px-4 py-2 font-bold">CPU</td>
                                     <td>{{ $yab[0]->cpu_cores }} @ {{$yab[0]->cpu_freq}} Mhz</td>
                                 </tr>
@@ -28,6 +36,10 @@
                                 <tr>
                                     <td class="px-4 py-2 font-bold">Ram</td>
                                     <td>{{ $yab[0]->ram }} {{$yab[0]->ram_type}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-2 font-bold">Swap</td>
+                                    <td>{{ $yab[0]->swap }} {{$yab[0]->swap_type}}</td>
                                 </tr>
                                 <tr>
                                     <td class="px-4 py-2 font-bold">Disk</td>
