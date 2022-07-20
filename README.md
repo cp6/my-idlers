@@ -40,8 +40,6 @@ php artisan cache:clear
 * Updated SeedBoxes model to use relationships + caching
 * Updated ApiController to use the new model relationship calling (& caching)
 * Updated container large screen max width from 1320px to 1420px
-* Fixed server compare initial selection
-* Fixed switch in getIpForDomain()
 
 ## Requires
 
