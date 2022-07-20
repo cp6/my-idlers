@@ -97,7 +97,7 @@ class SharedController extends Controller
 
     public function edit(Shared $shared)
     {
-        $shared = Shared::sharedHosting($shared->id);
+        $shared = Shared::sharedHosting($shared->id)[0];
         return view('shared.edit', compact(['shared']));
     }
 

@@ -34,22 +34,22 @@
                                 <td class="text-nowrap"><a href="https://{{ $domain->domain }}.{{$domain->extension}}"
                                                            class="text-decoration-none">{{ $domain->domain }}.{{$domain->extension}}</a></td>
                                 <td class="text-nowrap">{{ $domain->owned_since}}</td>
-                                <td class="text-nowrap">{{ now()->diffInDays($domain->next_due_date) }} <small>days</small>
+                                <td class="text-nowrap">{{ now()->diffInDays($domain->price->next_due_date) }} <small>days</small>
                                 </td>
-                                <td class="text-nowrap">{{ $domain->provider_name}}</td>
-                                <td class="text-nowrap">{{ $domain->price }} <small>{{$domain->currency}}</small></td>
+                                <td class="text-nowrap">{{ $domain->provider->name}}</td>
+                                <td class="text-nowrap">{{ $domain->price->price }} <small>{{$domain->price->currency}}</small></td>
                                 <td class="text-nowrap">
-                                    <form action="{{ route('domains.destroy', $domain->service_id) }}" method="POST">
-                                        <a href="{{ route('domains.show', $domain->service_id) }}"
+                                    <form action="{{ route('domains.destroy', $domain->id) }}" method="POST">
+                                        <a href="{{ route('domains.show', $domain->id) }}"
                                            class="text-body mx-1">
                                             <i class="fas fa-eye" title="view"></i></a>
-                                        <a href="{{ route('domains.edit', $domain->service_id) }}"
+                                        <a href="{{ route('domains.edit', $domain->id) }}"
                                            class="text-body mx-1">
                                             <i class="fas fa-pen" title="edit"></i></a>
                                         @csrf
                                         @method('DELETE')
                                         <i class="fas fa-trash text-danger ms-3" @click="modalForm"
-                                           id="btn-{{$domain->domain}}" title="{{$domain->service_id}}"></i>
+                                           id="btn-{{$domain->domain}}" title="{{$domain->id}}"></i>
                                     </form>
                                 </td>
                             </tr>

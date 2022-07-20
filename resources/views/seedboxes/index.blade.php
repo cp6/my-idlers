@@ -43,8 +43,8 @@
                                 <tr>
                                     <td>{{ $row->title }}</td>
                                     <td>{{ $row->seed_box_type }}</td>
-                                    <td class="text-nowrap">{{ $row->location }}</td>
-                                    <td class="text-nowrap">{{ $row->provider_name }}</td>
+                                    <td class="text-nowrap">{{ $row->location->name }}</td>
+                                    <td class="text-nowrap">{{ $row->provider->name }}</td>
                                     <td>
                                         @if($row->disk_as_gb >= 1000)
                                             {{ number_format($row->disk_as_gb / 1000,1) }} <small>TB</small>
@@ -66,22 +66,22 @@
                                             {{ $row->port_speed }} <small>Mbps</small>
                                         @endif
                                     </td>
-                                    <td>{{ $row->price }} {{$row->currency}} {{\App\Process::paymentTermIntToString($row->term)}}</td>
-                                    <td>{{Carbon\Carbon::parse($row->next_due_date)->diffForHumans()}}</td>
+                                    <td>{{ $row->price->price }} {{$row->price->currency}} {{\App\Process::paymentTermIntToString($row->price->term)}}</td>
+                                    <td>{{Carbon\Carbon::parse($row->price->next_due_date)->diffForHumans()}}</td>
                                     <td class="text-nowrap">{{ $row->owned_since }}</td>
                                     <td class="text-nowrap">
-                                        <form action="{{ route('seedboxes.destroy', $row->service_id) }}" method="POST">
+                                        <form action="{{ route('seedboxes.destroy', $row->id) }}" method="POST">
                                             @csrf
-                                            <a href="{{ route('seedboxes.show', $row->service_id) }}"
+                                            <a href="{{ route('seedboxes.show', $row->id) }}"
                                                class="text-body mx-1">
                                                 <i class="fas fa-eye" title="view"></i>
                                             </a>
-                                            <a href="{{ route('seedboxes.edit', $row->service_id) }}"
+                                            <a href="{{ route('seedboxes.edit', $row->id) }}"
                                                class="text-body mx-1">
                                                 <i class="fas fa-pen" title="edit"></i>
                                             </a>
                                             <i class="fas fa-trash text-danger ms-3" @click="modalForm"
-                                               id="btn-{{$row->title}}" title="{{$row->service_id}}"></i>
+                                               id="btn-{{$row->title}}" title="{{$row->id}}"></i>
                                         </form>
                                     </td>
                                 </tr>

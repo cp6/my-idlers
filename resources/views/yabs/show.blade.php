@@ -5,10 +5,9 @@
     </x-slot>
     <div class="container">
         <x-card class="shadow mt-3">
-            <x-back-button>
-                <x-slot name="href">{{ route('yabs.index') }}</x-slot>
-                Go back
-            </x-back-button>
+            <x-back-btn>
+                <x-slot name="route">{{ route('yabs.index') }}</x-slot>
+            </x-back-btn>
                 <div class="row">
                     <div class="'col-12 col-lg-6">
                         <div class="table-responsive">
@@ -17,6 +16,14 @@
                                 <tr>
                                     <td class="px-4 py-2 font-bold">Server</td>
                                     <td><a href="{{route('servers.show', ['server' => $yab[0]->server_id])}}" class="text-decoration-none">{{ $yab[0]->server->hostname }}</a></td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-2 font-bold">Uptime</td>
+                                    <td>{{ $yab[0]->uptime }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-2 font-bold">Distro</td>
+                                    <td>{{ $yab[0]->distro }}</td>
                                 </tr>
                                 <tr>
                                     <td class="px-4 py-2 font-bold">CPU</td>
@@ -29,6 +36,10 @@
                                 <tr>
                                     <td class="px-4 py-2 font-bold">Ram</td>
                                     <td>{{ $yab[0]->ram }} {{$yab[0]->ram_type}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-2 font-bold">Swap</td>
+                                    <td>{{ $yab[0]->swap }} {{$yab[0]->swap_type}}</td>
                                 </tr>
                                 <tr>
                                     <td class="px-4 py-2 font-bold">Disk</td>

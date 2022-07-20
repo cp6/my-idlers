@@ -129,14 +129,12 @@
                             </tbody>
                         </table>
                     </div>
-                    <a href="{{ route('servers.index') }}"
-                       class="btn btn-success btn-sm mx-2">
-                        Go back
-                    </a>
-                    <a href="{{ route('servers.edit', $server_data->id) }}"
-                       class="btn btn-primary btn-sm mx-2">
-                        Edit
-                    </a>
+                    <x-back-btn>
+                        <x-slot name="route">{{ route('servers.index') }}</x-slot>
+                    </x-back-btn>
+                    <x-edit-btn>
+                        <x-slot name="route">{{ route('servers.edit', $server_data->id) }}</x-slot>
+                    </x-edit-btn>
                 </div>
                 <div class="col-12 col-lg-6">
                     @if($server_data->has_yabs)

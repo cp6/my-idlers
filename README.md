@@ -1,17 +1,18 @@
 # My idlers
 
-A web app for displaying, organizing and storing information about servers (VPS), shared & reseller hosting, seed boxes, domains,
+A web app for displaying, organizing and storing information about servers (VPS), shared & reseller hosting, seed boxes,
+domains,
 DNS and misc services.
 
 Despite what the name infers this self hosted web app isn't just for storing idling server information. By using
 a [YABs](https://github.com/masonr/yet-another-bench-script) output you can get disk & network speed values along with
 GeekBench 5 scores to do easier comparing and sorting.
 
-[![Generic badge](https://img.shields.io/badge/version-2.1.2-blue.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Laravel-9.0-red.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/PHP-8.1-purple.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Bootstrap-5.1-pink.svg)](https://shields.io/)
+[![Generic badge](https://img.shields.io/badge/version-2.1.3-blue.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Laravel-9.0-red.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/PHP-8.1-purple.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Bootstrap-5.1-pink.svg)](https://shields.io/)
 
 <img src="https://raw.githubusercontent.com/cp6/my-idlers/main/public/My%20Idlers%20logo.jpg" width="128" height="128" />
 
-[Demo site](https://demo.myidlers.com/) 
+[Demo site](https://demo.myidlers.com/)
 
 **Note:** Create, Update and Delete are disabled on demo site.
 
@@ -19,17 +20,26 @@ GeekBench 5 scores to do easier comparing and sorting.
 
 [Cloud Five Limited](https://cloud-v.net/) for providing the hosting for demo installation.
 
-## 2.1.2 changes (19th July 2022):
+## 2.1.3 changes (20th July 2022):
 
-* Added YABs compare page
-* Added caching for YABs
-* Added LabelsAssigned model
-* Updated Server model to use relationships
-* Updated Shared model to use relationships
-* Updated Shared model to use caching
-* Updated Table model to have table name defined
-* Fixed server compare initial selection
-* Fixed switch in getIpForDomain()
+#### Please run the following if updating from existing install:
+
+```shell
+php artisan migrate
+php artisan route:cache
+php artisan cache:clear
+```
+
+* Added YABs to JSON output page
+* Added uptime, distro and kernel to YABs inserting
+* Added memory swap values to YABs inserting
+* Added save YABs as txt file (setting)
+* Added back and edit button component with icon
+* Updated Reseller model to use relationships + caching
+* Updated Misc model to use relationships + caching
+* Updated SeedBoxes model to use relationships + caching
+* Updated ApiController to use the new model relationship calling (& caching)
+* Updated container large screen max width from 1320px to 1420px
 
 ## Requires
 
@@ -65,13 +75,15 @@ GeekBench 5 scores to do easier comparing and sorting.
 * Run `php artisan migrate:fresh --seed` to create tables and seed data
 * Run `php artisan serve`
 
-## Update
+## Updating
 
-If you have at least version 2.0 installed:
+If you already have at least version 2.0 installed:
 
 * Run `git clone https://github.com/cp6/my-idlers.git`
 * Run `composer install`
 * Run `php artisan migrate`
+* Run `php artisan route:cache`
+* Run `php artisan cache:clear`
 
 ## Run using Docker
 
@@ -92,7 +104,6 @@ docker exec ... php artisan migrate:fresh --seed --force  # Set up database one 
 Run with a single click on [PikaPods.com](https://www.pikapods.com/)
 
 [![PikaPods](https://www.pikapods.com/static/run-button.svg)](https://www.pikapods.com/pods?run=my-idlers)
-
 
 ## API endpoints
 
@@ -168,35 +179,35 @@ Body content template
 
 ```json
 {
-"active": 1,
-"show_public": 0,
-"hostname": "test.domain.com",
-"ns1": "ns1",
-"ns2": "ns2",
-"server_type": 1,
-"os_id": 2,
-"provider_id": 10,
-"location_id": 15,
-"ssh_port": 22,
-"bandwidth": 2000,
-"ram": 2024,
-"ram_type": "MB",
-"ram_as_mb": 2024,
-"disk": 30,
-"disk_type": "GB",
-"disk_as_gb": 30,
-"cpu": 2,
-"has_yabs": 0,
-"was_promo": 1,
-"ip1": "127.0.0.1",
-"ip2": null,
-"owned_since": "2022-01-01",
-"currency": "USD",
-"price": 4.00,
-"payment_term": 1,
-"as_usd": 4.00,
-"usd_per_month": 4.00,
-"next_due_date": "2022-02-01"
+    "active": 1,
+    "show_public": 0,
+    "hostname": "test.domain.com",
+    "ns1": "ns1",
+    "ns2": "ns2",
+    "server_type": 1,
+    "os_id": 2,
+    "provider_id": 10,
+    "location_id": 15,
+    "ssh_port": 22,
+    "bandwidth": 2000,
+    "ram": 2024,
+    "ram_type": "MB",
+    "ram_as_mb": 2024,
+    "disk": 30,
+    "disk_type": "GB",
+    "disk_as_gb": 30,
+    "cpu": 2,
+    "has_yabs": 0,
+    "was_promo": 1,
+    "ip1": "127.0.0.1",
+    "ip2": null,
+    "owned_since": "2022-01-01",
+    "currency": "USD",
+    "price": 4.00,
+    "payment_term": 1,
+    "as_usd": 4.00,
+    "usd_per_month": 4.00,
+    "next_due_date": "2022-02-01"
 }
 ```
 
@@ -210,27 +221,27 @@ Body content template
 
 ```json
 {
-"active": 1,
-"show_public": 0,
-"hostname": "test.domain.com",
-"ns1": "ns1",
-"ns2": "ns2",
-"server_type": 1,
-"os_id": 2,
-"provider_id": 10,
-"location_id": 15,
-"ssh_port": 22,
-"bandwidth": 2000,
-"ram": 2024,
-"ram_type": "MB",
-"ram_as_mb": 2024,
-"disk": 30,
-"disk_type": "GB",
-"disk_as_gb": 30,
-"cpu": 2,
-"has_yabs": 0,
-"was_promo": 1,
-"owned_since": "2022-01-01"
+    "active": 1,
+    "show_public": 0,
+    "hostname": "test.domain.com",
+    "ns1": "ns1",
+    "ns2": "ns2",
+    "server_type": 1,
+    "os_id": 2,
+    "provider_id": 10,
+    "location_id": 15,
+    "ssh_port": 22,
+    "bandwidth": 2000,
+    "ram": 2024,
+    "ram_type": "MB",
+    "ram_as_mb": 2024,
+    "disk": 30,
+    "disk_type": "GB",
+    "disk_as_gb": 30,
+    "cpu": 2,
+    "has_yabs": 0,
+    "was_promo": 1,
+    "owned_since": "2022-01-01"
 }
 ```
 
@@ -244,7 +255,7 @@ Body content template
 {
     "price": 10.50,
     "currency": "USD",
-    "term" : 1
+    "term": 1
 }
 ```
 
@@ -253,7 +264,6 @@ Body content template
 Delete a server
 
 `/servers/ID`
-
 
 ## Notes
 

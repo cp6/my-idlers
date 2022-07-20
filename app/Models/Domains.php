@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class Domains extends Model
@@ -12,30 +13,39 @@ class Domains extends Model
 
     public $incrementing = false;
 
+    protected $table = 'domains';
+
     protected $fillable = ['id', 'domain', 'extension', 'ns1', 'ns2', 'ns3', 'price', 'currency', 'payment_term', 'owned_since', 'provider_id', 'next_due_date'];
 
-    public static function domainsDataIndexPage()
-    {
-        return DB::table('domains as d')
-            ->join('providers as p', 'd.provider_id', '=', 'p.id')
-            ->join('pricings as pr', 'd.id', '=', 'pr.service_id')
-            ->get(['d.*', 'p.name as provider_name', 'pr.*']);
+
+    public static function allDomains()
+    {//All domains and relationships (no using joins)
+        return Cache::remember("all_domains", now()->addMonth(1), function () {
+            return Domains::with(['provider', 'price', 'labels', 'labels.label'])->get();
+        });
     }
 
-    public static function domainsDataShowPage(string $domain_id)
-    {
-        return DB::table('domains as d')
-            ->join('providers as p', 'd.provider_id', '=', 'p.id')
-            ->join('pricings as pr', 'd.id', '=', 'pr.service_id')
-            ->where('d.id', '=', $domain_id)
-            ->get(['d.*', 'p.name as provider_name', 'pr.*']);
+    public static function domain(string $domain_id)
+    {//Single domains and relationships (no using joins)
+        return Cache::remember("domain.$domain_id", now()->addMonth(1), function () use ($domain_id) {
+            return Domains::where('id', $domain_id)
+                ->with(['provider', 'price', 'labels', 'labels.label'])->get();
+        });
     }
 
-    public static function domainsDataEditPage(string $domain_id)
+    public function provider()
     {
-        return DB::table('domains as d')
-            ->join('pricings as pr', 'd.id', '=', 'pr.service_id')
-            ->where('d.id', '=', $domain_id)
-            ->get(['d.*', 'pr.*']);
+        return $this->hasOne(Providers::class, 'id', 'provider_id');
     }
+
+    public function price()
+    {
+        return $this->hasOne(Pricing::class, 'service_id', 'id');
+    }
+
+    public function labels()
+    {
+        return $this->hasMany(LabelsAssigned::class, 'service_id', 'id');
+    }
+
 }

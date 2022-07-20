@@ -8,13 +8,9 @@
             <div class="row">
                 <div class="col-12 col-md-6 mb-2">
                     <h2>{{ $reseller->main_domain }}</h2>
-                    <code>@foreach($labels as $label)
-                            @if($loop->last)
-                                {{$label->label}}
-                            @else
-                                {{$label->label}},
-                            @endif
-                        @endforeach</code>
+                    @foreach($reseller->labels as $label)
+                        <span class="badge bg-primary mx-1">{{$label->label->label}}</span>
+                    @endforeach
                 </div>
                 <div class="col-12 col-md-6 text-md-end">
                     <h6 class="text-muted pe-lg-4">{{ $reseller->id }}</h6>
@@ -30,7 +26,7 @@
                             <tbody>
                             <tr>
                                 <td class="px-2 py-2 font-bold text-muted">Type</td>
-                                <td>{{ $reseller_extras[0]->reseller_type }}</td>
+                                <td>{{ $reseller->reseller_type }}</td>
                             </tr>
                             <tr>
                                 <td class="px-2 py-2 font-bold text-muted">Main domain</td>
@@ -39,22 +35,22 @@
                             </tr>
                             <tr>
                                 <td class="px-2 py-2 font-bold text-muted">Location</td>
-                                <td>{{ $reseller_extras[0]->location }}</td>
+                                <td>{{ $reseller->location->name }}</td>
                             </tr>
                             <tr>
                                 <td class="px-2 py-2 font-bold text-muted">Provider</td>
-                                <td>{{ $reseller_extras[0]->provider_name }}</td>
+                                <td>{{ $reseller->provider->name }}</td>
                             </tr>
                             <tr>
                                 <td class="px-2 py-2 font-bold text-muted">Price</td>
-                                <td>{{ $reseller_extras[0]->price }} {{ $reseller_extras[0]->currency }}
-                                    <small>{{\App\Process::paymentTermIntToString($reseller_extras[0]->term)}}</small>
+                                <td>{{ $reseller->price->price }} {{ $reseller->price->currency }}
+                                    <small>{{\App\Process::paymentTermIntToString($reseller->price->term)}}</small>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="px-2 py-2 font-bold text-muted">Has dedicated IP?</td>
                                 <td>
-                                    @if(isset($ip_address[0]->address))
+                                    @if(isset($reseller->ips[0]->address))
                                         Yes
                                     @else
                                         No
@@ -63,8 +59,8 @@
                             </tr>
                             <tr>
                                 <td class="px-2 py-2 font-bold text-muted">IP</td>
-                                <td><code>@if(isset($ip_address[0]->address))
-                                            {{$ip_address[0]->address}}
+                                <td><code>@if(isset($reseller->ips[0]->address))
+                                            {{$reseller->ips[0]->address}}
                                         @endif
                                     </code></td>
                             </tr>
@@ -78,8 +74,8 @@
                             </tr>
                             <tr>
                                 <td class="px-2 py-2 font-bold text-muted">Next due date</td>
-                                <td>{{Carbon\Carbon::parse($reseller_extras[0]->next_due_date)->diffForHumans()}}
-                                    ({{Carbon\Carbon::parse($reseller_extras[0]->next_due_date)->format('d/m/Y')}})
+                                <td>{{Carbon\Carbon::parse($reseller->price->next_due_date)->diffForHumans()}}
+                                    ({{Carbon\Carbon::parse($reseller->price->next_due_date)->format('d/m/Y')}})
                                 </td>
                             </tr>
                             <tr>
@@ -142,14 +138,12 @@
 
                 </div>
             </div>
-            <a href="{{ route('reseller.index') }}"
-               class="btn btn-success btn-sm mx-2">
-                Go back
-            </a>
-            <a href="{{ route('reseller.edit', $reseller->id) }}"
-               class="btn btn-primary btn-sm mx-2">
-                Edit
-            </a>
+            <x-back-btn>
+                <x-slot name="route">{{ route('reseller.index') }}</x-slot>
+            </x-back-btn>
+            <x-edit-btn>
+                <x-slot name="route">{{ route('reseller.edit', $reseller->id) }}</x-slot>
+            </x-edit-btn>
         </x-card>
         @if(Session::has('timer_version_footer') && Session::get('timer_version_footer') === 1)
             <p class="text-muted mt-4 text-end"><small>

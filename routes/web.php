@@ -70,6 +70,8 @@ Route::resource('shared', SharedController::class)->middleware(['auth']);
 
 Route::resource('yabs', YabsController::class)->middleware(['auth']);
 
+Route::get('yabs/{yab}/json', 'App\Http\Controllers\YabsController@yabsToJson')->middleware(['auth'])->name('yabs.json');
+
 Route::get('yabs-compare-choose', 'App\Http\Controllers\YabsController@chooseYabsCompare')->middleware(['auth'])->name('yabs.compare-choose');
 
 Route::get('yabs-compare/{yabs1}/{yabs2}', 'App\Http\Controllers\YabsController@compareYabs')->middleware(['auth'])->name('yabs.compare');

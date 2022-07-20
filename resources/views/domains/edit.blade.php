@@ -1,7 +1,7 @@
 @section('title') {{'Edit domain'}} @endsection
 <x-app-layout>
     <x-slot name="header">
-        Edit {{ $domain->domain }}.{{ $domain->extension }}
+        Edit {{ $domain_info->domain }}.{{ $domain_info->extension }}
     </x-slot>
     <div class="container">
         <x-card class="shadow mt-3">
@@ -11,7 +11,7 @@
                 Go back
             </x-back-button>
             <x-errors-alert></x-errors-alert>
-            <form action="{{ route('domains.update', $domain->id) }}" method="POST">
+            <form action="{{ route('domains.update', $domain_info->id) }}" method="POST">
                 @csrf
                 @method('PUT')
                 <div class="row mt-4">
@@ -22,7 +22,7 @@
                             <input type="text"
                                    class="form-control"
                                    name="domain"
-                                   value="{{ $domain->domain }}">
+                                   value="{{ $domain_info->domain }}">
                             @error('name') <span class="text-red-500">{{ $message }}
                     </span>@enderror
                         </div>
@@ -31,7 +31,7 @@
                         <x-text-input>
                             <x-slot name="title">Extension</x-slot>
                             <x-slot name="name">extension</x-slot>
-                            <x-slot name="value">{{ $domain->extension }}</x-slot>
+                            <x-slot name="value">{{ $domain_info->extension }}</x-slot>
                         </x-text-input>
                     </div>
                 </div>
@@ -41,7 +41,7 @@
                             <x-slot name="title">NS1</x-slot>
                             <x-slot name="name">ns1</x-slot>
                             <x-slot name="max">255</x-slot>
-                            <x-slot name="value">{{$domain->ns1}}</x-slot>
+                            <x-slot name="value">{{$domain_info->ns1}}</x-slot>
                         </x-text-input>
                     </div>
                     <div class="col-12 col-lg-4 mb-4">
@@ -49,7 +49,7 @@
                             <x-slot name="title">NS2</x-slot>
                             <x-slot name="name">ns2</x-slot>
                             <x-slot name="max">255</x-slot>
-                            <x-slot name="value">{{$domain->ns2}}</x-slot>
+                            <x-slot name="value">{{$domain_info->ns2}}</x-slot>
                         </x-text-input>
                     </div>
                     <div class="col-12 col-lg-4 mb-4">
@@ -57,7 +57,7 @@
                             <x-slot name="title">NS3</x-slot>
                             <x-slot name="name">ns3</x-slot>
                             <x-slot name="max">255</x-slot>
-                            <x-slot name="value">{{$domain->ns3}}</x-slot>
+                            <x-slot name="value">{{$domain_info->ns3}}</x-slot>
                         </x-text-input>
                     </div>
                 </div>
@@ -65,7 +65,7 @@
                     <div class="col-md-3 mb-3">
                         <x-providers-select>
                             <x-slot name="current">
-                                {{$domain->provider_id}}
+                                {{$domain_info->provider->id}}
                             </x-slot>
                         </x-providers-select>
                     </div>
@@ -74,17 +74,17 @@
                             <x-slot name="title">Price</x-slot>
                             <x-slot name="name">price</x-slot>
                             <x-slot name="step">0.01</x-slot>
-                            <x-slot name="value">{{ $domain_info[0]->price }}</x-slot>
+                            <x-slot name="value">{{ $domain_info->price->price }}</x-slot>
                         </x-number-input>
                     </div>
                     <div class="col-md-3 mb-3">
                         <x-term-select>
-                            <x-slot name="current">{{$domain_info[0]->term}}</x-slot>
+                            <x-slot name="current">{{$domain_info->price->term}}</x-slot>
                         </x-term-select>
                     </div>
                     <div class="col-md-3 mb-3">
                         <x-currency-select>
-                            <x-slot name="current">{{$domain_info[0]->currency}}</x-slot>
+                            <x-slot name="current">{{$domain_info->price->currency}}</x-slot>
                         </x-currency-select>
                     </div>
                 </div>
@@ -93,14 +93,14 @@
                         <x-date-input>
                             <x-slot name="title">Owned since</x-slot>
                             <x-slot name="name">owned_since</x-slot>
-                            <x-slot name="value">{{$domain_info[0]->owned_since }}</x-slot>
+                            <x-slot name="value">{{$domain_info->owned_since }}</x-slot>
                         </x-date-input>
                     </div>
                     <div class="col-12 col-md-4 mb-3">
                         <x-date-input>
                             <x-slot name="title">Next due date</x-slot>
                             <x-slot name="name">next_due_date</x-slot>
-                            <x-slot name="value">{{$domain_info[0]->next_due_date}}</x-slot>
+                            <x-slot name="value">{{$domain_info->price->next_due_date}}</x-slot>
                         </x-date-input>
                     </div>
                 </div>
@@ -110,8 +110,8 @@
                         <x-labels-select>
                             <x-slot name="title">label</x-slot>
                             <x-slot name="name">label1</x-slot>
-                            @if(isset($labels[0]->id))
-                                <x-slot name="current">{{$labels[0]->id}}</x-slot>
+                            @if(isset($domain_info->labels[0]->label))
+                                <x-slot name="current">{{$domain_info->labels[0]->label->id}}</x-slot>
                             @endif
                         </x-labels-select>
                     </div>
@@ -119,8 +119,8 @@
                         <x-labels-select>
                             <x-slot name="title">label</x-slot>
                             <x-slot name="name">label2</x-slot>
-                            @if(isset($labels[1]->id))
-                                <x-slot name="current">{{$labels[1]->id}}</x-slot>
+                            @if(isset($domain_info->labels[1]->label))
+                                <x-slot name="current">{{$domain_info->labels[1]->label->id}}</x-slot>
                             @endif
                         </x-labels-select>
                     </div>
@@ -128,8 +128,8 @@
                         <x-labels-select>
                             <x-slot name="title">label</x-slot>
                             <x-slot name="name">label3</x-slot>
-                            @if(isset($labels[2]->id))
-                                <x-slot name="current">{{$labels[2]->id}}</x-slot>
+                            @if(isset($domain_info->labels[2]->label))
+                                <x-slot name="current">{{$domain_info->labels[2]->label->id}}</x-slot>
                             @endif
                         </x-labels-select>
                     </div>
@@ -137,8 +137,8 @@
                         <x-labels-select>
                             <x-slot name="title">label</x-slot>
                             <x-slot name="name">label4</x-slot>
-                            @if(isset($labels[3]->id))
-                                <x-slot name="current">{{$labels[3]->id}}</x-slot>
+                            @if(isset($domain_info->labels[3]->label))
+                                <x-slot name="current">{{$domain_info->labels[3]->label->id}}</x-slot>
                             @endif
                         </x-labels-select>
                     </div>
@@ -146,7 +146,7 @@
 
                 <div class="form-check mt-2">
                     <input class="form-check-input" name="is_active" type="checkbox"
-                           value="1" {{ ($domain_info[0]->active === 1) ? 'checked' : '' }}>
+                           value="1" {{ ($domain_info->active === 1) ? 'checked' : '' }}>
                     <label class="form-check-label">
                         I still have this service
                     </label>

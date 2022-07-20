@@ -17,8 +17,7 @@ class SeedBoxesController extends Controller
 {
     public function index()
     {
-        $seedboxes = SeedBoxes::seedBoxesDataIndexPage();
-
+        $seedboxes = SeedBoxes::allSeedboxes();
         return view('seedboxes.index', compact(['seedboxes']));
     }
 
@@ -48,13 +47,10 @@ class SeedBoxesController extends Controller
         $seedbox_id = Str::random(8);
 
         $pricing = new Pricing();
-
         $as_usd = $pricing->convertToUSD($request->price, $request->currency);
-
         $pricing->insertPricing(6, $seedbox_id, $request->currency, $request->price, $request->payment_term, $as_usd, $request->next_due_date);
 
         Labels::deleteLabelsAssignedTo($seedbox_id);
-
         Labels::insertLabelsAssigned([$request->label1, $request->label2, $request->label3, $request->label4], $seedbox_id);
 
         SeedBoxes::create([
@@ -73,6 +69,7 @@ class SeedBoxesController extends Controller
             'was_promo' => $request->was_promo
         ]);
 
+        Cache::forget("all_seedboxes");
         Home::homePageCacheForget();
 
         return redirect()->route('seedboxes.index')
@@ -82,20 +79,14 @@ class SeedBoxesController extends Controller
 
     public function show(SeedBoxes $seedbox)
     {
-        $seedbox_extras = SeedBoxes::seedBoxDataShowPage($seedbox->id);
-
-        $labels = Labels::labelsForService($seedbox->id);
-
-        return view('seedboxes.show', compact(['seedbox', 'seedbox_extras', 'labels']));
+        $seedbox_data = SeedBoxes::seedbox($seedbox->id)[0];
+        return view('seedboxes.show', compact(['seedbox_data']));
     }
 
     public function edit(SeedBoxes $seedbox)
     {
-        $seedbox = SeedBoxes::seedBoxEditDataPage($seedbox->id);
-
-        $labels = Labels::labelsForService($seedbox[0]->id);
-
-        return view('seedboxes.edit', compact(['seedbox', 'labels']));
+        $seedbox_data = SeedBoxes::seedbox($seedbox->id)[0];
+        return view('seedboxes.edit', compact(['seedbox_data']));
     }
 
     public function update(Request $request, SeedBoxes $seedbox)
@@ -134,17 +125,15 @@ class SeedBoxesController extends Controller
             ]);
 
         $pricing = new Pricing();
-
         $as_usd = $pricing->convertToUSD($request->price, $request->currency);
-
         $pricing->updatePricing($seedbox->id, $request->currency, $request->price, $request->payment_term, $as_usd, $request->next_due_date);
 
         Labels::deleteLabelsAssignedTo($seedbox->id);
-
         Labels::insertLabelsAssigned([$request->label1, $request->label2, $request->label3, $request->label4], $seedbox->id);
 
+        Cache::forget("all_seedboxes");
+        Cache::forget("seedbox.{$seedbox->id}");
         Cache::forget("labels_for_service.{$seedbox->id}");
-
         Home::homePageCacheForget();
 
         return redirect()->route('seedboxes.index')
@@ -162,6 +151,8 @@ class SeedBoxesController extends Controller
 
         Labels::deleteLabelsAssignedTo($seedbox_id);
 
+        Cache::forget("all_seedboxes");
+        Cache::forget("seedbox.{$seedbox->id}");
         Home::homePageCacheForget();
 
         return redirect()->route('seedboxes.index')

@@ -133,14 +133,12 @@
 
                 </div>
             </div>
-            <a href="{{ route('shared.index') }}"
-               class="btn btn-success btn-sm mx-2">
-                Go back
-            </a>
-            <a href="{{ route('shared.edit', $shared->id) }}"
-               class="btn btn-primary btn-sm mx-2">
-                Edit
-            </a>
+            <x-back-btn>
+                <x-slot name="route">{{ route('shared.index') }}</x-slot>
+            </x-back-btn>
+            <x-edit-btn>
+                <x-slot name="route">{{ route('shared.edit', $shared->id) }}</x-slot>
+            </x-edit-btn>
         </x-card>
         @if(Session::has('timer_version_footer') && Session::get('timer_version_footer') === 1)
             <p class="text-muted mt-4 text-end"><small>

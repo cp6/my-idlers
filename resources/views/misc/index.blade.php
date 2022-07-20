@@ -36,23 +36,23 @@
                                         {{ date_format(new DateTime($m->owned_since), 'jS F Y') }}
                                     @endif
                                 </td>
-                                <td class="text-nowrap">{{ now()->diffInDays($m->next_due_date) }}
+                                <td class="text-nowrap">{{ now()->diffInDays($m->price->next_due_date) }}
                                     <small>days</small></td>
-                                <td class="text-nowrap">{{$m->price}} {{$m->currency}}
-                                    <small>{{\App\Process::paymentTermIntToString($m->term)}}</small></td>
+                                <td class="text-nowrap">{{$m->price->price}} {{$m->price->currency}}
+                                    <small>{{\App\Process::paymentTermIntToString($m->price->term)}}</small></td>
                                 <td class="text-nowrap">
-                                    <form action="{{ route('misc.destroy', $m->service_id) }}" method="POST">
-                                        <a href="{{ route('misc.edit', $m->service_id) }}"
+                                    <form action="{{ route('misc.destroy', $m->id) }}" method="POST">
+                                        <a href="{{ route('misc.edit', $m->id) }}"
                                            class="text-body mx-1">
                                             <i class="fas fa-pen" title="edit"></i></a>
-                                        <a href="{{ route('misc.show', $m->service_id) }}"
+                                        <a href="{{ route('misc.show', $m->id) }}"
                                            class="text-body mx-1">
                                             <i class="fas fa-eye" title="view"></i>
                                         </a>
                                         @csrf
                                         @method('DELETE')
                                         <i class="fas fa-trash text-danger ms-3" @click="modalForm"
-                                           id="btn-{{$m->name}}" title="{{$m->service_id}}"></i>
+                                           id="btn-{{$m->name}}" title="{{$m->id}}"></i>
                                     </form>
                                 </td>
                             </tr>

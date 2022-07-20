@@ -17,32 +17,44 @@ class Reseller extends Model
 
     public $incrementing = false;
 
-    public static function resellerDataIndexPage()
-    {
-        return DB::table('reseller_hosting as s')
-            ->join('providers as p', 's.provider_id', '=', 'p.id')
-            ->join('locations as l', 's.location_id', '=', 'l.id')
-            ->join('pricings as pr', 's.id', '=', 'pr.service_id')
-            ->get(['s.*', 'p.name as provider_name', 'pr.*', 'l.name as location']);
+    public static function allResellerHosting()
+    {//All reseller hosting and relationships (no using joins)
+        return Cache::remember("all_reseller", now()->addMonth(1), function () {
+            return Reseller::with(['location', 'provider', 'price', 'ips', 'labels', 'labels.label'])->get();
+        });
     }
 
-    public static function resellerDataShowPage(string $reseller_id)
+    public static function resellerHosting(string $shared_id)
+    {//Single reseller hosting and relationships (no using joins)
+        return Cache::remember("reseller_hosting.$shared_id", now()->addMonth(1), function () use ($shared_id) {
+            return Reseller::where('id', $shared_id)
+                ->with(['location', 'provider', 'price', 'ips', 'labels', 'labels.label'])->get();
+        });
+    }
+    
+    public function ips()
     {
-        return DB::table('reseller_hosting as s')
-            ->join('pricings as pr', 's.id', '=', 'pr.service_id')
-            ->join('providers as p', 's.provider_id', '=', 'p.id')
-            ->join('locations as l', 's.location_id', '=', 'l.id')
-            ->where('s.id', '=', $reseller_id)
-            ->get(['s.*', 'p.name as provider_name', 'l.name as location', 'pr.*']);
+        return $this->hasMany(IPs::class, 'service_id', 'id');
     }
 
-    public static function resellerDataEditPage(string $reseller_id)
+    public function location()
     {
-        return DB::table('reseller_hosting as s')
-            ->join('pricings as p', 's.id', '=', 'p.service_id')
-            ->where('s.id', '=', $reseller_id)
-            ->get(['s.*', 'p.*']);
+        return $this->hasOne(Locations::class, 'id', 'location_id');
+    }
 
+    public function provider()
+    {
+        return $this->hasOne(Providers::class, 'id', 'provider_id');
+    }
+
+    public function price()
+    {
+        return $this->hasOne(Pricing::class, 'service_id', 'id');
+    }
+
+    public function labels()
+    {
+        return $this->hasMany(LabelsAssigned::class, 'service_id', 'id');
     }
 
 }

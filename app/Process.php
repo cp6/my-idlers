@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 
 class Process
@@ -169,9 +170,9 @@ class Process
 
     public function yabsOutputAsJson(string $server_id, string $data_from_form): array
     {
-        $file_name = 'tempYabs.txt';
-
         $allowed_versions = ['v2021-12-28', 'v2022-02-18', 'v2022-04-30', 'v2022-05-06', 'v2022-06-11'];
+
+        $file_name = date('Y') . '/' . date('m') . '/' . time() . '.txt';
 
         Storage::disk('local')->put($file_name, $data_from_form);
 
@@ -179,12 +180,14 @@ class Process
 
         if ($file) {
             $array = explode("\n", $file);
-            Storage::disk('local')->delete($file_name);//Delete file
+            if (!Session::get('save_yabs_as_txt')) {//Check if we want YABs txt to stay
+                Storage::disk('local')->delete($file_name);//Delete file
+            }
         } else {
             return array('error_id' => 10, 'error_message' => 'Issue writing/reading txt file');
         }
 
-        //dd($array);
+        //dd($array);//Good for debugging the lines
 
         if (count($array) < 46) {
             return array('error_id' => 9, 'error_message' => 'Less than 46 lines');
@@ -213,6 +216,9 @@ class Process
                     $io_6 = explode(' ', preg_replace('!\s+!', ' ', $array[33]));
                     (str_contains($array[13], 'Enabled')) ? $aes_ni = true : $aes_ni = false;
                     (str_contains($array[14], 'Enabled')) ? $vm_amd_v = true : $vm_amd_v = false;
+                    $uptime = str_replace(["Uptime     : ", "\r"], '', $array[10]);
+                    $distro = str_replace(["Distro     : ", "\r"], '', $array[18]);
+                    $kernel = str_replace(["Kernel     : ", "\r"], '', $array[19]);
                 } else {
                     $cpu = $this->trimRemoveR(str_replace(':', '', strstr($array[10], ': ')));
                     $cpu_spec = explode(' ', strstr($array[11], ': '));//: 2 @ 3792.872 MHz
@@ -304,7 +310,7 @@ class Process
                             $gb_s = 60;
                             $gb_m = 61;
                             $gb_url = 62;
-                        }elseif ($array[59] === "Geekbench 5 Benchmark Test:\r") {
+                        } elseif ($array[59] === "Geekbench 5 Benchmark Test:\r") {
                             //HAS ipv6
                             //Has full ipv4 & ipv6 network speed testing
                             $has_ipv6 = true;
@@ -397,7 +403,10 @@ class Process
                     'vm' => $vm_amd_v,
                     'GB5_single' => $geekbench_single,
                     'GB5_mult' => $geekbench_multi,
-                    'GB5_id' => $gb5_id
+                    'GB5_id' => $gb5_id,
+                    'uptime' => $uptime ?? null,
+                    'distro' => $distro ?? null,
+                    'kernel' => $kernel ?? null,
                 ];
 
                 $output['disk_speed'] = $disk_test_arr;

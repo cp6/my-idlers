@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Domains;
 use App\Models\IPs;
 use App\Models\Labels;
+use App\Models\Misc;
 use App\Models\NetworkSpeed;
 use App\Models\OS;
 use App\Models\Pricing;
 use App\Models\Providers;
+use App\Models\Reseller;
+use App\Models\SeedBoxes;
 use App\Models\Server;
 use App\Models\Shared;
 use DataTables;
@@ -21,53 +25,13 @@ class ApiController extends Controller
 {
     protected function getAllServers()
     {
-        $servers = DB::table('servers as s')
-            ->Join('pricings as p', 's.id', '=', 'p.service_id')
-            ->join('providers as pr', 's.provider_id', '=', 'pr.id')
-            ->join('locations as l', 's.location_id', '=', 'l.id')
-            ->join('os as o', 's.os_id', '=', 'o.id')
-            ->get(['s.*', 'p.id as price_id', 'p.currency', 'p.price', 'p.term', 'p.as_usd', 'p.usd_per_month', 'p.next_due_date', 'pr.name as provider', 'l.name as location', 'o.name as os'])->toJson(JSON_PRETTY_PRINT);
-
+        $servers = Server::allServers()->toJson(JSON_PRETTY_PRINT);
         return response($servers, 200);
     }
 
     protected function getServer($id)
     {
-        $server = DB::table('servers as s')
-            ->Join('pricings as p', 's.id', '=', 'p.service_id')
-            ->join('providers as pr', 's.provider_id', '=', 'pr.id')
-            ->join('locations as l', 's.location_id', '=', 'l.id')
-            ->join('os as o', 's.os_id', '=', 'o.id')
-            ->where('s.id', '=', $id)
-            ->get(['s.*', 'p.id as price_id', 'p.currency', 'p.price', 'p.term', 'p.as_usd', 'p.usd_per_month', 'p.next_due_date', 'pr.name as provider', 'l.name as location', 'o.name as os']);
-
-        $yabs = DB::table('yabs')
-            ->where('yabs.server_id', '=', $id)
-            ->get();
-
-        $disk_speed = DB::table('disk_speed')
-            ->where('disk_speed.server_id', '=', $id)
-            ->get();
-
-        $network_speed = DB::table('network_speed')
-            ->where('network_speed.server_id', '=', $id)
-            ->get();
-
-        $labels = DB::table('labels_assigned as la')
-            ->Join('labels as l', 'la.label_id', '=', 'l.id')
-            ->where('la.service_id', '=', $id)
-            ->get(['l.*']);
-
-        $ip_addresses = DB::table('ips as i')
-            ->where('i.service_id', '=', $id)
-            ->get(['i.*']);
-
-        $server['ip_addresses'] = $ip_addresses;
-        $server['yabs'] = $yabs;
-        $server['disk_speed'] = $disk_speed;
-        $server['network_speed'] = $network_speed;
-        $server['labels'] = $labels;
-
+        $server = Server::server($id)->toJson(JSON_PRETTY_PRINT);
         return response($server, 200);
     }
 
@@ -79,7 +43,8 @@ class ApiController extends Controller
 
     protected function getPricing($id)
     {
-        $pricing = Pricing::where('id', $id)->get()->toJson(JSON_PRETTY_PRINT);
+        $pricing = Pricing::where('id', $id)
+            ->get()->toJson(JSON_PRETTY_PRINT);
         return response($pricing, 200);
     }
 
@@ -91,8 +56,7 @@ class ApiController extends Controller
 
     protected function getNetworkSpeeds($id)
     {
-        $ns = DB::table('network_speed as n')
-            ->where('n.server_id', '=', $id)
+        $ns = NetworkSpeed::where('server_id', '=', $id)
             ->get()->toJson(JSON_PRETTY_PRINT);
         return response($ns, 200);
     }
@@ -105,94 +69,68 @@ class ApiController extends Controller
 
     protected function getLabel($id)
     {
-        $label = DB::table('labels as l')
-            ->where('l.id', '=', $id)
+        $label = Labels::where('id', '=', $id)
             ->get()->toJson(JSON_PRETTY_PRINT);
         return response($label, 200);
     }
 
     protected function getAllShared()
     {
-        $shared = DB::table('shared_hosting as sh')
-            ->Join('pricings as p', 'sh.id', '=', 'p.service_id')
-            ->get(['sh.*', 'p.id as price_id', 'p.currency', 'p.price', 'p.term', 'p.as_usd', 'p.usd_per_month', 'p.next_due_date'])->toJson(JSON_PRETTY_PRINT);
+        $shared = Shared::allSharedHosting()->toJson(JSON_PRETTY_PRINT);
         return response($shared, 200);
     }
 
     protected function getShared($id)
     {
-        $shared = DB::table('shared_hosting as sh')
-            ->Join('pricings as p', 'sh.id', '=', 'p.service_id')
-            ->where('sh.id', '=', $id)
-            ->get(['sh.*', 'p.id as price_id', 'p.currency', 'p.price', 'p.term', 'p.as_usd', 'p.usd_per_month', 'p.next_due_date'])->toJson(JSON_PRETTY_PRINT);
+        $shared = Shared::sharedHosting($id)->toJson(JSON_PRETTY_PRINT);
         return response($shared, 200);
     }
 
     protected function getAllReseller()
     {
-        $reseller = DB::table('reseller_hosting as rh')
-            ->Join('pricings as p', 'rh.id', '=', 'p.service_id')
-            ->get(['rh.*', 'p.id as price_id', 'p.currency', 'p.price', 'p.term', 'p.as_usd', 'p.usd_per_month', 'p.next_due_date'])->toJson(JSON_PRETTY_PRINT);
+        $reseller = Reseller::allResellerHosting()->toJson(JSON_PRETTY_PRINT);
         return response($reseller, 200);
     }
 
     protected function getReseller($id)
     {
-        $reseller = DB::table('reseller_hosting as rh')
-            ->Join('pricings as p', 'rh.id', '=', 'p.service_id')
-            ->where('rh.id', '=', $id)
-            ->get(['rh.*', 'p.id as price_id', 'p.currency', 'p.price', 'p.term', 'p.as_usd', 'p.usd_per_month', 'p.next_due_date'])->toJson(JSON_PRETTY_PRINT);
+        $reseller = Reseller::resellerHosting($id)->toJson(JSON_PRETTY_PRINT);
         return response($reseller, 200);
     }
 
     protected function getAllSeedbox()
     {
-        $reseller = DB::table('seedboxes as sb')
-            ->Join('pricings as p', 'sb.id', '=', 'p.service_id')
-            ->get(['sb.*', 'p.id as price_id', 'p.currency', 'p.price', 'p.term', 'p.as_usd', 'p.usd_per_month', 'p.next_due_date'])->toJson(JSON_PRETTY_PRINT);
+        $reseller = SeedBoxes::allSeedboxes()->toJson(JSON_PRETTY_PRINT);
         return response($reseller, 200);
     }
 
     protected function getSeedbox($id)
     {
-        $reseller = DB::table('seedboxes as sb')
-            ->Join('pricings as p', 'sb.id', '=', 'p.service_id')
-            ->where('sb.id', '=', $id)
-            ->get(['sb.*', 'p.id as price_id', 'p.currency', 'p.price', 'p.term', 'p.as_usd', 'p.usd_per_month', 'p.next_due_date'])->toJson(JSON_PRETTY_PRINT);
+        $reseller = SeedBoxes::seedbox($id)->toJson(JSON_PRETTY_PRINT);
         return response($reseller, 200);
     }
 
     protected function getAllDomains()
     {
-        $domains = DB::table('domains as d')
-            ->Join('pricings as p', 'd.id', '=', 'p.service_id')
-            ->get(['d.*', 'p.id as price_id', 'p.currency', 'p.price', 'p.term', 'p.as_usd', 'p.usd_per_month', 'p.next_due_date'])->toJson(JSON_PRETTY_PRINT);
+        $domains = Domains::allDomains()->toJson(JSON_PRETTY_PRINT);
         return response($domains, 200);
     }
 
     protected function getDomains($id)
     {
-        $domain = DB::table('domains as d')
-            ->Join('pricings as p', 'd.id', '=', 'p.service_id')
-            ->where('d.id', '=', $id)
-            ->get(['d.*', 'p.id as price_id', 'p.currency', 'p.price', 'p.term', 'p.as_usd', 'p.usd_per_month', 'p.next_due_date'])->toJson(JSON_PRETTY_PRINT);
+        $domain = Domains::domain($id)->toJson(JSON_PRETTY_PRINT);
         return response($domain, 200);
     }
 
     protected function getAllMisc()
     {
-        $misc = DB::table('misc_services as m')
-            ->Join('pricings as p', 'm.id', '=', 'p.service_id')
-            ->get(['m.*', 'p.id as price_id', 'p.currency', 'p.price', 'p.term', 'p.as_usd', 'p.usd_per_month', 'p.next_due_date'])->toJson(JSON_PRETTY_PRINT);
+        $misc = Misc::allMisc()->toJson(JSON_PRETTY_PRINT);
         return response($misc, 200);
     }
 
     protected function getMisc($id)
     {
-        $misc = DB::table('misc_services as m')
-            ->Join('pricings as p', 'm.id', '=', 'p.service_id')
-            ->where('m.id', '=', $id)
-            ->get(['m.*', 'p.id as price_id', 'p.currency', 'p.price', 'p.term', 'p.as_usd', 'p.usd_per_month', 'p.next_due_date'])->toJson(JSON_PRETTY_PRINT);
+        $misc = Misc::misc($id)->toJson(JSON_PRETTY_PRINT);
         return response($misc, 200);
     }
 

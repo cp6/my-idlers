@@ -52,12 +52,18 @@ class YabsController extends Controller
             'ram' => $yabs['ram'],
             'ram_type' => $yabs['ram_type'],
             'ram_mb' => $yabs['ram_mb'],
+            'swap' => $yabs['swap'],
+            'swap_type' => $yabs['swap_type'],
+            'swap_mb' => $yabs['swap_mb'],
             'disk' => $yabs['disk'],
             'disk_type' => $yabs['disk_type'],
             'disk_gb' => $yabs['disk_gb'],
             'gb5_single' => $yabs['GB5_single'],
             'gb5_multi' => $yabs['GB5_mult'],
-            'gb5_id' => $yabs['GB5_id']
+            'gb5_id' => $yabs['GB5_id'],
+            'uptime' => $yabs['uptime'],
+            'distro' => $yabs['distro'],
+            'kernel' => $yabs['kernel']
         ]);
 
         DiskSpeed::create([
@@ -158,5 +164,12 @@ class YabsController extends Controller
 
         return view('yabs.compare', compact('yabs1_data', 'yabs2_data'));
     }
+
+    public function yabsToJson(Yabs $yab): array
+    {
+        $all_yabs = Yabs::yabs($yab->id)[0];
+        return Yabs::buildYabsArray($all_yabs);
+    }
+
 
 }

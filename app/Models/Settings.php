@@ -36,6 +36,7 @@ class Settings extends Model
         Session::put('show_server_value_yabs', $settings[0]->show_server_value_yabs ?? 0);
         Session::put('show_server_value_provider', $settings[0]->show_server_value_provider ?? 0);
         Session::put('show_server_value_location', $settings[0]->show_server_value_location ?? 0);
+        Session::put('save_yabs_as_txt', $settings[0]->save_yabs_as_txt ?? 0);
         Session::put('default_currency', $settings[0]->default_currency ?? 'USD');
         Session::put('default_server_os', $settings[0]->default_server_os ?? 1);
         Session::put('due_soon_amount', $settings[0]->due_soon_amount ?? 6);
