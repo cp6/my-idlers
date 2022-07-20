@@ -107,6 +107,22 @@
                         </x-currency-select>
                     </div>
                 </div>
+                <div class="row mt-3">
+                    <div class="col-12 col-md-6 mb-3">
+                        <div class="input-group">
+                            <div class="input-group-prepend"><span
+                                    class="input-group-text">Save YABs input to txt</span></div>
+                            <select class="form-control" name="save_yabs_as_txt">
+                                <option value="1" {{ ($setting[0]->save_yabs_as_txt === 1) ? 'selected' : '' }}>
+                                    Yes
+                                </option>
+                                <option value="0" {{ ($setting[0]->save_yabs_as_txt === 0) ? 'selected' : '' }}>
+                                    No
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
                 <p>Only if <i>Show servers to public</i> is <b>YES</b> do these apply:</p>
                 <div class="row mt-3">
                     <div class="col-12 col-md-6 mb-3">
