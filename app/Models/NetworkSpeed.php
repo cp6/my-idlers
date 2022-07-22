@@ -11,6 +11,8 @@ class NetworkSpeed extends Model
 
     public $incrementing = false;
 
+    protected $keyType = 'string';
+
     protected $table = 'network_speed';
 
     protected $fillable = ['id', 'server_id', 'location', 'send', 'send_type', 'send_as_mbps', 'receive', 'receive_type', 'receive_as_mbps', 'created_at', 'updated_at'];

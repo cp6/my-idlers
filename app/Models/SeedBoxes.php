@@ -13,6 +13,8 @@ class SeedBoxes extends Model
 
     protected $table = 'seedboxes';
 
+    protected $keyType = 'string';
+
     public $incrementing = false;
 
     protected $fillable = ['id', 'active', 'title', 'hostname', 'seed_box_type', 'provider_id', 'location_id', 'bandwidth', 'port_speed', 'disk', 'disk_type', 'disk_as_gb', 'was_promo', 'owned_since'];

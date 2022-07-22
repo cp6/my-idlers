@@ -13,6 +13,8 @@ class OS extends Model
 
     protected $fillable = ['name'];
 
+    protected $keyType = 'string';
+
     protected $table = 'os';
 
     public static function allOS(): array

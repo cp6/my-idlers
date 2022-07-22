@@ -13,6 +13,8 @@ class DNS extends Model
 
     public $incrementing = false;
 
+    protected $keyType = 'string';
+
     protected $fillable = ['id', 'service_id', 'hostname', 'dns_type', 'address', 'server_id', 'domain_id'];
 
     public static $dns_types = ['A', 'AAAA', 'DNAME', 'MX', 'NS', 'SOA', 'TXT', 'URI'];

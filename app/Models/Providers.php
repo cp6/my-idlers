@@ -13,6 +13,8 @@ class Providers extends Model
 
     protected $fillable = ['name'];
 
+    protected $keyType = 'string';
+
     protected $table = 'providers';
 
     public static function allProviders(): array
