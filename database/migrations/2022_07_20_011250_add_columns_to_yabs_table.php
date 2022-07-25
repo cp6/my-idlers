@@ -20,12 +20,7 @@ return new class extends Migration {
     public function down()
     {
         Schema::table('yabs', function (Blueprint $table) {
-            $table->dropColumn('uptime');
-            $table->dropColumn('distro');
-            $table->dropColumn('kernel');
-            $table->dropColumn('swap');
-            $table->dropColumn('swap_type', 2);
-            $table->dropColumn('swap_mb');
+            $table->dropColumn(['uptime', 'distro', 'kernel', 'swap', 'swap_type', 'swap_mb']);
         });
     }
 };
