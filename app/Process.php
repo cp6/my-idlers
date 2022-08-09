@@ -193,8 +193,8 @@ class Process
             return array('error_id' => 9, 'error_message' => 'Less than 46 lines');
         }
 
-        if (str_contains($array[0], "# ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## #\r")) {
-            if ($array[1] !== "#              Yet-Another-Bench-Script              #\r") {
+        if (str_contains($array[0], "# ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## #")) {
+            if (!str_contains($array[1],"#              Yet-Another-Bench-Script              #")) {
                 return array('error_id' => 8, 'error_message' => 'Didnt copy output correctly');
             }
 
@@ -261,7 +261,7 @@ class Process
 
                 if (isset($array[40])) {
                     if ($version_array[1] === 'v2022-05-06' || $version_array[1] === 'v2022-06-11') {
-                        if ($array[43] === "Geekbench 5 Benchmark Test:\r") {
+                        if (str_contains($array[43], "Geekbench 5 Benchmark Test:")) {
                             //No ipv6
                             //Has short ipv4 network speed testing (-r)
                             $has_ipv6 = false;
@@ -270,11 +270,11 @@ class Process
                             $gb_s = 47;
                             $gb_m = 48;
                             $gb_url = 49;
-                        } elseif ($array[45] === "Geekbench 4 Benchmark Test:\r") {
+                        } elseif (str_contains($array[45], "Geekbench 4 Benchmark Test:")) {
                             return array('error_id' => 6, 'error_message' => 'GeekBench 5 only allowed');
                         } elseif ($array[45] === "Geekbench 5 test failed. Run manually to determine cause.\r") {
                             return array('error_id' => 7, 'error_message' => 'GeekBench test failed');
-                        } elseif ($array[46] === "Geekbench 5 Benchmark Test:\r") {
+                        } elseif (str_contains($array[46], "Geekbench 5 Benchmark Test:")) {
                             //No ipv6
                             //Has full ipv4 network speed testing
                             $has_ipv6 = false;
@@ -283,7 +283,7 @@ class Process
                             $gb_s = 44;
                             $gb_m = 45;
                             $gb_url = 46;
-                        } elseif ($array[47] === "Geekbench 5 Benchmark Test:\r") {
+                        } elseif (str_contains($array[47], "Geekbench 5 Benchmark Test:")) {
                             //No ipv6
                             //Has full ipv4 network speed testing
                             $has_ipv6 = false;
@@ -292,7 +292,7 @@ class Process
                             $gb_s = 51;
                             $gb_m = 52;
                             $gb_url = 53;
-                        } elseif ($array[43] === "iperf3 Network Speed Tests (IPv6):\r") {
+                        } elseif (str_contains($array[43], "iperf3 Network Speed Tests (IPv6):")) {
                             //HAS ipv6
                             //Has short ipv4 & ipv6 network speed testing
                             $has_ipv6 = true;
@@ -301,7 +301,7 @@ class Process
                             $gb_s = 55;
                             $gb_m = 56;
                             $gb_url = 57;
-                        } elseif ($array[56] === "Geekbench 5 Benchmark Test:\r") {
+                        } elseif (str_contains($array[56], "Geekbench 5 Benchmark Test:")) {
                             //HAS ipv6
                             //Has full ipv4 & ipv6 network speed testing
                             $has_ipv6 = true;
@@ -310,7 +310,7 @@ class Process
                             $gb_s = 60;
                             $gb_m = 61;
                             $gb_url = 62;
-                        } elseif ($array[59] === "Geekbench 5 Benchmark Test:\r") {
+                        } elseif (str_contains($array[59], "Geekbench 5 Benchmark Test:")) {
                             //HAS ipv6
                             //Has full ipv4 & ipv6 network speed testing
                             $has_ipv6 = true;
@@ -323,7 +323,7 @@ class Process
                             return array('error_id' => 5, 'error_message' => 'Not correct YABs command output');
                         }
                     } else {
-                        if ($array[45] === "Geekbench 5 Benchmark Test:\r") {
+                        if (str_contains($array[45], "Geekbench 5 Benchmark Test:")) {
                             //No ipv6
                             //Has short ipv4 network speed testing (-r)
                             $has_ipv6 = false;
@@ -332,11 +332,11 @@ class Process
                             $gb_s = 49;
                             $gb_m = 50;
                             $gb_url = 51;
-                        } elseif ($array[45] === "Geekbench 4 Benchmark Test:\r") {
+                        } elseif (str_contains($array[45], "Geekbench 4 Benchmark Test:")) {
                             return array('error_id' => 6, 'error_message' => 'GeekBench 5 only allowed');
-                        } elseif ($array[45] === "Geekbench 5 test failed. Run manually to determine cause.\r") {
+                        } elseif (str_contains($array[45], "Geekbench 5 test failed. Run manually to determine cause.")) {
                             return array('error_id' => 7, 'error_message' => 'GeekBench test failed');
-                        } elseif ($array[40] === "Geekbench 5 Benchmark Test:\r") {
+                        } elseif (str_contains($array[40], "Geekbench 5 Benchmark Test:")) {
                             //No ipv6
                             //Has full ipv4 network speed testing
                             $has_ipv6 = false;
@@ -345,7 +345,7 @@ class Process
                             $gb_s = 44;
                             $gb_m = 45;
                             $gb_url = 46;
-                        } elseif ($array[40] === "iperf3 Network Speed Tests (IPv6):\r") {
+                        } elseif (str_contains($array[40], "iperf3 Network Speed Tests (IPv6):")) {
                             //HAS ipv6
                             //Has short ipv4 & ipv6 network speed testing
                             $has_ipv6 = true;
@@ -354,7 +354,7 @@ class Process
                             $gb_s = 52;
                             $gb_m = 53;
                             $gb_url = 54;
-                        } elseif ($array[56] === "Geekbench 5 Benchmark Test:\r") {
+                        } elseif (str_contains($array[56], "Geekbench 5 Benchmark Test:")) {
                             //HAS ipv6
                             //Has full ipv4 & ipv6 network speed testing
                             $has_ipv6 = true;
