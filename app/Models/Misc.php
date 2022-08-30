@@ -14,6 +14,8 @@ class Misc extends Model
 
     protected $table = 'misc_services';
 
+    protected $keyType = 'string';
+
     protected $fillable = ['id', 'name', 'owned_since'];
 
     public static function allMisc()

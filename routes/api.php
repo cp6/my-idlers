@@ -73,3 +73,7 @@ Route::middleware('auth:api')->get('shared/{id}', 'App\Http\Controllers\ApiContr
 Route::middleware('auth:api')->get('online/{hostname}', 'App\Http\Controllers\ApiController@checkHostIsUp');
 
 Route::middleware('auth:api')->get('dns/{domainName}/{type}', 'App\Http\Controllers\ApiController@getIpForDomain');
+
+Route::middleware('auth:api')->post('yabs/', 'App\Http\Controllers\ApiController@storeYabs');
+Route::middleware('auth:api')->get('yabs/', 'App\Http\Controllers\ApiController@getAllYabs');
+Route::middleware('auth:api')->get('yabs/{id}', 'App\Http\Controllers\ApiController@getYabs');

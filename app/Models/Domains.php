@@ -15,6 +15,8 @@ class Domains extends Model
 
     protected $table = 'domains';
 
+    protected $keyType = 'string';
+
     protected $fillable = ['id', 'domain', 'extension', 'ns1', 'ns2', 'ns3', 'price', 'currency', 'payment_term', 'owned_since', 'provider_id', 'next_due_date'];
 
 

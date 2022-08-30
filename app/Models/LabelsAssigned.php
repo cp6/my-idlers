@@ -15,6 +15,8 @@ class LabelsAssigned extends Model
 
     protected $fillable = ['label_id', 'service_id'];
 
+    protected $keyType = 'string';
+
     public function label()
     {
         return $this->hasOne(Labels::class, 'id', 'label_id');

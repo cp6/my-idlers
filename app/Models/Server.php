@@ -12,6 +12,10 @@ class Server extends Model
 {
     use HasFactory;
 
+    protected $table = 'servers';
+
+    protected $keyType = 'string';
+
     public $incrementing = false;
 
     protected $fillable = ['id', 'hostname', 'ipv4', 'ipv6', 'server_type', 'os_id', 'location_id', 'provider_id',

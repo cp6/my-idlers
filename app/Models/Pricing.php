@@ -13,6 +13,12 @@ class Pricing extends Model
 {
     use HasFactory;
 
+    protected $table = 'pricings';
+
+    public $incrementing = false;
+
+    protected $keyType = 'string';
+
     protected $fillable = ['service_id', 'service_type', 'currency', 'price', 'term', 'as_usd', 'usd_per_month', 'next_due_date'];
 
     private static function refreshRates(): object

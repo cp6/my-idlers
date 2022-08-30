@@ -15,6 +15,8 @@ class Labels extends Model
 
     protected $table = 'labels';
 
+    protected $keyType = 'string';
+
     protected $fillable = ['id', 'label', 'server_id', 'server_id_2', 'domain_id', 'domain_id_2', 'shared_id', 'shared_id_2'];
 
     public static function deleteLabelsAssignedTo($service_id)

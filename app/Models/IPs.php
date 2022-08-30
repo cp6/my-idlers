@@ -14,6 +14,8 @@ class IPs extends Model
 
     public $table = 'ips';
 
+    protected $keyType = 'string';
+
     protected $fillable = ['id', 'active', 'service_id', 'address', 'is_ipv4'];
 
     public $incrementing = false;

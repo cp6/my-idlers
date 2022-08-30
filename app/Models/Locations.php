@@ -15,6 +15,8 @@ class Locations extends Model
 
     protected $table = 'locations';
 
+    protected $keyType = 'string';
+
     public static function allLocations(): array
     {
         return Cache::remember("locations", now()->addMonth(1), function () {
