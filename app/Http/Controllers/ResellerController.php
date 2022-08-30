@@ -57,8 +57,7 @@ class ResellerController extends Controller
         $reseller_id = Str::random(8);
 
         $pricing = new Pricing();
-        $as_usd = $pricing->convertToUSD($request->price, $request->currency);
-        $pricing->insertPricing(3, $reseller_id, $request->currency, $request->price, $request->payment_term, $as_usd, $request->next_due_date);
+        $pricing->insertPricing(3, $reseller_id, $request->currency, $request->price, $request->payment_term, $request->next_due_date);
 
         if (!is_null($request->dedicated_ip)) {
             IPs::insertIP($reseller_id, $request->dedicated_ip);
