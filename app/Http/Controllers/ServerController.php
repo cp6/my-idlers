@@ -75,10 +75,7 @@ class ServerController extends Controller
         $server_id = Str::random(8);
 
         $pricing = new Pricing();
-
-        $as_usd = $pricing->convertToUSD($request->price, $request->currency);
-
-        $pricing->insertPricing(1, $server_id, $request->currency, $request->price, $request->payment_term, $as_usd, $request->next_due_date);
+        $pricing->insertPricing(1, $server_id, $request->currency, $request->price, $request->payment_term, $request->next_due_date);
 
         if (!is_null($request->ip1)) {
             IPs::insertIP($server_id, $request->ip1);

@@ -170,7 +170,7 @@ class Process
 
     public function yabsOutputAsJson(string $server_id, string $data_from_form): array
     {
-        $allowed_versions = ['v2021-12-28', 'v2022-02-18', 'v2022-04-30', 'v2022-05-06', 'v2022-06-11'];
+        $allowed_versions = ['v2021-12-28', 'v2022-02-18', 'v2022-04-30', 'v2022-05-06', 'v2022-06-11', 'v2022-08-20'];
 
         $file_name = date('Y') . '/' . date('m') . '/' . time() . '.txt';
 

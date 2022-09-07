@@ -1,6 +1,14 @@
 @section('title')
     {{$server_data->hostname}} {{'server'}}
 @endsection
+@section('scripts')
+    <script>
+        function showYabsCode() {
+            const el = document.querySelector('#yabs_code');
+            el.classList.remove("d-none");
+        }
+    </script>
+@endsection
 <x-app-layout>
     <x-slot name="header">
         {{ __('Server details') }}
@@ -135,6 +143,9 @@
                     <x-edit-btn>
                         <x-slot name="route">{{ route('servers.edit', $server_data->id) }}</x-slot>
                     </x-edit-btn>
+                    <a href="#" class="btn btn-light btn-sm mx-1" onclick="showYabsCode()">
+                        Show code to add a YABS
+                    </a>
                 </div>
                 <div class="col-12 col-lg-6">
                     @if($server_data->has_yabs)
@@ -199,6 +210,7 @@
                             see Geekbench, disk and network speeds</p>
                     @endif
                 </div>
+                <p id="yabs_code" class="d-none pt-3"><code>curl -sL yabs.sh | bash -s -- -s "{{route('api.store-yabs', [$server_data->id, \Illuminate\Support\Facades\Auth::user()->api_token])}}"</code></p>
             </div>
         </x-card>
         @if(Session::has('timer_version_footer') && Session::get('timer_version_footer') === 1)

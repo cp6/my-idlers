@@ -109,8 +109,9 @@ class Pricing extends Model
         DB::table('pricings')->where('service_id', '=', $id)->delete();
     }
 
-    public function insertPricing(int $type, string $service_id, string $currency, float $price, int $term, float $as_usd, string $next_due_date, int $is_active = 1)
+    public function insertPricing(int $type, string $service_id, string $currency, float $price, int $term, string $next_due_date, int $is_active = 1)
     {
+        $as_usd = $this->convertToUSD($price, $currency);
         return self::create([
             'service_type' => $type,
             'service_id' => $service_id,
@@ -120,7 +121,7 @@ class Pricing extends Model
             'as_usd' => $as_usd,
             'usd_per_month' => $this->costAsPerMonth($as_usd, $term),
             'next_due_date' => $next_due_date,
-            'active' => ($is_active) ? 1 : 0
+            'active' => $is_active
         ]);
     }
 

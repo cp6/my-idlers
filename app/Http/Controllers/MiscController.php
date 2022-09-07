@@ -41,8 +41,7 @@ class MiscController extends Controller
         $misc_id = Str::random(8);
 
         $pricing = new Pricing();
-        $as_usd = $pricing->convertToUSD($request->price, $request->currency);
-        $pricing->insertPricing(5, $misc_id, $request->currency, $request->price, $request->payment_term, $as_usd, $request->next_due_date);
+        $pricing->insertPricing(5, $misc_id, $request->currency, $request->price, $request->payment_term, $request->next_due_date);
 
         Misc::create([
             'id' => $misc_id,
