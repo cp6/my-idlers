@@ -8,7 +8,7 @@ Despite what the name infers this self hosted web app isn't just for storing idl
 a [YABs](https://github.com/masonr/yet-another-bench-script) output you can get disk & network speed values along with
 GeekBench 5 scores to do easier comparing and sorting.
 
-[![Generic badge](https://img.shields.io/badge/version-2.1.3-blue.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Laravel-9.0-red.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/PHP-8.1-purple.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Bootstrap-5.1-pink.svg)](https://shields.io/)
+[![Generic badge](https://img.shields.io/badge/version-2.1.4-blue.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Laravel-9.0-red.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/PHP-8.1-purple.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Bootstrap-5.1-pink.svg)](https://shields.io/)
 
 <img src="https://raw.githubusercontent.com/cp6/my-idlers/main/public/My%20Idlers%20logo.jpg" width="128" height="128" />
 
@@ -20,26 +20,33 @@ GeekBench 5 scores to do easier comparing and sorting.
 
 [Cloud Five Limited](https://cloud-v.net/) for providing the hosting for demo installation.
 
-## 2.1.3 changes (20th July 2022):
+## 2.1.4 changes (7th September 2022):
+
+#### Note:
+yabs.sh now has JSON formatted response and it is possible to POST the output directly from calling the script. 
+
+This will become the only method to add YABS results but using the form method still works for now.
+
+This version updates the yabs/ POST API to include the server id and your api key:
+
+`http://domain.com/api/yabs/tnSJLyhz/USERAPIKEYISHERE`
+
+Example yabs.sh call to POST the result
+
+`curl -sL yabs.sh | bash -s -- -s "http://domain.com/api/yabs/tnSJLyhz/USERAPIKEYISHERE"`
 
 #### Please run the following if updating from existing install:
 
 ```shell
-php artisan migrate
 php artisan route:cache
 php artisan cache:clear
 ```
 
-* Added YABs to JSON output page
-* Added uptime, distro and kernel to YABs inserting
-* Added memory swap values to YABs inserting
-* Added save YABs as txt file (setting)
-* Added back and edit button component with icon
-* Updated Reseller model to use relationships + caching
-* Updated Misc model to use relationships + caching
-* Updated SeedBoxes model to use relationships + caching
-* Updated ApiController to use the new model relationship calling (& caching)
-* Updated container large screen max width from 1320px to 1420px
+* Added YABS JSON parsing
+* Updated store YABS API function (Uses yabs.sh JSON)
+* Updated YABS POST API request (Uses yabs.sh JSON)
+* Updated server show page to display code to run and post a YABS on server
+* Updated pricing model insertPricing() func
 
 ## Requires
 
