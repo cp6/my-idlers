@@ -205,10 +205,10 @@ class Yabs extends Model
             }
 
             if ($disk > 10000) {
-                $disk_f = ($ram / 1024 / 1024);
+                $disk_f = ($disk / 1024 / 1024);
                 $disk_type = 'TB';
             } else {
-                $disk_f = ($ram / 1024);
+                $disk_f = ($disk / 1024);
                 $disk_type = 'GB';
             }
 
@@ -313,6 +313,11 @@ class Yabs extends Model
                     'cpu' => $cores,
                     'has_yabs' => 1
                 ]);
+
+            Cache::forget("yabs.$yabs_id");
+            Cache::forget("all_yabs");
+            Cache::forget("server.$server_id");
+            Cache::forget("all_servers");
 
         } catch (Exception $e) {//Not valid JSON
             return false;
