@@ -13,7 +13,6 @@
     <div class="container" id="app">
         <x-delete-confirm-modal></x-delete-confirm-modal>
         <x-card class="shadow mt-3">
-            <a href="{{ route('yabs.create') }}" class="btn btn-primary mb-3">Add YABs</a>
             <a href="{{ route('yabs.compare-choose') }}" class="btn btn-success mb-3">Compare YABs</a>
             <x-errors-alert></x-errors-alert>
             <x-success-alert></x-success-alert>
