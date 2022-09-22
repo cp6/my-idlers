@@ -36,6 +36,7 @@ Example yabs.sh call to POST the result
 #### Please run the following if updating from existing install:
 
 ```shell
+php artisan migrate
 php artisan route:cache
 php artisan cache:clear
 ```
