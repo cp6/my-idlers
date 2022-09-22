@@ -88,13 +88,21 @@
                         <tr>
                             <td class="td-nowrap">GB5 single</td>
                             <td class="td-nowrap">{{$yabs1_data[0]->gb5_single}}</td>
-                            {!! \App\Models\Server::tableRowCompare($yabs1_data[0]->gb5_single, $yabs2_data[0]->gb5_single, '') !!}
+                            @if(!is_null($yabs1_data[0]->gb5_single) && !is_null($yabs2_data[0]->gb5_single))
+                                {!! \App\Models\Server::tableRowCompare($yabs1_data[0]->gb5_single, $yabs2_data[0]->gb5_single, '') !!}
+                            @else
+                                <td>-</td>
+                            @endif
                             <td class="td-nowrap">{{$yabs2_data[0]->gb5_single}}</td>
                         </tr>
                         <tr>
                             <td class="td-nowrap">GB5 multi</td>
                             <td class="td-nowrap">{{$yabs1_data[0]->gb5_multi}}</td>
-                            {!! \App\Models\Server::tableRowCompare($yabs1_data[0]->gb5_multi, $yabs2_data[0]->gb5_multi, '') !!}
+                            @if(!is_null($yabs1_data[0]->gb5_multi) && !is_null($yabs2_data[0]->gb5_multi))
+                                {!! \App\Models\Server::tableRowCompare($yabs1_data[0]->gb5_multi, $yabs2_data[0]->gb5_multi, '') !!}
+                            @else
+                                <td>-</td>
+                            @endif
                             <td class="td-nowrap">{{$yabs2_data[0]->gb5_multi}}</td>
                         </tr>
                         <tr>
@@ -181,7 +189,7 @@
                                 </td>
                             </tr>
                         @endif
-                        @if($yabs1_data[0]->network_speed[3]->location === $yabs2_data[0]->network_speed[3]->location)
+                        @if(isset($yabs1_data[0]->network_speed[3]) && $yabs1_data[0]->network_speed[3]->location === $yabs2_data[0]->network_speed[3]->location)
                             <tr>
                                 <td class="td-nowrap">{{$yabs1_data[0]->network_speed[3]->location}} send</td>
                                 <td class="td-nowrap">{{$yabs1_data[0]->network_speed[3]->send_as_mbps}}<span
@@ -199,7 +207,7 @@
                                 </td>
                             </tr>
                         @endif
-                        @if($yabs1_data[0]->network_speed[4]->location === $yabs2_data[0]->network_speed[4]->location)
+                        @if(isset($yabs1_data[0]->network_speed[4]) && $yabs1_data[0]->network_speed[4]->location === $yabs2_data[0]->network_speed[4]->location)
                             <tr>
                                 <td class="td-nowrap">{{$yabs1_data[0]->network_speed[4]->location}} send</td>
                                 <td class="td-nowrap">{{$yabs1_data[0]->network_speed[4]->send_as_mbps}}<span
@@ -217,7 +225,7 @@
                                 </td>
                             </tr>
                         @endif
-                        @if($yabs1_data[0]->network_speed[4]->location === $yabs2_data[0]->network_speed[5]->location)
+                        @if(isset($yabs1_data[0]->network_speed[4]) && $yabs1_data[0]->network_speed[4]->location === $yabs2_data[0]->network_speed[5]->location)
                             <tr>
                                 <td class="td-nowrap">{{$yabs1_data[0]->network_speed[4]->location}} send</td>
                                 <td class="td-nowrap">{{$yabs1_data[0]->network_speed[4]->send_as_mbps}}<span

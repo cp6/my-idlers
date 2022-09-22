@@ -118,14 +118,14 @@ class ServerController extends Controller
 
     public function show(Server $server)
     {
-        $server_data = Server::server($server->id)[0];
+        $server_data = Server::server($server->id);
 
         return view('servers.show', compact(['server_data']));
     }
 
     public function edit(Server $server)
     {
-        $server_data = Server::server($server->id)[0];
+        $server_data = Server::server($server->id);
 
         return view('servers.edit', compact(['server_data']));
     }

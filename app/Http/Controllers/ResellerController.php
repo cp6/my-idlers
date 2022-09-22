@@ -29,7 +29,6 @@ class ResellerController extends Controller
 
     public function store(Request $request)
     {
-
         $request->validate([
             'domain' => 'required|min:4',
             'reseller_type' => 'required',
@@ -94,13 +93,13 @@ class ResellerController extends Controller
 
     public function show(Reseller $reseller)
     {
-        $reseller = Reseller::resellerHosting($reseller->id)[0];
+        $reseller = Reseller::resellerHosting($reseller->id);
         return view('reseller.show', compact(['reseller']));
     }
 
     public function edit(Reseller $reseller)
     {
-        $reseller = Reseller::resellerHosting($reseller->id)[0];
+        $reseller = Reseller::resellerHosting($reseller->id);
         return view('reseller.edit', compact(['reseller']));
     }
 

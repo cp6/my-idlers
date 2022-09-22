@@ -37,7 +37,7 @@ class Server extends Model
     {//Single server and relationships (no using joins)
         return Cache::remember("server.$server_id", now()->addMonth(1), function () use ($server_id) {
             return Server::where('id', $server_id)
-                ->with(['location', 'provider', 'os', 'price', 'ips', 'yabs', 'yabs.disk_speed', 'yabs.network_speed', 'labels', 'labels.label'])->get();
+                ->with(['location', 'provider', 'os', 'price', 'ips', 'yabs', 'yabs.disk_speed', 'yabs.network_speed', 'labels', 'labels.label'])->first();
         });
     }
 
@@ -91,17 +91,17 @@ class Server extends Model
             return "<i class='fas fa-expand' title='{$os_name}'></i>";
         } else if ($os <= 3) {//Centos
             return "<i class='fab fa-centos os-icon' title='{$os_name}'></i>";
-        } elseif ($os > 3 && $os <= 6) {//Debain
+        } elseif ($os > 7 && $os <= 11) {//Debain
             return "<i class='fab fa-linux os-icon' title='{$os_name}'></i>";
-        } elseif ($os > 6 && $os < 10) {//Fedora
+        } elseif ($os > 12 && $os < 15) {//Fedora
             return "<i class='fab fa-fedora os-icon' title='{$os_name}'></i>";
-        } elseif ($os > 10 && $os < 13) {//FreeBSD
+        } elseif ($os > 14 && $os < 18) {//FreeBSD
             return "<i class='fab fa-linux os-icon' title='{$os_name}'></i>";
-        } elseif ($os > 13 && $os < 16) {//OpenBSD
+        } elseif ($os > 17 && $os < 21) {//OpenBSD
             return "<i class='fab fa-linux os-icon' title='{$os_name}'></i>";
-        } elseif ($os > 15 && $os < 21) {//Ubuntu
+        } elseif ($os > 25 && $os < 32) {//Ubuntu
             return "<i class='fab fa-ubuntu os-icon' title='{$os_name}'></i>";
-        } elseif ($os > 20 && $os < 26) {//Windows
+        } elseif ($os > 32 && $os < 38) {//Windows
             return "<i class='fab fa-windows os-icon' title='{$os_name}'></i>";
         } else {//OTHER ISO CUSTOM etc
             return "<i class='fas fa-compact-disc os-icon' title='{$os_name}'></i>";

@@ -22,7 +22,7 @@ class DomainsController extends Controller
 
     public function show(Domains $domain)
     {//Need to modern
-        $domain_info = Domains::domain($domain->id)[0];
+        $domain_info = Domains::domain($domain->id);
         return view('domains.show', compact(['domain_info']));
     }
 
@@ -67,7 +67,7 @@ class DomainsController extends Controller
 
     public function edit(Domains $domain)
     {
-        $domain_info = Domains::domain($domain->id)[0];
+        $domain_info = Domains::domain($domain->id);
         return view('domains.edit', compact(['domain_info']));
     }
 

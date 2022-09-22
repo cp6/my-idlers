@@ -8,7 +8,7 @@ Despite what the name infers this self hosted web app isn't just for storing idl
 a [YABs](https://github.com/masonr/yet-another-bench-script) output you can get disk & network speed values along with
 GeekBench 5 scores to do easier comparing and sorting.
 
-[![Generic badge](https://img.shields.io/badge/version-2.1.5-blue.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Laravel-9.0-red.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/PHP-8.1-purple.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Bootstrap-5.1-pink.svg)](https://shields.io/)
+[![Generic badge](https://img.shields.io/badge/version-2.1.6-blue.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Laravel-9.0-red.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/PHP-8.1-purple.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Bootstrap-5.1-pink.svg)](https://shields.io/)
 
 <img src="https://raw.githubusercontent.com/cp6/my-idlers/main/public/My%20Idlers%20logo.jpg" width="128" height="128" />
 
@@ -20,14 +20,12 @@ GeekBench 5 scores to do easier comparing and sorting.
 
 [Cloud Five Limited](https://cloud-v.net/) for providing the hosting for demo installation.
 
-## 2.1.5 changes (7th September 2022):
+## 2.1.6 changes (22th September 2022):
 
-#### Note:
-yabs.sh now has JSON formatted response and it is possible to POST the output directly from calling the script. 
+#### You can no longer use the form to submit YABS results
+yabs.sh now has JSON formatted response and can POST the output directly from calling the script. 
 
-This will become the only method to add YABS results but using the form method still works for now.
-
-This version updates the yabs/ POST API to include the server id and your api key:
+With My idlers you can use your API key and the server id to directly POST the benchmark result
 
 `http://domain.com/api/yabs/tnSJLyhz/USERAPIKEYISHERE`
 
@@ -42,11 +40,17 @@ php artisan route:cache
 php artisan cache:clear
 ```
 
-* Added YABS JSON parsing
-* Updated store YABS API function (Uses yabs.sh JSON)
-* Updated YABS POST API request (Uses yabs.sh JSON)
-* Updated server show page to display code to run and post a YABS on server
-* Updated pricing model insertPricing() func
+* Removed old method and functions for adding a YABS result
+* Fixed YABS JSON parser disk being the ram value
+* Fixed YABS JSON parser disk conversion (MB & GB)
+* Fixed YABS JSON parser RAM conversion (MB & GB)
+* Fixed OS icons for server index page (showing wrongly)
+* Added custom HTTP error pages
+* Updated yabs table for gb5 values to be nullable
+* Updated error alert component
+* Updated posting YABS now clears relevant caches
+* Updated models and controllers to use first()
+* Update yabs compare view blade for nullable values
 
 ## Requires
 

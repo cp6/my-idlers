@@ -196,7 +196,7 @@ class Yabs extends Model
 
             $yabs_id = Str::random(8);
 
-            if ($ram > 10) {
+            if ($ram > 999999) {
                 $ram_f = ($ram / 1024 / 1024);
                 $ram_type = 'GB';
             } else {
@@ -204,11 +204,11 @@ class Yabs extends Model
                 $ram_type = 'MB';
             }
 
-            if ($disk > 10000) {
-                $disk_f = ($ram / 1024 / 1024);
+            if ($disk > 100000000) {
+                $disk_f = ($disk / 1024 / 1024 / 1024);
                 $disk_type = 'TB';
             } else {
-                $disk_f = ($ram / 1024);
+                $disk_f = ($disk / 1024 / 1024);
                 $disk_type = 'GB';
             }
 
@@ -242,23 +242,23 @@ class Yabs extends Model
             //Fio
             foreach ($data['fio'] as $ds) {
                 if ($ds['bs'] === '4k') {
-                    $d4k = ($ds['speed_rw'] > 1000000) ? ($ds['speed_rw'] / 1000) : $ds['speed_rw'];
-                    $d4k_type = ($ds['speed_rw'] > 1000000) ? 'GB/s' : 'MB/s';
+                    $d4k = ($ds['speed_rw'] > 999999) ? ($ds['speed_rw'] / 1000 / 1000) : $ds['speed_rw'] / 1000;
+                    $d4k_type = ($ds['speed_rw'] > 999999) ? 'GB/s' : 'MB/s';
                     $d4k_mbps = self::KBstoMBs($ds['speed_rw']);
                 }
                 if ($ds['bs'] === '64k') {
-                    $d64k = ($ds['speed_rw'] > 1000000) ? ($ds['speed_rw'] / 1000) : $ds['speed_rw'];
-                    $d64k_type = ($ds['speed_rw'] > 1000000) ? 'GB/s' : 'MB/s';
+                    $d64k = ($ds['speed_rw'] > 999999) ? ($ds['speed_rw'] / 1000 / 1000) : $ds['speed_rw'] / 1000;
+                    $d64k_type = ($ds['speed_rw'] > 999999) ? 'GB/s' : 'MB/s';
                     $d64k_mbps = self::KBstoMBs($ds['speed_rw']);
                 }
                 if ($ds['bs'] === '512k') {
-                    $d512k = ($ds['speed_rw'] > 1000000) ? ($ds['speed_rw'] / 1000) : $ds['speed_rw'];
-                    $d512k_type = ($ds['speed_rw'] > 1000000) ? 'GB/s' : 'MB/s';
+                    $d512k = ($ds['speed_rw'] > 999999) ? ($ds['speed_rw'] / 1000 / 1000) : $ds['speed_rw'] / 1000;
+                    $d512k_type = ($ds['speed_rw'] > 999999) ? 'GB/s' : 'MB/s';
                     $d512k_mbps = self::KBstoMBs($ds['speed_rw']);
                 }
                 if ($ds['bs'] === '1m') {
-                    $d1m = ($ds['speed_rw'] > 1000000) ? ($ds['speed_rw'] / 1000) : $ds['speed_rw'];
-                    $d1m_type = ($ds['speed_rw'] > 1000000) ? 'GB/s' : 'MB/s';
+                    $d1m = ($ds['speed_rw'] > 999999) ? ($ds['speed_rw'] / 1000 / 1000) : $ds['speed_rw'] / 1000;
+                    $d1m_type = ($ds['speed_rw'] > 999999) ? 'GB/s' : 'MB/s';
                     $d1m_mbps = self::KBstoMBs($ds['speed_rw']);
                 }
             }
@@ -313,6 +313,11 @@ class Yabs extends Model
                     'cpu' => $cores,
                     'has_yabs' => 1
                 ]);
+
+            Cache::forget("yabs.$yabs_id");
+            Cache::forget("all_yabs");
+            Cache::forget("server.$server_id");
+            Cache::forget("all_servers");
 
         } catch (Exception $e) {//Not valid JSON
             return false;
