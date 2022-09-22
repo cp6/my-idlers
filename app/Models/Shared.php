@@ -30,7 +30,7 @@ class Shared extends Model
     {//Single shared hosting and relationships (no using joins)
         return Cache::remember("shared_hosting.$shared_id", now()->addMonth(1), function () use ($shared_id) {
             return Shared::where('id', $shared_id)
-                ->with(['location', 'provider', 'price', 'ips', 'labels', 'labels.label'])->get();
+                ->with(['location', 'provider', 'price', 'ips', 'labels', 'labels.label'])->first();
         });
     }
 

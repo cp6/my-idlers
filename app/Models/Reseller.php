@@ -30,7 +30,7 @@ class Reseller extends Model
     {//Single reseller hosting and relationships (no using joins)
         return Cache::remember("reseller_hosting.$shared_id", now()->addMonth(1), function () use ($shared_id) {
             return Reseller::where('id', $shared_id)
-                ->with(['location', 'provider', 'price', 'ips', 'labels', 'labels.label'])->get();
+                ->with(['location', 'provider', 'price', 'ips', 'labels', 'labels.label'])->first();
         });
     }
 

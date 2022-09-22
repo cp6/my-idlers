@@ -30,7 +30,7 @@ class SeedBoxes extends Model
     {//Single seedbox and relationships (no using joins)
         return Cache::remember("seedbox.$seedbox_id", now()->addMonth(1), function () use ($seedbox_id) {
             return SeedBoxes::where('id', $seedbox_id)
-                ->with(['location', 'provider', 'price', 'labels.label'])->get();
+                ->with(['location', 'provider', 'price', 'labels.label'])->first();
         });
     }
 

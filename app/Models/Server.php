@@ -37,7 +37,7 @@ class Server extends Model
     {//Single server and relationships (no using joins)
         return Cache::remember("server.$server_id", now()->addMonth(1), function () use ($server_id) {
             return Server::where('id', $server_id)
-                ->with(['location', 'provider', 'os', 'price', 'ips', 'yabs', 'yabs.disk_speed', 'yabs.network_speed', 'labels', 'labels.label'])->get();
+                ->with(['location', 'provider', 'os', 'price', 'ips', 'yabs', 'yabs.disk_speed', 'yabs.network_speed', 'labels', 'labels.label'])->first();
         });
     }
 

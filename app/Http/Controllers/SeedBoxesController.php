@@ -78,13 +78,13 @@ class SeedBoxesController extends Controller
 
     public function show(SeedBoxes $seedbox)
     {
-        $seedbox_data = SeedBoxes::seedbox($seedbox->id)[0];
+        $seedbox_data = SeedBoxes::seedbox($seedbox->id);
         return view('seedboxes.show', compact(['seedbox_data']));
     }
 
     public function edit(SeedBoxes $seedbox)
     {
-        $seedbox_data = SeedBoxes::seedbox($seedbox->id)[0];
+        $seedbox_data = SeedBoxes::seedbox($seedbox->id);
         return view('seedboxes.edit', compact(['seedbox_data']));
     }
 

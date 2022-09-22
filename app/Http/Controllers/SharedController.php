@@ -90,13 +90,13 @@ class SharedController extends Controller
 
     public function show(Shared $shared)
     {
-        $shared = Shared::sharedHosting($shared->id)[0];
+        $shared = Shared::sharedHosting($shared->id);
         return view('shared.show', compact(['shared']));
     }
 
     public function edit(Shared $shared)
     {
-        $shared = Shared::sharedHosting($shared->id)[0];
+        $shared = Shared::sharedHosting($shared->id);
         return view('shared.edit', compact(['shared']));
     }
 

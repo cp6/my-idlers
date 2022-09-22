@@ -29,7 +29,7 @@ class Misc extends Model
     {//Single misc and relationships (no using joins)
         return Cache::remember("misc.$misc_id", now()->addMonth(1), function () use ($misc_id) {
             return Misc::where('id', $misc_id)
-                ->with(['price'])->get();
+                ->with(['price'])->first();
         });
     }
 

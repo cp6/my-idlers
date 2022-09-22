@@ -31,7 +31,7 @@ class Domains extends Model
     {//Single domains and relationships (no using joins)
         return Cache::remember("domain.$domain_id", now()->addMonth(1), function () use ($domain_id) {
             return Domains::where('id', $domain_id)
-                ->with(['provider', 'price', 'labels', 'labels.label'])->get();
+                ->with(['provider', 'price', 'labels', 'labels.label'])->first();
         });
     }
 

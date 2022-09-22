@@ -25,7 +25,7 @@ class MiscController extends Controller
 
     public function show(Misc $misc)
     {
-        $misc_data = Misc::misc($misc->id)[0];
+        $misc_data = Misc::misc($misc->id);
         return view('misc.show', compact(['misc_data']));
     }
 
@@ -58,7 +58,7 @@ class MiscController extends Controller
 
     public function edit(Misc $misc)
     {
-        $misc_data = Misc::misc($misc->id)[0];
+        $misc_data = Misc::misc($misc->id);
         return view('misc.edit', compact('misc_data'));
     }
 
