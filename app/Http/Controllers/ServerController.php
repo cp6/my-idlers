@@ -153,7 +153,7 @@ class ServerController extends Controller
                 'hostname' => $request->hostname,
                 'server_type' => $request->server_type,
                 'os_id' => $request->os_id,
-                'ssh' => $request->ssh,
+                'ssh' => $request->ssh_port,
                 'provider_id' => $request->provider_id,
                 'location_id' => $request->location_id,
                 'ram' => $request->ram,
