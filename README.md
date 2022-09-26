@@ -36,11 +36,13 @@ Example yabs.sh call to POST the result
 #### Please run the following if updating from existing install:
 
 ```shell
+composer install
 php artisan migrate
 php artisan route:cache
 php artisan cache:clear
 ```
 
+* Added doctrine/dbal
 * Removed old method and functions for adding a YABS result
 * Fixed YABS JSON parser disk being the ram value
 * Fixed YABS JSON parser disk conversion (MB & GB)
