@@ -79,7 +79,7 @@
                                         <td class="text-nowrap">{{ $server->provider->name }}</td>
                                         <td class="text-nowrap">{{ $server->price->price }} {{$server->price->currency}} {{\App\Process::paymentTermIntToString($server->price->term)}}</td>
                                         <td class="text-nowrap">
-                                            {{now()->diffInDays(Carbon\Carbon::parse($server->next_due_date), false)}}
+                                            {{now()->diffInDays(Carbon\Carbon::parse($server->price->next_due_date), false)}}
                                             <small>days</small></td>
                                         <td class="text-nowrap"> {{ $server->owned_since }}</td>
                                         <td class="text-nowrap">
