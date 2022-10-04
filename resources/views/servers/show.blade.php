@@ -37,7 +37,7 @@
                             <tr>
                                 <td class="px-2 py-2 font-bold text-muted">Type</td>
                                 <td>
-                                    {{ $server_data->serviceServerType($server_data->server_type) }}
+                                    {{ $server_data->serviceServerType($server_data->server_type, false) }}
                                 </td>
                             </tr>
                             <tr>

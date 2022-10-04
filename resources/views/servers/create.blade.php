@@ -35,14 +35,16 @@
                     </div>
                     <div class="col-12 col-lg-3 mb-4">
                         <div class="input-group">
-                            <div class="input-group-prepend"><span class="input-group-text">Type</span></div>
+                            <div class="input-group-prepend"><span class="input-group-text">Server type</span></div>
                             <select class="form-control" name="server_type">
-                                <option value="1" selected>VPS</option>
-                                <option value="2">Dedicated</option>
-                                <option value="3">Semi Dedicated</option>
-                                <option value="4">NAT</option>
-                            </select>
-                        </div>
+                                <option value="1" selected>KVM</option>
+                                <option value="2">OVZ</option>
+                                <option value="3">DEDI</option>
+                                <option value="4">LXC</option>
+                                <option value="5">SEMI-DEDI</option>
+                                <option value="6">VMware</option>
+                                <option value="7">NAT</option>
+                            </select></div>
                     </div>
                     <div class="col-12 col-lg-3 mb-4">
                         <x-os-select>
@@ -84,18 +86,6 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-12 col-lg-3 mb-4">
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span class="input-group-text">Virt</span></div>
-                            <select class="form-control" name="virt">
-                                <option value="1" selected="">KVM</option>
-                                <option value="2">OVZ</option>
-                                <option value="3">DEDI</option>
-                                <option value="4">LXC</option>
-                                <option value="5">SEMI-DEDI</option>
-                                <option value="6">VMware</option>
-                            </select></div>
-                    </div>
                     <div class="col-12 col-lg-3 mb-4">
                         <x-number-input>
                             <x-slot name="title">SSH</x-slot>

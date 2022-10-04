@@ -31,43 +31,7 @@
                     </div>
                     <div class="col-12 col-lg-3 mb-4">
                         <div class="input-group">
-                            <div class="input-group-prepend"><span class="input-group-text">Type</span></div>
-                            <select class="form-control" name="server_type">
-                                <option value="1" selected>VPS</option>
-                                <option value="2">Dedicated</option>
-                                <option value="3">Semi Dedicated</option>
-                                <option value="4">NAT</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-3 mb-4">
-                        <x-os-select>
-                            <x-slot name="current">{{$server_data->os_id}}</x-slot>
-                        </x-os-select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12 col-lg-3 mb-4">
-                        <x-text-input>
-                            <x-slot name="title">NS1</x-slot>
-                            <x-slot name="name">ns1</x-slot>
-                            <x-slot name="max">255</x-slot>
-                            <x-slot name="value">{{ $server_data->ns1 }}</x-slot>
-                        </x-text-input>
-                    </div>
-                    <div class="col-12 col-lg-3 mb-4">
-                        <x-text-input>
-                            <x-slot name="title">NS2</x-slot>
-                            <x-slot name="name">ns2</x-slot>
-                            <x-slot name="max">255</x-slot>
-                            <x-slot name="value">{{ $server_data->ns2 }}</x-slot>
-                        </x-text-input>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12 col-lg-3 mb-4">
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span class="input-group-text">Virt</span></div>
+                            <div class="input-group-prepend"><span class="input-group-text">Server type</span></div>
                             <select class="form-control" name="server_type">
                                 <option value="1" {{ ($server_data->server_type === 1) ? 'selected' : '' }}>KVM
                                 </option>
@@ -83,9 +47,35 @@
                                 <option value="6" {{ ($server_data->server_type === 6) ? 'selected' : '' }}>
                                     VMware
                                 </option>
+                                <option value="7" {{ ($server_data->server_type === 7) ? 'selected' : '' }}>
+                                    NAT
+                                </option>
                             </select></div>
                     </div>
                     <div class="col-12 col-lg-3 mb-4">
+                        <x-os-select>
+                            <x-slot name="current">{{$server_data->os_id}}</x-slot>
+                        </x-os-select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-lg-2 mb-4">
+                        <x-text-input>
+                            <x-slot name="title">NS1</x-slot>
+                            <x-slot name="name">ns1</x-slot>
+                            <x-slot name="max">255</x-slot>
+                            <x-slot name="value">{{ $server_data->ns1 }}</x-slot>
+                        </x-text-input>
+                    </div>
+                    <div class="col-12 col-lg-2 mb-4">
+                        <x-text-input>
+                            <x-slot name="title">NS2</x-slot>
+                            <x-slot name="name">ns2</x-slot>
+                            <x-slot name="max">255</x-slot>
+                            <x-slot name="value">{{ $server_data->ns2 }}</x-slot>
+                        </x-text-input>
+                    </div>
+                    <div class="col-12 col-lg-2 mb-4">
                         <x-number-input>
                             <x-slot name="title">SSH</x-slot>
                             <x-slot name="name">ssh_port</x-slot>
@@ -105,7 +95,7 @@
                             <x-slot name="value">{{ $server_data->bandwidth }}</x-slot>
                         </x-number-input>
                     </div>
-                    <div class="col-12 col-lg-3 mb-4">
+                    <div class="col-12 col-lg-2 mb-4">
                         <x-yes-no-select>
                             <x-slot name="title">Promo price</x-slot>
                             <x-slot name="name">was_promo</x-slot>

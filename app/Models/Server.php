@@ -68,19 +68,27 @@ class Server extends Model
         });
     }
 
-    public static function serviceServerType($type)
+    public static function serviceServerType(int $type, bool $short = true): string
     {
         if ($type === 1) {
             return "KVM";
         } elseif ($type === 2) {
             return "OVZ";
         } elseif ($type === 3) {
+            if (!$short) {
+                return "Dedicated";
+            }
             return "DEDI";
         } elseif ($type === 4) {
             return "LXC";
         } elseif ($type === 6) {
             return "VMware";
+        } elseif ($type === 7) {
+            return "NAT";
         } else {
+            if (!$short) {
+                return "Semi-dedicated";
+            }
             return "SEMI-DEDI";
         }
     }
