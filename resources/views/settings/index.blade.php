@@ -224,6 +224,56 @@
                         </div>
                     </div>
                 </div>
+                <div class="row mt-3">
+                    <div class="col-12 col-md-6 mb-3">
+                        <div class="input-group">
+                            <div class="input-group-prepend"><span
+                                    class="input-group-text">Default order by</span></div>
+                            <select class="form-control" name="sort_on">
+                                <option
+                                    value="1" {{ ($setting[0]->sort_on === 1) ? 'selected' : '' }}>
+                                    created_at ASC
+                                </option>
+                                <option
+                                    value="2" {{ ($setting[0]->sort_on === 2) ? 'selected' : '' }}>
+                                    created_at DESC
+                                </option>
+                                <option
+                                    value="3" {{ ($setting[0]->sort_on === 3) ? 'selected' : '' }}>
+                                    next_due_date ASC
+                                </option>
+                                <option
+                                    value="4" {{ ($setting[0]->sort_on === 4) ? 'selected' : '' }}>
+                                    next_due_date DESC
+                                </option>
+                                <option
+                                    value="5" {{ ($setting[0]->sort_on === 5) ? 'selected' : '' }}>
+                                    as_usd ASC
+                                </option>
+                                <option
+                                    value="6" {{ ($setting[0]->sort_on === 6) ? 'selected' : '' }}>
+                                    as_usd DESC
+                                </option>
+                                <option
+                                    value="7" {{ ($setting[0]->sort_on === 7) ? 'selected' : '' }}>
+                                    owned_since ASC
+                                </option>
+                                <option
+                                    value="8" {{ ($setting[0]->sort_on === 8) ? 'selected' : '' }}>
+                                    owned_since DESC
+                                </option>
+                                <option
+                                    value="9" {{ ($setting[0]->sort_on === 9) ? 'selected' : '' }}>
+                                    updated_at ASC
+                                </option>
+                                <option
+                                    value="10" {{ ($setting[0]->sort_on === 10) ? 'selected' : '' }}>
+                                    updated_at DESC
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-12 col-lg-4">
                         <x-submit-button>Update settings</x-submit-button>

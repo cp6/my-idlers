@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Database\Eloquent\Builder;
 
 class Server extends Model
 {
@@ -25,6 +27,18 @@ class Server extends Model
      * @var mixed
      */
     private $id;
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('order', function (Builder $builder) {
+            $array = Settings::orderByProcess(Session::get('sort_on'));
+            if (!in_array(Session::get('sort_on'), [3, 4, 5, 6], true)) {
+                $builder->orderBy($array[0], $array[1]);
+            }
+        });
+    }
 
     public static function allServers()
     {//All servers and relationships (no using joins)
@@ -45,8 +59,7 @@ class Server extends Model
     {//All ACTIVE servers and relationships replaces activeServersDataIndexPage()
         return Cache::remember("all_active_servers", now()->addMonth(1), function () {
             return Server::where('active', '=', 1)
-                ->with(['location', 'provider', 'os', 'price', 'ips', 'yabs', 'yabs.disk_speed', 'yabs.network_speed', 'labels', 'labels.label'])
-                ->get();
+                ->with(['location', 'provider', 'os', 'ips', 'yabs', 'yabs.disk_speed', 'yabs.network_speed', 'labels', 'labels.label', 'price'])->get();
         });
     }
 
@@ -258,6 +271,9 @@ class Server extends Model
 
     public function price()
     {
+        if (in_array(Session::get('sort_on'), [3, 4, 5, 6], true)) {
+            return $this->hasOne(Pricing::class, 'service_id', 'id')->orderBy(Settings::orderByProcess(Session::get('sort_on'))[0], Settings::orderByProcess(Session::get('sort_on'))[1]);
+        }
         return $this->hasOne(Pricing::class, 'service_id', 'id');
     }
 

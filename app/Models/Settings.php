@@ -19,30 +19,56 @@ class Settings extends Model
     public static function getSettings()
     {
         return Cache::remember('settings', now()->addWeek(1), function () {
-            return DB::table('settings')
-                ->where('id', '=', 1)
-                ->get();
+            return DB::table('settings')->where('id', '=', 1)
+                ->first();
         });
     }
 
     public static function setSettingsToSession($settings): void
     {
-        Session::put('dark_mode', $settings[0]->dark_mode ?? 0);
-        Session::put('timer_version_footer', $settings[0]->show_versions_footer ?? 1);
-        Session::put('show_servers_public', $settings[0]->show_servers_public ?? 0);
-        Session::put('show_server_value_ip', $settings[0]->show_server_value_ip ?? 0);
-        Session::put('show_server_value_hostname', $settings[0]->show_server_value_hostname ?? 0);
-        Session::put('show_server_value_price', $settings[0]->show_server_value_price ?? 0);
-        Session::put('show_server_value_yabs', $settings[0]->show_server_value_yabs ?? 0);
-        Session::put('show_server_value_provider', $settings[0]->show_server_value_provider ?? 0);
-        Session::put('show_server_value_location', $settings[0]->show_server_value_location ?? 0);
-        Session::put('save_yabs_as_txt', $settings[0]->save_yabs_as_txt ?? 0);
-        Session::put('default_currency', $settings[0]->default_currency ?? 'USD');
-        Session::put('default_server_os', $settings[0]->default_server_os ?? 1);
-        Session::put('due_soon_amount', $settings[0]->due_soon_amount ?? 6);
-        Session::put('recently_added_amount', $settings[0]->recently_added_amount ?? 6);
-        Session::put('dashboard_currency', $settings[0]->dashboard_currency ?? 'USD');
+        Session::put('dark_mode', $settings->dark_mode ?? 0);
+        Session::put('timer_version_footer', $settings->show_versions_footer ?? 1);
+        Session::put('show_servers_public', $settings->show_servers_public ?? 0);
+        Session::put('show_server_value_ip', $settings->show_server_value_ip ?? 0);
+        Session::put('show_server_value_hostname', $settings->show_server_value_hostname ?? 0);
+        Session::put('show_server_value_price', $settings->show_server_value_price ?? 0);
+        Session::put('show_server_value_yabs', $settings->show_server_value_yabs ?? 0);
+        Session::put('show_server_value_provider', $settings->show_server_value_provider ?? 0);
+        Session::put('show_server_value_location', $settings->show_server_value_location ?? 0);
+        Session::put('save_yabs_as_txt', $settings->save_yabs_as_txt ?? 0);
+        Session::put('default_currency', $settings->default_currency ?? 'USD');
+        Session::put('default_server_os', $settings->default_server_os ?? 1);
+        Session::put('due_soon_amount', $settings->due_soon_amount ?? 6);
+        Session::put('recently_added_amount', $settings->recently_added_amount ?? 6);
+        Session::put('dashboard_currency', $settings->dashboard_currency ?? 'USD');
+        Session::put('sort_on', $settings->sort_on ?? 1);
         Session::save();
+    }
+
+    public static function orderByProcess(int $value): array
+    {
+        if ($value === 1) {//Created_at ASC
+            return ['created_at', 'asc'];
+        } elseif ($value === 2) {//Created_at DESC
+            return ['created_at', 'desc'];
+        } elseif ($value === 3) {//next_due_date ASC
+            return ['next_due_date', 'asc'];
+        } elseif ($value === 4) {//next_due_date DESC
+            return ['next_due_date', 'desc'];
+        } elseif ($value === 5) {//as_usd ASC
+            return ['as_usd', 'asc'];
+        } elseif ($value === 6) {//as_usd DESC
+            return ['as_usd', 'desc'];
+        } elseif ($value === 7) {//owned_since ASC
+            return ['owned_since', 'asc'];
+        } elseif ($value === 8) {//owned_since DESC
+            return ['owned_since', 'desc'];
+        } elseif ($value === 9) {//updated_at ASC
+            return ['updated_at', 'asc'];
+        } elseif ($value === 10) {//updated_at DESC
+            return ['updated_at', 'desc'];
+        }
+        return ['created_at', 'desc'];
     }
 
 

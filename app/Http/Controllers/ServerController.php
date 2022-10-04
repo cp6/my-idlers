@@ -7,9 +7,7 @@ use App\Models\Labels;
 use App\Models\Pricing;
 use App\Models\Server;
 use App\Models\Settings;
-use App\Models\Yabs;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
@@ -29,22 +27,13 @@ class ServerController extends Controller
     public function showServersPublic()
     {
         $settings = Settings::getSettings();
-
-        Session::put('timer_version_footer', $settings[0]->show_versions_footer ?? 1);
-        Session::put('show_servers_public', $settings[0]->show_servers_public ?? 0);
-        Session::put('show_server_value_ip', $settings[0]->show_server_value_ip ?? 0);
-        Session::put('show_server_value_hostname', $settings[0]->show_server_value_hostname ?? 0);
-        Session::put('show_server_value_price', $settings[0]->show_server_value_price ?? 0);
-        Session::put('show_server_value_yabs', $settings[0]->show_server_value_yabs ?? 0);
-        Session::put('show_server_value_provider', $settings[0]->show_server_value_provider ?? 0);
-        Session::put('show_server_value_location', $settings[0]->show_server_value_location ?? 0);
-        Session::save();
+        Settings::setSettingsToSession($settings);
 
         if ((Session::get('show_servers_public') === 1)) {
             $servers = Server::allPublicServers();
             return view('servers.public-index', compact('servers'));
         }
-        return response()->view('errors.404', array("status" => 404, "title" => "Page not found", "message" => ""), 404);
+        abort(404);
     }
 
     public function create()
@@ -228,13 +217,13 @@ class ServerController extends Controller
         $server1_data = Server::server($server1);
 
         if (!isset($server1_data[0]->yabs[0])) {
-            return response()->view('errors.404', array("status" => 404, "title" => "Page not found", "message" => "No server with YABs data was found for id '$server1'"), 404);
+           abort(404);
         }
 
         $server2_data = Server::server($server2);
 
         if (!isset($server2_data[0]->yabs[0])) {
-            return response()->view('errors.404', array("status" => 404, "title" => "Page not found", "message" => "No server with YABs data was found for id '$server2'"), 404);
+            abort(404);
         }
         return view('servers.compare', compact('server1_data', 'server2_data'));
     }
