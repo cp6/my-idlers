@@ -25,9 +25,9 @@ class IPs extends Model
         DB::table('ips')->where('service_id', '=', $service_id)->delete();
     }
 
-    public static function insertIP(string $service_id, string $address)
+    public static function insertIP(string $service_id, string $address): IPs
     {
-        self::create(
+        return self::create(
             [
                 'id' => Str::random(8),
                 'service_id' => $service_id,

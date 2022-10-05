@@ -109,7 +109,7 @@ class Pricing extends Model
         DB::table('pricings')->where('service_id', '=', $id)->delete();
     }
 
-    public function insertPricing(int $type, string $service_id, string $currency, float $price, int $term, string $next_due_date, int $is_active = 1)
+    public function insertPricing(int $type, string $service_id, string $currency, float $price, int $term, string $next_due_date, int $is_active = 1): Pricing
     {
         $as_usd = $this->convertToUSD($price, $currency);
         return self::create([
@@ -125,7 +125,7 @@ class Pricing extends Model
         ]);
     }
 
-    public function updatePricing(string $service_id, string $currency, float $price, int $term, float $as_usd, string $next_due_date, int $is_active = 1)
+    public function updatePricing(string $service_id, string $currency, float $price, int $term, float $as_usd, string $next_due_date, int $is_active = 1): int
     {
         return DB::table('pricings')
             ->where('service_id', $service_id)

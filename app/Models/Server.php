@@ -93,7 +93,7 @@ class Server extends Model
         }
     }
 
-    public static function osIntToIcon(int $os, string $os_name)
+    public static function osIntToIcon(int $os, string $os_name): string
     {
         if ($os === 1) {//None
             return "<i class='fas fa-expand' title='{$os_name}'></i>";
@@ -116,70 +116,7 @@ class Server extends Model
         }
     }
 
-    public static function osIdAsString($os)
-    {
-        if ($os === "0") {
-            return "None";
-        } elseif ($os === "1") {
-            return "CentOS 7";
-        } elseif ($os === "2") {
-            return "CentOS 8";
-        } elseif ($os === "3") {
-            return "CentOS";
-        } elseif ($os === "4") {
-            return "Debian 9";
-        } elseif ($os === "5") {
-            return "Debian 10";
-        } elseif ($os === "6") {
-            return "Debian";
-        } elseif ($os === "7") {
-            return "Fedora 32";
-        } elseif ($os === "8") {
-            return "Fedora 33";
-        } elseif ($os === "9") {
-            return "Fedora";
-        } elseif ($os === "10") {
-            return "FreeBSD 11.4";
-        } elseif ($os === "11") {
-            return "FreeBSD 12.1";
-        } elseif ($os === "12") {
-            return "FreeBSD";
-        } elseif ($os === "13") {
-            return "OpenBSD 6.7";
-        } elseif ($os === "14") {
-            return "OpenBSD 6.8";
-        } elseif ($os === "15") {
-            return "OpenBSD";
-        } elseif ($os == "16") {
-            return "Ubuntu 16.04";
-        } elseif ($os === "17") {
-            return "Ubuntu 18.04";
-        } elseif ($os === "18") {
-            return "Ubuntu 20.04";
-        } elseif ($os === "19") {
-            return "Ubuntu 20.10";
-        } elseif ($os === "20") {
-            return "Ubuntu";
-        } elseif ($os === "21") {
-            return "Windows Server 2008";
-        } elseif ($os === "22") {
-            return "Windows Server 2012";
-        } elseif ($os === "23") {
-            return "Windows Server 2016";
-        } elseif ($os === "24") {
-            return "Windows Server 2019";
-        } elseif ($os === "25") {
-            return "Windows 10";
-        } elseif ($os === "26") {
-            return "Custom";
-        } elseif ($os === "27") {
-            return "Other";
-        } else {
-            return "Unknown";
-        }
-    }
-
-    public static function tableRowCompare(string $val1, string $val2, string $value_type = '', bool $is_int = true)
+    public static function tableRowCompare(string $val1, string $val2, string $value_type = '', bool $is_int = true): string
     {
         //<td class="td-nowrap plus-td">+303<span class="data-type">MBps</span></td>
         $str = '<td class="td-nowrap ';
