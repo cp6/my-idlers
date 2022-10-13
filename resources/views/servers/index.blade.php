@@ -97,8 +97,8 @@
                                                    title="check if up"
                                                    @click="onClk">
                                                 </i>
-                                                <i class="fas fa-trash text-danger ms-3" @click="modalForm"
-                                                   id="btn-{{$server->hostname}}" title="{{$server->id}}"></i>
+                                                <i class="fas fa-trash text-danger ms-3" @click="confirmDeleteModal"
+                                                   id="{{$server->id}}" title="{{$server->hostname}}"></i>
                                             </form>
                                         </td>
                                     </tr>
@@ -179,8 +179,8 @@
                                                    title="check if up"
                                                    @click="onClk">
                                                 </i>
-                                                <i class="fas fa-trash text-danger ms-3" @click="modalForm"
-                                                   id="btn-{{$server->hostname}}" title="{{$server->id}}"></i>
+                                                <i class="fas fa-trash text-danger ms-3" @click="confirmDeleteModal"
+                                                   id="{{$server->id}}" title="{{$server->hostname}}"></i>
                                             </form>
                                         </td>
                                     </tr>
@@ -237,10 +237,10 @@
                                 });
                         }
                     },
-                    modalForm(event) {
+                    confirmDeleteModal(event) {
                         this.showModal = true;
-                        this.modal_hostname = event.target.id.replace('btn-', '');
-                        this.modal_id = event.target.title;
+                        this.modal_hostname = event.target.title;
+                        this.modal_id = event.target.id;
                         this.delete_form_action = 'servers/' + this.modal_id;
                     }
                 }

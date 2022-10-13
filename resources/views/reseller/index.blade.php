@@ -56,8 +56,8 @@
                                                class="text-body mx-1"><i class="fas fa-eye" title="view"></i></a>
                                             <a href="{{ route('reseller.edit', $row->id) }}"
                                                class="text-body mx-1"><i class="fas fa-pen" title="edit"></i></a>
-                                            <i class="fas fa-trash text-danger ms-3" @click="modalForm"
-                                               id="btn-{{$row->main_domain}}" title="{{$row->id}}"></i>
+                                            <i class="fas fa-trash text-danger ms-3" @click="confirmDeleteModal"
+                                               id="{{$row->id}}" title="{{$row->main_domain}}"></i>
                                         </form>
                                     </td>
                                 </tr>
@@ -90,10 +90,10 @@
                 showModal: false
             },
             methods: {
-                modalForm(event) {
+                confirmDeleteModal(event) {
                     this.showModal = true;
-                    this.modal_hostname = event.target.id.replace('btn-', '');
-                    this.modal_id = event.target.title;
+                    this.modal_hostname = event.target.title;
+                    this.modal_id = event.target.id;
                     this.delete_form_action = 'reseller/' + this.modal_id;
                 }
             }
