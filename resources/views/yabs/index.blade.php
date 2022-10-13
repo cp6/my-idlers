@@ -14,8 +14,7 @@
         <x-delete-confirm-modal></x-delete-confirm-modal>
         <x-card class="shadow mt-3">
             <a href="{{ route('yabs.compare-choose') }}" class="btn btn-success mb-3">Compare YABs</a>
-            <x-errors-alert></x-errors-alert>
-            <x-success-alert></x-success-alert>
+            <x-response-alerts></x-response-alerts>
                 <div class="table-responsive">
                     <table class="table table-bordered">
                         <thead class="table-light">

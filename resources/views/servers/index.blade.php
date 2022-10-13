@@ -12,6 +12,7 @@
     </x-slot>
     <div class="container" id="app">
         <x-delete-confirm-modal></x-delete-confirm-modal>
+        <x-response-alerts></x-response-alerts>
         <ul class="nav nav-tabs mt-3" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button"
@@ -32,7 +33,6 @@
                     <a href="{{ route('servers-compare-choose') }}" class="btn btn-primary mb-3 ms-2">Compare
                         servers</a>
                     <a href="{{ route('yabs.create') }}" class="btn btn-primary mb-3 ms-2">Add a YABs</a>
-                    <x-success-alert></x-success-alert>
                     <div class="table-responsive">
                         <table class="table table-bordered">
                             <thead class="table-light">
@@ -118,7 +118,6 @@
                     <a href="{{ route('servers.create') }}" class="btn btn-primary mb-3">Add server</a>
                     <a href="{{ route('servers-compare-choose') }}" class="btn btn-primary mb-3 ms-2">Compare
                         servers</a>
-                    <x-success-alert></x-success-alert>
                     <div class="table-responsive">
                         <table class="table table-bordered">
                             <thead class="table-light">

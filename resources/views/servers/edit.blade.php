@@ -12,7 +12,7 @@
                 <x-slot name="href">{{ route('servers.index') }}</x-slot>
                 Back to servers
             </x-back-button>
-            <x-errors-alert></x-errors-alert>
+            <x-response-alerts></x-response-alerts>
             <form action="{{ route('servers.update', $server_data->id) }}" method="POST">
                 @csrf
                 @method('PUT')

@@ -10,7 +10,7 @@
                 <x-slot name="href">{{ route('locations.index') }}</x-slot>
                 Go back
             </x-back-button>
-            <x-errors-alert></x-errors-alert>
+            <x-response-alerts></x-response-alerts>
                 <form action="{{ route('locations.store') }}" method="POST">
                     @csrf
                     <div class="row">

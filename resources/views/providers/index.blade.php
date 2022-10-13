@@ -17,7 +17,7 @@
         <x-delete-confirm-modal></x-delete-confirm-modal>
         <x-card class="shadow mt-3">
             <a href="{{ route('providers.create') }}" class="btn btn-primary mb-3">Add a provider</a>
-            <x-success-alert></x-success-alert>
+            <x-response-alerts></x-response-alerts>
             <table class="table table-bordered" id="providers-table">
                 <thead class="table-light">
                 <tr class="bg-gray-100">
