@@ -35,7 +35,8 @@ class SettingsController extends Controller
             'default_server_os' => 'required',
             'due_soon_amount' => 'required|integer|between:0,12',
             'recently_added_amount' => 'required|integer|between:0,12',
-            'currency' => 'required|string|size:3'
+            'currency' => 'required|string|size:3',
+            'sort_on' => 'required|integer|between:1,10',
         ]);
 
         DB::table('settings')
@@ -56,15 +57,23 @@ class SettingsController extends Controller
                 'due_soon_amount' => $request->due_soon_amount,
                 'recently_added_amount' => $request->recently_added_amount,
                 'dashboard_currency' => $request->currency,
+                'sort_on' => $request->sort_on,
             ]);
-
-        Settings::setSettingsToSession($settings);
 
         Cache::forget('due_soon');//Main page due_soon cache
         Cache::forget('recently_added');//Main page recently_added cache
         Cache::forget('pricing_breakdown');//Main page pricing breakdown
 
         Cache::forget('settings');//Main page settings cache
+        //Clear because they are affected by settings change (sort_on)
+        Cache::forget('all_servers');
+        Cache::forget('all_active_servers');
+        Cache::forget('all_shared');
+        Cache::forget('all_seedboxes');
+        Cache::forget('all_reseller');
+        Cache::forget('all_misc');
+
+        Settings::setSettingsToSession(Settings::getSettings());
 
         return redirect()->route('settings.index')
             ->with('success', 'Settings Updated Successfully.');

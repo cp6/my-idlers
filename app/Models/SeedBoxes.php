@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class SeedBoxes extends Model
 {
@@ -18,6 +20,18 @@ class SeedBoxes extends Model
     public $incrementing = false;
 
     protected $fillable = ['id', 'active', 'title', 'hostname', 'seed_box_type', 'provider_id', 'location_id', 'bandwidth', 'port_speed', 'disk', 'disk_type', 'disk_as_gb', 'was_promo', 'owned_since'];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('order', function (Builder $builder) {
+            $array = Settings::orderByProcess(Session::get('sort_on'));
+            if (!in_array(Session::get('sort_on'), [3, 4, 5, 6], true)) {
+                $builder->orderBy($array[0], $array[1]);
+            }
+        });
+    }
 
     public static function allSeedboxes()
     {//All seedboxes and relationships (no using joins)
@@ -46,6 +60,9 @@ class SeedBoxes extends Model
 
     public function price()
     {
+        if (in_array(Session::get('sort_on'), [3, 4, 5, 6], true)) {
+            return $this->hasOne(Pricing::class, 'service_id', 'id')->orderBy(Settings::orderByProcess(Session::get('sort_on'))[0], Settings::orderByProcess(Session::get('sort_on'))[1]);
+        }
         return $this->hasOne(Pricing::class, 'service_id', 'id');
     }
 
