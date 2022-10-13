@@ -1,4 +1,4 @@
-@section('title') {{'Insert project'}} @endsection
+@section("title", "Add label")
 <x-app-layout>
     <x-slot name="header">
         {{ __('Insert a new label') }}

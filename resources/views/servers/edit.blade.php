@@ -1,6 +1,4 @@
-@section('title')
-    {{$server_data->hostname}} {{'edit'}}
-@endsection
+@section("title", "{$server_data->hostname} edit")
 <x-app-layout>
     <x-slot name="header">
         Edit {{ $server_data->hostname }}

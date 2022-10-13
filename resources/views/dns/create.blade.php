@@ -1,4 +1,4 @@
-@section('title') {{'Insert DNS'}} @endsection
+@section("title", "Insert DNS")
 <x-app-layout>
     <x-slot name="header">
         {{ __('Insert a new DNS') }}

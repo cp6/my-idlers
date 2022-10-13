@@ -1,4 +1,4 @@
-@section('title') {{'Seed boxes'}} @endsection
+@section("title", "Seed boxes")
 @section('style')
     <x-modal-style></x-modal-style>
 @endsection

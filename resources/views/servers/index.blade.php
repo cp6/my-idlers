@@ -1,4 +1,4 @@
-@section('title') {{'Servers'}} @endsection
+@section("title", "Servers")
 @section('style')
     <x-modal-style></x-modal-style>
 @endsection

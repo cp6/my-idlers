@@ -1,6 +1,4 @@
-@section('title')
-    {{$server_data->hostname}} {{'server'}}
-@endsection
+@section("title", "{$server_data->hostname} server")
 @section('scripts')
     <script>
         function showYabsCode() {

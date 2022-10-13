@@ -1,4 +1,4 @@
-@section('title') {{'Shared hosting'}} @endsection
+@section("title", "Shared hosting")
 @section('style')
     <x-modal-style></x-modal-style>
 @endsection

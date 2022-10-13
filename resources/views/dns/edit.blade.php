@@ -1,4 +1,4 @@
-@section('title') {{'Edit'}} {{ $dn->hostname }} {{$dn->dns_type}} {{'DNS'}} @endsection
+@section("title", "Edit {$dn->hostname} {$dn->dns_type} DNS")
 <x-app-layout>
     <x-slot name="header">
         Edit {{ $dn->hostname }} {{$dn->dns_type}} record

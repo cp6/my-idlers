@@ -1,4 +1,4 @@
-@section('title') {{'Providers'}} @endsection
+@section("title", "Providers")
 @section('css_links')
     <link rel="stylesheet" href="{{ asset('css/datatables.bootstrap.min.css') }}">
 @endsection

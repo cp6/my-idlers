@@ -1,4 +1,4 @@
-@section('title') {{$seedbox_data->title}} {{'Seed box'}} @endsection
+@section("title", "{$seedbox_data->title} seed box")
 <x-app-layout>
     <x-slot name="header">
         {{ __('Seed box details') }}

@@ -1,4 +1,4 @@
-@section('title') {{'Insert provider'}} @endsection
+@section("title", "Insert provider")
 <x-app-layout>
     <x-slot name="header">
         {{ __('Insert a new provider') }}

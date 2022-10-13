@@ -1,4 +1,4 @@
-@section('title') {{ $misc_data->name }} {{'service'}} @endsection
+@section("title", "{$misc_data->name} service")
 <x-app-layout>
     <x-slot name="header">
         {{ __('Misc details') }}

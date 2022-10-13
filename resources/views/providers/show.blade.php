@@ -1,4 +1,4 @@
-@section('title') {{ $provider->name }} {{'provider'}} @endsection
+@section("title", "{$provider->name } provider")
 <x-app-layout>
     <x-slot name="header">
         {{ __('Provider details') }}

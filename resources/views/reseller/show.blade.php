@@ -1,4 +1,4 @@
-@section('title') {{$reseller->main_domain}} {{'reseller hosting'}} @endsection
+@section("title", "{$reseller->main_domain} reseller hosting")
 <x-app-layout>
     <x-slot name="header">
         {{ __('Reseller hosting details') }}

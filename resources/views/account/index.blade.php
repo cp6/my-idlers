@@ -1,4 +1,4 @@
-@section('title') {{'Edit account'}} @endsection
+@section("title", "Edit account")
 <x-app-layout>
     <x-slot name="header">
         Edit account

@@ -1,4 +1,4 @@
-@section('title') {{'Home'}} @endsection
+@section("title", "Home")
 <x-app-layout>
     <div class="container">
         @if (Route::has('login'))

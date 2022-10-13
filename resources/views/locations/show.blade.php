@@ -1,4 +1,4 @@
-@section('title') {{ $location->name }} {{'location'}} @endsection
+@section("title", "{$location->name} location")
 <x-app-layout>
     <x-slot name="header">
         {{ __('Location details') }}

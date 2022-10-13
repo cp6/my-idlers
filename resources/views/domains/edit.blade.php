@@ -1,4 +1,4 @@
-@section('title') {{'Edit domain'}} @endsection
+@section("title", "Edit Domain")
 <x-app-layout>
     <x-slot name="header">
         Edit {{ $domain_info->domain }}.{{ $domain_info->extension }}

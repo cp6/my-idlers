@@ -1,4 +1,4 @@
-@section('title') {{'Insert domain'}} @endsection
+@section("title", "Insert Domain")
 <x-app-layout>
     <x-slot name="header">
         {{ __('Insert a new domain') }}
