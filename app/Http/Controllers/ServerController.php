@@ -208,7 +208,13 @@ class ServerController extends Controller
     public function chooseCompare()
     {//NOTICE: Selecting servers is not cached yet
         $all_servers = Server::where('has_yabs', 1)->get();
-        return view('servers.choose-compare', compact('all_servers'));
+
+        if (isset($all_servers[1])){
+            return view('servers.choose-compare', compact('all_servers'));
+        }
+
+        return redirect()->route('servers.index')
+            ->with('error', 'You need atleast 2 servers with a YABS to do a compare');
     }
 
     public function compareServers($server1, $server2)
