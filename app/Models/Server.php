@@ -43,7 +43,7 @@ class Server extends Model
     public static function allServers()
     {//All servers and relationships (no using joins)
         return Cache::remember("all_servers", now()->addMonth(1), function () {
-            return Server::with(['location', 'provider', 'os', 'price', 'ips', 'yabs', 'yabs.disk_speed', 'yabs.network_speed', 'labels', 'labels.label'])->get();
+            return Server::with(['location', 'provider', 'os', 'price', 'ips', 'yabs', 'yabs.disk_speed', 'yabs.network_speed', 'labels'])->get();
         });
     }
 
@@ -51,7 +51,7 @@ class Server extends Model
     {//Single server and relationships (no using joins)
         return Cache::remember("server.$server_id", now()->addMonth(1), function () use ($server_id) {
             return Server::where('id', $server_id)
-                ->with(['location', 'provider', 'os', 'price', 'ips', 'yabs', 'yabs.disk_speed', 'yabs.network_speed', 'labels', 'labels.label'])->first();
+                ->with(['location', 'provider', 'os', 'price', 'ips', 'yabs', 'yabs.disk_speed', 'yabs.network_speed', 'labels'])->first();
         });
     }
 
@@ -59,7 +59,7 @@ class Server extends Model
     {//All ACTIVE servers and relationships replaces activeServersDataIndexPage()
         return Cache::remember("all_active_servers", now()->addMonth(1), function () {
             return Server::where('active', '=', 1)
-                ->with(['location', 'provider', 'os', 'ips', 'yabs', 'yabs.disk_speed', 'yabs.network_speed', 'labels', 'labels.label', 'price'])->get();
+                ->with(['location', 'provider', 'os', 'ips', 'yabs', 'yabs.disk_speed', 'yabs.network_speed', 'labels', 'price'])->get();
         });
     }
 
@@ -67,7 +67,7 @@ class Server extends Model
     {//All NON ACTIVE servers and relationships replaces nonActiveServersDataIndexPage()
         return Cache::remember("non_active_servers", now()->addMonth(1), function () {
             return Server::where('active', '=', 0)
-                ->with(['location', 'provider', 'os', 'price', 'ips', 'yabs', 'yabs.disk_speed', 'yabs.network_speed', 'labels', 'labels.label'])
+                ->with(['location', 'provider', 'os', 'price', 'ips', 'yabs', 'yabs.disk_speed', 'yabs.network_speed', 'labels'])
                 ->get();
         });
     }
@@ -76,7 +76,7 @@ class Server extends Model
     {//server data that will be publicly viewable (values in settings)
         return Cache::remember("public_server_data", now()->addMonth(1), function () {
             return Server::where('show_public', '=', 1)
-                ->with(['location', 'provider', 'os', 'price', 'ips', 'yabs', 'yabs.disk_speed', 'yabs.network_speed', 'labels', 'labels.label'])
+                ->with(['location', 'provider', 'os', 'price', 'ips', 'yabs', 'yabs.disk_speed', 'yabs.network_speed', 'labels'])
                 ->get();
         });
     }
