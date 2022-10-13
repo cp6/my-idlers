@@ -25,7 +25,7 @@ class Home extends Model
 
     public static function servicesCount()
     {
-        return Cache::remember('services_count', now()->addHour(6), function () {
+        return Cache::remember('services_count', now()->addHours(6), function () {
             return DB::table('pricings')
                 ->select('service_type', DB::raw('COUNT(*) as amount'))
                 ->groupBy('service_type')
@@ -36,7 +36,7 @@ class Home extends Model
 
     public static function dueSoonData()
     {
-        return Cache::remember('due_soon', now()->addHour(6), function () {
+        return Cache::remember('due_soon', now()->addHours(6), function () {
             return DB::table('pricings as p')
                 ->leftJoin('servers as s', 'p.service_id', '=', 's.id')
                 ->leftJoin('shared_hosting as sh', 'p.service_id', '=', 'sh.id')
@@ -53,7 +53,7 @@ class Home extends Model
 
     public static function serverSummary()
     {
-        return Cache::remember('servers_summary', now()->addHour(6), function () {
+        return Cache::remember('servers_summary', now()->addHours(6), function () {
             $cpu_sum = DB::table('servers')->get()->where('active', '=', 1)->sum('cpu');
             $ram_mb = DB::table('servers')->get()->where('active', '=', 1)->sum('ram_as_mb');
             $disk_gb = DB::table('servers')->get()->where('active', '=', 1)->sum('disk_as_gb');
@@ -73,7 +73,7 @@ class Home extends Model
 
     public static function recentlyAdded()
     {
-        return Cache::remember('recently_added', now()->addHour(6), function () {
+        return Cache::remember('recently_added', now()->addHours(6), function () {
             return DB::table('pricings as p')
                 ->leftJoin('servers as s', 'p.service_id', '=', 's.id')
                 ->leftJoin('shared_hosting as sh', 'p.service_id', '=', 'sh.id')

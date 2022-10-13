@@ -40,7 +40,7 @@ class IPs extends Model
 
     public static function ipsForServer(string $server_id)
     {
-        return Cache::remember("ip_addresses.$server_id", now()->addHour(1), function () use ($server_id) {
+        return Cache::remember("ip_addresses.$server_id", now()->addHours(1), function () use ($server_id) {
             return json_decode(DB::table('ips as i')
                 ->where('i.service_id', '=', $server_id)
                 ->get(), true);
