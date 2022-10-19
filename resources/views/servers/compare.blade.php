@@ -1,6 +1,4 @@
-@section('title')
-    {{'Compare servers'}}
-@endsection
+@section("title", "Compare servers")
 @section('style')
     <style>
         .td-nowrap {

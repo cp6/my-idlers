@@ -142,7 +142,7 @@ class ServerController extends Controller
                 'hostname' => $request->hostname,
                 'server_type' => $request->server_type,
                 'os_id' => $request->os_id,
-                'ssh' => $request->ssh,
+                'ssh' => $request->ssh_port,
                 'provider_id' => $request->provider_id,
                 'location_id' => $request->location_id,
                 'ram' => $request->ram,
@@ -189,9 +189,8 @@ class ServerController extends Controller
 
     public function destroy(Server $server)
     {
-        $items = Server::find($server->id);
-
-        $items->delete();
+        $item = Server::find($server->id);
+        $item->delete();
 
         $p = new Pricing();
         $p->deletePricing($server->id);
@@ -209,7 +208,13 @@ class ServerController extends Controller
     public function chooseCompare()
     {//NOTICE: Selecting servers is not cached yet
         $all_servers = Server::where('has_yabs', 1)->get();
-        return view('servers.choose-compare', compact('all_servers'));
+
+        if (isset($all_servers[1])){
+            return view('servers.choose-compare', compact('all_servers'));
+        }
+
+        return redirect()->route('servers.index')
+            ->with('error', 'You need atleast 2 servers with a YABS to do a compare');
     }
 
     public function compareServers($server1, $server2)

@@ -30,11 +30,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', 'App\Http\Controllers\HomeController@index')->name('/');
 
-
-Route::get('dashboard', function () {
-    return redirect('/');
-});
-
 require __DIR__ . '/auth.php';
 
 Route::resource('account', AccountController::class)->middleware(['auth']);
@@ -60,7 +55,6 @@ Route::resource('reseller', ResellerController::class)->middleware(['auth']);
 Route::get('servers/public', 'App\Http\Controllers\ServerController@showServersPublic')->name('servers/public');
 
 Route::resource('servers', ServerController::class)->middleware(['auth']);
-
 
 Route::resource('settings', SettingsController::class)->middleware(['auth']);
 

@@ -1,4 +1,4 @@
-@section('title') {{'Servers'}} @endsection
+@section("title", "Servers")
 @section('style')
     <x-modal-style></x-modal-style>
 @endsection
@@ -12,6 +12,7 @@
     </x-slot>
     <div class="container" id="app">
         <x-delete-confirm-modal></x-delete-confirm-modal>
+        <x-response-alerts></x-response-alerts>
         <ul class="nav nav-tabs mt-3" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button"
@@ -32,7 +33,6 @@
                     <a href="{{ route('servers-compare-choose') }}" class="btn btn-primary mb-3 ms-2">Compare
                         servers</a>
                     <a href="{{ route('yabs.create') }}" class="btn btn-primary mb-3 ms-2">Add a YABs</a>
-                    <x-success-alert></x-success-alert>
                     <div class="table-responsive">
                         <table class="table table-bordered">
                             <thead class="table-light">
@@ -79,7 +79,7 @@
                                         <td class="text-nowrap">{{ $server->provider->name }}</td>
                                         <td class="text-nowrap">{{ $server->price->price }} {{$server->price->currency}} {{\App\Process::paymentTermIntToString($server->price->term)}}</td>
                                         <td class="text-nowrap">
-                                            {{now()->diffInDays(Carbon\Carbon::parse($server->next_due_date), false)}}
+                                            {{now()->diffInDays(Carbon\Carbon::parse($server->price->next_due_date), false)}}
                                             <small>days</small></td>
                                         <td class="text-nowrap"> {{ $server->owned_since }}</td>
                                         <td class="text-nowrap">
@@ -97,8 +97,8 @@
                                                    title="check if up"
                                                    @click="checkUp">
                                                 </i>
-                                                <i class="fas fa-trash text-danger ms-3" @click="modalForm"
-                                                   id="btn-{{$server->hostname}}" title="{{$server->id}}"></i>
+                                                <i class="fas fa-trash text-danger ms-3" @click="confirmDeleteModal"
+                                                   id="{{$server->id}}" title="{{$server->hostname}}"></i>
                                             </form>
                                         </td>
                                     </tr>
@@ -118,7 +118,6 @@
                     <a href="{{ route('servers.create') }}" class="btn btn-primary mb-3">Add server</a>
                     <a href="{{ route('servers-compare-choose') }}" class="btn btn-primary mb-3 ms-2">Compare
                         servers</a>
-                    <x-success-alert></x-success-alert>
                     <div class="table-responsive">
                         <table class="table table-bordered">
                             <thead class="table-light">
@@ -179,8 +178,8 @@
                                                    title="check if up"
                                                    @click="checkUp">
                                                 </i>
-                                                <i class="fas fa-trash text-danger ms-3" @click="modalForm"
-                                                   id="btn-{{$server->hostname}}" title="{{$server->id}}"></i>
+                                                <i class="fas fa-trash text-danger ms-3" @click="confirmDeleteModal"
+                                                   id="{{$server->id}}" title="{{$server->hostname}}"></i>
                                             </form>
                                         </td>
                                     </tr>
@@ -236,10 +235,10 @@
                                 });
                         }
                     },
-                    modalForm(event) {
+                    confirmDeleteModal(event) {
                         this.showModal = true;
-                        this.modal_hostname = event.target.id.replace('btn-', '');
-                        this.modal_id = event.target.title;
+                        this.modal_hostname = event.target.title;
+                        this.modal_id = event.target.id;
                         this.delete_form_action = 'servers/' + this.modal_id;
                     }
                 }

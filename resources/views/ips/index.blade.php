@@ -1,4 +1,4 @@
-@section('title') {{'IP Addresses'}} @endsection
+@section("title", "IP addresses")
 @section('css_links')
     <link rel="stylesheet" href="{{ asset('css/datatables.bootstrap.min.css') }}">
 @endsection
@@ -17,7 +17,7 @@
         <x-delete-confirm-modal></x-delete-confirm-modal>
         <x-card class="shadow mt-3">
             <a href="{{ route('IPs.create') }}" class="btn btn-primary mb-3">Add IP</a>
-            <x-success-alert></x-success-alert>
+            <x-response-alerts></x-response-alerts>
             <div class="table-responsive">
                 <table class="table table-bordered" id="ips-table">
                     <thead class="table-light">

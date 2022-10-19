@@ -1,4 +1,4 @@
-@section('title') {{ $dns->hostname }} {{$dns->dns_type}} {{'dns'}} @endsection
+@section("title", "{$dns->hostname} {$dns->dns_type} DNS")
 <x-app-layout>
     <x-slot name="header">
         {{ __('DNS details') }}

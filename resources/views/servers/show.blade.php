@@ -1,6 +1,4 @@
-@section('title')
-    {{$server_data->hostname}} {{'server'}}
-@endsection
+@section("title", "{$server_data->hostname} server")
 @section('scripts')
     <script>
         function showYabsCode() {
@@ -37,7 +35,7 @@
                             <tr>
                                 <td class="px-2 py-2 font-bold text-muted">Type</td>
                                 <td>
-                                    {{ $server_data->serviceServerType($server_data->server_type) }}
+                                    {{ $server_data->serviceServerType($server_data->server_type, false) }}
                                 </td>
                             </tr>
                             <tr>

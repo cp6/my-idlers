@@ -1,4 +1,4 @@
-@section('title') {{'Domains'}} @endsection
+@section("title", "Domains")
 @section('style')
     <x-modal-style></x-modal-style>
 @endsection
@@ -14,7 +14,7 @@
             <x-delete-confirm-modal></x-delete-confirm-modal>
             <x-card class="shadow mt-3">
                 <a href="{{ route('domains.create') }}" class="btn btn-primary mb-3">Add a domain</a>
-                <x-success-alert></x-success-alert>
+                <x-response-alerts></x-response-alerts>
             <div class="table-responsive">
                 <table class="table table-bordered">
                     <thead class="table-light">

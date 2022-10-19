@@ -1,4 +1,4 @@
-@section('title') {{$misc_data->name}} {{'edit'}} @endsection
+@section("title", "{$misc_data->name} edit")
 <x-app-layout>
     <x-slot name="header">
         Edit {{ $misc_data->name }}
@@ -10,7 +10,7 @@
                 <x-slot name="href">{{ route('misc.index') }}</x-slot>
                 Go back
             </x-back-button>
-            <x-errors-alert></x-errors-alert>
+            <x-response-alerts></x-response-alerts>
             <form action="{{ route('misc.update', $misc_data->id) }}" method="POST">
                 @csrf
                 @method('PUT')

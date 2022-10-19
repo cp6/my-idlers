@@ -1,4 +1,4 @@
-@section('title') {{'Insert provider'}} @endsection
+@section("title", "Insert provider")
 <x-app-layout>
     <x-slot name="header">
         {{ __('Insert a new provider') }}
@@ -10,7 +10,7 @@
                 <x-slot name="href">{{ route('providers.index') }}</x-slot>
                 Go back
             </x-back-button>
-            <x-errors-alert></x-errors-alert>
+            <x-response-alerts></x-response-alerts>
             <form action="{{ route('providers.store') }}" method="POST">
                 @csrf
                 <div class="row">

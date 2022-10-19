@@ -1,4 +1,4 @@
-@section('title') {{'Insert operating system'}} @endsection
+@section("title", "Insert operating system")
 <x-app-layout>
     <x-slot name="header">
         {{ __('Insert a new OS') }}
@@ -10,7 +10,7 @@
                 <x-slot name="href">{{ route('os.index') }}</x-slot>
                 Go back
             </x-back-button>
-            <x-errors-alert></x-errors-alert>
+            <x-response-alerts></x-response-alerts>
                 <form action="{{ route('os.store') }}" method="POST">
                     @csrf
                     <div class="row">

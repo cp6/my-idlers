@@ -4,13 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Server;
 use App\Models\Yabs;
-use App\Process;
-use App\Models\DiskSpeed;
-use App\Models\NetworkSpeed;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class YabsController extends Controller
 {
@@ -66,18 +62,18 @@ class YabsController extends Controller
             ->with('error', 'You need atleast 2 YABS to do a compare');
     }
 
-    public function compareYabs($yabs1, $yabs2)
+    public function compareYabs(string $yabs1, string $yabs2)
     {
         $yabs1_data = Yabs::yabs($yabs1);
 
         if (count($yabs1_data) === 0) {
-            return response()->view('errors.404', array("status" => 404, "title" => "Page not found", "message" => "No YABs data was found for id '$yabs1'"), 404);
+            abort(404);
         }
 
         $yabs2_data = Yabs::yabs($yabs2);
 
         if (count($yabs2_data) === 0) {
-            return response()->view('errors.404', array("status" => 404, "title" => "Page not found", "message" => "No YABs data was found for id '$server2'"), 404);
+            abort(404);
         }
 
         return view('yabs.compare', compact('yabs1_data', 'yabs2_data'));

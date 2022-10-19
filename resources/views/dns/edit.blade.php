@@ -1,4 +1,4 @@
-@section('title') {{'Edit'}} {{ $dn->hostname }} {{$dn->dns_type}} {{'DNS'}} @endsection
+@section("title", "Edit {$dn->hostname} {$dn->dns_type} DNS")
 <x-app-layout>
     <x-slot name="header">
         Edit {{ $dn->hostname }} {{$dn->dns_type}} record
@@ -10,7 +10,7 @@
                 <x-slot name="href">{{ route('dns.index') }}</x-slot>
                 Go back
             </x-back-button>
-            <x-errors-alert></x-errors-alert>
+            <x-response-alerts></x-response-alerts>
             <form action="{{ route('dns.update', $dn->id) }}" method="POST">
                 @csrf
                 @method('PUT')

@@ -1,4 +1,4 @@
-@section('title') {{$yab[0]->hostname}} {{$yab[0]->id}} {{'YABs'}} @endsection
+@section("title", "{$yab[0]->hostname} {$yab[0]->id} YABS")
 <x-app-layout>
     <x-slot name="header">
         {{ __('YABs details') }}

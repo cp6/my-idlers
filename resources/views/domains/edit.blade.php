@@ -1,4 +1,4 @@
-@section('title') {{'Edit domain'}} @endsection
+@section("title", "Edit Domain")
 <x-app-layout>
     <x-slot name="header">
         Edit {{ $domain_info->domain }}.{{ $domain_info->extension }}
@@ -10,7 +10,7 @@
                 <x-slot name="href">{{ route('domains.index') }}</x-slot>
                 Go back
             </x-back-button>
-            <x-errors-alert></x-errors-alert>
+            <x-response-alerts></x-response-alerts>
             <form action="{{ route('domains.update', $domain_info->id) }}" method="POST">
                 @csrf
                 @method('PUT')
