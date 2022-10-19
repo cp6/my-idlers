@@ -1,4 +1,4 @@
-@section('title') {{'Enter new seed box'}} @endsection
+@section("title", "Enter new seed box")
 <x-app-layout>
     <x-slot name="header">
         {{ __('Insert a new seed box') }}

@@ -1,4 +1,4 @@
-@section('title') {{ $label->label }} {{'label'}} @endsection
+@section("title", "{$label->label} label")
 <x-app-layout>
     <x-slot name="header">
         {{ __('Label details') }}

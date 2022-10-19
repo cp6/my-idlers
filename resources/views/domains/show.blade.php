@@ -1,6 +1,4 @@
-@section('title')
-    {{ $domain_info->domain }}.{{$domain_info->extension}} {{'domain'}}
-@endsection
+@section("title", "{$domain_info->domain }.{$domain_info->extension} domain")
 <x-app-layout>
     <x-slot name="header">
         {{ __('Domain details') }}

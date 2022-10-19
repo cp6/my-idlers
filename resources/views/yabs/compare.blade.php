@@ -1,4 +1,4 @@
-@section('title') {{'Compare YABs'}} @endsection
+@section("title", "Compare YABS")
 @section('style')
     <style>
         .td-nowrap {

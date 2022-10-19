@@ -1,4 +1,4 @@
-@section('title') {{'Public viewable servers'}} @endsection
+@section("title", "Public viewable servers")
 <x-app-layout>
     <x-slot name="header">
         {{ __('Servers') }}

@@ -36,7 +36,7 @@ class Shared extends Model
     public static function allSharedHosting()
     {//All shared hosting and relationships (no using joins)
         return Cache::remember("all_shared", now()->addMonth(1), function () {
-            return Shared::with(['location', 'provider', 'price', 'ips', 'labels', 'labels.label'])->get();
+            return Shared::with(['location', 'provider', 'price', 'ips', 'labels'])->get();
         });
     }
 
@@ -44,7 +44,7 @@ class Shared extends Model
     {//Single shared hosting and relationships (no using joins)
         return Cache::remember("shared_hosting.$shared_id", now()->addMonth(1), function () use ($shared_id) {
             return Shared::where('id', $shared_id)
-                ->with(['location', 'provider', 'price', 'ips', 'labels', 'labels.label'])->first();
+                ->with(['location', 'provider', 'price', 'ips', 'labels'])->first();
         });
     }
 

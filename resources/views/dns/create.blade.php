@@ -1,4 +1,4 @@
-@section('title') {{'Insert DNS'}} @endsection
+@section("title", "Insert DNS")
 <x-app-layout>
     <x-slot name="header">
         {{ __('Insert a new DNS') }}
@@ -10,7 +10,7 @@
                 <x-slot name="href">{{ route('dns.index') }}</x-slot>
                 Go back
             </x-back-button>
-            <x-errors-alert></x-errors-alert>
+            <x-response-alerts></x-response-alerts>
             <form action="{{ route('dns.store') }}" method="POST">
                 @csrf
                 <div class="row">

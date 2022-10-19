@@ -1,4 +1,4 @@
-@section('title') {{'Choose servers'}} @endsection
+@section("title", "Choose servers")
 @section('scripts')
     <script src="{{ asset('js/vue.min.js') }}"></script>
 @endsection

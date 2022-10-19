@@ -82,7 +82,7 @@ class DNSController extends Controller
         $labels = DB::table('labels_assigned as l')
             ->join('labels', 'l.label_id', '=', 'labels.id')
             ->where('l.service_id', '=', $dn->id)
-            ->get(['labels.id', 'labels.label']);
+            ->get(['labels.id']);
 
         return view('dns.edit', compact(['dn', 'labels', 'Servers', 'Domains', 'Shareds', 'Resellers']));
     }

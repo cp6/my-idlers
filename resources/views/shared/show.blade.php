@@ -1,4 +1,4 @@
-@section('title') {{$shared->main_domain}} {{'shared'}} @endsection
+@section("title", "{$shared->main_domain} shared")
 <x-app-layout>
     <x-slot name="header">
         {{ __('Share hosting details') }}

@@ -1,6 +1,4 @@
-@section('title')
-    {{'Choose YABs to compare'}}
-@endsection
+@section("title", "Choose YABs to compare")
 @section('scripts')
     <script src="{{ asset('js/vue.min.js') }}"></script>
 @endsection

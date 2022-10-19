@@ -17,7 +17,8 @@
         "laravel/tinker": "^2.7",
         "laravel/ui": "^3.4",
         "yajra/laravel-datatables-oracle": "~9.20",
-        "ext-json": "*"
+        "ext-json": "*",
+        "doctrine/dbal": "v3.4"
     },
     "require-dev": {
         "fakerphp/faker": "^1.19.0",

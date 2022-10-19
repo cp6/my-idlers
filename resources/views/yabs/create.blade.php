@@ -1,4 +1,4 @@
-@section('title') {{'Insert YABs'}} @endsection
+@section("title", "Insert YABS")
 <x-app-layout>
     <x-slot name="header">
         {{ __('Insert a YABs') }}
@@ -10,7 +10,7 @@
                 <x-slot name="href">{{ route('yabs.index') }}</x-slot>
                 Go back
             </x-back-button>
-            <x-errors-alert></x-errors-alert>
+            <x-response-alerts></x-response-alerts>
             <form action="{{ route('yabs.store') }}" method="POST">
                 @csrf
                 <div class="row">
