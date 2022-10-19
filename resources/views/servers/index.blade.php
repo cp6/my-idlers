@@ -93,9 +93,9 @@
                                                     <i class="fas fa-pen" title="edit"></i>
                                                 </a>
 
-                                                <i class="fas fa-plug mx-1" id="btn-{{$server->hostname}}"
+                                                <i class="fas fa-plug mx-1" id="{{$server->hostname}}"
                                                    title="check if up"
-                                                   @click="onClk">
+                                                   @click="checkUp">
                                                 </i>
                                                 <i class="fas fa-trash text-danger ms-3" @click="modalForm"
                                                    id="btn-{{$server->hostname}}" title="{{$server->id}}"></i>
@@ -175,9 +175,9 @@
                                                     <i class="fas fa-pen" title="edit"></i>
                                                 </a>
 
-                                                <i class="fas fa-plug mx-1" id="btn-{{$server->hostname}}"
+                                                <i class="fas fa-plug mx-1" id="{{$server->hostname}}"
                                                    title="check if up"
-                                                   @click="onClk">
+                                                   @click="checkUp">
                                                 </i>
                                                 <i class="fas fa-trash text-danger ms-3" @click="modalForm"
                                                    id="btn-{{$server->hostname}}" title="{{$server->id}}"></i>
@@ -203,7 +203,6 @@
         </div>
 
         <script>
-
             axios.defaults.headers.common = {
                 'Content-Type': 'application/json',
                 'X-Requested-With': 'XMLHttpRequest',
@@ -221,12 +220,12 @@
                     showModal: false
                 },
                 methods: {
-                    onClk(event) {
-                        var hostname = event.target.id.replace('btn-', '');
+                    checkUp(event) {
+                        var hostname = event.target.id;
 
                         if (hostname) {
                             axios
-                                .get('/api/online/' + event.target.id.replace('btn-', ''), {headers: {'Authorization': 'Bearer ' + document.querySelector('meta[name="api_token"]').getAttribute('content')}})
+                                .get('/api/online/' +  event.target.id, {headers: {'Authorization': 'Bearer ' + document.querySelector('meta[name="api_token"]').getAttribute('content')}})
                                 .then(response => (this.status = response.data.is_online))
                                 .finally(() => {
                                     if (this.status) {
