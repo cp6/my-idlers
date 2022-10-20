@@ -1,15 +1,12 @@
-@section("title", "Misc services")
-@section('style')
+@extends('layouts.index')
+@section('title', 'Misc')
+@section('css_style')
     <x-modal-style></x-modal-style>
 @endsection
-@section('scripts')
-    <script src="{{ asset('js/vue.min.js') }}"></script>
-    <script src="{{ asset('js/axios.min.js') }}"></script>
+@section('header')
+    {{ __('Misc') }}
 @endsection
-<x-app-layout>
-    <x-slot name="header">
-        {{ __('Misc services') }}
-    </x-slot>
+@section('content')
     <div class="container" id="app">
         <x-delete-confirm-modal></x-delete-confirm-modal>
         <x-card class="shadow mt-3">
@@ -52,7 +49,7 @@
                                         @csrf
                                         @method('DELETE')
                                         <i class="fas fa-trash text-danger ms-3" @click="confirmDeleteModal"
-                                           id="{{$m->name}}" title="{{$m->id}}"></i>
+                                           id="{{$m->id}}" title="{{$m->name}}"></i>
                                     </form>
                                 </td>
                             </tr>
@@ -71,4 +68,4 @@
     <x-modal-delete-script>
         <x-slot name="uri">misc</x-slot>
     </x-modal-delete-script>
-</x-app-layout>
+@endsection

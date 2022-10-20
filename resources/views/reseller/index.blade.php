@@ -1,16 +1,12 @@
-@section("title", "Resellers")
-@section('style')
+@extends('layouts.index')
+@section('title', 'Resellers')
+@section('css_style')
     <x-modal-style></x-modal-style>
 @endsection
-@section('scripts')
-    <script src="{{ asset('js/vue.min.js') }}"></script>
-    <script src="{{ asset('js/axios.min.js') }}"></script>
+@section('header')
+    {{ __('Reseller') }}
 @endsection
-<x-app-layout>
-    <x-slot name="header">
-        {{ __('Reseller') }}
-    </x-slot>
-
+@section('content')
     <div class="container" id="app">
         <x-delete-confirm-modal></x-delete-confirm-modal>
         <div class="card shadow mt-3">
@@ -73,9 +69,9 @@
                 </div>
             </div>
         </div>
-              <x-details-footer></x-details-footer>
+        <x-details-footer></x-details-footer>
     </div>
     <x-modal-delete-script>
         <x-slot name="uri">reseller</x-slot>
     </x-modal-delete-script>
-</x-app-layout>
+@endsection

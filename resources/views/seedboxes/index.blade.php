@@ -1,15 +1,12 @@
-@section("title", "Seed boxes")
-@section('style')
+@extends('layouts.index')
+@section('title', 'Seed boxes')
+@section('css_style')
     <x-modal-style></x-modal-style>
 @endsection
-@section('scripts')
-    <script src="{{ asset('js/vue.min.js') }}"></script>
-    <script src="{{ asset('js/axios.min.js') }}"></script>
+@section('header')
+    {{ __('Seed boxes') }}
 @endsection
-<x-app-layout>
-    <x-slot name="header">
-        {{ __('Seed boxes') }}
-    </x-slot>
+@section('content')
     <div class="container" id="app">
         <x-delete-confirm-modal></x-delete-confirm-modal>
         <div class="card shadow mt-3">
@@ -96,12 +93,9 @@
                 </div>
             </div>
         </div>
-        @if(Session::has('timer_version_footer') && Session::get('timer_version_footer') === 1)
-            <p class="text-muted mt-4 text-end"><small>Built on Laravel
-                    v{{ Illuminate\Foundation\Application::VERSION }} (PHP v{{ PHP_VERSION }})</small></p>
-        @endif
+        <x-details-footer></x-details-footer>
     </div>
     <x-modal-delete-script>
         <x-slot name="uri">seedboxes</x-slot>
     </x-modal-delete-script>
-</x-app-layout>
+@endsection
