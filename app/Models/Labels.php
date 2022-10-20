@@ -33,7 +33,7 @@ class Labels extends Model
     {
         for ($i = 1; $i <= 4; $i++) {
             if (!is_null($labels_array[($i - 1)])) {
-                DB::insert('INSERT INTO labels_assigned (label_id, service_id) values (?, ?)', [$labels_array[($i - 1)], $service_id]);
+                DB::table('labels_assigned')->insert(['label_id' => $labels_array[($i - 1)], 'service_id' => $service_id]);
             }
         }
     }
