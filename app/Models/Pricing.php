@@ -48,7 +48,7 @@ class Pricing extends Model
     private static function getRates($currency): float
     {
         $rate = self::refreshRates()->$currency;
-        return $rate === null ? 1.00 : $rate;
+        return $rate ?? 1.00;
     }
 
     public static function getCurrencyList(): array
