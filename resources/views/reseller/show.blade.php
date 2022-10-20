@@ -145,11 +145,6 @@
                 <x-slot name="route">{{ route('reseller.edit', $reseller->id) }}</x-slot>
             </x-edit-btn>
         </x-card>
-        @if(Session::has('timer_version_footer') && Session::get('timer_version_footer') === 1)
-            <p class="text-muted mt-4 text-end"><small>
-                    Built on Laravel v{{ Illuminate\Foundation\Application::VERSION }} (PHP v{{ PHP_VERSION }}
-                    )</small>
-            </p>
-        @endif
+              <x-details-footer></x-details-footer>
     </div>
 </x-app-layout>
