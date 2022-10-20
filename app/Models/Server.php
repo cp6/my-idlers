@@ -43,7 +43,12 @@ class Server extends Model
     public static function allServers()
     {//All servers and relationships (no using joins)
         return Cache::remember("all_servers", now()->addMonth(1), function () {
-            return Server::with(['location', 'provider', 'os', 'price', 'ips', 'yabs', 'yabs.disk_speed', 'yabs.network_speed', 'labels'])->get();
+            $query = Server::with(['location', 'provider', 'os', 'price', 'ips', 'yabs', 'yabs.disk_speed', 'yabs.network_speed', 'labels']);
+            if (in_array(Session::get('sort_on'), [3, 4, 5, 6], true)) {
+                $options = Settings::orderByProcess(Session::get('sort_on'));
+                $query->orderBy(Pricing::select("pricings.$options[0]")->whereColumn("pricings.service_id", "servers.id"), $options[1]);
+            }
+            return $query->get();
         });
     }
 
@@ -58,8 +63,13 @@ class Server extends Model
     public static function allActiveServers()
     {//All ACTIVE servers and relationships replaces activeServersDataIndexPage()
         return Cache::remember("all_active_servers", now()->addMonth(1), function () {
-            return Server::where('active', '=', 1)
-                ->with(['location', 'provider', 'os', 'ips', 'yabs', 'yabs.disk_speed', 'yabs.network_speed', 'labels', 'price'])->get();
+            $query = Server::where('active', '=', 1)
+                ->with(['location', 'provider', 'os', 'ips', 'yabs', 'yabs.disk_speed', 'yabs.network_speed', 'labels', 'price']);
+            if (in_array(Session::get('sort_on'), [3, 4, 5, 6], true)) {
+                $options = Settings::orderByProcess(Session::get('sort_on'));
+                $query->orderBy(Pricing::select("pricings.$options[0]")->whereColumn("pricings.service_id", "servers.id"), $options[1]);
+            }
+            return $query->get();
         });
     }
 
@@ -216,9 +226,6 @@ class Server extends Model
 
     public function price()
     {
-        if (in_array(Session::get('sort_on'), [3, 4, 5, 6], true)) {
-            return $this->hasOne(Pricing::class, 'service_id', 'id')->orderBy(Settings::orderByProcess(Session::get('sort_on'))[0], Settings::orderByProcess(Session::get('sort_on'))[1]);
-        }
         return $this->hasOne(Pricing::class, 'service_id', 'id');
     }
 

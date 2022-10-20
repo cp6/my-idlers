@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class Domains extends Model
 {
@@ -23,7 +24,12 @@ class Domains extends Model
     public static function allDomains()
     {//All domains and relationships (no using joins)
         return Cache::remember("all_domains", now()->addMonth(1), function () {
-            return Domains::with(['provider', 'price', 'labels'])->get();
+            $query = Domains::with(['provider', 'price', 'labels']);
+            if (in_array(Session::get('sort_on'), [3, 4, 5, 6], true)) {
+                $options = Settings::orderByProcess(Session::get('sort_on'));
+                $query->orderBy(Pricing::select("pricings.$options[0]")->whereColumn("pricings.service_id", "domains.id"), $options[1]);
+            }
+            return $query->get();
         });
     }
 
