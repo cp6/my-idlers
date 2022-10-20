@@ -43,6 +43,7 @@ php artisan cache:clear
 * Added & implemented details footer blade component
 * Added new index layout
 * Updated domains, misc, reseller, seedboxes and shared use new index layout
+* Updated validation for store and update
 * Updated `updatePricing()` to not need `$as_usd` parameter
 * Updated labels assigned insert
 * Updated order/sort by methods for pricing related columns
