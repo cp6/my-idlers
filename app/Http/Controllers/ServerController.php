@@ -179,10 +179,7 @@ class ServerController extends Controller
         $server_id = $request->server_id;
 
         $pricing = new Pricing();
-
-        $as_usd = $pricing->convertToUSD($request->price, $request->currency);
-
-        $pricing->updatePricing($server_id, $request->currency, $request->price, $request->payment_term, $as_usd, $request->next_due_date);
+        $pricing->updatePricing($server_id, $request->currency, $request->price, $request->payment_term, $request->next_due_date);
 
         Labels::deleteLabelsAssignedTo($server_id);
 

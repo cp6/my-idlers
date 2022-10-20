@@ -125,8 +125,9 @@ class Pricing extends Model
         ]);
     }
 
-    public function updatePricing(string $service_id, string $currency, float $price, int $term, float $as_usd, string $next_due_date, int $is_active = 1): int
+    public function updatePricing(string $service_id, string $currency, float $price, int $term, string $next_due_date, int $is_active = 1): int
     {
+        $as_usd = $this->convertToUSD($price, $currency);
         return DB::table('pricings')
             ->where('service_id', $service_id)
             ->update([
@@ -136,15 +137,14 @@ class Pricing extends Model
                 'as_usd' => $as_usd,
                 'usd_per_month' => $this->costAsPerMonth($as_usd, $term),
                 'next_due_date' => $next_due_date,
-                'active' => ($is_active) ? 1 : 0
+                'active' => $is_active
             ]);
     }
 
     public static function allPricing()
     {
         return Cache::remember('all_pricing', now()->addWeek(1), function () {
-            return DB::table('pricings')
-                ->get();
+            return Pricing::get();
         });
     }
 

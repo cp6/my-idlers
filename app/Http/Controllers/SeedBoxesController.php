@@ -130,8 +130,7 @@ class SeedBoxesController extends Controller
         ]);
 
         $pricing = new Pricing();
-        $as_usd = $pricing->convertToUSD($request->price, $request->currency);
-        $pricing->updatePricing($seedbox->id, $request->currency, $request->price, $request->payment_term, $as_usd, $request->next_due_date);
+        $pricing->updatePricing($seedbox->id, $request->currency, $request->price, $request->payment_term, $request->next_due_date);
 
         Labels::deleteLabelsAssignedTo($seedbox->id);
         Labels::insertLabelsAssigned([$request->label1, $request->label2, $request->label3, $request->label4], $seedbox->id);

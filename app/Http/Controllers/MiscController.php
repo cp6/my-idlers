@@ -82,8 +82,7 @@ class MiscController extends Controller
         ]);
 
         $pricing = new Pricing();
-        $as_usd = $pricing->convertToUSD($request->price, $request->currency);
-        $pricing->updatePricing($misc->id, $request->currency, $request->price, $request->payment_term, $as_usd, $request->next_due_date);
+        $pricing->updatePricing($misc->id, $request->currency, $request->price, $request->payment_term, $request->next_due_date);
 
         Cache::forget("all_misc");
         Cache::forget("misc.{$misc->id}");
