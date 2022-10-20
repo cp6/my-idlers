@@ -34,9 +34,13 @@ class DNSController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'hostname' => 'required|min:2',
-            'address' => 'required|min:2',
-            'dns_type' => 'required'
+            'hostname' => 'required|string|min:2',
+            'address' => 'required|string|min:2',
+            'dns_type' => 'required|string',
+            'label1' => 'sometimes|nullable|string',
+            'label2' => 'sometimes|nullable|string',
+            'label3' => 'sometimes|nullable|string',
+            'label4' => 'sometimes|nullable|string',
         ]);
 
         $dns_id = Str::random(8);
@@ -90,9 +94,13 @@ class DNSController extends Controller
     public function update(Request $request, DNS $dn)
     {
         $request->validate([
-            'hostname' => 'required|min:2',
-            'address' => 'required|min:2',
-            'dns_type' => 'required'
+            'hostname' => 'required|string|min:2',
+            'address' => 'required|string|min:2',
+            'dns_type' => 'required|string',
+            'label1' => 'sometimes|nullable|string',
+            'label2' => 'sometimes|nullable|string',
+            'label3' => 'sometimes|nullable|string',
+            'label4' => 'sometimes|nullable|string',
         ]);
 
         $dn->update([

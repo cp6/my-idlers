@@ -18,9 +18,7 @@ class ServerController extends Controller
     public function index()
     {
         $servers = Server::allActiveServers();
-
         $non_active_servers = Server::allNonActiveServers();
-
         return view('servers.index', compact(['servers', 'non_active_servers']));
     }
 
@@ -43,22 +41,30 @@ class ServerController extends Controller
 
     public function store(Request $request)
     {
-
         $request->validate([
             'hostname' => 'required|min:5',
-            'ip1' => 'nullable|ip',
-            'ip2' => 'nullable|ip',
-            'service_type' => 'numeric',
-            'server_type' => 'numeric',
-            'ram' => 'numeric',
-            'disk' => 'numeric',
-            'os_id' => 'numeric',
-            'provider_id' => 'numeric',
-            'location_id' => 'numeric',
-            'price' => 'numeric',
-            'cpu' => 'numeric',
-            'was_promo' => 'numeric',
-            'next_due_date' => 'required|date'
+            'ip1' => 'sometimes|nullable|ip',
+            'ip2' => 'sometimes|nullable|ip',
+            'ns1' => 'sometimes|nullable|string',
+            'ns2' => 'sometimes|nullable|string',
+            'service_type' => 'integer',
+            'server_type' => 'integer',
+            'ssh_port' => 'integer',
+            'bandwidth' => 'integer',
+            'ram' => 'required|numeric',
+            'disk' => 'required|integer',
+            'os_id' => 'required|integer',
+            'provider_id' => 'required|integer',
+            'location_id' => 'required|integer',
+            'price' => 'required|numeric',
+            'cpu' => 'required|integer',
+            'was_promo' => 'integer',
+            'next_due_date' => 'required|date',
+            'owned_since' => 'sometimes|nullable|date',
+            'label1' => 'sometimes|nullable|string',
+            'label2' => 'sometimes|nullable|string',
+            'label3' => 'sometimes|nullable|string',
+            'label4' => 'sometimes|nullable|string',
         ]);
 
         $server_id = Str::random(8);
@@ -123,43 +129,54 @@ class ServerController extends Controller
     {
         $request->validate([
             'hostname' => 'required|min:5',
-            'ram' => 'numeric',
-            'disk' => 'numeric',
-            'os_id' => 'numeric',
-            'provider_id' => 'numeric',
-            'location_id' => 'numeric',
-            'price' => 'numeric',
-            'cpu' => 'numeric',
-            'was_promo' => 'numeric',
-            'next_due_date' => 'date'
+            'ip1' => 'sometimes|nullable|ip',
+            'ip2' => 'sometimes|nullable|ip',
+            'ns1' => 'sometimes|nullable|string',
+            'ns2' => 'sometimes|nullable|string',
+            'service_type' => 'integer',
+            'server_type' => 'integer',
+            'ssh_port' => 'integer',
+            'bandwidth' => 'integer',
+            'ram' => 'required|numeric',
+            'disk' => 'required|integer',
+            'os_id' => 'required|integer',
+            'provider_id' => 'required|integer',
+            'location_id' => 'required|integer',
+            'price' => 'required|numeric',
+            'cpu' => 'required|integer',
+            'was_promo' => 'integer',
+            'next_due_date' => 'required|date',
+            'owned_since' => 'sometimes|nullable|date',
+            'label1' => 'sometimes|nullable|string',
+            'label2' => 'sometimes|nullable|string',
+            'label3' => 'sometimes|nullable|string',
+            'label4' => 'sometimes|nullable|string',
+        ]);
+
+        $server->update([
+            'hostname' => $request->hostname,
+            'server_type' => $request->server_type,
+            'os_id' => $request->os_id,
+            'ssh' => $request->ssh_port,
+            'provider_id' => $request->provider_id,
+            'location_id' => $request->location_id,
+            'ram' => $request->ram,
+            'ram_type' => $request->ram_type,
+            'ram_as_mb' => ($request->ram_type === 'MB') ? $request->ram : ($request->ram * 1024),
+            'disk' => $request->disk,
+            'disk_type' => $request->disk_type,
+            'disk_as_gb' => ($request->disk_type === 'GB') ? $request->disk : ($request->disk * 1024),
+            'owned_since' => $request->owned_since,
+            'ns1' => $request->ns1,
+            'ns2' => $request->ns2,
+            'bandwidth' => $request->bandwidth,
+            'cpu' => $request->cpu,
+            'was_promo' => $request->was_promo,
+            'active' => (isset($request->is_active)) ? 1 : 0,
+            'show_public' => (isset($request->show_public)) ? 1 : 0
         ]);
 
         $server_id = $request->server_id;
-
-        DB::table('servers')
-            ->where('id', $server_id)
-            ->update([
-                'hostname' => $request->hostname,
-                'server_type' => $request->server_type,
-                'os_id' => $request->os_id,
-                'ssh' => $request->ssh_port,
-                'provider_id' => $request->provider_id,
-                'location_id' => $request->location_id,
-                'ram' => $request->ram,
-                'ram_type' => $request->ram_type,
-                'ram_as_mb' => ($request->ram_type === 'MB') ? $request->ram : ($request->ram * 1024),
-                'disk' => $request->disk,
-                'disk_type' => $request->disk_type,
-                'disk_as_gb' => ($request->disk_type === 'GB') ? $request->disk : ($request->disk * 1024),
-                'owned_since' => $request->owned_since,
-                'ns1' => $request->ns1,
-                'ns2' => $request->ns2,
-                'bandwidth' => $request->bandwidth,
-                'cpu' => $request->cpu,
-                'was_promo' => $request->was_promo,
-                'active' => (isset($request->is_active)) ? 1 : 0,
-                'show_public' => (isset($request->show_public)) ? 1 : 0
-            ]);
 
         $pricing = new Pricing();
 
@@ -209,7 +226,7 @@ class ServerController extends Controller
     {//NOTICE: Selecting servers is not cached yet
         $all_servers = Server::where('has_yabs', 1)->get();
 
-        if (isset($all_servers[1])){
+        if (isset($all_servers[1])) {
             return view('servers.choose-compare', compact('all_servers'));
         }
 
@@ -222,7 +239,7 @@ class ServerController extends Controller
         $server1_data = Server::server($server1);
 
         if (!isset($server1_data[0]->yabs[0])) {
-           abort(404);
+            abort(404);
         }
 
         $server2_data = Server::server($server2);

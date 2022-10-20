@@ -29,19 +29,23 @@ class SeedBoxesController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required|string',
-            'hostname' => 'string|nullable',
-            'seed_box_type' => 'required',
-            'provider_id' => 'numeric',
-            'location_id' => 'numeric',
+            'title' => 'required|string|min:2',
+            'hostname' => 'sometimes|nullable|string|min:2',
+            'seed_box_type' => 'required|string',
+            'provider_id' => 'integer',
+            'location_id' => 'integer',
             'price' => 'numeric',
-            'payment_term' => 'numeric',
-            'was_promo' => 'numeric',
-            'owned_since' => 'date',
-            'disk' => 'numeric',
-            'bandwidth' => 'numeric',
-            'port_speed' => 'numeric',
-            'next_due_date' => 'required|date'
+            'payment_term' => 'integer',
+            'was_promo' => 'integer',
+            'owned_since' => 'sometimes|nullable|date',
+            'disk' => 'integer',
+            'bandwidth' => 'integer',
+            'port_speed' => 'integer',
+            'next_due_date' => 'required|date',
+            'label1' => 'sometimes|nullable|string',
+            'label2' => 'sometimes|nullable|string',
+            'label3' => 'sometimes|nullable|string',
+            'label4' => 'sometimes|nullable|string',
         ]);
 
         $seedbox_id = Str::random(8);
@@ -91,37 +95,39 @@ class SeedBoxesController extends Controller
     public function update(Request $request, SeedBoxes $seedbox)
     {
         $request->validate([
-            'id' => 'required|size:8',
-            'title' => 'required|string',
-            'hostname' => 'string|nullable',
-            'seed_box_type' => 'required',
-            'disk' => 'numeric',
-            'provider_id' => 'numeric',
-            'location_id' => 'numeric',
+            'title' => 'required|string|min:2',
+            'hostname' => 'sometimes|nullable|string|min:2',
+            'seed_box_type' => 'required|string',
+            'provider_id' => 'integer',
+            'location_id' => 'integer',
             'price' => 'numeric',
-            'payment_term' => 'numeric',
-            'was_promo' => 'numeric',
-            'owned_since' => 'date',
-            'bandwidth' => 'numeric',
-            'port_speed' => 'numeric'
+            'payment_term' => 'integer',
+            'was_promo' => 'integer',
+            'owned_since' => 'sometimes|nullable|date',
+            'disk' => 'integer',
+            'bandwidth' => 'integer',
+            'port_speed' => 'integer',
+            'next_due_date' => 'required|date',
+            'label1' => 'sometimes|nullable|string',
+            'label2' => 'sometimes|nullable|string',
+            'label3' => 'sometimes|nullable|string',
+            'label4' => 'sometimes|nullable|string',
         ]);
 
-        DB::table('seedboxes')
-            ->where('id', $seedbox->id)
-            ->update([
-                'title' => $request->title,
-                'hostname' => $request->hostname,
-                'seed_box_type' => $request->seed_box_type,
-                'location_id' => $request->location_id,
-                'provider_id' => $request->provider_id,
-                'disk' => $request->disk,
-                'disk_type' => 'GB',
-                'disk_as_gb' => $request->disk,
-                'owned_since' => $request->owned_since,
-                'bandwidth' => $request->bandwidth,
-                'port_speed' => $request->port_speed,
-                'was_promo' => $request->was_promo
-            ]);
+        $seedbox->update([
+            'title' => $request->title,
+            'hostname' => $request->hostname,
+            'seed_box_type' => $request->seed_box_type,
+            'location_id' => $request->location_id,
+            'provider_id' => $request->provider_id,
+            'disk' => $request->disk,
+            'disk_type' => 'GB',
+            'disk_as_gb' => $request->disk,
+            'owned_since' => $request->owned_since,
+            'bandwidth' => $request->bandwidth,
+            'port_speed' => $request->port_speed,
+            'was_promo' => $request->was_promo
+        ]);
 
         $pricing = new Pricing();
         $as_usd = $pricing->convertToUSD($request->price, $request->currency);

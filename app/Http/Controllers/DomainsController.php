@@ -34,11 +34,20 @@ class DomainsController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'domain' => 'required|min:2',
-            'extension' => 'required|min:2',
-            'provider_id' => 'numeric',
+            'domain' => 'required|string|min:2',
+            'extension' => 'required|string|min:2',
+            'ns1' => 'sometimes|nullable|min:2',
+            'ns2' => 'sometimes|nullable|min:2',
+            'ns3' => 'sometimes|nullable|min:2',
+            'provider_id' => 'integer',
+            'payment_term' => 'integer',
             'price' => 'numeric',
-            'next_due_date' => 'required|date'
+            'next_due_date' => 'required|date',
+            'owned_since' => 'sometimes|nullable|date',
+            'label1' => 'sometimes|nullable|string',
+            'label2' => 'sometimes|nullable|string',
+            'label3' => 'sometimes|nullable|string',
+            'label4' => 'sometimes|nullable|string',
         ]);
 
         $domain_id = Str::random(8);
@@ -74,10 +83,20 @@ class DomainsController extends Controller
     public function update(Request $request, Domains $domain)
     {
         $request->validate([
-            'domain' => 'required|min:2',
-            'extension' => 'required|min:2',
-            'provider_id' => 'numeric',
-            'price' => 'numeric'
+            'domain' => 'required|string|min:2',
+            'extension' => 'required|string|min:2',
+            'ns1' => 'sometimes|nullable|min:2',
+            'ns2' => 'sometimes|nullable|min:2',
+            'ns3' => 'sometimes|nullable|min:2',
+            'provider_id' => 'integer',
+            'payment_term' => 'integer',
+            'price' => 'numeric',
+            'next_due_date' => 'required|date',
+            'owned_since' => 'sometimes|nullable|date',
+            'label1' => 'sometimes|nullable|string',
+            'label2' => 'sometimes|nullable|string',
+            'label3' => 'sometimes|nullable|string',
+            'label4' => 'sometimes|nullable|string',
         ]);
 
         $pricing = new Pricing();

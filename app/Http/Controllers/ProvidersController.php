@@ -24,7 +24,7 @@ class ProvidersController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'provider_name' => 'required|min:2'
+            'provider_name' => 'required|string|min:2'
         ]);
 
         Providers::create([
