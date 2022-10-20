@@ -48,8 +48,8 @@
                                             <i class="fas fa-pen" title="edit"></i></a>
                                         @csrf
                                         @method('DELETE')
-                                        <i class="fas fa-trash text-danger ms-3" @click="modalForm"
-                                           id="btn-{{$domain->domain}}" title="{{$domain->id}}"></i>
+                                        <i class="fas fa-trash text-danger ms-3" @click="confirmDeleteModal"
+                                           id="{{$domain->id}}" title="{{$domain->domain}}"></i>
                                     </form>
                                 </td>
                             </tr>

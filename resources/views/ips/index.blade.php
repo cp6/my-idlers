@@ -41,8 +41,8 @@
                                     <form action="{{ route('IPs.destroy', $ip->id) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
-                                        <i class="fas fa-trash text-danger ms-3" @click="modalForm"
-                                           id="btn-{{$ip->hostname}}" title="{{$ip->id}}"></i>
+                                        <i class="fas fa-trash text-danger ms-3" @click="confirmDeleteModal"
+                                           id="{{$ip->id}}" title="{{$ip->hostname}}"></i>
                                     </form>
                                 </td>
                             </tr>

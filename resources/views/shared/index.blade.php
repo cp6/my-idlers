@@ -79,24 +79,7 @@
                     v{{ Illuminate\Foundation\Application::VERSION }} (PHP v{{ PHP_VERSION }})</small></p>
         @endif
     </div>
-
-    <script>
-        let app = new Vue({
-            el: "#app",
-            data: {
-                "modal_hostname": '',
-                "modal_id": '',
-                "delete_form_action": '',
-                showModal: false
-            },
-            methods: {
-                confirmDeleteModal(event) {
-                    this.showModal = true;
-                    this.modal_hostname = event.target.title;
-                    this.modal_id = event.target.id;
-                    this.delete_form_action = 'shared/' + this.modal_id;
-                }
-            }
-        });
-    </script>
+    <x-modal-delete-script>
+        <x-slot name="uri">shared</x-slot>
+    </x-modal-delete-script>
 </x-app-layout>

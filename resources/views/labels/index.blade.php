@@ -36,8 +36,8 @@
                                        class="text-body mx-1">
                                         <i class="fas fa-eye" title="view"></i></a>
                                     @csrf
-                                    <i class="fas fa-trash text-danger ms-3" @click="modalForm"
-                                       id="btn-{{$label->label}}" title="{{$label->id}}"></i>
+                                    <i class="fas fa-trash text-danger ms-3" @click="confirmDeleteModal"
+                                       id="{{$label->id}}" title="{{$label->label}}"></i>
                                 </form>
                             </td>
                         </tr>
@@ -75,6 +75,6 @@
         });
     </script>
     <x-modal-delete-script>
-        <x-slot name="uri">locations</x-slot>
+        <x-slot name="uri">labels</x-slot>
     </x-modal-delete-script>
 </x-app-layout>

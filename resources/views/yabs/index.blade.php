@@ -64,8 +64,8 @@
                                                 <i class="fas fa-eye" title="view"></i>
                                             </a>
 
-                                            <i class="fas fa-trash text-danger ms-3" @click="modalForm"
-                                               id="btn-{{$yab->server->hostname}}" title="{{$yab->id}}"></i>
+                                            <i class="fas fa-trash text-danger ms-3" @click="confirmDeleteModal"
+                                               id="{{$yab->id}}" title="{{$yab->server->hostname}}"></i>
                                         </form>
                                     </td>
                                 </tr>

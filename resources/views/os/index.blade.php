@@ -32,8 +32,8 @@
                             <td class="text-nowrap">{{ $o->name }}</td>
                             <td class="text-nowrap">
                                 <form action="{{ route('locations.destroy', $o->id) }}" method="POST">
-                                    <i class="fas fa-trash text-danger ms-3" @click="modalForm"
-                                       id="btn-{{$o->name}}" title="{{$o->id}}"></i>
+                                    <i class="fas fa-trash text-danger ms-3" @click="confirmDeleteModal"
+                                       id="{{$o->id}}" title="{{$o->name}}"></i>
                                 </form>
                             </td>
                         </tr>

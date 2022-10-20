@@ -35,8 +35,8 @@
                                     <a href="{{ route('providers.show', $provider->id) }}"
                                        class="text-body mx-1">
                                         <i class="fas fa-eye" title="view"></i></a>
-                                    <i class="fas fa-trash text-danger ms-3" @click="modalForm"
-                                       id="btn-{{$provider->name}}" title="{{$provider->id}}"></i>
+                                    <i class="fas fa-trash text-danger ms-3" @click="confirmDeleteModal"
+                                       id="{{$provider->id}}" title="{{$provider->name}}"></i>
                                 </form>
                             </td>
                         </tr>

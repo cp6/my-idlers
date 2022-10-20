@@ -51,8 +51,8 @@
                                         </a>
                                         @csrf
                                         @method('DELETE')
-                                        <i class="fas fa-trash text-danger ms-3" @click="modalForm"
-                                           id="btn-{{$m->name}}" title="{{$m->id}}"></i>
+                                        <i class="fas fa-trash text-danger ms-3" @click="confirmDeleteModal"
+                                           id="{{$m->name}}" title="{{$m->id}}"></i>
                                     </form>
                                 </td>
                             </tr>
