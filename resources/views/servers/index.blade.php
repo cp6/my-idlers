@@ -32,7 +32,6 @@
                     <a href="{{ route('servers.create') }}" class="btn btn-primary mb-3">Add server</a>
                     <a href="{{ route('servers-compare-choose') }}" class="btn btn-primary mb-3 ms-2">Compare
                         servers</a>
-                    <a href="{{ route('yabs.create') }}" class="btn btn-primary mb-3 ms-2">Add a YABs</a>
                     <div class="table-responsive">
                         <table class="table table-bordered">
                             <thead class="table-light">
