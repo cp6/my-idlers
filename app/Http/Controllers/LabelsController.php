@@ -25,7 +25,7 @@ class LabelsController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'label' => 'required|min:2'
+            'label' => 'required|string|min:2'
         ]);
 
         Labels::create([

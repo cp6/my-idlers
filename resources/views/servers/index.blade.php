@@ -32,7 +32,6 @@
                     <a href="{{ route('servers.create') }}" class="btn btn-primary mb-3">Add server</a>
                     <a href="{{ route('servers-compare-choose') }}" class="btn btn-primary mb-3 ms-2">Compare
                         servers</a>
-                    <a href="{{ route('yabs.create') }}" class="btn btn-primary mb-3 ms-2">Add a YABs</a>
                     <div class="table-responsive">
                         <table class="table table-bordered">
                             <thead class="table-light">
@@ -93,9 +92,9 @@
                                                     <i class="fas fa-pen" title="edit"></i>
                                                 </a>
 
-                                                <i class="fas fa-plug mx-1" id="btn-{{$server->hostname}}"
+                                                <i class="fas fa-plug mx-1" id="{{$server->hostname}}"
                                                    title="check if up"
-                                                   @click="onClk">
+                                                   @click="checkUp">
                                                 </i>
                                                 <i class="fas fa-trash text-danger ms-3" @click="confirmDeleteModal"
                                                    id="{{$server->id}}" title="{{$server->hostname}}"></i>
@@ -174,9 +173,9 @@
                                                     <i class="fas fa-pen" title="edit"></i>
                                                 </a>
 
-                                                <i class="fas fa-plug mx-1" id="btn-{{$server->hostname}}"
+                                                <i class="fas fa-plug mx-1" id="{{$server->hostname}}"
                                                    title="check if up"
-                                                   @click="onClk">
+                                                   @click="checkUp">
                                                 </i>
                                                 <i class="fas fa-trash text-danger ms-3" @click="confirmDeleteModal"
                                                    id="{{$server->id}}" title="{{$server->hostname}}"></i>
@@ -195,14 +194,9 @@
                     </div>
                 </x-card>
             </div>
-            @if(Session::has('timer_version_footer') && Session::get('timer_version_footer') === 1)
-                <p class="text-muted mt-4 text-end"><small>Built on Laravel
-                        v{{ Illuminate\Foundation\Application::VERSION }} (PHP v{{ PHP_VERSION }})</small></p>
-            @endif
+            <x-details-footer></x-details-footer>
         </div>
-
         <script>
-
             axios.defaults.headers.common = {
                 'Content-Type': 'application/json',
                 'X-Requested-With': 'XMLHttpRequest',
@@ -220,12 +214,12 @@
                     showModal: false
                 },
                 methods: {
-                    onClk(event) {
-                        var hostname = event.target.id.replace('btn-', '');
+                    checkUp(event) {
+                        var hostname = event.target.id;
 
                         if (hostname) {
                             axios
-                                .get('/api/online/' + event.target.id.replace('btn-', ''), {headers: {'Authorization': 'Bearer ' + document.querySelector('meta[name="api_token"]').getAttribute('content')}})
+                                .get('/api/online/' + event.target.id, {headers: {'Authorization': 'Bearer ' + document.querySelector('meta[name="api_token"]').getAttribute('content')}})
                                 .then(response => (this.status = response.data.is_online))
                                 .finally(() => {
                                     if (this.status) {

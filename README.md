@@ -8,7 +8,7 @@ Despite what the name infers this self hosted web app isn't just for storing idl
 a [YABs](https://github.com/masonr/yet-another-bench-script) output you can get disk & network speed values along with
 GeekBench 5 scores to do easier comparing and sorting.
 
-[![Generic badge](https://img.shields.io/badge/version-2.1.7-blue.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Laravel-9.0-red.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/PHP-8.1-purple.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Bootstrap-5.1-pink.svg)](https://shields.io/)
+[![Generic badge](https://img.shields.io/badge/version-2.1.8-blue.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Laravel-9.0-red.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/PHP-8.1-purple.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Bootstrap-5.1-pink.svg)](https://shields.io/)
 
 <img src="https://raw.githubusercontent.com/cp6/my-idlers/main/public/My%20Idlers%20logo.jpg" width="128" height="128" />
 
@@ -20,7 +20,7 @@ GeekBench 5 scores to do easier comparing and sorting.
 
 [Cloud Five Limited](https://cloud-v.net/) for providing the hosting for demo installation.
 
-## 2.1.7 changes (13th October 2022):
+## 2.1.8 changes (20th October 2022):
 
 #### You can no longer use the form to submit YABS results
 yabs.sh now has JSON formatted response and can POST the output directly from calling the script. 
@@ -36,26 +36,18 @@ Example yabs.sh call to POST the result
 #### Please run the following if updating from existing install:
 
 ```shell
-php artisan migrate
 php artisan route:cache
 php artisan cache:clear
 ```
 
-* Added default order by (Change this in settings)
-* Added dual success & error response alert component
-* Added new response alert component into views
-* Added input parameters for `compareYabs()`
-* Updated and fixed server_type and virt mix-ups
-* Updated views title `@section` layout
-* Updated cache timeframes
-* Updated `RouteServiceProvider::HOME` for `'/'`
-* Updated the server choose compare method
-* Fixed update server ssh port
-* Fixed server due in X days being null
-* Removed unused with 'labels.label' in queries
-* Removed unused welcome and dashboard views
-* Removed dashboard redirect to / from routes file
-* Removed now unused success & error alert components
+* Added & implemented details footer blade component
+* Added new index layout
+* Updated domains, misc, reseller, seedboxes and shared use new index layout
+* Updated validation for store and update
+* Updated `updatePricing()` to not need `$as_usd` parameter
+* Updated labels assigned insert
+* Updated order/sort by methods for pricing related columns
+* Removed add YABs button on servers index page
 
 ## Requires
 

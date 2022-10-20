@@ -1,15 +1,12 @@
-@section("title", "Misc services")
-@section('style')
+@extends('layouts.index')
+@section('title', 'Misc')
+@section('css_style')
     <x-modal-style></x-modal-style>
 @endsection
-@section('scripts')
-    <script src="{{ asset('js/vue.min.js') }}"></script>
-    <script src="{{ asset('js/axios.min.js') }}"></script>
+@section('header')
+    {{ __('Misc') }}
 @endsection
-<x-app-layout>
-    <x-slot name="header">
-        {{ __('Misc services') }}
-    </x-slot>
+@section('content')
     <div class="container" id="app">
         <x-delete-confirm-modal></x-delete-confirm-modal>
         <x-card class="shadow mt-3">
@@ -51,8 +48,8 @@
                                         </a>
                                         @csrf
                                         @method('DELETE')
-                                        <i class="fas fa-trash text-danger ms-3" @click="modalForm"
-                                           id="btn-{{$m->name}}" title="{{$m->id}}"></i>
+                                        <i class="fas fa-trash text-danger ms-3" @click="confirmDeleteModal"
+                                           id="{{$m->id}}" title="{{$m->name}}"></i>
                                     </form>
                                 </td>
                             </tr>
@@ -66,14 +63,9 @@
                 </table>
             </div>
         </x-card>
-        @if(Session::has('timer_version_footer') && Session::get('timer_version_footer') === 1)
-            <p class="text-muted mt-4 text-end"><small>
-                    Built on Laravel v{{ Illuminate\Foundation\Application::VERSION }} (PHP v{{ PHP_VERSION }}
-                    )</small>
-            </p>
-        @endif
+        <x-details-footer></x-details-footer>
     </div>
     <x-modal-delete-script>
         <x-slot name="uri">misc</x-slot>
     </x-modal-delete-script>
-</x-app-layout>
+@endsection

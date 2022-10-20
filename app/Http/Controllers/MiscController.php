@@ -32,9 +32,11 @@ class MiscController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|min:3',
+            'name' => 'required|string|min:3',
             'price' => 'required|numeric',
-            'owned_since' => 'date',
+            'payment_term' => 'required|integer',
+            'currency' => 'required|string|size:3',
+            'owned_since' => 'sometimes|nullable|date',
             'next_due_date' => 'required|date'
         ]);
 
@@ -65,21 +67,22 @@ class MiscController extends Controller
     public function update(Request $request, Misc $misc)
     {
         $request->validate([
-            'name' => 'required',
-            'owned_since' => 'date',
+            'name' => 'required|string|min:3',
+            'price' => 'required|numeric',
+            'payment_term' => 'required|integer',
+            'currency' => 'required|string|size:3',
+            'owned_since' => 'sometimes|nullable|date',
+            'next_due_date' => 'required|date'
         ]);
 
-        DB::table('misc_services')
-            ->where('id', $misc->id)
-            ->update([
-                'name' => $request->name,
-                'owned_since' => $request->owned_since,
-                'active' => (isset($request->is_active)) ? 1 : 0
-            ]);
+        $misc->update([
+            'name' => $request->name,
+            'owned_since' => $request->owned_since,
+            'active' => (isset($request->is_active)) ? 1 : 0
+        ]);
 
         $pricing = new Pricing();
-        $as_usd = $pricing->convertToUSD($request->price, $request->currency);
-        $pricing->updatePricing($misc->id, $request->currency, $request->price, $request->payment_term, $as_usd, $request->next_due_date);
+        $pricing->updatePricing($misc->id, $request->currency, $request->price, $request->payment_term, $request->next_due_date);
 
         Cache::forget("all_misc");
         Cache::forget("misc.{$misc->id}");

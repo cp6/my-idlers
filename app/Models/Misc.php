@@ -35,7 +35,12 @@ class Misc extends Model
     public static function allMisc()
     {//All misc and relationships (no using joins)
         return Cache::remember("all_misc", now()->addMonth(1), function () {
-            return Misc::with(['price'])->get();
+            $query = Misc::with(['price']);
+            if (in_array(Session::get('sort_on'), [3, 4, 5, 6], true)) {
+                $options = Settings::orderByProcess(Session::get('sort_on'));
+                $query->orderBy(Pricing::select("pricings.$options[0]")->whereColumn("pricings.service_id", "misc_services.id"), $options[1]);
+            }
+            return $query->get();
         });
     }
 
@@ -49,9 +54,6 @@ class Misc extends Model
 
     public function price()
     {
-        if (in_array(Session::get('sort_on'), [3, 4, 5, 6], true)) {
-            return $this->hasOne(Pricing::class, 'service_id', 'id')->orderBy(Settings::orderByProcess(Session::get('sort_on'))[0], Settings::orderByProcess(Session::get('sort_on'))[1]);
-        }
         return $this->hasOne(Pricing::class, 'service_id', 'id');
     }
 

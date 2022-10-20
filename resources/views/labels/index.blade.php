@@ -36,8 +36,8 @@
                                        class="text-body mx-1">
                                         <i class="fas fa-eye" title="view"></i></a>
                                     @csrf
-                                    <i class="fas fa-trash text-danger ms-3" @click="modalForm"
-                                       id="btn-{{$label->label}}" title="{{$label->id}}"></i>
+                                    <i class="fas fa-trash text-danger ms-3" @click="confirmDeleteModal"
+                                       id="{{$label->id}}" title="{{$label->label}}"></i>
                                 </form>
                             </td>
                         </tr>
@@ -50,12 +50,7 @@
                 </tbody>
             </table>
         </x-card>
-        @if(Session::has('timer_version_footer') && Session::get('timer_version_footer') === 1)
-            <p class="text-muted mt-4 text-end"><small>
-                    Built on Laravel v{{ Illuminate\Foundation\Application::VERSION }} (PHP v{{ PHP_VERSION }}
-                    )</small>
-            </p>
-        @endif
+              <x-details-footer></x-details-footer>
     </div>
     <x-datatables-assets></x-datatables-assets>
     <script type="text/javascript">
@@ -75,6 +70,6 @@
         });
     </script>
     <x-modal-delete-script>
-        <x-slot name="uri">locations</x-slot>
+        <x-slot name="uri">labels</x-slot>
     </x-modal-delete-script>
 </x-app-layout>

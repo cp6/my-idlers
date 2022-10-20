@@ -32,8 +32,8 @@
                             <td class="text-nowrap">{{ $o->name }}</td>
                             <td class="text-nowrap">
                                 <form action="{{ route('locations.destroy', $o->id) }}" method="POST">
-                                    <i class="fas fa-trash text-danger ms-3" @click="modalForm"
-                                       id="btn-{{$o->name}}" title="{{$o->id}}"></i>
+                                    <i class="fas fa-trash text-danger ms-3" @click="confirmDeleteModal"
+                                       id="{{$o->id}}" title="{{$o->name}}"></i>
                                 </form>
                             </td>
                         </tr>
@@ -46,12 +46,7 @@
                 </tbody>
             </table>
         </x-card>
-        @if(Session::has('timer_version_footer') && Session::get('timer_version_footer') === 1)
-            <p class="text-muted mt-4 text-end"><small>
-                    Built on Laravel v{{ Illuminate\Foundation\Application::VERSION }} (PHP v{{ PHP_VERSION }}
-                    )</small>
-            </p>
-        @endif
+        <x-details-footer></x-details-footer>
     </div>
     <x-datatables-assets></x-datatables-assets>
     <script type="text/javascript">

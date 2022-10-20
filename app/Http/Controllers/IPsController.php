@@ -31,7 +31,8 @@ class IPsController extends Controller
     {
         $request->validate([
             'address' => 'required|ip|min:2',
-            'ip_type' => 'required'
+            'ip_type' => 'required|string|size:4',
+            'service_id' => 'required|string'
         ]);
 
         $ip_id = Str::random(8);

@@ -41,8 +41,8 @@
                                     <form action="{{ route('IPs.destroy', $ip->id) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
-                                        <i class="fas fa-trash text-danger ms-3" @click="modalForm"
-                                           id="btn-{{$ip->hostname}}" title="{{$ip->id}}"></i>
+                                        <i class="fas fa-trash text-danger ms-3" @click="confirmDeleteModal"
+                                           id="{{$ip->id}}" title="{{$ip->hostname}}"></i>
                                     </form>
                                 </td>
                             </tr>
@@ -56,12 +56,7 @@
                 </table>
             </div>
         </x-card>
-        @if(Session::has('timer_version_footer') && Session::get('timer_version_footer') === 1)
-            <p class="text-muted mt-4 text-end"><small>
-                    Built on Laravel v{{ Illuminate\Foundation\Application::VERSION }} (PHP v{{ PHP_VERSION }}
-                    )</small>
-            </p>
-        @endif
+        <x-details-footer></x-details-footer>
     </div>
     <x-datatables-assets></x-datatables-assets>
     <script type="text/javascript">

@@ -29,24 +29,26 @@ class SharedController extends Controller
     {
         $request->validate([
             'domain' => 'required|min:4',
-            'shared_type' => 'required',
-            'server_type' => 'numeric',
-            'ram' => 'numeric',
-            'disk' => 'numeric',
-            'os_id' => 'numeric',
-            'provider_id' => 'numeric',
-            'location_id' => 'numeric',
+            'shared_type' => 'required|string',
+            'disk' => 'integer',
+            'os_id' => 'integer',
+            'provider_id' => 'integer',
+            'location_id' => 'integer',
             'price' => 'numeric',
-            'payment_term' => 'numeric',
-            'was_promo' => 'numeric',
-            'owned_since' => 'date',
-            'domains' => 'numeric',
-            'sub_domains' => 'numeric',
-            'bandwidth' => 'numeric',
-            'email' => 'numeric',
-            'ftp' => 'numeric',
-            'db' => 'numeric',
-            'next_due_date' => 'required|date'
+            'payment_term' => 'integer',
+            'was_promo' => 'integer',
+            'owned_since' => 'sometimes|nullable|date',
+            'domains' => 'integer',
+            'sub_domains' => 'integer',
+            'bandwidth' => 'integer',
+            'email' => 'integer',
+            'ftp' => 'integer',
+            'db' => 'integer',
+            'next_due_date' => 'required|date',
+            'label1' => 'sometimes|nullable|string',
+            'label2' => 'sometimes|nullable|string',
+            'label3' => 'sometimes|nullable|string',
+            'label4' => 'sometimes|nullable|string',
         ]);
 
         $shared_id = Str::random(8);
@@ -103,50 +105,49 @@ class SharedController extends Controller
     public function update(Request $request, Shared $shared)
     {
         $request->validate([
-            'id' => 'required|size:8',
             'domain' => 'required|min:4',
-            'shared_type' => 'required',
-            'dedicated_ip' => 'present',
-            'server_type' => 'numeric',
-            'disk' => 'numeric',
-            'os_id' => 'numeric',
-            'provider_id' => 'numeric',
-            'location_id' => 'numeric',
+            'shared_type' => 'required|string',
+            'disk' => 'integer',
+            'os_id' => 'integer',
+            'provider_id' => 'integer',
+            'location_id' => 'integer',
             'price' => 'numeric',
-            'payment_term' => 'numeric',
-            'was_promo' => 'numeric',
-            'owned_since' => 'date',
-            'domains' => 'numeric',
-            'sub_domains' => 'numeric',
-            'bandwidth' => 'numeric',
-            'email' => 'numeric',
-            'ftp' => 'numeric',
-            'db' => 'numeric'
+            'payment_term' => 'integer',
+            'was_promo' => 'integer',
+            'owned_since' => 'sometimes|nullable|date',
+            'domains' => 'integer',
+            'sub_domains' => 'integer',
+            'bandwidth' => 'integer',
+            'email' => 'integer',
+            'ftp' => 'integer',
+            'db' => 'integer',
+            'next_due_date' => 'required|date',
+            'label1' => 'sometimes|nullable|string',
+            'label2' => 'sometimes|nullable|string',
+            'label3' => 'sometimes|nullable|string',
+            'label4' => 'sometimes|nullable|string',
         ]);
 
-        DB::table('shared_hosting')
-            ->where('id', $request->id)
-            ->update([
-                'main_domain' => $request->domain,
-                'shared_type' => $request->shared_type,
-                'provider_id' => $request->provider_id,
-                'location_id' => $request->location_id,
-                'disk' => $request->disk,
-                'disk_type' => 'GB',
-                'disk_as_gb' => $request->disk,
-                'owned_since' => $request->owned_since,
-                'bandwidth' => $request->bandwidth,
-                'was_promo' => $request->was_promo,
-                'domains_limit' => $request->domains,
-                'subdomains_limit' => $request->sub_domains,
-                'email_limit' => $request->email,
-                'ftp_limit' => $request->ftp,
-                'db_limit' => $request->db
-            ]);
+        $shared->update([
+            'main_domain' => $request->domain,
+            'shared_type' => $request->shared_type,
+            'provider_id' => $request->provider_id,
+            'location_id' => $request->location_id,
+            'disk' => $request->disk,
+            'disk_type' => 'GB',
+            'disk_as_gb' => $request->disk,
+            'owned_since' => $request->owned_since,
+            'bandwidth' => $request->bandwidth,
+            'was_promo' => $request->was_promo,
+            'domains_limit' => $request->domains,
+            'subdomains_limit' => $request->sub_domains,
+            'email_limit' => $request->email,
+            'ftp_limit' => $request->ftp,
+            'db_limit' => $request->db
+        ]);
 
         $pricing = new Pricing();
-        $as_usd = $pricing->convertToUSD($request->price, $request->currency);
-        $pricing->updatePricing($request->id, $request->currency, $request->price, $request->payment_term, $as_usd, $request->next_due_date);
+        $pricing->updatePricing($request->id, $request->currency, $request->price, $request->payment_term, $request->next_due_date);
 
         Labels::deleteLabelsAssignedTo($request->id);
         Labels::insertLabelsAssigned([$request->label1, $request->label2, $request->label3, $request->label4], $request->id);

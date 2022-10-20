@@ -36,7 +36,12 @@ class Reseller extends Model
     public static function allResellerHosting()
     {//All reseller hosting and relationships (no using joins)
         return Cache::remember("all_reseller", now()->addMonth(1), function () {
-            return Reseller::with(['location', 'provider', 'price', 'ips', 'labels'])->get();
+            $query = Reseller::with(['location', 'provider', 'price', 'ips', 'labels']);
+            if (in_array(Session::get('sort_on'), [3, 4, 5, 6], true)) {
+                $options = Settings::orderByProcess(Session::get('sort_on'));
+                $query->orderBy(Pricing::select("pricings.$options[0]")->whereColumn("pricings.service_id", "reseller_hosting.id"), $options[1]);
+            }
+            return $query->get();
         });
     }
 
@@ -65,9 +70,6 @@ class Reseller extends Model
 
     public function price()
     {
-        if (in_array(Session::get('sort_on'), [3, 4, 5, 6], true)) {
-            return $this->hasOne(Pricing::class, 'service_id', 'id')->orderBy(Settings::orderByProcess(Session::get('sort_on'))[0], Settings::orderByProcess(Session::get('sort_on'))[1]);
-        }
         return $this->hasOne(Pricing::class, 'service_id', 'id');
     }
 

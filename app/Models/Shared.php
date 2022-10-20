@@ -36,7 +36,12 @@ class Shared extends Model
     public static function allSharedHosting()
     {//All shared hosting and relationships (no using joins)
         return Cache::remember("all_shared", now()->addMonth(1), function () {
-            return Shared::with(['location', 'provider', 'price', 'ips', 'labels'])->get();
+            $query = Shared::with(['location', 'provider', 'price', 'ips', 'labels']);
+            if (in_array(Session::get('sort_on'), [3, 4, 5, 6], true)) {
+                $options = Settings::orderByProcess(Session::get('sort_on'));
+                $query->orderBy(Pricing::select("pricings.$options[0]")->whereColumn("pricings.service_id", "shared_hosting.id"), $options[1]);
+            }
+            return $query->get();
         });
     }
 
@@ -65,9 +70,6 @@ class Shared extends Model
 
     public function price()
     {
-        if (in_array(Session::get('sort_on'), [3, 4, 5, 6], true)) {
-            return $this->hasOne(Pricing::class, 'service_id', 'id')->orderBy(Settings::orderByProcess(Session::get('sort_on'))[0], Settings::orderByProcess(Session::get('sort_on'))[1]);
-        }
         return $this->hasOne(Pricing::class, 'service_id', 'id');
     }
 

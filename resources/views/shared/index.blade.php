@@ -1,15 +1,12 @@
-@section("title", "Shared hosting")
-@section('style')
+@extends('layouts.index')
+@section('title', 'Shared hosting')
+@section('css_style')
     <x-modal-style></x-modal-style>
 @endsection
-@section('scripts')
-    <script src="{{ asset('js/vue.min.js') }}"></script>
-    <script src="{{ asset('js/axios.min.js') }}"></script>
+@section('header')
+    {{ __('Shared') }}
 @endsection
-<x-app-layout>
-    <x-slot name="header">
-        {{ __('Shared hosting') }}
-    </x-slot>
+@section('content')
     <div class="container" id="app">
         <x-delete-confirm-modal></x-delete-confirm-modal>
         <div class="card shadow mt-3">
@@ -74,29 +71,9 @@
                 </div>
             </div>
         </div>
-        @if(Session::has('timer_version_footer') && Session::get('timer_version_footer') === 1)
-            <p class="text-muted mt-4 text-end"><small>Built on Laravel
-                    v{{ Illuminate\Foundation\Application::VERSION }} (PHP v{{ PHP_VERSION }})</small></p>
-        @endif
+        <x-details-footer></x-details-footer>
     </div>
-
-    <script>
-        let app = new Vue({
-            el: "#app",
-            data: {
-                "modal_hostname": '',
-                "modal_id": '',
-                "delete_form_action": '',
-                showModal: false
-            },
-            methods: {
-                confirmDeleteModal(event) {
-                    this.showModal = true;
-                    this.modal_hostname = event.target.title;
-                    this.modal_id = event.target.id;
-                    this.delete_form_action = 'shared/' + this.modal_id;
-                }
-            }
-        });
-    </script>
-</x-app-layout>
+    <x-modal-delete-script>
+        <x-slot name="uri">shared</x-slot>
+    </x-modal-delete-script>
+@endsection
