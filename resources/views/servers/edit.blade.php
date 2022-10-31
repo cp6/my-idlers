@@ -16,7 +16,6 @@
                 @method('PUT')
                 <div class="row mt-3">
                     <div class="col-12 col-lg-6 mb-4">
-                        <input type="hidden" value="{{$server_data->id}}" name="server_id">
                         <x-text-input title="Hostname" name="hostname" value="{{ $server_data->hostname }}"></x-text-input>
                     </div>
                     <div class="col-12 col-lg-3 mb-4">

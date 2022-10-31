@@ -47,7 +47,6 @@ class ServerController extends Controller
             'ip2' => 'sometimes|nullable|ip',
             'ns1' => 'sometimes|nullable|string',
             'ns2' => 'sometimes|nullable|string',
-            'service_type' => 'integer',
             'server_type' => 'integer',
             'ssh_port' => 'integer',
             'bandwidth' => 'integer',
@@ -133,7 +132,6 @@ class ServerController extends Controller
             'ip2' => 'sometimes|nullable|ip',
             'ns1' => 'sometimes|nullable|string',
             'ns2' => 'sometimes|nullable|string',
-            'service_type' => 'integer',
             'server_type' => 'integer',
             'ssh_port' => 'integer',
             'bandwidth' => 'integer',
@@ -176,26 +174,24 @@ class ServerController extends Controller
             'show_public' => (isset($request->show_public)) ? 1 : 0
         ]);
 
-        $server_id = $request->server_id;
-
         $pricing = new Pricing();
-        $pricing->updatePricing($server_id, $request->currency, $request->price, $request->payment_term, $request->next_due_date);
+        $pricing->updatePricing($server->id, $request->currency, $request->price, $request->payment_term, $request->next_due_date);
 
-        Labels::deleteLabelsAssignedTo($server_id);
+        Labels::deleteLabelsAssignedTo($server->id);
 
-        Labels::insertLabelsAssigned([$request->label1, $request->label2, $request->label3, $request->label4], $server_id);
+        Labels::insertLabelsAssigned([$request->label1, $request->label2, $request->label3, $request->label4], $server->id);
 
-        IPs::deleteIPsAssignedTo($server_id);
+        IPs::deleteIPsAssignedTo($server->id);
 
         for ($i = 1; $i <= 8; $i++) {//Max of 8 ips
             $obj = 'ip' . $i;
             if (isset($request->$obj) && !is_null($request->$obj)) {
-                IPs::insertIP($server_id, $request->$obj);
+                IPs::insertIP($server->id, $request->$obj);
             }
         }
 
         Server::serverRelatedCacheForget();
-        Server::serverSpecificCacheForget($server_id);
+        Server::serverSpecificCacheForget($server->id);
 
         return redirect()->route('servers.index')
             ->with('success', 'Server Updated Successfully.');

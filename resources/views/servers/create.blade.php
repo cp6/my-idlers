@@ -19,7 +19,6 @@
                 @csrf
                 <div class="row">
                     <div class="col-12 col-lg-6 mb-4">
-                        <input type="hidden" value="1" name="service_type">
                         <div class="input-group">
                             <div class="input-group-prepend"><span class="input-group-text">Hostname</span></div>
                             <input type="text"
