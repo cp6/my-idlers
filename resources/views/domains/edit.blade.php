@@ -16,7 +16,6 @@
                 @method('PUT')
                 <div class="row mt-4">
                     <div class="col-12 col-lg-4 mb-4">
-                        <input type="hidden" value="1" name="service_type">
                         <x-text-input title="Domain" name="domain" value="{{ $domain_info->domain }}"></x-text-input>
                     </div>
                     <div class="col-12 col-lg-4 mb-4">

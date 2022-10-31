@@ -15,7 +15,6 @@
                 @csrf
                 <div class="row">
                     <div class="col-12 col-md-4 mb-4">
-                        <input type="hidden" value="1" name="service_type">
                         <x-text-input title="Name" name="name"></x-text-input>
                     </div>
                     <div class="col-12 col-md-2 mb-3">

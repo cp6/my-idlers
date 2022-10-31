@@ -27,7 +27,6 @@
                             </div>
                         </div>
                         <div class="col-12 col-lg-4 mb-4">
-                            <input type="hidden" name="id" value="{{$seedbox_data->id}}">
                             <div class="input-group">
                                 <div class="input-group-prepend"><span class="input-group-text">Type</span></div>
                                 <select class="form-control" name="seed_box_type">
