@@ -5,11 +5,7 @@
     </x-slot>
     <div class="container">
         <x-card class="shadow mt-3">
-            @if ($message = Session::get('success'))
-                <div class="alert alert-success" role="alert">
-                    <p class="my-1">{{ $message }}</p>
-                </div>
-            @endif
+            <x-response-alerts></x-response-alerts>
             <x-back-button>
                 <x-slot name="href">{{ route('/') }}</x-slot>
                 Back to home
@@ -19,32 +15,10 @@
                 @method('PUT')
                 <div class="row mt-2">
                     <div class="col-12 col-md-6 mb-3">
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span
-                                    class="input-group-text">Use dark mode</span></div>
-                            <select class="form-control" name="dark_mode">
-                                <option value="1" {{ ($setting[0]->dark_mode === 1) ? 'selected' : '' }}>
-                                    Yes
-                                </option>
-                                <option value="0" {{ ($setting[0]->dark_mode === 0) ? 'selected' : '' }}>
-                                    No
-                                </option>
-                            </select>
-                        </div>
+                        <x-yes-no-select title="Use dark mode" name="dark_mode" value="{{ $setting->dark_mode }}"></x-yes-no-select>
                     </div>
                     <div class="col-12 col-md-6 mb-3">
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span
-                                    class="input-group-text">Show versions footer</span></div>
-                            <select class="form-control" name="show_versions_footer">
-                                <option value="1" {{ ($setting[0]->show_versions_footer === 1) ? 'selected' : '' }}>
-                                    Yes
-                                </option>
-                                <option value="0" {{ ($setting[0]->show_versions_footer === 0) ? 'selected' : '' }}>
-                                    No
-                                </option>
-                            </select>
-                        </div>
+                        <x-yes-no-select title="Show versions footer" name="show_versions_footer" value="{{ $setting->show_versions_footer }}"></x-yes-no-select>
                     </div>
                 </div>
                 <div class="row mt-3">
@@ -52,14 +26,14 @@
                         <x-os-select>
                             <x-slot name="title">Default server OS</x-slot>
                             <x-slot name="name">default_server_os</x-slot>
-                            <x-slot name="current">{{$setting[0]->default_server_os}}</x-slot>
+                            <x-slot name="current">{{$setting->default_server_os}}</x-slot>
                         </x-os-select>
                     </div>
                     <div class="col-12 col-md-6 mb-3">
                         <x-currency-select>
                             <x-slot name="title">Default currency</x-slot>
                             <x-slot name="name">default_currency</x-slot>
-                            <x-slot name="current">{{$setting[0]->default_currency}}</x-slot>
+                            <x-slot name="current">{{$setting->default_currency}}</x-slot>
                         </x-currency-select>
                     </div>
                 </div>
@@ -71,7 +45,7 @@
                             <x-slot name="step">1</x-slot>
                             <x-slot name="min">0</x-slot>
                             <x-slot name="max">12</x-slot>
-                            <x-slot name="value">{{$setting[0]->due_soon_amount}}</x-slot>
+                            <x-slot name="value">{{$setting->due_soon_amount}}</x-slot>
                         </x-number-input>
                     </div>
                     <div class="col-12 col-md-6 mb-3">
@@ -81,147 +55,49 @@
                             <x-slot name="step">1</x-slot>
                             <x-slot name="min">0</x-slot>
                             <x-slot name="max">12</x-slot>
-                            <x-slot name="value">{{$setting[0]->recently_added_amount}}</x-slot>
+                            <x-slot name="value">{{$setting->recently_added_amount}}</x-slot>
                         </x-number-input>
                     </div>
                 </div>
                 <div class="row mt-3">
                     <div class="col-12 col-md-6 mb-3">
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span
-                                    class="input-group-text">Show servers to public</span></div>
-                            <select class="form-control" name="show_servers_public">
-                                <option value="1" {{ ($setting[0]->show_servers_public === 1) ? 'selected' : '' }}>
-                                    Yes
-                                </option>
-                                <option value="0" {{ ($setting[0]->show_servers_public === 0) ? 'selected' : '' }}>
-                                    No
-                                </option>
-                            </select>
-                        </div>
+                        <x-yes-no-select title="Show servers to public" name="show_servers_public" value="{{ $setting->show_servers_public }}"></x-yes-no-select>
                     </div>
                     <div class="col-12 col-md-6 mb-3">
                         <x-currency-select>
                             <x-slot name="title">Home page currency</x-slot>
-                            <x-slot name="current">{{$setting[0]->dashboard_currency}}</x-slot>
+                            <x-slot name="current">{{$setting->dashboard_currency}}</x-slot>
                         </x-currency-select>
                     </div>
                 </div>
                 <div class="row mt-3">
                     <div class="col-12 col-md-6 mb-3">
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span
-                                    class="input-group-text">Save YABs input to txt</span></div>
-                            <select class="form-control" name="save_yabs_as_txt">
-                                <option value="1" {{ ($setting[0]->save_yabs_as_txt === 1) ? 'selected' : '' }}>
-                                    Yes
-                                </option>
-                                <option value="0" {{ ($setting[0]->save_yabs_as_txt === 0) ? 'selected' : '' }}>
-                                    No
-                                </option>
-                            </select>
-                        </div>
+                        <x-yes-no-select title="Save YABs input to txt" name="save_yabs_as_txt" value="{{ $setting->save_yabs_as_txt }}"></x-yes-no-select>
                     </div>
                 </div>
                 <p>Only if <i>Show servers to public</i> is <b>YES</b> do these apply:</p>
                 <div class="row mt-3">
                     <div class="col-12 col-md-6 mb-3">
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span
-                                    class="input-group-text">Show servers IP's</span></div>
-                            <select class="form-control" name="show_server_value_ip">
-                                <option value="1" {{ ($setting[0]->show_server_value_ip === 1) ? 'selected' : '' }}>
-                                    Yes
-                                </option>
-                                <option value="0" {{ ($setting[0]->show_server_value_ip === 0) ? 'selected' : '' }}>
-                                    No
-                                </option>
-                            </select>
-                        </div>
+                        <x-yes-no-select title="Show servers IP's" name="show_server_value_ip" value="{{ $setting->show_server_value_ip }}"></x-yes-no-select>
                     </div>
                     <div class="col-12 col-md-6 mb-3">
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span
-                                    class="input-group-text">Show servers hostname</span></div>
-                            <select class="form-control" name="show_server_value_hostname">
-                                <option
-                                    value="1" {{ ($setting[0]->show_server_value_hostname === 1) ? 'selected' : '' }}>
-                                    Yes
-                                </option>
-                                <option
-                                    value="0" {{ ($setting[0]->show_server_value_hostname === 0) ? 'selected' : '' }}>
-                                    No
-                                </option>
-                            </select>
-                        </div>
+                        <x-yes-no-select title="Show servers hostname" name="show_server_value_hostname" value="{{ $setting->show_server_value_hostname }}"></x-yes-no-select>
                     </div>
                 </div>
                 <div class="row mt-3">
                     <div class="col-12 col-md-6 mb-3">
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span
-                                    class="input-group-text">Show servers provider</span></div>
-                            <select class="form-control" name="show_server_value_provider">
-                                <option
-                                    value="1" {{ ($setting[0]->show_server_value_provider === 1) ? 'selected' : '' }}>
-                                    Yes
-                                </option>
-                                <option
-                                    value="0" {{ ($setting[0]->show_server_value_provider === 0) ? 'selected' : '' }}>
-                                    No
-                                </option>
-                            </select>
-                        </div>
+                        <x-yes-no-select title="Show servers provider" name="show_server_value_provider" value="{{ $setting->show_server_value_provider }}"></x-yes-no-select>
                     </div>
                     <div class="col-12 col-md-6 mb-3">
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span
-                                    class="input-group-text">Show servers location</span></div>
-                            <select class="form-control" name="show_server_value_location">
-                                <option
-                                    value="1" {{ ($setting[0]->show_server_value_location === 1) ? 'selected' : '' }}>
-                                    Yes
-                                </option>
-                                <option
-                                    value="0" {{ ($setting[0]->show_server_value_location === 0) ? 'selected' : '' }}>
-                                    No
-                                </option>
-                            </select>
-                        </div>
+                        <x-yes-no-select title="Show servers location" name="show_server_value_location" value="{{ $setting->show_server_value_location }}"></x-yes-no-select>
                     </div>
                 </div>
                 <div class="row mt-3">
                     <div class="col-12 col-md-6 mb-3">
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span
-                                    class="input-group-text">Show servers price</span></div>
-                            <select class="form-control" name="show_server_value_price">
-                                <option
-                                    value="1" {{ ($setting[0]->show_server_value_price === 1) ? 'selected' : '' }}>
-                                    Yes
-                                </option>
-                                <option
-                                    value="0" {{ ($setting[0]->show_server_value_price === 0) ? 'selected' : '' }}>
-                                    No
-                                </option>
-                            </select>
-                        </div>
+                        <x-yes-no-select title="Show servers price" name="show_server_value_price" value="{{ $setting->show_server_value_price }}"></x-yes-no-select>
                     </div>
                     <div class="col-12 col-md-6 mb-3">
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span
-                                    class="input-group-text">Show servers YABs</span></div>
-                            <select class="form-control" name="show_server_value_yabs">
-                                <option
-                                    value="1" {{ ($setting[0]->show_server_value_yabs === 1) ? 'selected' : '' }}>
-                                    Yes
-                                </option>
-                                <option
-                                    value="0" {{ ($setting[0]->show_server_value_yabs === 0) ? 'selected' : '' }}>
-                                    No
-                                </option>
-                            </select>
-                        </div>
+                        <x-yes-no-select title="Show servers YABS" name="show_server_value_yabs" value="{{ $setting->show_server_value_yabs }}"></x-yes-no-select>
                     </div>
                 </div>
                 <div class="row mt-3">
@@ -231,43 +107,43 @@
                                     class="input-group-text">Default order by</span></div>
                             <select class="form-control" name="sort_on">
                                 <option
-                                    value="1" {{ ($setting[0]->sort_on === 1) ? 'selected' : '' }}>
+                                    value="1" {{ ($setting->sort_on === 1) ? 'selected' : '' }}>
                                     created_at ASC
                                 </option>
                                 <option
-                                    value="2" {{ ($setting[0]->sort_on === 2) ? 'selected' : '' }}>
+                                    value="2" {{ ($setting->sort_on === 2) ? 'selected' : '' }}>
                                     created_at DESC
                                 </option>
                                 <option
-                                    value="3" {{ ($setting[0]->sort_on === 3) ? 'selected' : '' }}>
+                                    value="3" {{ ($setting->sort_on === 3) ? 'selected' : '' }}>
                                     next_due_date ASC
                                 </option>
                                 <option
-                                    value="4" {{ ($setting[0]->sort_on === 4) ? 'selected' : '' }}>
+                                    value="4" {{ ($setting->sort_on === 4) ? 'selected' : '' }}>
                                     next_due_date DESC
                                 </option>
                                 <option
-                                    value="5" {{ ($setting[0]->sort_on === 5) ? 'selected' : '' }}>
+                                    value="5" {{ ($setting->sort_on === 5) ? 'selected' : '' }}>
                                     as_usd ASC
                                 </option>
                                 <option
-                                    value="6" {{ ($setting[0]->sort_on === 6) ? 'selected' : '' }}>
+                                    value="6" {{ ($setting->sort_on === 6) ? 'selected' : '' }}>
                                     as_usd DESC
                                 </option>
                                 <option
-                                    value="7" {{ ($setting[0]->sort_on === 7) ? 'selected' : '' }}>
+                                    value="7" {{ ($setting->sort_on === 7) ? 'selected' : '' }}>
                                     owned_since ASC
                                 </option>
                                 <option
-                                    value="8" {{ ($setting[0]->sort_on === 8) ? 'selected' : '' }}>
+                                    value="8" {{ ($setting->sort_on === 8) ? 'selected' : '' }}>
                                     owned_since DESC
                                 </option>
                                 <option
-                                    value="9" {{ ($setting[0]->sort_on === 9) ? 'selected' : '' }}>
+                                    value="9" {{ ($setting->sort_on === 9) ? 'selected' : '' }}>
                                     updated_at ASC
                                 </option>
                                 <option
-                                    value="10" {{ ($setting[0]->sort_on === 10) ? 'selected' : '' }}>
+                                    value="10" {{ ($setting->sort_on === 10) ? 'selected' : '' }}>
                                     updated_at DESC
                                 </option>
                             </select>
