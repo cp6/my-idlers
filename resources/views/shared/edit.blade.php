@@ -17,14 +17,7 @@
                     @method('PUT')
                     <div class="row mt-3">
                         <div class="col-12 col-lg-3 mb-4">
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text">Domain</span></div>
-                                <input type="text"
-                                       class="form-control"
-                                       name="domain" value="{{$shared->main_domain}}">
-                                @error('name') <span class="text-red-500">{{ $message }}
-                    </span>@enderror
-                            </div>
+                            <x-text-input title="Domain" name="domain" value="{{$shared->main_domain}}"></x-text-input>
                         </div>
                         <div class="col-12 col-lg-3 mb-4">
                             <input type="hidden" name="id" value="{{$shared->id}}">

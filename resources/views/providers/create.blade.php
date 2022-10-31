@@ -15,14 +15,7 @@
                 @csrf
                 <div class="row">
                     <div class="col-12 col-lg-6 mb-4">
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span class="input-group-text">Provider</span></div>
-                            <input type="text"
-                                   class="form-control"
-                                   name="provider_name" minlength="2" maxlength="255" required>
-                            @error('provider') <span class="text-red-500">{{ $message }}
-                    </span>@enderror
-                        </div>
+                        <x-text-input title="Provider" name="provider_name"></x-text-input>
                     </div>
                 </div>
                 <div class="row">

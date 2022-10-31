@@ -15,14 +15,7 @@
                     @csrf
                     <div class="row">
                         <div class="col-12 col-lg-6 mb-4">
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text">Label</span></div>
-                                <input type="text"
-                                       class="form-control"
-                                       name="label" required>
-                                @error('name') <span class="text-red-500">{{ $message }}
-                    </span>@enderror
-                            </div>
+                            <x-text-input title="Label" name="label"></x-text-input>
                         </div>
                     </div>
                     <div class="row">

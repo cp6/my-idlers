@@ -15,14 +15,7 @@
                     @csrf
                     <div class="row">
                         <div class="col-12 col-lg-6 mb-4">
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text">OS</span></div>
-                                <input type="text"
-                                       class="form-control"
-                                       name="os_name" minlength="2" maxlength="255" required>
-                                @error('os') <span class="text-red-500">{{ $message }}
-                    </span>@enderror
-                            </div>
+                            <x-text-input title="OS" name="os_name"></x-text-input>
                         </div>
                     </div>
                     <div class="row">

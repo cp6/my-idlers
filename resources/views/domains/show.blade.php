@@ -27,8 +27,7 @@
                             <tr>
                                 <td class="px-2 py-2 font-bold text-muted">Domain</td>
                                 <td><a href="https://{{ $domain_info->domain }}.{{$domain_info->extension}}"
-                                       class="text-decoration-none">{{ $domain_info->domain }}
-                                        .{{$domain_info->extension}}</a></td>
+                                       class="text-decoration-none">{{ $domain_info->domain}}.{{$domain_info->extension}}</a></td>
                             </tr>
                             <tr>
                                 <td class="px-2 py-2 font-bold text-muted">Provider</td>

@@ -16,22 +16,10 @@
                 @method('PUT')
                 <div class="row mt-4">
                     <div class="col-12 col-lg-4 mb-4">
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span class="input-group-text">Hostname</span></div>
-                            <input type="text"
-                                   class="form-control"
-                                   name="hostname"
-                                   value="{{ $dn->hostname }}">
-                            @error('name') <span class="text-red-500">{{ $message }}
-                    </span>@enderror
-                        </div>
+                        <x-text-input title="Hostname" name="hostname" value="{{ $dn->hostname }}"></x-text-input>
                     </div>
                     <div class="col-12 col-lg-4 mb-4">
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span class="input-group-text">Address</span></div>
-                            <input type="text" name="address" class="form-control" minlength="1"
-                                   maxlength="124" value="{{ $dn->address }}">
-                        </div>
+                        <x-text-input title="Address" name="address" value="{{ $dn->address }}"></x-text-input>
                     </div>
                     <div class="col-12 col-lg-4 mb-4">
                         <div class="input-group">

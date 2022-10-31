@@ -16,14 +16,7 @@
                 @method('PUT')
                 <div class="row">
                     <div class="col-12 col-lg-4 mb-4">
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span class="input-group-text">Name</span></div>
-                            <input type="text"
-                                   class="form-control"
-                                   name="name" required maxlength="255" value="{{$misc_data->name}}">
-                            @error('name') <span class="text-red-500">{{ $message }}
-                    </span>@enderror
-                        </div>
+                        <x-text-input title="Name" name="name" value="{{$misc_data->name}}"></x-text-input>
                     </div>
                     <div class="col-md-3 mb-3">
                         <x-number-input>

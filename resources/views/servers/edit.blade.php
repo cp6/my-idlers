@@ -17,15 +17,7 @@
                 <div class="row mt-3">
                     <div class="col-12 col-lg-6 mb-4">
                         <input type="hidden" value="{{$server_data->id}}" name="server_id">
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span class="input-group-text">Hostname</span></div>
-                            <input type="text"
-                                   class="form-control"
-                                   name="hostname"
-                                   value="{{ $server_data->hostname }}">
-                            @error('name') <span class="text-red-500">{{ $message }}
-                    </span>@enderror
-                        </div>
+                        <x-text-input title="Hostname" name="hostname" value="{{ $server_data->hostname }}"></x-text-input>
                     </div>
                     <div class="col-12 col-lg-3 mb-4">
                         <div class="input-group">

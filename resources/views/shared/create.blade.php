@@ -16,14 +16,7 @@
                     @csrf
                     <div class="row">
                         <div class="col-12 col-lg-3 mb-4">
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text">Domain</span></div>
-                                <input type="text"
-                                       class="form-control"
-                                       name="domain">
-                                @error('name') <span class="text-red-500">{{ $message }}
-                    </span>@enderror
-                            </div>
+                            <x-text-input title="Domain" name="domain"></x-text-input>
                         </div>
                         <div class="col-12 col-lg-3 mb-4">
                             <div class="input-group">

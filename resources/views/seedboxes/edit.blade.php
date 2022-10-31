@@ -16,14 +16,7 @@
                     @method('PUT')
                     <div class="row mt-3">
                         <div class="col-12 col-lg-4 mb-4">
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text">Title</span></div>
-                                <input type="text"
-                                       class="form-control"
-                                       name="title" value="{{$seedbox_data->title}}">
-                                @error('title') <span class="text-red-500">{{ $message }}
-                    </span>@enderror
-                            </div>
+                            <x-text-input title="Title" name="title" value="{{$seedbox_data->title}}"></x-text-input>
                         </div>
                         <div class="col-12 col-lg-4 mb-4">
                             <div class="input-group">

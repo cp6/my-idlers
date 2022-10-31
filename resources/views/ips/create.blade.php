@@ -15,10 +15,7 @@
                 @csrf
                 <div class="row">
                     <div class="col-12 col-lg-6 mb-4">
-                        <x-text-input>
-                            <x-slot name="title">IP address</x-slot>
-                            <x-slot name="name">address</x-slot>
-                        </x-text-input>
+                        <x-text-input title="IP address" name="address"></x-text-input>
                     </div>
                     <div class="col-12 col-lg-4 mb-3">
                         <div class="input-group">

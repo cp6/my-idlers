@@ -16,14 +16,7 @@
                 <div class="row">
                     <div class="col-12 col-md-4 mb-4">
                         <input type="hidden" value="1" name="service_type">
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span class="input-group-text">Name</span></div>
-                            <input type="text"
-                                   class="form-control"
-                                   name="name" required maxlength="255">
-                            @error('name') <span class="text-red-500">{{ $message }}
-                    </span>@enderror
-                        </div>
+                        <x-text-input title="Name" name="name"></x-text-input>
                     </div>
                     <div class="col-12 col-md-2 mb-3">
                         <x-number-input>

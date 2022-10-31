@@ -17,15 +17,7 @@
                 <div class="row mt-4">
                     <div class="col-12 col-lg-4 mb-4">
                         <input type="hidden" value="1" name="service_type">
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span class="input-group-text">domain</span></div>
-                            <input type="text"
-                                   class="form-control"
-                                   name="domain"
-                                   value="{{ $domain_info->domain }}">
-                            @error('name') <span class="text-red-500">{{ $message }}
-                    </span>@enderror
-                        </div>
+                        <x-text-input title="Domain" name="domain" value="{{ $domain_info->domain }}"></x-text-input>
                     </div>
                     <div class="col-12 col-lg-4 mb-4">
                         <x-text-input>
