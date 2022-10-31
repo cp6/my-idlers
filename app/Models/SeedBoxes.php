@@ -26,7 +26,7 @@ class SeedBoxes extends Model
         parent::boot();
 
         static::addGlobalScope('order', function (Builder $builder) {
-            $array = Settings::orderByProcess(Session::get('sort_on'));
+            $array = Settings::orderByProcess(Session::get('sort_on') ?? 2);//created_at desc if not set
             if (!in_array(Session::get('sort_on'), [3, 4, 5, 6], true)) {
                 $builder->orderBy($array[0], $array[1]);
             }
