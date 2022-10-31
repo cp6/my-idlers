@@ -72,6 +72,7 @@ class SettingsController extends Controller
         Cache::forget('all_seedboxes');
         Cache::forget('all_reseller');
         Cache::forget('all_misc');
+        Cache::forget('all_domains');
 
         Settings::setSettingsToSession(Settings::getSettings());
 
