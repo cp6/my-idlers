@@ -29,7 +29,7 @@
                             @error('name') <span class="text-red-500">{{ $message }}
                     </span>@enderror
                             <div class="input-group-append"><span class="input-group-text"><a id="fillIps" href="#"><i
-                                            class="fas fa-search py-1" @click="onClk"
+                                            class="fas fa-search py-1" @click="fetchDnsRecords"
                                             title="Auto fill A and AAAA records"></i></a></span></div>
                         </div>
                     </div>
@@ -257,7 +257,7 @@
                 "ipv6_in": ''
             },
             methods: {
-                onClk(event) {
+                fetchDnsRecords(event) {
                     var hostname = document.getElementById('hostname').value;
 
                     if (hostname) {
