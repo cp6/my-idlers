@@ -136,6 +136,7 @@ class ResellerController extends Controller
             'reseller_type' => $request->reseller_type,
             'provider_id' => $request->provider_id,
             'location_id' => $request->location_id,
+            'accounts' => $request->accounts,
             'disk' => $request->disk,
             'disk_type' => 'GB',
             'disk_as_gb' => $request->disk,
@@ -150,19 +151,20 @@ class ResellerController extends Controller
         ]);
 
         $pricing = new Pricing();
-        $pricing->updatePricing($request->id, $request->currency, $request->price, $request->payment_term, $request->next_due_date);
+        $pricing->updatePricing($reseller->id, $request->currency, $request->price, $request->payment_term, $request->next_due_date);
 
-        Labels::deleteLabelsAssignedTo($request->id);
-        Labels::insertLabelsAssigned([$request->label1, $request->label2, $request->label3, $request->label4], $request->id);
+        Labels::deleteLabelsAssignedTo($reseller->id);
+        Labels::insertLabelsAssigned([$request->label1, $request->label2, $request->label3, $request->label4], $reseller->id);
 
-        IPs::deleteIPsAssignedTo($request->id);
+        IPs::deleteIPsAssignedTo($reseller->id);
 
-        if (isset($request->dedicated_ip)) {
-            IPs::insertIP($request->id, $request->dedicated_ip);
+        if (!is_null($request->dedicated_ip)) {
+            IPs::insertIP($reseller->id, $request->dedicated_ip);
         }
 
-        Cache::forget("reseller_hosting.{$request->id}");
-        Cache::forget("labels_for_service.{$request->id}");
+        Cache::forget("all_reseller");
+        Cache::forget("reseller_hosting.{$reseller->id}");
+        Cache::forget("labels_for_service.{$reseller->id}");
 
         Home::homePageCacheForget();
 

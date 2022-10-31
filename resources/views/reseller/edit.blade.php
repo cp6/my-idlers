@@ -20,7 +20,6 @@
                             <x-text-input title="Domain" name="domain" value="{{$reseller->main_domain}}"></x-text-input>
                         </div>
                         <div class="col-12 col-lg-3 mb-4">
-                            <input type="hidden" name="id" value="{{$reseller->id}}">
                             <div class="input-group">
                                 <div class="input-group-prepend"><span class="input-group-text">Type</span></div>
                                 <select class="form-control" name="reseller_type">
