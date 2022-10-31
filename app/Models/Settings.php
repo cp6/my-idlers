@@ -47,9 +47,9 @@ class Settings extends Model
 
     public static function orderByProcess(int $value): array
     {
-        if ($value === 1) {//Created_at ASC
+        if ($value === 1) {//created_at ASC
             return ['created_at', 'asc'];
-        } elseif ($value === 2) {//Created_at DESC
+        } elseif ($value === 2) {//created_at DESC
             return ['created_at', 'desc'];
         } elseif ($value === 3) {//next_due_date ASC
             return ['next_due_date', 'asc'];
