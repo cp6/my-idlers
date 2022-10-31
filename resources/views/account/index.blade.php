@@ -3,14 +3,9 @@
     <x-slot name="header">
         Edit account
     </x-slot>
-
     <div class="container">
         <x-card class="shadow mt-3">
-            @if ($message = Session::get('success'))
-                <div class="alert alert-success" role="alert">
-                    <p class="my-1">{{ $message }}</p>
-                </div>
-            @endif
+            <x-response-alerts></x-response-alerts>
             <form action="{{ route('account.update',Auth::user()->id) }}" method="POST">
                 @csrf
                 @method('PUT')
