@@ -250,23 +250,12 @@
                 </div>
                 <div class="row mt-2">
                     <div class="col-12 col-lg-6 mb-4">
-                        <div class="form-check">
-                            <input class="form-check-input" name="is_active" type="checkbox"
-                                   value="1" {{ ($server_data->active === 1) ? 'checked' : '' }}>
-                            <label class="form-check-label">
-                                I still have this server
-                            </label>
-                        </div>
+                        <x-form-check text="I still have this server" name="is_active"
+                                      checked="{{$server_data->active}}"></x-form-check>
                     </div>
                     <div class="col-12 col-lg-6 mb-4">
-                        <div class="form-check">
-                            <input class="form-check-input" name="show_public" type="checkbox"
-                                   value="1" {{ ($server_data->show_public === 1) ? 'checked' : '' }}>
-                            <label class="form-check-label">
-                                Allow this data to be public <a href="{{route('settings.index')}}">restrict values
-                                    here</a>
-                            </label>
-                        </div>
+                        <x-form-check text="Allow some of this data to be public" name="show_public"
+                                      checked="{{$server_data->show_public}}"></x-form-check>
                     </div>
                 </div>
                 <div class="row mt-2">
