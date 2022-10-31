@@ -147,18 +147,18 @@ class SharedController extends Controller
         ]);
 
         $pricing = new Pricing();
-        $pricing->updatePricing($request->id, $request->currency, $request->price, $request->payment_term, $request->next_due_date);
+        $pricing->updatePricing($shared->id, $request->currency, $request->price, $request->payment_term, $request->next_due_date);
 
-        Labels::deleteLabelsAssignedTo($request->id);
-        Labels::insertLabelsAssigned([$request->label1, $request->label2, $request->label3, $request->label4], $request->id);
-        Cache::forget("labels_for_service.{$request->id}");
+        Labels::deleteLabelsAssignedTo($shared->id);
+        Labels::insertLabelsAssigned([$request->label1, $request->label2, $request->label3, $request->label4], $shared->id);
+        Cache::forget("labels_for_service.{$shared->id}");
 
-        IPs::deleteIPsAssignedTo($request->id);
+        IPs::deleteIPsAssignedTo($shared->id);
         if (isset($request->dedicated_ip)) {
-            IPs::insertIP($request->id, $request->dedicated_ip);
+            IPs::insertIP($shared->id, $request->dedicated_ip);
         }
 
-        Cache::forget("shared_hosting.{$request->id}");
+        Cache::forget("shared_hosting.{$shared->id}");
         Cache::forget('all_shared');
         Home::homePageCacheForget();
 
