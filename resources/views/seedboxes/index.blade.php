@@ -12,11 +12,7 @@
         <div class="card shadow mt-3">
             <div class="card-body">
                 <a href="{{ route('seedboxes.create') }}" class="btn btn-primary mb-3">Add a seed box</a>
-                @if ($message = Session::get('success'))
-                    <div class="alert alert-success" role="alert">
-                        <p class="my-1">{{ $message }}</p>
-                    </div>
-                @endif
+                <x-response-alerts></x-response-alerts>
                 <div class="table-responsive">
                     <table class="table table-bordered">
                         <thead class="table-light">
