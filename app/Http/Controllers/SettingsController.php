@@ -6,40 +6,35 @@ use App\Models\Settings;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Session;
 
 class SettingsController extends Controller
 {
     public function index()
     {
-        $setting = DB::table('settings')
-            ->where('id', '=', 1)
-            ->get();
-
-        return view('settings.index', compact(['setting']));
+        return view('settings.index', ['setting' => Settings::where('id', 1)->first()]);
     }
 
-    public function update(Request $request, Settings $settings)
+    public function update(Request $request)
     {
         $request->validate([
-            'dark_mode' => 'required|boolean',
-            'show_versions_footer' => 'required|boolean',
-            'show_server_value_ip' => 'required|boolean',
-            'show_server_value_hostname' => 'required|boolean',
-            'show_server_value_provider' => 'required|boolean',
-            'show_server_value_location' => 'required|boolean',
-            'show_server_value_price' => 'required|boolean',
-            'show_server_value_yabs' => 'required|boolean',
-            'save_yabs_as_txt' => 'required|boolean',
-            'default_currency' => 'required',
-            'default_server_os' => 'required',
+            'dark_mode' => 'required|integer|min:0|max:1',
+            'show_versions_footer' => 'required|integer|min:0|max:1',
+            'show_server_value_ip' => 'required|integer|min:0|max:1',
+            'show_server_value_hostname' => 'required|integer|min:0|max:1',
+            'show_server_value_provider' => 'required|integer|min:0|max:1',
+            'show_server_value_location' => 'required|integer|min:0|max:1',
+            'show_server_value_price' => 'required|integer|min:0|max:1',
+            'show_server_value_yabs' => 'required|integer|min:0|max:1',
+            'save_yabs_as_txt' => 'required|integer|min:0|max:1',
+            'default_currency' => 'required|string|size:3',
+            'default_server_os' => 'required|integer',
             'due_soon_amount' => 'required|integer|between:0,12',
             'recently_added_amount' => 'required|integer|between:0,12',
             'currency' => 'required|string|size:3',
             'sort_on' => 'required|integer|between:1,10',
         ]);
 
-        DB::table('settings')
+       $update =  DB::table('settings')
             ->where('id', 1)
             ->update([
                 'dark_mode' => $request->dark_mode,
@@ -76,8 +71,13 @@ class SettingsController extends Controller
 
         Settings::setSettingsToSession(Settings::getSettings());
 
+        if ($update){
+            return redirect()->route('settings.index')
+                ->with('success', 'Settings Updated Successfully.');
+        }
+
         return redirect()->route('settings.index')
-            ->with('success', 'Settings Updated Successfully.');
+            ->with('error', 'Settings failed to update.');
     }
 
 }
