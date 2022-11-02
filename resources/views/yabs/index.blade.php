@@ -8,12 +8,12 @@
 @endsection
 <x-app-layout>
     <x-slot name="header">
-        {{ __('YABs') }}
+        {{ __('YABS') }}
     </x-slot>
     <div class="container" id="app">
         <x-delete-confirm-modal></x-delete-confirm-modal>
         <x-card class="shadow mt-3">
-            <a href="{{ route('yabs.compare-choose') }}" class="btn btn-success mb-3">Compare YABs</a>
+            <a href="{{ route('yabs.compare-choose') }}" class="btn btn-success mb-3">Compare YABS</a>
             <x-response-alerts></x-response-alerts>
             <div class="table-responsive">
                 <table class="table table-bordered">
@@ -23,10 +23,10 @@
                         <th>CPU</th>
                         <th>CPU FREQ</th>
                         <th>RAM</th>
-                        <th>DISK</th>
+                        <th>Disk</th>
                         <th>GB5 S</th>
                         <th>GB5 M</th>
-                        <th>Ipv6</th>
+                        <th>IPv6</th>
                         <th>4k</th>
                         <th>64k</th>
                         <th>512k</th>
@@ -76,7 +76,7 @@
                         @endforeach
                     @else
                         <tr>
-                            <td class="px-4 py-2 border text-red-500" colspan="3">No YABs found.</td>
+                            <td class="px-4 py-2 border text-red-500" colspan="3">No YABS found.</td>
                         </tr>
                     @endif
                     </tbody>

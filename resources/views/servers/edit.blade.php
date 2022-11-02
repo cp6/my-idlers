@@ -120,7 +120,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <p class="text-muted">Note adding a YABs output will overwrite Ram, disk and CPU.</p>
+                    <p class="text-muted">Note adding a YABS output will overwrite RAM, disk and CPU.</p>
                     <div class="col-12 col-md-2 mb-3">
                         <x-number-input>
                             <x-slot name="title">CPU</x-slot>
@@ -132,7 +132,7 @@
                     </div>
                     <div class="col-md-2 mb-3">
                         <x-number-input>
-                            <x-slot name="title">Ram</x-slot>
+                            <x-slot name="title">RAM</x-slot>
                             <x-slot name="name">ram</x-slot>
                             <x-slot name="value">{{$server_data->ram}}</x-slot>
                             <x-slot name="max">100000</x-slot>
@@ -140,7 +140,7 @@
                     </div>
                     <div class="col-md-2 mb-3">
                         <x-ram-type-select>
-                            <x-slot name="title">Ram type</x-slot>
+                            <x-slot name="title">RAM type</x-slot>
                             <x-slot name="name">ram_type</x-slot>
                             <x-slot name="value">{{$server_data->ram_type}}</x-slot>
                         </x-ram-type-select>

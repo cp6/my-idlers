@@ -74,7 +74,7 @@
                             <td class="td-nowrap">{{$yabs2_data[0]->cpu_freq}}<span class="data-type">Mhz</span></td>
                         </tr>
                         <tr>
-                            <td class="td-nowrap">Ram</td>
+                            <td class="td-nowrap">RAM</td>
                             <td class="td-nowrap">{{$yabs1_data[0]->ram_mb}}<span class="data-type">MB</span></td>
                             {!! \App\Models\Server::tableRowCompare($yabs1_data[0]->ram_mb, $yabs2_data[0]->ram_mb, 'MB') !!}
                             <td class="td-nowrap">{{$yabs2_data[0]->ram_mb}}<span class="data-type">MB</span></td>

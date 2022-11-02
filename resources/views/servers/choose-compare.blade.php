@@ -39,7 +39,7 @@
                 </div>
                 <a v-bind:href="full_url" class="btn btn-success mt-4">View comparison table</a>
                 @else
-                    <p class="text-danger">You need to have added a YABs to at least 2 servers to use this feature</p>
+                    <p class="text-danger">You need to have added a YABS to at least 2 servers to use this feature</p>
                 @endif
             </div>
         </div>

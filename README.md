@@ -5,7 +5,7 @@ domains,
 DNS and misc services.
 
 Despite what the name infers this self hosted web app isn't just for storing idling server information. By using
-a [YABs](https://github.com/masonr/yet-another-bench-script) output you can get disk & network speed values along with
+a [YABS](https://github.com/masonr/yet-another-bench-script) output you can get disk & network speed values along with
 GeekBench 5 scores to do easier comparing and sorting.
 
 [![Generic badge](https://img.shields.io/badge/version-2.1.8-blue.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Laravel-9.0-red.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/PHP-8.1-purple.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Bootstrap-5.1-pink.svg)](https://shields.io/)
@@ -47,7 +47,7 @@ php artisan cache:clear
 * Updated `updatePricing()` to not need `$as_usd` parameter
 * Updated labels assigned insert
 * Updated order/sort by methods for pricing related columns
-* Removed add YABs button on servers index page
+* Removed add YABS button on servers index page
 
 ## Requires
 
@@ -60,10 +60,10 @@ php artisan cache:clear
 * Add domains
 * [Auto get IP's from hostname](https://cdn.write.corbpie.com/wp-content/uploads/2021/01/my-idlers-self-hosted-server-domain-information-ips-from-hostname.gif)
 * [Check up/down status](https://cdn.write.corbpie.com/wp-content/uploads/2021/01/my-idlers-self-hosted-server-domain-information-ping-up-feature.gif)
-* Get YABs data from output
+* Get YABS data from output
 * Compare 2 servers
-* Save & view YABs output
-* Update YABs disk & network results
+* Save & view YABS output
+* Update YABS disk & network results
 * Next due date system
 * Multi currency compatibility
 * Multi payment-term compatibility
@@ -295,7 +295,7 @@ or
 
 ```curl -sL yabs.sh | bash -s -- -r```
 
-**Make sure YABs output starts at the first line which is:**
+**Make sure YABS output starts at the first line which is:**
 
 ```# ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## #```
 
@@ -309,7 +309,7 @@ Logo icons created by Freepik - Flaticon
 
 [![My idlers screenshot3](https://cdn.write.corbpie.com/wp-content/uploads/2022/03/My-idlers-v2-servers-home.jpg)](https://cdn.write.corbpie.com/wp-content/uploads/2022/03/My-idlers-v2-servers-home.jpg)
 
-[![My idlers screenshot4](https://cdn.write.corbpie.com/wp-content/uploads/2022/03/My-idlers-v2-YABs.jpg)](https://cdn.write.corbpie.com/wp-content/uploads/2022/03/My-idlers-v2-YABs.jpg)
+[![My idlers screenshot4](https://cdn.write.corbpie.com/wp-content/uploads/2022/03/My-idlers-v2-YABS.jpg)](https://cdn.write.corbpie.com/wp-content/uploads/2022/03/My-idlers-v2-YABS.jpg)
 
 [![My idlers screenshot5](https://cdn.write.corbpie.com/wp-content/uploads/2022/03/My-idlers-v2-add-server_2.png)](https://cdn.write.corbpie.com/wp-content/uploads/2022/03/My-idlers-v2-add-server_2.png)
 

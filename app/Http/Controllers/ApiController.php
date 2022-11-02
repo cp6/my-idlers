@@ -483,7 +483,7 @@ class ApiController extends Controller
         if ($insert) {
             Cache::forget('all_active_servers');//all servers cache
             Cache::forget('non_active_servers');//all servers cache
-            Cache::forget('all_yabs');//Forget the all YABs cache
+            Cache::forget('all_yabs');//Forget the all YABS cache
             return response()->json(array('message' => 'Successfully added YABS'), 200);
         }
 

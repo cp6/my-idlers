@@ -1,7 +1,7 @@
 @section("title", "{$yab[0]->hostname} {$yab[0]->id} YABS")
 <x-app-layout>
     <x-slot name="header">
-        {{ __('YABs details') }}
+        {{ __('YABS details') }}
     </x-slot>
     <div class="container">
         <x-card class="shadow mt-3">
@@ -34,7 +34,7 @@
                                     <td>{{ $yab[0]->cpu_model }}</td>
                                 </tr>
                                 <tr>
-                                    <td class="px-4 py-2 font-bold">Ram</td>
+                                    <td class="px-4 py-2 font-bold">RAM</td>
                                     <td>{{ $yab[0]->ram }} {{$yab[0]->ram_type}}</td>
                                 </tr>
                                 <tr>

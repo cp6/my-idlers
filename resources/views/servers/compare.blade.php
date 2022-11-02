@@ -62,7 +62,7 @@
                                     class="data-type">Mhz</span></td>
                         </tr>
                         <tr>
-                            <td class="td-nowrap">Ram</td>
+                            <td class="td-nowrap">RAM</td>
                             <td class="td-nowrap">{{$server1_data[0]->yabs[0]->ram_mb}}<span class="data-type">MB</span>
                             </td>
                             {!! \App\Models\Server::tableRowCompare($server1_data[0]->yabs[0]->ram_mb, $server2_data[0]->yabs[0]->ram_mb, 'MB') !!}
@@ -286,7 +286,7 @@
                             <td class="td-nowrap">{{number_format($server2_data[0]->yabs[0]->disk_gb / $server2_data[0]->price->usd_per_month,2)}}</td>
                         </tr>
                         <tr>
-                            <td class="td-nowrap">Ram MB per USD</td>
+                            <td class="td-nowrap">RAM MB per USD</td>
                             <td class="td-nowrap">{{number_format($server1_data[0]->yabs[0]->ram_mb / $server1_data[0]->price->usd_per_month,2)}}</td>
                             {!! \App\Models\Server::tableRowCompare($server1_data[0]->yabs[0]->ram_mb / $server1_data[0]->price->usd_per_month, $server2_data[0]->yabs[0]->ram_mb / $server2_data[0]->price->usd_per_month, '') !!}
                             <td class="td-nowrap">{{number_format($server2_data[0]->yabs[0]->ram_mb / $server2_data[0]->price->usd_per_month,2)}}</td>

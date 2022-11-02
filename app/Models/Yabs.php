@@ -167,18 +167,18 @@ class Yabs extends Model
             $version = $data['version'];
             $has_ipv4 = $data['net']['ipv4'];
             $has_ipv6 = $data['net']['ipv6'];
-            //Os
+            //OS
             $arch = $data['os']['arch'];
             $distro = $data['os']['distro'];
             $kernel = $data['os']['kernel'];
             $uptime = $data['os']['uptime'];
-            //Cpu
+            //CPU
             $model = $data['cpu']['model'];
             $cores = $data['cpu']['cores'];
             $freq = $data['cpu']['freq'];
             $aes = $data['cpu']['aes'];
             $virt = $data['cpu']['virt'];
-            //Ram Disk
+            //RAM Disk
             $ram = $data['mem']['ram'];
             $swap = $data['mem']['swap'];
             $disk = $data['mem']['disk'];
@@ -239,7 +239,7 @@ class Yabs extends Model
                 'gb5_id' => $gb5_id
             ]);
 
-            //Fio
+            //fio
             foreach ($data['fio'] as $ds) {
                 if ($ds['bs'] === '4k') {
                     $d4k = ($ds['speed_rw'] > 999999) ? ($ds['speed_rw'] / 1000 / 1000) : $ds['speed_rw'] / 1000;
@@ -280,7 +280,7 @@ class Yabs extends Model
                 'd_1m_as_mbps' => $d1m_mbps
             ]);
 
-            //Iperf
+            //iperf
             foreach ($data['iperf'] as $st) {
                 ($has_ipv4) ? $match = 'IPv4' : $match = 'IPv6';
                 if ($st['mode'] === $match) {
