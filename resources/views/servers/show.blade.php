@@ -204,7 +204,7 @@
                             </table>
                         </div>
                     @else
-                        <p>Please add a YABs to
+                        <p>Please add a YABS to
                             see Geekbench, disk and network speeds:</p>
                         <code>curl -sL yabs.sh | bash -s -- -s "{{route('api.store-yabs', [$server_data->id, \Illuminate\Support\Facades\Auth::user()->api_token])}}"</code>
                     @endif

@@ -47,7 +47,7 @@ class YabsController extends Controller
         Cache::forget("yabs.{$yab->id}");
 
         return redirect()->route('yabs.index')
-            ->with('success', 'YABs was deleted Successfully.');
+            ->with('success', 'YABS was deleted Successfully.');
     }
 
     public function chooseYabsCompare()

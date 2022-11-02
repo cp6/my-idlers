@@ -79,9 +79,9 @@
                                             </div>
                                             <div class="col-6 text-end">
                                                 @if(isset($server->yabs[0]->cpu_cores))
-                                                    <i class="fas fa-check mx-1" style="color: #0000008c;"></i>YABs
+                                                    <i class="fas fa-check mx-1" style="color: #0000008c;"></i>YABS
                                                 @else
-                                                    <i class="fas fa-times mx-1" style="color: #0000008c;"></i>YABs
+                                                    <i class="fas fa-times mx-1" style="color: #0000008c;"></i>YABS
                                                 @endif
                                             </div>
                                         </div>

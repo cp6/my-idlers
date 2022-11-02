@@ -159,7 +159,7 @@
                                     <h4>{{number_format($information['servers_summary']['ram_mb_sum'] / 1024, 2)}}
                                         <small
                                             class="text-muted">GB</small></h4>
-                                    <p>Ram</p>
+                                    <p>RAM</p>
                                 </div>
                             </div>
                         </div>

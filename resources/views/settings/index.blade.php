@@ -72,7 +72,7 @@
                 </div>
                 <div class="row mt-3">
                     <div class="col-12 col-md-6 mb-3">
-                        <x-yes-no-select title="Save YABs input to txt" name="save_yabs_as_txt" value="{{ $setting->save_yabs_as_txt }}"></x-yes-no-select>
+                        <x-yes-no-select title="Save YABS input to txt" name="save_yabs_as_txt" value="{{ $setting->save_yabs_as_txt }}"></x-yes-no-select>
                     </div>
                 </div>
                 <p>Only if <i>Show servers to public</i> is <b>YES</b> do these apply:</p>

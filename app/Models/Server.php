@@ -193,7 +193,7 @@ class Server extends Model
     }
 
     public static function serverYabsAmount(string $server_id): int
-    {//Returns amount of YABs a server has
+    {//Returns amount of YABS a server has
         return DB::table('yabs')
             ->where('server_id', '=', $server_id)
             ->get()->count();
