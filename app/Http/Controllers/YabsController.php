@@ -12,8 +12,7 @@ class YabsController extends Controller
 {
     public function index()
     {
-        $yabs = Yabs::allYabs();
-        return view('yabs.index', compact(['yabs']));
+        return view('yabs.index', ['yabs' => Yabs::allYabs()]);
     }
 
     public function create()
@@ -28,8 +27,7 @@ class YabsController extends Controller
 
     public function show(Yabs $yab)
     {
-        $yab = Yabs::yabs($yab->id);
-        return view('yabs.show', compact(['yab']));
+        return view('yabs.show', ['yabs' => Yabs::yabs($yab->id)]);
     }
 
     public function destroy(Yabs $yab)
@@ -66,13 +64,13 @@ class YabsController extends Controller
     {
         $yabs1_data = Yabs::yabs($yabs1);
 
-        if (count($yabs1_data) === 0) {
+        if (is_null($yabs1_data)) {
             abort(404);
         }
 
         $yabs2_data = Yabs::yabs($yabs2);
 
-        if (count($yabs2_data) === 0) {
+        if (is_null($yabs2_data)) {
             abort(404);
         }
 
