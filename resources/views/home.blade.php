@@ -1,220 +1,69 @@
 @section("title", "Home")
 <x-app-layout>
-    <div class="container">
-        @if (Route::has('login'))
-            @auth
                 <div class="row mt-4">
                     <div class="col-6 col-lg-2 mb-3">
-                        <div class="card">
-                            <div class="card-body text-center shadow">
-                                <div class="row">
-                                    <h3>{{ $information['servers'] }}</h3>
-                                    <h5><a href="servers" class="text-decoration-none">Servers</a></h5>
-                                </div>
-                            </div>
-                        </div>
+                        <x-service-tally-card tally="{{ $information['servers'] }}" route="{{route('servers.index')}}" service="Servers"></x-service-tally-card>
                     </div>
                     <div class="col-6 col-lg-2 mb-3">
-                        <div class="card">
-                            <div class="card-body text-center shadow">
-                                <div class="row">
-                                    <h3>{{ $information['shared'] }}</h3>
-                                    <h5><a href="shared" class="text-decoration-none">Shared</a></h5>
-                                </div>
-                            </div>
-                        </div>
+                        <x-service-tally-card tally="{{ $information['shared'] }}" route="{{route('shared.index')}}" service="Shared"></x-service-tally-card>
                     </div>
                     <div class="col-6 col-lg-2 mb-3">
-                        <div class="card">
-                            <div class="card-body text-center shadow">
-                                <div class="row">
-                                    <h3>{{ $information['reseller'] }}</h3>
-                                    <h5><a href="reseller" class="text-decoration-none">Reseller</a></h5>
-                                </div>
-                            </div>
-                        </div>
+                        <x-service-tally-card tally="{{ $information['reseller'] }}" route="{{route('reseller.index')}}" service="Reseller"></x-service-tally-card>
                     </div>
                     <div class="col-6 col-lg-2 mb-3">
-                        <div class="card">
-                            <div class="card-body text-center shadow">
-                                <div class="row">
-                                    <h3>{{ $information['domains'] }}</h3>
-                                    <h5><a href="domains" class="text-decoration-none">Domains</a></h5>
-                                </div>
-                            </div>
-                        </div>
+                        <x-service-tally-card tally="{{ $information['domains'] }}" route="{{route('domains.index')}}" service="Domains"></x-service-tally-card>
                     </div>
                     <div class="col-6 col-lg-2 mb-3">
-                        <div class="card">
-                            <div class="card-body text-center shadow">
-                                <div class="row">
-                                    <h3>{{ $information['misc'] }}</h3>
-                                    <h5><a href="misc" class="text-decoration-none">Misc</a></h5>
-                                </div>
-                            </div>
-                        </div>
+                        <x-service-tally-card tally="{{ $information['misc'] }}" route="{{route('misc.index')}}" service="Misc"></x-service-tally-card>
                     </div>
                     <div class="col-6 col-lg-2 mb-3">
-                        <div class="card">
-                            <div class="card-body text-center shadow">
-                                <div class="row">
-                                    <h3>{{ $information['dns'] }}</h3>
-                                    <h5><a href="dns" class="text-decoration-none">DNS</a></h5>
-                                </div>
-                            </div>
-                        </div>
+                        <x-service-tally-card tally="{{ $information['dns'] }}" route="{{route('dns.index')}}" service="DNS"></x-service-tally-card>
                     </div>
                 </div>
 
                 <div class="row mt-3">
                     <div class="col-12 col-lg-2 mb-3">
-                        <div class="card">
-                            <div class="card-body text-center shadow">
-                                <div class="row">
-                                    <h4>
-                                        {{$information['total_cost_weekly']}}
-                                        <small class="text-muted">{{$information['currency']}}</small>
-                                    </h4>
-                                    <p>Weekly cost</p>
-                                </div>
-                            </div>
-                        </div>
+                        <x-info-card value="{{$information['total_cost_weekly']}}" title="Weekly cost" append="{{$information['currency']}}"></x-info-card>
                     </div>
                     <div class="col-12 col-lg-2 mb-3">
-                        <div class="card">
-                            <div class="card-body text-center shadow">
-                                <div class="row">
-                                    <h4>
-                                        {{$information['total_cost_monthly']}}
-                                        <small class="text-muted">{{$information['currency']}}</small>
-                                    </h4>
-                                    <p>Monthly cost</p>
-                                </div>
-                            </div>
-                        </div>
+                        <x-info-card value="{{$information['total_cost_monthly']}}" title="Monthly cost" append="{{$information['currency']}}"></x-info-card>
                     </div>
                     <div class="col-12 col-lg-2 mb-3">
-                        <div class="card">
-                            <div class="card-body text-center shadow">
-                                <div class="row">
-                                    <h4>
-                                        {{$information['total_cost_yearly']}}
-                                        <small class="text-muted">{{$information['currency']}}</small>
-                                    </h4>
-                                    <p>Yearly cost</p>
-                                </div>
-                            </div>
-                        </div>
+                        <x-info-card value="{{$information['total_cost_yearly']}}" title="Yearly cost" append="{{$information['currency']}}"></x-info-card>
                     </div>
                     <div class="col-12 col-lg-2 mb-3">
-                        <div class="card">
-                            <div class="card-body text-center shadow">
-                                <div class="row">
-                                    <h4>
-                                        {{$information['total_cost_2_yearly']}}
-                                        <small class="text-muted">{{$information['currency']}}</small>
-                                    </h4>
-                                    <p>2 yearly cost</p>
-                                </div>
-                            </div>
-                        </div>
+                        <x-info-card value="{{$information['total_cost_2_yearly']}}" title="2 yearly cost" append="{{$information['currency']}}"></x-info-card>
                     </div>
                     <div class="col-12 col-lg-2 mb-3">
-                        <div class="card">
-                            <div class="card-body text-center shadow">
-                                <div class="row">
-                                    <h4>{{$information['total_services']}}</h4>
-                                    <p>Active services</p>
-                                </div>
-                            </div>
-                        </div>
+                        <x-info-card value="{{$information['total_services']}}" title="Active services"></x-info-card>
                     </div>
                     <div class="col-12 col-lg-2 mb-3">
-                        <div class="card">
-                            <div class="card-body text-center shadow">
-                                <div class="row">
-                                    <h4>{{$information['total_inactive']}}</h4>
-                                    <p>Inactive services</p>
-                                </div>
-                            </div>
-                        </div>
+                        <x-info-card value="{{$information['total_inactive']}}" title="Inactive services"></x-info-card>
                     </div>
                 </div>
 
                 <div class="row mt-3">
                     <div class="col-6 col-lg-2 mb-3">
-                        <div class="card">
-                            <div class="card-body text-center shadow">
-                                <div class="row">
-                                    <h4>{{$information['servers_summary']['cpu_sum']}}</h4>
-                                    <p>CPU</p>
-                                </div>
-                            </div>
-                        </div>
+                        <x-info-card value="{{$information['servers_summary']['cpu_sum']}}" title="CPU"></x-info-card>
                     </div>
                     <div class="col-6 col-lg-2 mb-3">
-                        <div class="card">
-                            <div class="card-body text-center shadow">
-                                <div class="row">
-                                    <h4>{{number_format($information['servers_summary']['ram_mb_sum'] / 1024, 2)}}
-                                        <small
-                                            class="text-muted">GB</small></h4>
-                                    <p>RAM</p>
-                                </div>
-                            </div>
-                        </div>
+                        <x-info-card value="{{number_format($information['servers_summary']['ram_mb_sum'] / 1024, 2)}}" title="RAM" append="GB"></x-info-card>
                     </div>
                     <div class="col-6 col-lg-2 mb-3">
-                        <div class="card">
-                            <div class="card-body text-center shadow">
-                                <div class="row">
-                                    <h4>
-                                        @if($information['servers_summary']['disk_gb_sum'] >= 1000)
-                                            {{number_format($information['servers_summary']['disk_gb_sum'] / 1024,2)}}
-                                            <small
-                                                class="text-muted">TB</small>
-                                        @else
-                                            {{$information['servers_summary']['disk_gb_sum']}} <small
-                                                class="text-muted">GB</small>
-                                        @endif
-                                    </h4>
-                                    <p>Disk</p>
-                                </div>
-                            </div>
-                        </div>
+                        @if($information['servers_summary']['disk_gb_sum'] >= 1000)
+                            <x-info-card value="{{number_format($information['servers_summary']['disk_gb_sum'] / 1024,2)}}" title="DISK" append="TB"></x-info-card>
+                        @else
+                            <x-info-card value="{{$information['servers_summary']['disk_gb_sum']}}" title="DISK" append="GB"></x-info-card>
+                        @endif
                     </div>
                     <div class="col-6 col-lg-2 mb-3">
-                        <div class="card">
-                            <div class="card-body text-center shadow">
-                                <div class="row">
-                                    <h4>{{number_format($information['servers_summary']['bandwidth_sum'] / 1024,2)}}
-                                        <small
-                                            class="text-muted">TB</small></h4>
-                                    <p>Bandwidth</p>
-                                </div>
-                            </div>
-                        </div>
+                        <x-info-card value="{{number_format($information['servers_summary']['bandwidth_sum'] / 1024, 2)}}" title="Bandwidth" append="TB"></x-info-card>
                     </div>
                     <div class="col-6 col-lg-2 mb-3">
-                        <div class="card">
-                            <div class="card-body text-center shadow">
-                                <div class="row">
-                                    <h4>{{$information['servers_summary']['locations_sum']}}</h4>
-                                    <p>Locations</p>
-                                </div>
-                            </div>
-                        </div>
+                        <x-info-card value="{{$information['servers_summary']['locations_sum']}}" title="Locations"></x-info-card>
                     </div>
                     <div class="col-6 col-lg-2 mb-3">
-                        <div class="card">
-                            <div class="card-body text-center shadow">
-                                <div class="row">
-                                    <h4>{{$information['servers_summary']['providers_sum']}}</h4>
-                                    <p>Providers</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                        <x-info-card value="{{$information['servers_summary']['providers_sum']}}" title="Providers"></x-info-card>
                 </div>
 
                 @if(Session::get('due_soon_amount') > 0)
@@ -404,15 +253,4 @@
                     </p>
                 @endif
     </div>
-
-    @else
-        <a href="{{ route('login') }}" class="text-sm text-gray-700 underline">Login</a>
-
-        @if (Route::has('register'))
-            <a href="{{ route('register') }}" class="ml-4 text-sm text-gray-700 underline">Register</a>
-            @endif
-            @endauth
-            </div>
-        @endif
-
 </x-app-layout>
