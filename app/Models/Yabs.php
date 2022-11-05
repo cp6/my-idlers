@@ -27,7 +27,7 @@ class Yabs extends Model
     {
         return Cache::remember("yabs.$yabs_id", now()->addMonth(1), function () use ($yabs_id) {
             return self::where('id', $yabs_id)->with(['server', 'disk_speed', 'network_speed', 'server.location', 'server.provider'])
-                ->get();
+                ->first();
         });
     }
 
