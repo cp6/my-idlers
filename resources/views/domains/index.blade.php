@@ -1,5 +1,5 @@
 @extends('layouts.index')
-@section('title', 'Domains')
+@section('title', 'Domain names')
 @section('css_style')
     <x-modal-style></x-modal-style>
 @endsection

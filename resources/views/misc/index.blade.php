@@ -1,5 +1,5 @@
 @extends('layouts.index')
-@section('title', 'Misc')
+@section('title', 'Misc services')
 @section('css_style')
     <x-modal-style></x-modal-style>
 @endsection
