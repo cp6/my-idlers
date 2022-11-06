@@ -1,4 +1,4 @@
-@section("title", "Insert operating system")
+@section("title", "Add an operating system")
 <x-app-layout>
     <x-slot name="header">
         {{ __('Insert a new OS') }}

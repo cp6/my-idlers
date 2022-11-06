@@ -1,4 +1,4 @@
-@section("title", "Insert IP address")
+@section("title", "Add an IP address")
 <x-app-layout>
     <x-slot name="header">
         {{ __('Insert a new IP') }}

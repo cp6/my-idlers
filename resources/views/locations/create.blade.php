@@ -1,4 +1,4 @@
-@section("title", "Insert Location")
+@section("title", "Add a Location")
 <x-app-layout>
     <x-slot name="header">
         {{ __('Insert a new location') }}

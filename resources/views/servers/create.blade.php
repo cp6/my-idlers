@@ -1,4 +1,4 @@
-@section("title", "Enter new server")
+@section("title", "Add a server")
 @section('scripts')
     <script src="{{ asset('js/vue.min.js') }}"></script>
     <script src="{{ asset('js/axios.min.js') }}"></script>
