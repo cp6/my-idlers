@@ -24,7 +24,7 @@ class LocationsController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'location_name' => 'required|string|min:2'
+            'location_name' => 'required|string|min:2|max:255'
         ]);
 
         Locations::create([
