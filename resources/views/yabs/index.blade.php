@@ -1,4 +1,4 @@
-@section("title", "YABS")
+@section("title", "YABS results")
 @section('style')
     <x-modal-style></x-modal-style>
 @endsection
