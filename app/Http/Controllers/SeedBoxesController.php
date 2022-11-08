@@ -146,14 +146,12 @@ class SeedBoxesController extends Controller
 
     public function destroy(SeedBoxes $seedbox)
     {
-        $seedbox_id = $seedbox->id;
-        $items = SeedBoxes::find($seedbox_id);
-        $items->delete();
+        $seedbox->delete();
 
         $p = new Pricing();
-        $p->deletePricing($seedbox_id);
+        $p->deletePricing( $seedbox->id);
 
-        Labels::deleteLabelsAssignedTo($seedbox_id);
+        Labels::deleteLabelsAssignedTo( $seedbox->id);
 
         Cache::forget("all_seedboxes");
         Cache::forget("seedbox.{$seedbox->id}");

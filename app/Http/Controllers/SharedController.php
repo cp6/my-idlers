@@ -168,18 +168,16 @@ class SharedController extends Controller
 
     public function destroy(Shared $shared)
     {
-        $shared_id = $shared->id;
-        $items = Shared::find($shared_id);
-        $items->delete();
+        $shared->delete();
 
         $p = new Pricing();
-        $p->deletePricing($shared_id);
+        $p->deletePricing($shared->id);
 
-        Labels::deleteLabelsAssignedTo($shared_id);
+        Labels::deleteLabelsAssignedTo($shared->id);
 
-        IPs::deleteIPsAssignedTo($shared_id);
+        IPs::deleteIPsAssignedTo($shared->id);
 
-        Cache::forget("shared_hosting.$shared_id");
+        Cache::forget("shared_hosting.$shared->id");
         Cache::forget('all_shared');
         Home::homePageCacheForget();
 

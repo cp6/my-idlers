@@ -32,8 +32,7 @@ class YabsController extends Controller
 
     public function destroy(Yabs $yab)
     {
-        $yabs = Yabs::find($yab->id);
-        $yabs->delete();
+        $yab->delete();
 
         if (Server::serverYabsAmount($yab->server_id) === 0) {
             DB::table('servers')

@@ -37,9 +37,7 @@ class OsController extends Controller
 
     public function destroy(OS $o)
     {
-        $items = OS::find($o->id);
-
-        $items->delete();
+        $o->delete();
 
         Cache::forget('operating_systems');
 

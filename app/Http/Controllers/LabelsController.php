@@ -61,15 +61,11 @@ class LabelsController extends Controller
 
     public function destroy(Labels $label)
     {
-        $label_id = $label->id;
-
-        $items = Labels::find($label_id);
-
-        $items->delete();
+        $label->delete();
 
         Cache::forget('labels_count');
 
-        Labels::deleteLabelAssignedAs($label_id);
+        Labels::deleteLabelAssignedAs($label->id);
 
         Cache::forget('all_labels');
 

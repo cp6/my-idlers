@@ -51,8 +51,7 @@ class IPsController extends Controller
 
     public function destroy(IPs $IP)
     {
-        $items = IPs::find($IP->id);
-        $items->delete();
+        $IP->delete();
 
         return redirect()->route('IPs.index')
             ->with('success', 'IP address was deleted Successfully.');

@@ -174,19 +174,17 @@ class ResellerController extends Controller
 
     public function destroy(Reseller $reseller)
     {
-        $reseller_id = $reseller->id;
-        $items = Reseller::find($reseller_id);
-        $items->delete();
+        $reseller->delete();
 
         $p = new Pricing();
-        $p->deletePricing($reseller_id);
+        $p->deletePricing($reseller->id);
 
-        Labels::deleteLabelsAssignedTo($reseller_id);
+        Labels::deleteLabelsAssignedTo($reseller->id);
 
-        IPs::deleteIPsAssignedTo($reseller_id);
+        IPs::deleteIPsAssignedTo($reseller->id);
 
         Cache::forget("all_reseller");
-        Cache::forget("reseller_hosting.$reseller_id");
+        Cache::forget("reseller_hosting.$reseller->id");
         Home::homePageCacheForget();
 
         return redirect()->route('reseller.index')

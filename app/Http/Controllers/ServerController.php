@@ -199,8 +199,7 @@ class ServerController extends Controller
 
     public function destroy(Server $server)
     {
-        $item = Server::find($server->id);
-        $item->delete();
+        $server->delete();
 
         $p = new Pricing();
         $p->deletePricing($server->id);

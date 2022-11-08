@@ -94,8 +94,7 @@ class MiscController extends Controller
 
     public function destroy(Misc $misc)
     {
-        $items = Misc::find($misc->id);
-        $items->delete();
+        $misc->delete();
 
         $p = new Pricing();
         $p->deletePricing($misc->id);

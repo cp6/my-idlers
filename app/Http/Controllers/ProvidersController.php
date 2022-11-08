@@ -46,9 +46,7 @@ class ProvidersController extends Controller
 
     public function destroy(Providers $provider)
     {
-        $items = Providers::find($provider->id);
-
-        $items->delete();
+        $provider->delete();
 
         Cache::forget('providers');
 

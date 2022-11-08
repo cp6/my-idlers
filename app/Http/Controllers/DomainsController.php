@@ -127,8 +127,7 @@ class DomainsController extends Controller
 
     public function destroy(Domains $domain)
     {
-        $items = Domains::find($domain->id);
-        $items->delete();
+        $domain->delete();
 
         $p = new Pricing();
         $p->deletePricing($domain->id);

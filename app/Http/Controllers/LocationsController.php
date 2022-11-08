@@ -61,9 +61,7 @@ class LocationsController extends Controller
 
     public function destroy(Locations $location)
     {
-        $items = Locations::find($location->id);
-
-        $items->delete();
+        $location->delete();
 
         Cache::forget('locations');
 
