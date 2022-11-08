@@ -7,7 +7,6 @@
 @endsection
 @section('scripts')
     <script src="{{ asset('js/vue.min.js') }}"></script>
-    <script src="{{ asset('js/axios.min.js') }}"></script>
 @endsection
 <x-app-layout>
     <x-slot name="header">
@@ -42,7 +41,7 @@
                                         @csrf
                                         @method('DELETE')
                                         <i class="fas fa-trash text-danger ms-3" @click="confirmDeleteModal"
-                                           id="{{$ip->id}}" title="{{$ip->hostname}}"></i>
+                                           id="{{$ip->id}}" title="{{$ip->address}}"></i>
                                     </form>
                                 </td>
                             </tr>
