@@ -7,7 +7,6 @@
 @endsection
 @section('scripts')
     <script src="{{ asset('js/vue.min.js') }}"></script>
-    <script src="{{ asset('js/axios.min.js') }}"></script>
 @endsection
 <x-app-layout>
     <x-slot name="header">
