@@ -35,8 +35,8 @@
                                     <a href="{{ route('locations.show', $location->id) }}"
                                        class="text-body mx-1">
                                         <i class="fas fa-eye" title="view"></i></a>
-                                    <i class="fas fa-trash text-danger ms-3" @click="modalForm"
-                                       id="btn-{{$location->name}}" title="{{$location->id}}"></i>
+                                    <i class="fas fa-trash text-danger ms-3" @click="confirmDeleteModal"
+                                       id="{{$location->id}}" title="{{$location->name}}"></i>
                                 </form>
                             </td>
                         </tr>
