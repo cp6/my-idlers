@@ -32,19 +32,24 @@
                         <div class="input-group">
                             <div class="input-group-prepend"><span class="input-group-text">Service</span></div>
                             <select class="form-control" name="service_id">
-                                @foreach ($Servers as $server)
+                                @foreach ($servers as $server)
                                     <option value="{{ $server['id'] }}">
-                                        {{ $server['hostname'] }} (VPS)
+                                        {{ $server['hostname'] }} (Server)
                                     </option>
                                 @endforeach
-                                @foreach ($Shareds as $shared)
+                                @foreach ($shareds as $shared)
                                     <option value="{{ $shared['id'] }}">
-                                        {{ $shared['main_domain'] }} (shared)
+                                        {{ $shared['main_domain'] }} (Shared)
                                     </option>
                                 @endforeach
-                                @foreach ($Resellers as $reseller)
+                                @foreach ($resellers as $reseller)
                                     <option value="{{ $reseller['id'] }}">
-                                        {{ $reseller['main_domain'] }} (reseller)
+                                        {{ $reseller['main_domain'] }} (Reseller)
+                                    </option>
+                                @endforeach
+                                @foreach ($seed_boxes as $seed_box)
+                                    <option value="{{ $seed_box['id'] }}">
+                                        {{ $seed_box['title'] }} (Seed box)
                                     </option>
                                 @endforeach
                             </select></div>

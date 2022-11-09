@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\DNS;
 use App\Models\IPs;
 use App\Models\Reseller;
+use App\Models\SeedBoxes;
 use App\Models\Server;
 use App\Models\Shared;
 use Illuminate\Http\Request;
@@ -21,10 +22,11 @@ class IPsController extends Controller
 
     public function create()
     {
-        $Servers = Server::all();
-        $Shareds = Shared::all();
-        $Resellers = Reseller::all();
-        return view('ips.create', compact(['Servers', 'Shareds', 'Resellers']));
+        $servers = Server::all();
+        $shareds = Shared::all();
+        $resellers = Reseller::all();
+        $seed_boxes = SeedBoxes::all();
+        return view('ips.create', compact(['servers', 'shareds', 'resellers', 'seed_boxes']));
     }
 
     public function store(Request $request)
