@@ -127,19 +127,22 @@ class DomainsController extends Controller
 
     public function destroy(Domains $domain)
     {
-        $domain->delete();
+        if ($domain->delete()){
+            $p = new Pricing();
+            $p->deletePricing($domain->id);
 
-        $p = new Pricing();
-        $p->deletePricing($domain->id);
+            Labels::deleteLabelsAssignedTo($domain->id);
 
-        Labels::deleteLabelsAssignedTo($domain->id);
+            Cache::forget("all_domains");
+            Cache::forget("domain.{$domain->id}");
+            Home::homePageCacheForget();
 
-        Cache::forget("all_domains");
-        Cache::forget("domain.{$domain->id}");
-        Home::homePageCacheForget();
+            return redirect()->route('domains.index')
+                ->with('success', 'Domain was deleted Successfully.');
+        }
 
         return redirect()->route('domains.index')
-            ->with('success', 'Domain was deleted Successfully.');
+            ->with('error', 'Domain was not deleted.');
     }
 
 }

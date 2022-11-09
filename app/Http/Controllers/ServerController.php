@@ -199,19 +199,22 @@ class ServerController extends Controller
 
     public function destroy(Server $server)
     {
-        $server->delete();
+        if ($server->delete()) {
+            $p = new Pricing();
+            $p->deletePricing($server->id);
 
-        $p = new Pricing();
-        $p->deletePricing($server->id);
+            Labels::deleteLabelsAssignedTo($server->id);
 
-        Labels::deleteLabelsAssignedTo($server->id);
+            IPs::deleteIPsAssignedTo($server->id);
 
-        IPs::deleteIPsAssignedTo($server->id);
+            Server::serverRelatedCacheForget();
 
-        Server::serverRelatedCacheForget();
+            return redirect()->route('servers.index')
+                ->with('success', 'Server was deleted Successfully.');
+        }
 
         return redirect()->route('servers.index')
-            ->with('success', 'Server was deleted Successfully.');
+            ->with('error', 'Server was not deleted.');
     }
 
     public function chooseCompare()

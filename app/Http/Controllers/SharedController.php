@@ -168,21 +168,24 @@ class SharedController extends Controller
 
     public function destroy(Shared $shared)
     {
-        $shared->delete();
+        if ($shared->delete()) {
+            $p = new Pricing();
+            $p->deletePricing($shared->id);
 
-        $p = new Pricing();
-        $p->deletePricing($shared->id);
+            Labels::deleteLabelsAssignedTo($shared->id);
 
-        Labels::deleteLabelsAssignedTo($shared->id);
+            IPs::deleteIPsAssignedTo($shared->id);
 
-        IPs::deleteIPsAssignedTo($shared->id);
+            Cache::forget("shared_hosting.$shared->id");
+            Cache::forget('all_shared');
+            Home::homePageCacheForget();
 
-        Cache::forget("shared_hosting.$shared->id");
-        Cache::forget('all_shared');
-        Home::homePageCacheForget();
+            return redirect()->route('shared.index')
+                ->with('success', 'Shared hosting was deleted Successfully.');
+        }
 
         return redirect()->route('shared.index')
-            ->with('success', 'Shared hosting was deleted Successfully.');
+            ->with('error', 'Shared was not deleted.');
     }
 
 }

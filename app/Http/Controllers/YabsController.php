@@ -32,26 +32,29 @@ class YabsController extends Controller
 
     public function destroy(Yabs $yab)
     {
-        $yab->delete();
+        if ($yab->delete()) {
+            if (Server::serverYabsAmount($yab->server_id) === 0) {
+                DB::table('servers')
+                    ->where('id', $yab->server_id)
+                    ->update(['has_yabs' => 0]);
+            }
 
-        if (Server::serverYabsAmount($yab->server_id) === 0) {
-            DB::table('servers')
-                ->where('id', $yab->server_id)
-                ->update(['has_yabs' => 0]);
+            Cache::forget('all_yabs');
+            Cache::forget("yabs.{$yab->id}");
+
+            return redirect()->route('yabs.index')
+                ->with('success', 'YABS was deleted Successfully.');
         }
 
-        Cache::forget('all_yabs');
-        Cache::forget("yabs.{$yab->id}");
-
         return redirect()->route('yabs.index')
-            ->with('success', 'YABS was deleted Successfully.');
+            ->with('error', 'YABS was not deleted.');
     }
 
     public function chooseYabsCompare()
     {
         $all_yabs = Yabs::allYabs();
 
-        if (isset($all_yabs[1])){
+        if (isset($all_yabs[1])) {
             return view('yabs.choose-compare', compact('all_yabs'));
         }
 

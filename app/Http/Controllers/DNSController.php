@@ -123,13 +123,16 @@ class DNSController extends Controller
 
     public function destroy(DNS $dn)
     {
-        $dn->delete();
+        if ( $dn->delete()){
+            Cache::forget('dns_count');
 
-        Cache::forget('dns_count');
+            Labels::deleteLabelsAssignedTo($dn->id);
 
-        Labels::deleteLabelsAssignedTo($dn->id);
+            return redirect()->route('dns.index')
+                ->with('success', 'DNS was deleted Successfully.');
+        }
 
         return redirect()->route('dns.index')
-            ->with('success', 'DNS was deleted Successfully.');
+            ->with('error', 'DNS was not deleted.');
     }
 }

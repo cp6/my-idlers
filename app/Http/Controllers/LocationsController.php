@@ -61,11 +61,15 @@ class LocationsController extends Controller
 
     public function destroy(Locations $location)
     {
-        $location->delete();
+        if ($location->delete()){
+            Cache::forget('locations');
 
-        Cache::forget('locations');
+            return redirect()->route('locations.index')
+                ->with('success', 'Location was deleted Successfully.');
+        }
 
         return redirect()->route('locations.index')
-            ->with('success', 'Location was deleted Successfully.');
+            ->with('error', 'Location was not deleted.');
+
     }
 }

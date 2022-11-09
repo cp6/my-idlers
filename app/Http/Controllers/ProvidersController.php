@@ -46,12 +46,16 @@ class ProvidersController extends Controller
 
     public function destroy(Providers $provider)
     {
-        $provider->delete();
+        if ($provider->delete()) {
+            Cache::forget('providers');
 
-        Cache::forget('providers');
+            return redirect()->route('providers.index')
+                ->with('success', 'Provider was deleted Successfully.');
+        }
 
         return redirect()->route('providers.index')
-            ->with('success', 'Provider was deleted Successfully.');
+            ->with('error', 'Provider was not deleted.');
+
     }
 
 }

@@ -37,11 +37,15 @@ class OsController extends Controller
 
     public function destroy(OS $o)
     {
-        $o->delete();
+        if ($o->delete()) {
+            Cache::forget('operating_systems');
 
-        Cache::forget('operating_systems');
+            return redirect()->route('os.index')
+                ->with('success', 'OS was deleted Successfully.');
+        }
 
         return redirect()->route('os.index')
-            ->with('success', 'OS was deleted Successfully.');
+            ->with('error', 'OS was not deleted.');
+
     }
 }

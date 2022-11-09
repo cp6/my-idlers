@@ -61,15 +61,18 @@ class LabelsController extends Controller
 
     public function destroy(Labels $label)
     {
-        $label->delete();
+        if ($label->delete()) {
+            Cache::forget('labels_count');
 
-        Cache::forget('labels_count');
+            Labels::deleteLabelAssignedAs($label->id);
 
-        Labels::deleteLabelAssignedAs($label->id);
+            Cache::forget('all_labels');
 
-        Cache::forget('all_labels');
+            return redirect()->route('labels.index')
+                ->with('success', 'Label was deleted Successfully.');
+        }
 
         return redirect()->route('labels.index')
-            ->with('success', 'Label was deleted Successfully.');
+            ->with('error', 'Label was not deleted.');
     }
 }

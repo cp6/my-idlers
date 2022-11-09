@@ -94,16 +94,19 @@ class MiscController extends Controller
 
     public function destroy(Misc $misc)
     {
-        $misc->delete();
+        if ($misc->delete()) {
+            $p = new Pricing();
+            $p->deletePricing($misc->id);
 
-        $p = new Pricing();
-        $p->deletePricing($misc->id);
+            Cache::forget("all_misc");
+            Cache::forget("misc.{$misc->id}");
+            Home::homePageCacheForget();
 
-        Cache::forget("all_misc");
-        Cache::forget("misc.{$misc->id}");
-        Home::homePageCacheForget();
+            return redirect()->route('misc.index')
+                ->with('success', 'Misc service was deleted Successfully.');
+        }
 
         return redirect()->route('misc.index')
-            ->with('success', 'Misc service was deleted Successfully.');
+            ->with('error', 'Misc service was not deleted.');
     }
 }

@@ -146,18 +146,21 @@ class SeedBoxesController extends Controller
 
     public function destroy(SeedBoxes $seedbox)
     {
-        $seedbox->delete();
+        if ($seedbox->delete()) {
+            $p = new Pricing();
+            $p->deletePricing($seedbox->id);
 
-        $p = new Pricing();
-        $p->deletePricing( $seedbox->id);
+            Labels::deleteLabelsAssignedTo($seedbox->id);
 
-        Labels::deleteLabelsAssignedTo( $seedbox->id);
+            Cache::forget("all_seedboxes");
+            Cache::forget("seedbox.{$seedbox->id}");
+            Home::homePageCacheForget();
 
-        Cache::forget("all_seedboxes");
-        Cache::forget("seedbox.{$seedbox->id}");
-        Home::homePageCacheForget();
+            return redirect()->route('seedboxes.index')
+                ->with('success', 'Seed box was deleted Successfully.');
+        }
 
         return redirect()->route('seedboxes.index')
-            ->with('success', 'Seed box was deleted Successfully.');
+            ->with('error', 'Seed box was not deleted.');
     }
 }
