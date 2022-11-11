@@ -22,6 +22,7 @@
                             <th>Location</th>
                             <th>Provider</th>
                             <th>Disk</th>
+                            <th>Domains</th>
                             <th>Price</th>
                             <th>Due</th>
                             <th>Had since</th>
@@ -37,6 +38,7 @@
                                     <td class="text-nowrap">{{ $row->location->name }}</td>
                                     <td class="text-nowrap">{{ $row->provider->name }}</td>
                                     <td>{{ $row->disk_as_gb }} <small>GB</small></td>
+                                    <td>{{ $row->domains_limit }}</td>
                                     <td>{{ $row->price->price }} {{$row->price->currency}} {{\App\Process::paymentTermIntToString($row->price->term)}}</td>
                                     <td>{{Carbon\Carbon::parse($row->price->next_due_date)->diffForHumans()}}</td>
                                     <td class="text-nowrap">{{ $row->owned_since }}</td>
