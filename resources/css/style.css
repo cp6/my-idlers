@@ -1,0 +1,22 @@
+/*
+Custom styles go in here
+ */
+
+.modal-mask {
+    position: fixed;
+    z-index: 9998;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .5);
+    transition: opacity .3s ease;
+}
+
+.modal-body {
+    margin: 10px 0;
+}
+
+.modal {
+    display: contents !important;
+}
