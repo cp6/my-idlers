@@ -33,6 +33,13 @@ Example yabs.sh call to POST the result
 
 `curl -sL yabs.sh | bash -s -- -s "http://domain.com/api/yabs/tnSJLyhz/USERAPIKEYISHERE"`
 
+### NPM / Laravel mix now in use
+
+```shell
+npm install
+npm run prod
+```
+
 #### Please run the following if updating from existing install:
 
 ```shell
