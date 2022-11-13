@@ -1,10 +1,4 @@
-@section("title", "YABS results")
-@section('style')
-    <x-modal-style></x-modal-style>
-@endsection
-@section('scripts')
-    <script src="{{ asset('js/vue.min.js') }}"></script>
-@endsection
+@section('title', 'YABS results')
 <x-app-layout>
     <x-slot name="header">
         {{ __('YABS') }}

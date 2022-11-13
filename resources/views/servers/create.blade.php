@@ -1,8 +1,4 @@
 @section("title", "Add a server")
-@section('scripts')
-    <script src="{{ asset('js/vue.min.js') }}"></script>
-    <script src="{{ asset('js/axios.min.js') }}"></script>
-@endsection
 <x-app-layout>
     <x-slot name="header">
         {{ __('Insert a new server') }}
@@ -224,7 +220,8 @@
                         </x-labels-select>
                     </div>
                 </div>
-                <x-form-check text="Allow this data to be public, restrict values in settings" name="show_public"></x-form-check>
+                <x-form-check text="Allow this data to be public, restrict values in settings"
+                              name="show_public"></x-form-check>
                 <div class="row">
                     <div class="col-12 col-lg-4">
                         <x-submit-button>Insert server</x-submit-button>
@@ -233,35 +230,39 @@
             </form>
         </x-card>
     </div>
+    @section('scripts')
+        <script>
+            window.addEventListener('load', function () {
 
-    <script>
-        axios.defaults.headers.common = {
-            'Content-Type': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-            'Accept': 'application/json',
-        };
+                axios.defaults.headers.common = {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json',
+                };
 
-        let app = new Vue({
-            el: "#app",
-            data: {
-                "ipv4_in": '',
-                "ipv6_in": ''
-            },
-            methods: {
-                fetchDnsRecords(event) {
-                    var hostname = document.getElementById('hostname').value;
+                let app = new Vue({
+                    el: "#app",
+                    data: {
+                        "ipv4_in": '',
+                        "ipv6_in": ''
+                    },
+                    methods: {
+                        fetchDnsRecords(event) {
+                            var hostname = document.getElementById('hostname').value;
 
-                    if (hostname) {
-                        axios
-                            .get('/api/dns/' + hostname + '/A', {headers: {'Authorization': 'Bearer ' + document.querySelector('meta[name="api_token"]').getAttribute('content')}})
-                            .then(response => (this.ipv4_in = response.data.ip));
-                        axios
-                            .get('/api/dns/' + hostname + '/AAAA', {headers: {'Authorization': 'Bearer ' + document.querySelector('meta[name="api_token"]').getAttribute('content')}})
-                            .then(response => (this.ipv6_in = response.data.ip));
+                            if (hostname) {
+                                axios
+                                    .get('/api/dns/' + hostname + '/A', {headers: {'Authorization': 'Bearer ' + document.querySelector('meta[name="api_token"]').getAttribute('content')}})
+                                    .then(response => (this.ipv4_in = response.data.ip));
+                                axios
+                                    .get('/api/dns/' + hostname + '/AAAA', {headers: {'Authorization': 'Bearer ' + document.querySelector('meta[name="api_token"]').getAttribute('content')}})
+                                    .then(response => (this.ipv6_in = response.data.ip));
+                            }
+                        }
                     }
-                }
-            }
-        });
-    </script>
+                });
+            })
+        </script>
+    @endsection
 </x-app-layout>

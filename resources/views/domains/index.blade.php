@@ -1,12 +1,8 @@
-@extends('layouts.index')
 @section('title', 'Domain names')
-@section('css_style')
-    <x-modal-style></x-modal-style>
-@endsection
-@section('header')
-    {{ __('Domains') }}
-@endsection
-@section('content')
+<x-app-layout>
+    <x-slot name="header">
+        {{ __('Domains') }}
+    </x-slot>
     <div class="container" id="app">
         <x-delete-confirm-modal></x-delete-confirm-modal>
         <x-card class="shadow mt-3">
@@ -67,4 +63,4 @@
     <x-modal-delete-script>
         <x-slot name="uri">domains</x-slot>
     </x-modal-delete-script>
-@endsection
+</x-app-layout>

@@ -1,14 +1,9 @@
-@extends('layouts.index')
 @section('title', 'Resellers')
-@section('css_style')
-    <x-modal-style></x-modal-style>
-@endsection
-@section('header')
-    {{ __('Reseller') }}
-@endsection
-@section('content')
+<x-app-layout>
+    <x-slot name="header">
+        {{ __('Reseller') }}
+    </x-slot>
     <div class="container" id="app">
-        <x-delete-confirm-modal></x-delete-confirm-modal>
         <div class="card shadow mt-3">
             <div class="card-body">
                 <a href="{{ route('reseller.create') }}" class="btn btn-primary mb-3">Add a reseller</a>
@@ -68,8 +63,9 @@
             </div>
         </div>
         <x-details-footer></x-details-footer>
+        <x-delete-confirm-modal></x-delete-confirm-modal>
     </div>
     <x-modal-delete-script>
         <x-slot name="uri">reseller</x-slot>
     </x-modal-delete-script>
-@endsection
+</x-app-layout>

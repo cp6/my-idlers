@@ -1,7 +1,7 @@
 <div v-if="showModal">
-        <transition name="modal">
-        <div class="modal-mask">
-            <div class="modal-wrapper">
+    <transition name="modal">
+        <div id="confirmDeleteModal" class="modal-mask d-none">
+            <div class="modal">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header py-1">
