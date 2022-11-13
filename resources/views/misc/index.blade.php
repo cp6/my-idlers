@@ -1,12 +1,8 @@
-@extends('layouts.index')
 @section('title', 'Misc services')
-@section('css_style')
-    <x-modal-style></x-modal-style>
-@endsection
-@section('header')
-    {{ __('Misc') }}
-@endsection
-@section('content')
+<x-app-layout>
+    <x-slot name="header">
+        {{ __('Misc') }}
+    </x-slot>
     <div class="container" id="app">
         <x-delete-confirm-modal></x-delete-confirm-modal>
         <x-card class="shadow mt-3">
@@ -68,4 +64,4 @@
     <x-modal-delete-script>
         <x-slot name="uri">misc</x-slot>
     </x-modal-delete-script>
-@endsection
+</x-app-layout>

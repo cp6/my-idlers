@@ -1,14 +1,9 @@
-@extends('layouts.index')
 @section('title', 'Seed boxes')
-@section('css_style')
-    <x-modal-style></x-modal-style>
-@endsection
-@section('header')
-    {{ __('Seed boxes') }}
-@endsection
-@section('content')
+<x-app-layout>
+    <x-slot name="header">
+        {{ __('Seed boxes') }}
+    </x-slot>
     <div class="container" id="app">
-        <x-delete-confirm-modal></x-delete-confirm-modal>
         <div class="card shadow mt-3">
             <div class="card-body">
                 <a href="{{ route('seedboxes.create') }}" class="btn btn-primary mb-3">Add a seed box</a>
@@ -90,8 +85,9 @@
             </div>
         </div>
         <x-details-footer></x-details-footer>
+        <x-delete-confirm-modal></x-delete-confirm-modal>
     </div>
     <x-modal-delete-script>
         <x-slot name="uri">seedboxes</x-slot>
     </x-modal-delete-script>
-@endsection
+</x-app-layout>
