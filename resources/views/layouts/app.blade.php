@@ -11,19 +11,16 @@
     <title>@yield('title') - @if (config()->has('app.name')) {{ config('app.name') }} @else My idlers @endif</title>
 
     @if(Session::get('dark_mode'))
-        <link rel="stylesheet" href="{{ asset('css/bootstrap-dark.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/dark.css') }}">
     @else
-        <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/light.css') }}">
     @endif
 
-    <link rel="stylesheet" href="{{ asset('css/fa.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 
     @yield('css_links')
     @yield('style')
 
-    <script src="{{ asset('js/bootstrap.min.js') }}" defer></script>
-
-    @yield('scripts')
 </head>
 <body class="font-sans antialiased">
 <div class="container-fluid">
@@ -40,5 +37,7 @@
 <div class="container">
     {{ $slot }}
 </div>
+<script src="{{ asset('js/app.js') }}" defer></script>
+@yield('scripts')
 </body>
 </html>
