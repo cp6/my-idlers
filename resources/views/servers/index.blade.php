@@ -1,17 +1,9 @@
-@section("title", "Servers")
-@section('style')
-    <x-modal-style></x-modal-style>
-@endsection
-@section('scripts')
-    <script src="{{ asset('js/vue.min.js') }}"></script>
-    <script src="{{ asset('js/axios.min.js') }}"></script>
-@endsection
+@section('title', 'Servers')
 <x-app-layout>
     <x-slot name="header">
         {{ __('Servers') }}
     </x-slot>
     <div class="container" id="app">
-        <x-delete-confirm-modal></x-delete-confirm-modal>
         <x-response-alerts></x-response-alerts>
         <ul class="nav nav-tabs mt-3" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
@@ -94,7 +86,7 @@
 
                                                 <i class="fas fa-plug mx-1" id="{{$server->hostname}}"
                                                    title="check if up"
-                                                   @click="checkUp">
+                                                   @click="checkIfUp">
                                                 </i>
                                                 <i class="fas fa-trash text-danger ms-3" @click="confirmDeleteModal"
                                                    id="{{$server->id}}" title="{{$server->hostname}}"></i>
@@ -175,7 +167,7 @@
 
                                                 <i class="fas fa-plug mx-1" id="{{$server->hostname}}"
                                                    title="check if up"
-                                                   @click="checkUp">
+                                                   @click="checkIfUp">
                                                 </i>
                                                 <i class="fas fa-trash text-danger ms-3" @click="confirmDeleteModal"
                                                    id="{{$server->id}}" title="{{$server->hostname}}"></i>
@@ -196,47 +188,54 @@
             </div>
             <x-details-footer></x-details-footer>
         </div>
+        <x-delete-confirm-modal></x-delete-confirm-modal>
+    </div>
+    @section('scripts')
         <script>
-            axios.defaults.headers.common = {
-                'Content-Type': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                'Accept': 'application/json',
-            };
+            window.addEventListener('load', function () {
+                document.getElementById("confirmDeleteModal").classList.remove("d-none");
+                axios.defaults.headers.common = {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json',
+                };
 
-            let app = new Vue({
-                el: "#app",
-                data: {
-                    "status": false,
-                    "modal_hostname": '',
-                    "modal_id": '',
-                    "delete_form_action": '',
-                    showModal: false
-                },
-                methods: {
-                    checkUp(event) {
-                        var hostname = event.target.id;
-
-                        if (hostname) {
-                            axios
-                                .get('/api/online/' + event.target.id, {headers: {'Authorization': 'Bearer ' + document.querySelector('meta[name="api_token"]').getAttribute('content')}})
-                                .then(response => (this.status = response.data.is_online))
-                                .finally(() => {
-                                    if (this.status) {
-                                        event.target.className = "fas fa-plug text-success mx-1";
-                                    } else if (!this.status) {
-                                        event.target.className = "fas fa-plug text-danger mx-1";
-                                    }
-                                });
-                        }
+                let app = new Vue({
+                    el: "#app",
+                    data: {
+                        "status": false,
+                        "modal_hostname": '',
+                        "modal_id": '',
+                        "delete_form_action": '',
+                        showModal: false
                     },
-                    confirmDeleteModal(event) {
-                        this.showModal = true;
-                        this.modal_hostname = event.target.title;
-                        this.modal_id = event.target.id;
-                        this.delete_form_action = 'servers/' + this.modal_id;
+                    methods: {
+                        checkIfUp(event) {
+                            var hostname = event.target.id;
+
+                            if (hostname) {
+                                axios
+                                    .get('/api/online/' + event.target.id, {headers: {'Authorization': 'Bearer ' + document.querySelector('meta[name="api_token"]').getAttribute('content')}})
+                                    .then(response => (this.status = response.data.is_online))
+                                    .finally(() => {
+                                        if (this.status) {
+                                            event.target.className = "fas fa-plug text-success mx-1";
+                                        } else if (!this.status) {
+                                            event.target.className = "fas fa-plug text-danger mx-1";
+                                        }
+                                    });
+                            }
+                        },
+                        confirmDeleteModal(event) {
+                            this.showModal = true;
+                            this.modal_hostname = event.target.title;
+                            this.modal_id = event.target.id;
+                            this.delete_form_action = 'servers/' + this.modal_id;
+                        }
                     }
-                }
-            });
+                });
+            })
         </script>
+    @endsection
 </x-app-layout>
