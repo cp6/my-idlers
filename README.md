@@ -1,6 +1,6 @@
 # My idlers
 
-A web app for displaying, organizing and storing information about servers (VPS), shared & reseller hosting, seed boxes,
+A self hosted web app for displaying, organizing and storing information about servers (VPS), shared & reseller hosting, seed boxes,
 domains,
 DNS and misc services.
 
