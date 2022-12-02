@@ -78,4 +78,9 @@ class Reseller extends Model
         return $this->hasMany(LabelsAssigned::class, 'service_id', 'id');
     }
 
+    public function note(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Note::class, 'service_id', 'id');
+    }
+
 }

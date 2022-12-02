@@ -20,7 +20,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="'col-12 col-lg-6">
+                <div class="col-12 col-lg-6">
                     <div class="table-responsive">
                         <table class="table table-borderless text-nowrap">
                             <tbody>
@@ -97,7 +97,7 @@
                         </table>
                     </div>
                 </div>
-                <div class="'col-12 col-lg-6">
+                <div class="col-12 col-lg-6">
                     <table class="table table-borderless">
                         <tbody>
                         <tr>
@@ -128,6 +128,12 @@
                             <td class="px-2 py-2 font-bold text-muted">FTP Limit</td>
                             <td>{{$shared->ftp_limit}}</td>
                         </tr>
+                        @if(isset($shared->note))
+                        <tr>
+                            <td class="px-2 py-2 font-bold text-muted">Note:</td>
+                            <td>{{$shared->note->note}}</td>
+                        </tr>
+                        @endif
                         </tbody>
                     </table>
 

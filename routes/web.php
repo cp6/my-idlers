@@ -7,6 +7,7 @@ use App\Http\Controllers\IPsController;
 use App\Http\Controllers\LabelsController;
 use App\Http\Controllers\LocationsController;
 use App\Http\Controllers\MiscController;
+use App\Http\Controllers\NoteController;
 use App\Http\Controllers\OsController;
 use App\Http\Controllers\ProvidersController;
 use App\Http\Controllers\ResellerController;
@@ -63,6 +64,8 @@ Route::resource('seedboxes', SeedBoxesController::class)->middleware(['auth']);
 Route::resource('shared', SharedController::class)->middleware(['auth']);
 
 Route::resource('yabs', YabsController::class)->middleware(['auth']);
+
+Route::resource('notes', NoteController::class)->middleware(['auth']);
 
 Route::get('yabs/{yab}/json', 'App\Http\Controllers\YabsController@yabsToJson')->middleware(['auth'])->name('yabs.json');
 

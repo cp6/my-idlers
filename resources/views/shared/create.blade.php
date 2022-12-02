@@ -47,7 +47,7 @@
                     <div class="row">
                         <div class="col-md-3 mb-3">
                             <x-providers-select>
-                                <x-slot name="current">10</x-slot>
+                                <x-slot name="current">{{random_int(1,98)}}</x-slot>
                             </x-providers-select>
                         </div>
                         <div class="col-md-3 mb-3">

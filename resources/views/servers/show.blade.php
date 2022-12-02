@@ -210,6 +210,10 @@
                     @endif
                 </div>
                 <p id="yabs_code" class="d-none pt-3"><code>curl -sL yabs.sh | bash -s -- -s "{{route('api.store-yabs', [$server_data->id, \Illuminate\Support\Facades\Auth::user()->api_token])}}"</code></p>
+                @if(isset($server_data->note))
+                    <p class="font-bold text-muted mt-3 mb-1 pb-0">Note:</p>
+                    <p class="pt-0">{{$server_data->note->note}}</p>
+                @endif
             </div>
         </x-card>
               <x-details-footer></x-details-footer>

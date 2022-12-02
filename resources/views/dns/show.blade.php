@@ -88,6 +88,12 @@
                         </table>
                     </div>
                 </div>
+                <div class="col-12 col-lg-6">
+                    @if(isset($dns->note))
+                        <p class="font-bold text-muted mt-3 mb-1 pb-0">Note:</p>
+                        <p class="pt-0">{{$dns->note->note}}</p>
+                    @endif
+                </div>
             </div>
             <a href="{{ route('dns.index') }}"
                class="btn btn-success btn-sm mx-2">
