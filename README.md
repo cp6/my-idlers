@@ -1,6 +1,6 @@
 # My idlers
 
-A web app for displaying, organizing and storing information about servers (VPS), shared & reseller hosting, seed boxes,
+A self hosted web app for displaying, organizing and storing information about servers (VPS), shared & reseller hosting, seed boxes,
 domains,
 DNS and misc services.
 
@@ -18,36 +18,22 @@ GeekBench 5 scores to do easier comparing and sorting.
 
 ## Project sponsor
 
-[Cloud Five Limited](https://cloud-v.net/) for providing the hosting for demo installation.
+Currently seeking a project sponsor
 
-## 2.1.8 changes (20th October 2022):
-
-#### You can no longer use the form to submit YABS results
-yabs.sh now has JSON formatted response and can POST the output directly from calling the script. 
-
-With My idlers you can use your API key and the server id to directly POST the benchmark result
-
-`http://domain.com/api/yabs/tnSJLyhz/USERAPIKEYISHERE`
-
-Example yabs.sh call to POST the result
-
-`curl -sL yabs.sh | bash -s -- -s "http://domain.com/api/yabs/tnSJLyhz/USERAPIKEYISHERE"`
+## 2.1.9 changes (2nd December 2022):
 
 #### Please run the following if updating from existing install:
 
 ```shell
+php artisan migrate
 php artisan route:cache
 php artisan cache:clear
 ```
 
-* Added & implemented details footer blade component
-* Added new index layout
-* Updated domains, misc, reseller, seedboxes and shared use new index layout
-* Updated validation for store and update
-* Updated `updatePricing()` to not need `$as_usd` parameter
-* Updated labels assigned insert
-* Updated order/sort by methods for pricing related columns
-* Removed add YABS button on servers index page
+* Added & implemented NPM webpack
+* Added compiled assets
+* Added notes (Servers, shared, reseller, domains, DNS and IPs)
+* Fixed create views default provider is no longer the former sponsor
 
 ## Requires
 
@@ -71,6 +57,7 @@ php artisan cache:clear
 * Assign labels
 * Assign server type (KVM, OVZ, LXC & dedi)
 * Easy to edit values
+* Assign notes
 
 ## Install
 
@@ -112,6 +99,18 @@ docker exec ... php artisan migrate:fresh --seed --force  # Set up database one 
 Run with a single click on [PikaPods.com](https://www.pikapods.com/)
 
 [![PikaPods](https://www.pikapods.com/static/run-button.svg)](https://www.pikapods.com/pods?run=my-idlers)
+
+## Adding a YABS benchmark
+
+yabs.sh now has JSON formatted response and can POST the output directly from calling the script.
+
+With My idlers you can use your API key and the server id to directly POST the benchmark result
+
+`https://yourdomain.com/api/yabs/SERVERID/USERAPIKEYISHERE`
+
+Example yabs.sh call to POST the result:
+
+`curl -sL yabs.sh | bash -s -- -s "https://yourdomain.com/api/yabs/SERVERID/USERAPIKEYISHERE"`
 
 ## API endpoints
 
