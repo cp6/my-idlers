@@ -57,7 +57,4 @@ fabric.properties
 # .idea/misc.xml
 # *.ipr
 storage/clockwork/
-#public/css/
-#public/js/
-#public/fonts/
-#public/webfonts/
+!public/
