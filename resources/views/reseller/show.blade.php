@@ -133,6 +133,12 @@
                             <td class="px-2 py-2 font-bold text-muted">FTP Limit</td>
                             <td>{{$reseller->ftp_limit}}</td>
                         </tr>
+                        @if(isset($reseller->note))
+                            <tr>
+                                <td class="px-2 py-2 font-bold text-muted">Note:</td>
+                                <td>{{$reseller->note->note}}</td>
+                            </tr>
+                        @endif
                         </tbody>
                     </table>
 

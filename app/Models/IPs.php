@@ -47,4 +47,9 @@ class IPs extends Model
         });
     }
 
+    public function note(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Note::class, 'service_id', 'id');
+    }
+
 }

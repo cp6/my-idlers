@@ -38,6 +38,7 @@
                         <li><a class="dropdown-item" href="{{route('providers.index')}}">Providers</a></li>
                         <li><a class="dropdown-item" href="{{route('seedboxes.index')}}">Seedboxes</a></li>
                         <li><a class="dropdown-item" href="{{route('yabs.index')}}">YABS</a></li>
+                        <li><a class="dropdown-item" href="{{route('notes.index')}}">Notes</a></li>
                         <li><a class="dropdown-item" href="{{route('settings.index')}}">Settings</a></li>
                         <li><a class="dropdown-item" href="{{route('account.index')}}">Account</a></li>
                     </ul>

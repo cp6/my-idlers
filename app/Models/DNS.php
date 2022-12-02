@@ -25,4 +25,10 @@ class DNS extends Model
             return DB::table('d_n_s')->count();
         });
     }
+
+    public function note(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Note::class, 'service_id', 'id');
+    }
+
 }

@@ -85,6 +85,12 @@
                         </table>
                     </div>
                 </div>
+                <div class="col-12 col-lg-6">
+                    @if(isset($domain_info->note))
+                        <p class="font-bold text-muted mt-3 mb-1 pb-0">Note:</p>
+                        <p class="pt-0">{{$domain_info->note->note}}</p>
+                    @endif
+                </div>
             </div>
             <x-back-btn>
                 <x-slot name="route">{{ route('domains.index') }}</x-slot>
