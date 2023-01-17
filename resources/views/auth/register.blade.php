@@ -4,7 +4,7 @@
         <!-- Validation Errors -->
         <x-auth-validation-errors class="mb-4" :errors="$errors"/>
 
-        <h3 class="text-center mb-4">My idlers Register</h3>
+        <h3 class="text-center mb-4">@if (config()->has('app.name')) {{ config('app.name') }} @else My idlers @endif Register</h3>
         <form method="POST" action="{{ route('register') }}">
         @csrf
 
