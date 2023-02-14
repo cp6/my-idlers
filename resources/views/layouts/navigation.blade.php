@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-md navbar-light bg-light shadow-sm" aria-label="Eleventh navbar example">
     <div class="container">
-        <a class="navbar-brand" href="{{route('/')}}">My Idlers</a>
+        <a class="navbar-brand" href="{{route('/')}}">@if (config()->has('app.name')) {{ config('app.name') }} @else My idlers @endif</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample09"
                 aria-controls="navbarsExample09" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
