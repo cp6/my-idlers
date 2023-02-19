@@ -8,7 +8,7 @@ Despite what the name infers this self hosted web app isn't just for storing idl
 a [YABS](https://github.com/masonr/yet-another-bench-script) output you can get disk & network speed values along with
 GeekBench 5 scores to do easier comparing and sorting.
 
-[![Generic badge](https://img.shields.io/badge/version-2.1.9-blue.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Laravel-9.0-red.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/PHP-8.1-purple.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Bootstrap-5.1-pink.svg)](https://shields.io/)
+[![Generic badge](https://img.shields.io/badge/version-2.2-blue.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Laravel-10.0-red.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/PHP-8.1-purple.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Bootstrap-5.2-pink.svg)](https://shields.io/)
 
 <img src="https://raw.githubusercontent.com/cp6/my-idlers/main/public/My%20Idlers%20logo.jpg" width="128" height="128" />
 
@@ -20,27 +20,20 @@ GeekBench 5 scores to do easier comparing and sorting.
 
 Currently seeking a project sponsor
 
-## 2.1.9 changes (2nd December 2022):
+## 2.2 changes (19th February 2023):
 
-### NPM / Laravel mix now in use
-
-```shell
-npm install
-npm run prod
-```
+* Laravel version 10
+* PHP minimum version 8.1
+* Updated asset versions
 
 #### Please run the following if updating from existing install:
 
 ```shell
+composer update
 php artisan migrate
 php artisan route:cache
 php artisan cache:clear
 ```
-
-* Added & implemented NPM webpack
-* Added compiled assets
-* Added notes (Servers, shared, reseller, domains, DNS and IPs)
-* Fixed create views default provider is no longer the former sponsor
 
 ## Requires
 
@@ -83,6 +76,7 @@ If you already have at least version 2.0 installed:
 
 * Run `git clone https://github.com/cp6/my-idlers.git`
 * Run `composer install`
+* Run `composer update`
 * Run `php artisan migrate`
 * Run `php artisan route:cache`
 * Run `php artisan cache:clear`
