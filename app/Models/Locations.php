@@ -20,7 +20,7 @@ class Locations extends Model
     public static function allLocations(): array
     {
         return Cache::remember("locations", now()->addMonth(1), function () {
-            return DB::table('locations')->get()->toArray();
+            return DB::table('locations')->orderBy('name')->get()->toArray();
         });
     }
 }

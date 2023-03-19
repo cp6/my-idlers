@@ -20,7 +20,7 @@ class OS extends Model
     public static function allOS(): array
     {
         return Cache::remember("operating_systems", now()->addMonth(1), function () {
-            return DB::table('os')->get()->toArray();
+            return DB::table('os')->orderBy('name')->get()->toArray();
         });
     }
 }
