@@ -20,11 +20,9 @@ GeekBench 5 scores to do easier comparing and sorting.
 
 Currently seeking a project sponsor
 
-## 2.2 changes (19th February 2023):
+## 2.2.1 changes (20th March 2023):
 
-* Laravel version 10
-* PHP minimum version 8.1
-* Updated asset versions
+* Fixed Locations, OS and Providers being not Alpha-Sorted
 
 #### Please run the following if updating from existing install:
 
