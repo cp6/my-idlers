@@ -10,7 +10,7 @@
                 <x-slot name="href">{{ route('/') }}</x-slot>
                 Back to home
             </x-back-button>
-            <form action="{{ route('settings.update', 1) }}" method="POST">
+            <form action="{{ route('settings.update', 1) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="row mt-2">
@@ -68,11 +68,6 @@
                             <x-slot name="title">Home page currency</x-slot>
                             <x-slot name="current">{{$setting->dashboard_currency}}</x-slot>
                         </x-currency-select>
-                    </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-12 col-md-6 mb-3">
-                        <x-yes-no-select title="Save YABS input to txt" name="save_yabs_as_txt" value="{{ $setting->save_yabs_as_txt }}"></x-yes-no-select>
                     </div>
                 </div>
                 <p>Only if <i>Show servers to public</i> is <b>YES</b> do these apply:</p>
@@ -148,6 +143,12 @@
                                 </option>
                             </select>
                         </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12 col-md-6 mb-3">
+                        <label class="form-label pe-2" for="chooseFile">Add custom favicon must be either .ico|.png|.jpg MAX 40KB</label>
+                        <input type="file" name="favicon" class="form-control" id="favicon">
                     </div>
                 </div>
                 <div class="row">
