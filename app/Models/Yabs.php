@@ -58,20 +58,20 @@ class Yabs extends Model
     {
         $speed_tests = [];
         foreach ($data->network_speed as $ns) {
-            $speed_tests[] = array(
+            $speed_tests[] = [
                 'location' => $ns->location,
                 'send' => $ns->send . ' ' . $ns->send_type,
                 'receive' => $ns->receive . ' ' . $ns->receive_type,
-            );
+            ];
         }
-        return array(
+        return [
             'date_time' => $data->output_date,
             'location' => $data->server->location->name,
             'provider' => $data->server->provider->name,
             'uptime' => $data->uptime,
             'distro' => $data->distro,
             'kernel' => $data->kernel,
-            'cpu' => array(
+            'cpu' => [
                 'cores' => $data->cpu_cores,
                 'speed_mhz' => $data->cpu_freq,
                 'model' => $data->cpu_model,
@@ -79,30 +79,30 @@ class Yabs extends Model
                 'vm' => $data->vm === 1,
                 'GB5_single' => $data->gb5_single,
                 'GB5_multi' => $data->gb5_multi,
-            ),
-            'ram' => array(
+            ],
+            'ram' => [
                 'amount' => $data->ram . ' ' . $data->ram_type,
                 'mb' => $data->ram_mb,
-                'swap' => array(
+                'swap' => [
                     'amount' => $data->swap ?? null . ' ' . $data->swap_type ?? null,
                     'mb' => $data->swap_mb ?? null,
-                ),
-            ),
-            'disk' => array(
+                ],
+            ],
+            'disk' => [
                 'amount' => $data->disk . ' ' . $data->disk_type,
                 'gb' => $data->disk_gb,
-                'speed_tests' => array(
+                'speed_tests' => [
                     '4k' => $data->disk_speed->d_4k . ' ' . $data->disk_speed->d_4k_type,
                     '64k' => $data->disk_speed->d_64k . ' ' . $data->disk_speed->d_64k_type,
                     '512k' => $data->disk_speed->d_512k . ' ' . $data->disk_speed->d_512k_type,
                     '1m' => $data->disk_speed->d_1m . ' ' . $data->disk_speed->d_1m_type,
-                ),
-            ),
-            'network' => array(
+                ],
+            ],
+            'network' => [
                 'has_ipv6' => $data->has_ipv6 === 1,
                 'speed_tests' => $speed_tests
-            ),
-        );
+            ],
+        ];
     }
 
     public static function speedAsMbps(string $string): float

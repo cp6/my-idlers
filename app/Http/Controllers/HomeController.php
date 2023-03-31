@@ -47,7 +47,7 @@ class HomeController extends Controller
 
         $p->stopTimer();
 
-        $information = array(
+        $information = [
             'servers' => $service_count['servers'],
             'domains' => $service_count['domains'],
             'shared' => $service_count['shared'],
@@ -67,7 +67,7 @@ class HomeController extends Controller
             'execution_time' => number_format($p->getTimeTaken(), 2),
             'servers_summary' => $server_summary,
             'currency' => Session::get('dashboard_currency')
-        );
+        ];
 
         return view('home', compact('information'));
     }

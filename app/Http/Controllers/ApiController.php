@@ -264,7 +264,7 @@ class ApiController extends Controller
 
     protected function storeServer(Request $request)
     {
-        $rules = array(
+        $rules = [
             'hostname' => 'min:3',
             'server_type' => 'required|integer',
             'os_id' => 'required|integer',
@@ -289,9 +289,9 @@ class ApiController extends Controller
             'price' => 'required|numeric',
             'payment_term' => 'required|integer',
             'next_due_date' => 'date',
-        );
+        ];
 
-        $messages = array(
+        $messages = [
             'required' => ':attribute is required',
             'min' => ':attribute must be longer than 3',
             'integer' => ':attribute must be an integer',
@@ -300,7 +300,7 @@ class ApiController extends Controller
             'numeric' => ':attribute must be a float',
             'ip' => ':attribute must be a valid IP address',
             'date' => ':attribute must be a date Y-m-d',
-        );
+        ];
 
         $validator = Validator::make($request->all(), $rules, $messages);
 
@@ -375,7 +375,7 @@ class ApiController extends Controller
 
     public function updateServer(Request $request)
     {
-        $rules = array(
+        $rules = [
             'hostname' => 'string|min:3',
             'server_type' => 'integer',
             'os_id' => 'integer',
@@ -398,9 +398,9 @@ class ApiController extends Controller
             'price' => 'numeric',
             'payment_term' => 'integer',
             'next_due_date' => 'date',
-        );
+        ];
 
-        $messages = array(
+        $messages = [
             'required' => ':attribute is required',
             'min' => ':attribute must be longer than 3',
             'integer' => ':attribute must be an integer',
@@ -408,7 +408,7 @@ class ApiController extends Controller
             'size' => ':attribute must be exactly :size characters',
             'numeric' => ':attribute must be a float',
             'date' => ':attribute must be a date Y-m-d',
-        );
+        ];
 
         $validator = Validator::make($request->all(), $rules, $messages);
 
@@ -430,22 +430,22 @@ class ApiController extends Controller
 
     public function updatePricing(Request $request)
     {
-        $rules = array(
+        $rules = [
             'price' => 'required|numeric',
             'currency' => 'required|string|size:3',
             'term' => 'required|integer',
             'active' => 'integer',
             'next_due_date' => 'date',
-        );
+        ];
 
-        $messages = array(
+        $messages = [
             'required' => ':attribute is required',
             'integer' => ':attribute must be an integer',
             'string' => ':attribute must be a string',
             'size' => ':attribute must be exactly :size characters',
             'numeric' => ':attribute must be a float',
             'date' => ':attribute must be a date Y-m-d',
-        );
+        ];
 
         $validator = Validator::make($request->all(), $rules, $messages);
 
