@@ -8,7 +8,7 @@ Despite what the name infers this self hosted web app isn't just for storing idl
 a [YABS](https://github.com/masonr/yet-another-bench-script) output you can get disk & network speed values along with
 GeekBench 5 scores to do easier comparing and sorting.
 
-[![Generic badge](https://img.shields.io/badge/version-2.2-blue.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Laravel-10.0-red.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/PHP-8.1-purple.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Bootstrap-5.2-pink.svg)](https://shields.io/)
+[![Generic badge](https://img.shields.io/badge/version-2.3-blue.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Laravel-10.0-red.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/PHP-8.1-purple.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Bootstrap-5.2-pink.svg)](https://shields.io/)
 
 <img src="https://raw.githubusercontent.com/cp6/my-idlers/main/public/My%20Idlers%20logo.jpg" width="128" height="128" />
 
@@ -20,9 +20,13 @@ GeekBench 5 scores to do easier comparing and sorting.
 
 Currently seeking a project sponsor
 
-## 2.2.1 changes (20th March 2023):
+## 2.3 changes (31st March 2023):
 
-* Fixed Locations, OS and Providers being not Alpha-Sorted
+* Added ability to upload and use own favicon
+* Removed unused CSS and JS asset files
+* Updated `array()` usage to `[]`
+* Removed setting for saving YABS to text file
+* Updated Settings model, getSettings() now uses Eloquent rather than DB
 
 #### Please run the following if updating from existing install:
 
