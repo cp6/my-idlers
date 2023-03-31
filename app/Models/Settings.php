@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 class Settings extends Model
@@ -16,11 +15,10 @@ class Settings extends Model
 
     protected $fillable = ['id', 'show_versions_footer', 'show_servers_public', 'show_server_value_ip', 'show_server_value_hostname', 'show_server_value_provider', 'show_server_value_location', 'show_server_value_price', 'show_server_value_yabs', 'save_yabs_as_txt', 'default_currency', 'default_server_os', 'due_soon_amount', 'recently_added_amount', 'dark_mode', 'dashboard_currency', 'sort_on', 'favicon'];
 
-    public static function getSettings()
+    public static function getSettings(): Settings
     {
         return Cache::remember('settings', now()->addWeek(1), function () {
-            return DB::table('settings')->where('id', '=', 1)
-                ->first();
+            return self::where('id', 1)->first();
         });
     }
 
@@ -71,6 +69,5 @@ class Settings extends Model
         }
         return ['created_at', 'desc'];
     }
-
 
 }
