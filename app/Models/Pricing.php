@@ -143,8 +143,8 @@ class Pricing extends Model
 
     public static function allPricing()
     {
-        return Cache::remember('all_pricing', now()->addWeek(1), function () {
-            return Pricing::get();
+        return Cache::remember('all_active_pricing', now()->addWeek(1), function () {
+            return Pricing::where('active', 1)->get();
         });
     }
 
