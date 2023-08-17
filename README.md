@@ -20,13 +20,12 @@ GeekBench 5 scores to do easier comparing and sorting.
 
 Currently seeking a project sponsor
 
-## 2.3 changes (31st March 2023):
+## 2.3.1 changes (17th August 2023):
 
-* Added ability to upload and use own favicon
-* Removed unused CSS and JS asset files
-* Updated `array()` usage to `[]`
-* Removed setting for saving YABS to text file
-* Updated Settings model, getSettings() now uses Eloquent rather than DB
+* Updated resource files
+* Updated composer.json
+* Updated packages.json
+* Fixed dashboard price summary including non active services
 
 #### Please run the following if updating from existing install:
 
