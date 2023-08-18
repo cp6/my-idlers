@@ -69,8 +69,8 @@ class DNSController extends Controller
         $dns = DNS::findOrFail($dn->id);
 
         $labels = DB::table('labels_assigned as l')
-            ->join('labels', 'l.label_id', '=', 'labels.id')
-            ->where('l.service_id', '=', $dn->id)
+            ->join('labels', 'l.label_id', 'labels.id')
+            ->where('l.service_id', $dn->id)
             ->get(['labels.label']);
 
         return view('dns.show', compact(['dn', 'dns', 'labels']));
@@ -84,8 +84,8 @@ class DNSController extends Controller
         $Resellers = Reseller::all();
         $dn = DNS::findOrFail($dn->id);
         $labels = DB::table('labels_assigned as l')
-            ->join('labels', 'l.label_id', '=', 'labels.id')
-            ->where('l.service_id', '=', $dn->id)
+            ->join('labels', 'l.label_id', 'labels.id')
+            ->where('l.service_id', $dn->id)
             ->get(['labels.id']);
 
         return view('dns.edit', compact(['dn', 'labels', 'Servers', 'Domains', 'Shareds', 'Resellers']));

@@ -29,7 +29,7 @@ class Home extends Model
             return DB::table('pricings')
                 ->select('service_type', DB::raw('COUNT(*) as amount'))
                 ->groupBy('service_type')
-                ->where('active', '=', 1)
+                ->where('active', 1)
                 ->get();
         });
     }
@@ -38,13 +38,13 @@ class Home extends Model
     {
         return Cache::remember('due_soon', now()->addHours(6), function () {
             return DB::table('pricings as p')
-                ->leftJoin('servers as s', 'p.service_id', '=', 's.id')
-                ->leftJoin('shared_hosting as sh', 'p.service_id', '=', 'sh.id')
-                ->leftJoin('reseller_hosting as r', 'p.service_id', '=', 'r.id')
-                ->leftJoin('domains as d', 'p.service_id', '=', 'd.id')
-                ->leftJoin('misc_services as ms', 'p.service_id', '=', 'ms.id')
-                ->leftJoin('seedboxes as sb', 'p.service_id', '=', 'sb.id')
-                ->where('p.active', '=', 1)
+                ->leftJoin('servers as s', 'p.service_id', 's.id')
+                ->leftJoin('shared_hosting as sh', 'p.service_id', 'sh.id')
+                ->leftJoin('reseller_hosting as r', 'p.service_id', 'r.id')
+                ->leftJoin('domains as d', 'p.service_id', 'd.id')
+                ->leftJoin('misc_services as ms', 'p.service_id', 'ms.id')
+                ->leftJoin('seedboxes as sb', 'p.service_id', 'sb.id')
+                ->where('p.active', 1)
                 ->orderBy('next_due_date', 'ASC')
                 ->limit(Session::get('due_soon_amount'))
                 ->get(['p.*', 's.hostname', 'd.domain', 'd.extension', 'r.main_domain as reseller', 'sh.main_domain', 'ms.name', 'sb.title']);
@@ -54,12 +54,12 @@ class Home extends Model
     public static function serverSummary()
     {
         return Cache::remember('servers_summary', now()->addHours(6), function () {
-            $cpu_sum = DB::table('servers')->get()->where('active', '=', 1)->sum('cpu');
-            $ram_mb = DB::table('servers')->get()->where('active', '=', 1)->sum('ram_as_mb');
-            $disk_gb = DB::table('servers')->get()->where('active', '=', 1)->sum('disk_as_gb');
-            $bandwidth = DB::table('servers')->get()->where('active', '=', 1)->sum('bandwidth');
-            $locations_sum = DB::table('servers')->get()->where('active', '=', 1)->groupBy('location_id')->count();
-            $providers_sum = DB::table('servers')->get()->where('active', '=', 1)->groupBy('provider_id')->count();
+            $cpu_sum = DB::table('servers')->get()->where('active', 1)->sum('cpu');
+            $ram_mb = DB::table('servers')->get()->where('active', 1)->sum('ram_as_mb');
+            $disk_gb = DB::table('servers')->get()->where('active', 1)->sum('disk_as_gb');
+            $bandwidth = DB::table('servers')->get()->where('active', 1)->sum('bandwidth');
+            $locations_sum = DB::table('servers')->get()->where('active', 1)->groupBy('location_id')->count();
+            $providers_sum = DB::table('servers')->get()->where('active', 1)->groupBy('provider_id')->count();
             return array(
                 'cpu_sum' => $cpu_sum,
                 'ram_mb_sum' => $ram_mb,
@@ -75,13 +75,13 @@ class Home extends Model
     {
         return Cache::remember('recently_added', now()->addHours(6), function () {
             return DB::table('pricings as p')
-                ->leftJoin('servers as s', 'p.service_id', '=', 's.id')
-                ->leftJoin('shared_hosting as sh', 'p.service_id', '=', 'sh.id')
-                ->leftJoin('reseller_hosting as r', 'p.service_id', '=', 'r.id')
-                ->leftJoin('domains as d', 'p.service_id', '=', 'd.id')
-                ->leftJoin('misc_services as ms', 'p.service_id', '=', 'ms.id')
-                ->leftJoin('seedboxes as sb', 'p.service_id', '=', 'sb.id')
-                ->where('p.active', '=', 1)
+                ->leftJoin('servers as s', 'p.service_id', 's.id')
+                ->leftJoin('shared_hosting as sh', 'p.service_id', 'sh.id')
+                ->leftJoin('reseller_hosting as r', 'p.service_id', 'r.id')
+                ->leftJoin('domains as d', 'p.service_id', 'd.id')
+                ->leftJoin('misc_services as ms', 'p.service_id', 'ms.id')
+                ->leftJoin('seedboxes as sb', 'p.service_id', 'sb.id')
+                ->where('p.active', 1)
                 ->orderBy('created_at', 'DESC')
                 ->limit(Session::get('recently_added_amount'))
                 ->get(['p.*', 's.hostname', 'd.domain', 'd.extension', 'r.main_domain as reseller', 'sh.main_domain', 'ms.name', 'sb.title']);

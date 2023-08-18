@@ -60,7 +60,7 @@ class ApiController extends Controller
 
     protected function getNetworkSpeeds($id)
     {
-        $ns = NetworkSpeed::where('server_id', '=', $id)
+        $ns = NetworkSpeed::where('server_id', $id)
             ->get()->toJson(JSON_PRETTY_PRINT);
         return response($ns, 200);
     }
@@ -73,7 +73,7 @@ class ApiController extends Controller
 
     protected function getLabel($id)
     {
-        $label = Labels::where('id', '=', $id)
+        $label = Labels::where('id', $id)
             ->get()->toJson(JSON_PRETTY_PRINT);
         return response($label, 200);
     }
@@ -148,7 +148,7 @@ class ApiController extends Controller
     protected function getDns($id)
     {
         $dns = DB::table('d_n_s')
-            ->where('id', '=', $id)
+            ->where('id', $id)
             ->get()->toJson(JSON_PRETTY_PRINT);
         return response($dns, 200);
     }
@@ -163,7 +163,7 @@ class ApiController extends Controller
     protected function getLocation($id)
     {
         $location = DB::table('locations')
-            ->where('id', '=', $id)
+            ->where('id', $id)
             ->get()->toJson(JSON_PRETTY_PRINT);
         return response($location, 200);
     }
@@ -178,7 +178,7 @@ class ApiController extends Controller
     protected function getProvider($id)
     {
         $providers = DB::table('providers')
-            ->where('id', '=', $id)
+            ->where('id', $id)
             ->get()->toJson(JSON_PRETTY_PRINT);
         return response($providers, 200);
     }
@@ -199,7 +199,7 @@ class ApiController extends Controller
     protected function getOs($id)
     {
         $os = DB::table('os as o')
-            ->where('o.id', '=', $id)
+            ->where('o.id', $id)
             ->get()->toJson(JSON_PRETTY_PRINT);
         return response($os, 200);
     }
@@ -213,7 +213,7 @@ class ApiController extends Controller
     protected function getIP($id)
     {
         $ip = DB::table('ips as i')
-            ->where('i.id', '=', $id)
+            ->where('i.id', $id)
             ->get()->toJson(JSON_PRETTY_PRINT);
         return response($ip, 200);
     }

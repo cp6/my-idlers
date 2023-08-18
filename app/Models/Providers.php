@@ -27,17 +27,17 @@ class Providers extends Model
     public static function showServicesForProvider($provider): array
     {
         $servers = DB::table('servers as s')
-            ->where('s.provider_id', '=', $provider)
+            ->where('s.provider_id', $provider)
             ->get(['s.id', 's.hostname'])
             ->toArray();
 
         $shared = DB::table('shared_hosting as s')
-            ->where('s.provider_id', '=', $provider)
+            ->where('s.provider_id', $provider)
             ->get(['s.id', 's.main_domain as main_domain_shared'])
             ->toArray();
 
         $reseller = DB::table('reseller_hosting as r')
-            ->where('r.provider_id', '=', $provider)
+            ->where('r.provider_id', $provider)
             ->get(['r.id', 'r.main_domain as main_domain_reseller'])
             ->toArray();
 

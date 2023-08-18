@@ -63,7 +63,7 @@ class Server extends Model
     public static function allActiveServers()
     {//All ACTIVE servers and relationships replaces activeServersDataIndexPage()
         return Cache::remember("all_active_servers", now()->addMonth(1), function () {
-            $query = Server::where('active', '=', 1)
+            $query = Server::where('active', 1)
                 ->with(['location', 'provider', 'os', 'ips', 'yabs', 'yabs.disk_speed', 'yabs.network_speed', 'labels', 'price']);
             if (in_array(Session::get('sort_on'), [3, 4, 5, 6], true)) {
                 $options = Settings::orderByProcess(Session::get('sort_on'));
@@ -76,7 +76,7 @@ class Server extends Model
     public static function allNonActiveServers()
     {//All NON ACTIVE servers and relationships replaces nonActiveServersDataIndexPage()
         return Cache::remember("non_active_servers", now()->addMonth(1), function () {
-            return Server::where('active', '=', 0)
+            return Server::where('active', 0)
                 ->with(['location', 'provider', 'os', 'price', 'ips', 'yabs', 'yabs.disk_speed', 'yabs.network_speed', 'labels'])
                 ->get();
         });
@@ -85,7 +85,7 @@ class Server extends Model
     public static function allPublicServers()
     {//server data that will be publicly viewable (values in settings)
         return Cache::remember("public_server_data", now()->addMonth(1), function () {
-            return Server::where('show_public', '=', 1)
+            return Server::where('show_public', 1)
                 ->with(['location', 'provider', 'os', 'price', 'ips', 'yabs', 'yabs.disk_speed', 'yabs.network_speed', 'labels'])
                 ->get();
         });

@@ -40,17 +40,17 @@ class LocationsController extends Controller
     public function show(Locations $location)
     {
         $servers = DB::table('servers as s')
-            ->where('s.location_id', '=', $location->id)
+            ->where('s.location_id', $location->id)
             ->get(['s.id', 's.hostname'])
             ->toArray();
 
         $shared = DB::table('shared_hosting as s')
-            ->where('s.location_id', '=', $location->id)
+            ->where('s.location_id', $location->id)
             ->get(['s.id', 's.main_domain as main_domain_shared'])
             ->toArray();
 
         $reseller = DB::table('reseller_hosting as r')
-            ->where('r.location_id', '=', $location->id)
+            ->where('r.location_id', $location->id)
             ->get(['r.id', 'r.main_domain as main_domain_reseller'])
             ->toArray();
 

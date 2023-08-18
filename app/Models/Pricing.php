@@ -106,7 +106,7 @@ class Pricing extends Model
 
     public function deletePricing($id): void
     {
-        DB::table('pricings')->where('service_id', '=', $id)->delete();
+        DB::table('pricings')->where('service_id', $id)->delete();
     }
 
     public function insertPricing(int $type, string $service_id, string $currency, float $price, int $term, string $next_due_date, int $is_active = 1): Pricing

@@ -22,7 +22,7 @@ class IPs extends Model
 
     public static function deleteIPsAssignedTo($service_id)
     {
-        DB::table('ips')->where('service_id', '=', $service_id)->delete();
+        DB::table('ips')->where('service_id', $service_id)->delete();
     }
 
     public static function insertIP(string $service_id, string $address): IPs
@@ -42,7 +42,7 @@ class IPs extends Model
     {
         return Cache::remember("ip_addresses.$server_id", now()->addHours(1), function () use ($server_id) {
             return json_decode(DB::table('ips as i')
-                ->where('i.service_id', '=', $server_id)
+                ->where('i.service_id', $server_id)
                 ->get(), true);
         });
     }
