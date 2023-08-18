@@ -2,11 +2,9 @@
 
 namespace App\Models;
 
-use App\Process;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -52,7 +50,7 @@ class Server extends Model
         });
     }
 
-    public static function server(string $server_id)
+    public static function server(string $server_id): Server
     {//Single server and relationships (no using joins)
         return Cache::remember("server.$server_id", now()->addMonth(1), function () use ($server_id) {
             return Server::where('id', $server_id)
@@ -197,37 +195,37 @@ class Server extends Model
         return Yabs::where('server_id', $server_id)->count();
     }
 
-    public function yabs()
+    public function yabs(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Yabs::class, 'server_id', 'id');
     }
 
-    public function ips()
+    public function ips(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(IPs::class, 'service_id', 'id');
     }
 
-    public function location()
+    public function location(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(Locations::class, 'id', 'location_id');
     }
 
-    public function provider()
+    public function provider(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(Providers::class, 'id', 'provider_id');
     }
 
-    public function os()
+    public function os(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(OS::class, 'id', 'os_id');
     }
 
-    public function price()
+    public function price(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(Pricing::class, 'service_id', 'id');
     }
 
-    public function labels()
+    public function labels(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(LabelsAssigned::class, 'service_id', 'id');
     }
