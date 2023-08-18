@@ -59,7 +59,7 @@ class HomeController extends Controller
             'total_services' => $service_count['total'],
             'total_inactive' => $pricing_breakdown['inactive_count'],
             'total_cost_weekly' => number_format($pricing_breakdown['total_cost_weekly'], 2),
-            'total_cost_monthly' => number_format($pricing_breakdown['total_cost_montly'], 2),
+            'total_cost_monthly' => number_format($pricing_breakdown['total_cost_monthly'], 2),
             'total_cost_yearly' => number_format($pricing_breakdown['total_cost_yearly'], 2),
             'total_cost_2_yearly' => number_format(($pricing_breakdown['total_cost_yearly'] * 2), 2),
             'due_soon' => $due_soon,

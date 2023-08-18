@@ -163,7 +163,7 @@ class Home extends Model
 
             return array(
                 'total_cost_weekly' => $total_cost_weekly,
-                'total_cost_montly' => $total_cost_pm,
+                'total_cost_monthly' => $total_cost_pm,
                 'total_cost_yearly' => $total_cost_yearly,
                 'inactive_count' => $inactive_count,
             );
