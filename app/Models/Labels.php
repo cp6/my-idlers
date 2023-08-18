@@ -41,7 +41,7 @@ class Labels extends Model
     public static function labelsCount()
     {
         return Cache::remember('labels_count', now()->addMonth(1), function () {
-            return DB::table('labels')->count();
+            return Labels::count();
         });
     }
 

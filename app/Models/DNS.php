@@ -22,7 +22,7 @@ class DNS extends Model
     public static function dnsCount()
     {
         return Cache::remember('dns_count', now()->addMonth(1), function () {
-            return DB::table('d_n_s')->count();
+            return DNS::count();
         });
     }
 
