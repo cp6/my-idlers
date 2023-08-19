@@ -20,7 +20,7 @@ class Providers extends Model
     public static function allProviders(): array
     {
         return Cache::remember("providers", now()->addMonth(1), function () {
-            return DB::table('providers')->orderBy('name')->get()->toArray();
+            return self::orderBy('name')->get()->toArray();
         });
     }
 

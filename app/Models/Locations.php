@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 
 class Locations extends Model
 {
@@ -20,7 +19,7 @@ class Locations extends Model
     public static function allLocations(): array
     {
         return Cache::remember("locations", now()->addMonth(1), function () {
-            return DB::table('locations')->orderBy('name')->get()->toArray();
+            return self::orderBy('name')->get()->toArray();
         });
     }
 }

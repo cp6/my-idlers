@@ -21,12 +21,12 @@ class Labels extends Model
 
     public static function deleteLabelsAssignedTo($service_id): void
     {
-        DB::table('labels_assigned')->where('service_id', $service_id)->delete();
+        LabelsAssigned::where('service_id', $service_id)->delete();
     }
 
     public static function deleteLabelAssignedAs($label_id): void
     {
-        DB::table('labels_assigned')->where('label_id', $label_id)->delete();
+        LabelsAssigned::where('label_id', $label_id)->delete();
     }
 
     public static function insertLabelsAssigned(array $labels_array, string $service_id): void
