@@ -15,16 +15,6 @@ class YabsController extends Controller
         return view('yabs.index', ['yabs' => Yabs::allYabs()]);
     }
 
-    public function create()
-    {
-        abort(404);//Use new YABS json output POST method -s "URL"
-    }
-
-    public function store(Request $request)
-    {
-        abort(404);//Storing YABS now done through APiController
-    }
-
     public function show(Yabs $yab)
     {
         return view('yabs.show', ['yabs' => Yabs::yabs($yab->id)]);
