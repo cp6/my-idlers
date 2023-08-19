@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 
 class Labels extends Model
 {
@@ -33,7 +32,10 @@ class Labels extends Model
     {
         for ($i = 1; $i <= 4; $i++) {
             if (!is_null($labels_array[($i - 1)])) {
-                DB::table('labels_assigned')->insert(['label_id' => $labels_array[($i - 1)], 'service_id' => $service_id]);
+                LabelsAssigned::create([
+                    'label_id' => $labels_array[($i - 1)],
+                    'service_id' => $service_id
+                ]);
             }
         }
     }
