@@ -17,7 +17,7 @@ class NetworkSpeed extends Model
 
     protected $fillable = ['id', 'server_id', 'location', 'send', 'send_type', 'send_as_mbps', 'receive', 'receive_type', 'receive_as_mbps', 'created_at', 'updated_at'];
 
-    public function yabs()
+    public function yabs(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Yabs::class, 'id', 'id');
     }

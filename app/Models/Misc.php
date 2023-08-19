@@ -52,7 +52,7 @@ class Misc extends Model
         });
     }
 
-    public function price()
+    public function price(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(Pricing::class, 'service_id', 'id');
     }

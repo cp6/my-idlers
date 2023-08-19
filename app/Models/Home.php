@@ -13,7 +13,7 @@ class Home extends Model
 {
     use HasFactory;
 
-    public static function homePageCacheForget()
+    public static function homePageCacheForget(): void
     {
         Cache::forget('services_count');//Main page services_count cache
         Cache::forget('due_soon');//Main page due_soon cache

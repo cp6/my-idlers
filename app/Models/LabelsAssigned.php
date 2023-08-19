@@ -17,7 +17,7 @@ class LabelsAssigned extends Model
 
     protected $keyType = 'string';
 
-    public function label()
+    public function label(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(Labels::class, 'id', 'label_id');
     }

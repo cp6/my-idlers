@@ -20,7 +20,7 @@ class IPs extends Model
 
     public $incrementing = false;
 
-    public static function deleteIPsAssignedTo($service_id)
+    public static function deleteIPsAssignedTo($service_id): void
     {
         DB::table('ips')->where('service_id', $service_id)->delete();
     }

@@ -53,27 +53,27 @@ class Reseller extends Model
         });
     }
 
-    public function ips()
+    public function ips(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(IPs::class, 'service_id', 'id');
     }
 
-    public function location()
+    public function location(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(Locations::class, 'id', 'location_id');
     }
 
-    public function provider()
+    public function provider(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(Providers::class, 'id', 'provider_id');
     }
 
-    public function price()
+    public function price(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(Pricing::class, 'service_id', 'id');
     }
 
-    public function labels()
+    public function labels(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(LabelsAssigned::class, 'service_id', 'id');
     }

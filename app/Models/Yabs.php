@@ -39,17 +39,17 @@ class Yabs extends Model
         });
     }
 
-    public function server()
+    public function server(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(Server::class, 'id', 'server_id');
     }
 
-    public function disk_speed()
+    public function disk_speed(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(DiskSpeed::class, 'id', 'id');
     }
 
-    public function network_speed()
+    public function network_speed(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(NetworkSpeed::class, 'id', 'id');
     }
