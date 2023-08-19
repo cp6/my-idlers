@@ -159,7 +159,7 @@ class Yabs extends Model
         return $kbs / 1000;
     }
 
-    public static function insertFromJson($data, string $server_id)
+    public static function insertFromJson($data, string $server_id): bool
     {
         $data = (object)$data;
         try {
