@@ -54,11 +54,6 @@ class LabelsController extends Controller
         return view('labels.show', compact(['label', 'labels']));
     }
 
-    public function edit(Labels $label)
-    {
-        abort(404);
-    }
-
     public function destroy(Labels $label)
     {
         if ($label->delete()) {

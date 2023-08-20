@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\DNS;
 use App\Models\IPs;
 use App\Models\Reseller;
 use App\Models\SeedBoxes;
 use App\Models\Server;
 use App\Models\Shared;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class IPsController extends Controller

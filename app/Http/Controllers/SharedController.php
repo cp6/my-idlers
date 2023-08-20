@@ -9,7 +9,6 @@ use App\Models\Pricing;
 use App\Models\Shared;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class SharedController extends Controller

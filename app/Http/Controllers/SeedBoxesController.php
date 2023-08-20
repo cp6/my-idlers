@@ -3,14 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Home;
-use App\Models\IPs;
 use App\Models\Labels;
 use App\Models\Pricing;
 use App\Models\SeedBoxes;
-use App\Models\Shared;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class SeedBoxesController extends Controller

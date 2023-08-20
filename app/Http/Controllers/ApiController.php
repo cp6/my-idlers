@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\DiskSpeed;
 use App\Models\Domains;
 use App\Models\IPs;
 use App\Models\Labels;
@@ -17,7 +16,6 @@ use App\Models\Server;
 use App\Models\Shared;
 use App\Models\User;
 use App\Models\Yabs;
-use App\Process;
 use DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;

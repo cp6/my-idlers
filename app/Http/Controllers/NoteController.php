@@ -7,7 +7,6 @@ use App\Models\Domains;
 use App\Models\IPs;
 use App\Models\Note;
 use App\Models\Reseller;
-use App\Models\SeedBoxes;
 use App\Models\Server;
 use App\Models\Shared;
 use Illuminate\Http\Request;

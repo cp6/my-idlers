@@ -8,7 +8,6 @@ use App\Models\Reseller;
 use App\Models\Server;
 use App\Models\Domains;
 use App\Models\Shared;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -91,7 +90,7 @@ class DNSController extends Controller
         return view('dns.edit', compact(['dn', 'labels', 'Servers', 'Domains', 'Shareds', 'Resellers']));
     }
 
-    public function update(Request $request, DNS $dn)
+    public function update(Request $request, DNS $dn): \Illuminate\Http\RedirectResponse
     {
         $request->validate([
             'hostname' => 'required|string|min:2',
@@ -121,7 +120,7 @@ class DNSController extends Controller
             ->with('success', 'DNS updated Successfully.');
     }
 
-    public function destroy(DNS $dn)
+    public function destroy(DNS $dn): \Illuminate\Http\RedirectResponse
     {
         if ( $dn->delete()){
             Cache::forget('dns_count');

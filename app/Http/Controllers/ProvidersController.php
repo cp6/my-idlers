@@ -3,10 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Providers;
-use DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 
 class ProvidersController extends Controller
 {
