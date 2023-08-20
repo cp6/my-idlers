@@ -2,10 +2,6 @@
 
 namespace App;
 
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Storage;
-
 class Process
 {
     public string $start_time;
