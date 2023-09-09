@@ -18,14 +18,14 @@
                 @if(!empty($providers))
                     @foreach($providers as $provider)
                         <tr>
-                            <td class="text-nowrap">{{ $provider->name }}</td>
+                            <td class="text-nowrap">{{ $provider['name'] }}</td>
                             <td class="text-nowrap">
-                                <form action="{{ route('providers.destroy', $provider->id) }}" method="POST">
-                                    <a href="{{ route('providers.show', $provider->id) }}"
+                                <form action="{{ route('providers.destroy', $provider['id']) }}" method="POST">
+                                    <a href="{{ route('providers.show', $provider['id']) }}"
                                        class="text-body mx-1">
                                         <i class="fas fa-eye" title="view"></i></a>
                                     <i class="fas fa-trash text-danger ms-3" @click="confirmDeleteModal"
-                                       id="{{$provider->id}}" title="{{$provider->name}}"></i>
+                                       id="{{$provider['id']}}" title="{{$provider['name']}}"></i>
                                 </form>
                             </td>
                         </tr>

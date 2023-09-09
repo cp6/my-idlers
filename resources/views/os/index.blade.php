@@ -18,11 +18,11 @@
                 @if(!empty($os))
                     @foreach($os as $o)
                         <tr>
-                            <td class="text-nowrap">{{ $o->name }}</td>
+                            <td class="text-nowrap">{{ $o['name'] }}</td>
                             <td class="text-nowrap">
-                                <form action="{{ route('locations.destroy', $o->id) }}" method="POST">
+                                <form action="{{ route('locations.destroy', $o['id']) }}" method="POST">
                                     <i class="fas fa-trash text-danger ms-3" @click="confirmDeleteModal"
-                                       id="{{$o->id}}" title="{{$o->name}}"></i>
+                                       id="{{$o['id']}}" title="{{$o['name']}}"></i>
                                 </form>
                             </td>
                         </tr>

@@ -18,14 +18,14 @@
                 @if(!empty($locations))
                     @foreach($locations as $location)
                         <tr>
-                            <td class="text-nowrap">{{ $location->name }}</td>
+                            <td class="text-nowrap">{{ $location['name'] }}</td>
                             <td class="text-nowrap">
-                                <form action="{{ route('locations.destroy', $location->id) }}" method="POST">
-                                    <a href="{{ route('locations.show', $location->id) }}"
+                                <form action="{{ route('locations.destroy', $location['id']) }}" method="POST">
+                                    <a href="{{ route('locations.show', $location['id']) }}"
                                        class="text-body mx-1">
                                         <i class="fas fa-eye" title="view"></i></a>
                                     <i class="fas fa-trash text-danger ms-3" @click="confirmDeleteModal"
-                                       id="{{$location->id}}" title="{{$location->name}}"></i>
+                                       id="{{$location['id']}}" title="{{$location['name']}}"></i>
                                 </form>
                             </td>
                         </tr>
