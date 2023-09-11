@@ -12,7 +12,7 @@ GeekBench 5 scores to do easier comparing and sorting.
 
 <img src="https://raw.githubusercontent.com/cp6/my-idlers/main/public/My%20Idlers%20logo.jpg" width="128" height="128" />
 
-[Demo site](https://demo.myidlers.com/)
+[View demo site](https://demo.myidlers.com/)
 
 **Note:** Create, Update and Delete are disabled on demo site.
 
