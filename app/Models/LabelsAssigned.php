@@ -11,6 +11,8 @@ class LabelsAssigned extends Model
 
     public $incrementing = false;
 
+    public $timestamps = false;
+
     public $table = 'labels_assigned';
 
     protected $fillable = ['label_id', 'service_id'];
