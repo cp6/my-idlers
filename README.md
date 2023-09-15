@@ -114,6 +114,10 @@ Example yabs.sh call to POST the result:
 
 `curl -sL yabs.sh | bash -s -- -s "https://yourdomain.com/api/yabs/SERVERID/USERAPIKEYISHERE"`
 
+## TODO
+
+Add Geekbench 6 single and multi-core scores
+
 ## API endpoints
 
 For GET requests the header must have `Accept: application/json` and your API token (found at `/account`)
