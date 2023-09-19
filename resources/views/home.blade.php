@@ -21,102 +21,99 @@
                 </button>
             </li>
         </ul>
-
-            <div class="tab-content" id="myTabContent">
-                <div class="tab-pane fade show active" id="tally" role="tabpanel" aria-labelledby="tally-tab">
-                    <div class="row mt-3">
-                        <div class="col-6 col-lg-2 mb-3">
-                            <x-service-tally-card tally="{{ $information['servers'] }}"
-                                                  route="{{route('servers.index')}}"
-                                                  service="Servers"></x-service-tally-card>
-                        </div>
-                        <div class="col-6 col-lg-2 mb-3">
-                            <x-service-tally-card tally="{{ $information['shared'] }}" route="{{route('shared.index')}}"
-                                                  service="Shared"></x-service-tally-card>
-                        </div>
-                        <div class="col-6 col-lg-2 mb-3">
-                            <x-service-tally-card tally="{{ $information['reseller'] }}"
-                                                  route="{{route('reseller.index')}}"
-                                                  service="Reseller"></x-service-tally-card>
-                        </div>
-                        <div class="col-6 col-lg-2 mb-3">
-                            <x-service-tally-card tally="{{ $information['domains'] }}"
-                                                  route="{{route('domains.index')}}"
-                                                  service="Domains"></x-service-tally-card>
-                        </div>
-                        <div class="col-6 col-lg-2 mb-3">
-                            <x-service-tally-card tally="{{ $information['misc'] }}" route="{{route('misc.index')}}"
-                                                  service="Misc"></x-service-tally-card>
-                        </div>
-                        <div class="col-6 col-lg-2 mb-3">
-                            <x-service-tally-card tally="{{ $information['dns'] }}" route="{{route('dns.index')}}"
-                                                  service="DNS"></x-service-tally-card>
-                        </div>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="tally" role="tabpanel" aria-labelledby="tally-tab">
+                <div class="row mt-3">
+                    <div class="col-6 col-lg-2 mb-3">
+                        <x-service-tally-card tally="{{ $information['servers'] }}"
+                                              route="{{route('servers.index')}}"
+                                              service="Servers"></x-service-tally-card>
                     </div>
-                </div>
-
-                <div class="tab-pane fade" id="costings" role="tabpanel" aria-labelledby="costings-tab">
-                    <div class="row mt-3">
-                        <div class="col-12 col-lg-2 mb-3">
-                            <x-info-card value="{{$information['total_cost_weekly']}}" title="Weekly cost"
-                                         append="{{$information['currency']}}"></x-info-card>
-                        </div>
-                        <div class="col-12 col-lg-2 mb-3">
-                            <x-info-card value="{{$information['total_cost_monthly']}}" title="Monthly cost"
-                                         append="{{$information['currency']}}"></x-info-card>
-                        </div>
-                        <div class="col-12 col-lg-2 mb-3">
-                            <x-info-card value="{{$information['total_cost_yearly']}}" title="Yearly cost"
-                                         append="{{$information['currency']}}"></x-info-card>
-                        </div>
-                        <div class="col-12 col-lg-2 mb-3">
-                            <x-info-card value="{{$information['total_cost_2_yearly']}}" title="2 yearly cost"
-                                         append="{{$information['currency']}}"></x-info-card>
-                        </div>
+                    <div class="col-6 col-lg-2 mb-3">
+                        <x-service-tally-card tally="{{ $information['shared'] }}" route="{{route('shared.index')}}"
+                                              service="Shared"></x-service-tally-card>
                     </div>
-                </div>
-
-                <div class="tab-pane fade" id="averages" role="tabpanel" aria-labelledby="averages-tab">
-                    <div class="row mt-3">
-                        <div class="col-6 col-lg-2 mb-3">
-                            <x-info-card value="{{$information['servers_summary']['cpu_sum']}}"
-                                         title="CPU"></x-info-card>
-                        </div>
-                        <div class="col-6 col-lg-2 mb-3">
-                            <x-info-card
-                                value="{{number_format($information['servers_summary']['ram_mb_sum'] / 1024, 2)}}"
-                                title="RAM"
-                                append="GB"></x-info-card>
-                        </div>
-                        <div class="col-6 col-lg-2 mb-3">
-                            @if($information['servers_summary']['disk_gb_sum'] >= 1000)
-                                <x-info-card
-                                    value="{{number_format($information['servers_summary']['disk_gb_sum'] / 1024,2)}}"
-                                    title="DISK" append="TB"></x-info-card>
-                            @else
-                                <x-info-card value="{{$information['servers_summary']['disk_gb_sum']}}" title="DISK"
-                                             append="GB"></x-info-card>
-                            @endif
-                        </div>
-                        <div class="col-6 col-lg-2 mb-3">
-                            <x-info-card
-                                value="{{number_format($information['servers_summary']['bandwidth_sum'] / 1024, 2)}}"
-                                title="Bandwidth" append="TB"></x-info-card>
-                        </div>
-                        <div class="col-6 col-lg-2 mb-3">
-                            <x-info-card value="{{$information['servers_summary']['locations_sum']}}"
-                                         title="Locations"></x-info-card>
-                        </div>
-                        <div class="col-6 col-lg-2 mb-3">
-                            <x-info-card value="{{$information['servers_summary']['providers_sum']}}"
-                                         title="Providers"></x-info-card>
-                        </div>
+                    <div class="col-6 col-lg-2 mb-3">
+                        <x-service-tally-card tally="{{ $information['reseller'] }}"
+                                              route="{{route('reseller.index')}}"
+                                              service="Reseller"></x-service-tally-card>
+                    </div>
+                    <div class="col-6 col-lg-2 mb-3">
+                        <x-service-tally-card tally="{{ $information['domains'] }}"
+                                              route="{{route('domains.index')}}"
+                                              service="Domains"></x-service-tally-card>
+                    </div>
+                    <div class="col-6 col-lg-2 mb-3">
+                        <x-service-tally-card tally="{{ $information['misc'] }}" route="{{route('misc.index')}}"
+                                              service="Misc"></x-service-tally-card>
+                    </div>
+                    <div class="col-6 col-lg-2 mb-3">
+                        <x-service-tally-card tally="{{ $information['dns'] }}" route="{{route('dns.index')}}"
+                                              service="DNS"></x-service-tally-card>
                     </div>
                 </div>
             </div>
 
-    </div>
+            <div class="tab-pane fade" id="costings" role="tabpanel" aria-labelledby="costings-tab">
+                <div class="row mt-3">
+                    <div class="col-12 col-lg-2 mb-3">
+                        <x-info-card value="{{$information['total_cost_weekly']}}" title="Weekly cost"
+                                     append="{{$information['currency']}}"></x-info-card>
+                    </div>
+                    <div class="col-12 col-lg-2 mb-3">
+                        <x-info-card value="{{$information['total_cost_monthly']}}" title="Monthly cost"
+                                     append="{{$information['currency']}}"></x-info-card>
+                    </div>
+                    <div class="col-12 col-lg-2 mb-3">
+                        <x-info-card value="{{$information['total_cost_yearly']}}" title="Yearly cost"
+                                     append="{{$information['currency']}}"></x-info-card>
+                    </div>
+                    <div class="col-12 col-lg-2 mb-3">
+                        <x-info-card value="{{$information['total_cost_2_yearly']}}" title="2 yearly cost"
+                                     append="{{$information['currency']}}"></x-info-card>
+                    </div>
+                </div>
+            </div>
 
+            <div class="tab-pane fade" id="averages" role="tabpanel" aria-labelledby="averages-tab">
+                <div class="row mt-3">
+                    <div class="col-6 col-lg-2 mb-3">
+                        <x-info-card value="{{$information['servers_summary']['cpu_sum']}}"
+                                     title="CPU"></x-info-card>
+                    </div>
+                    <div class="col-6 col-lg-2 mb-3">
+                        <x-info-card
+                            value="{{number_format($information['servers_summary']['ram_mb_sum'] / 1024, 2)}}"
+                            title="RAM"
+                            append="GB"></x-info-card>
+                    </div>
+                    <div class="col-6 col-lg-2 mb-3">
+                        @if($information['servers_summary']['disk_gb_sum'] >= 1000)
+                            <x-info-card
+                                value="{{number_format($information['servers_summary']['disk_gb_sum'] / 1024,2)}}"
+                                title="DISK" append="TB"></x-info-card>
+                        @else
+                            <x-info-card value="{{$information['servers_summary']['disk_gb_sum']}}" title="DISK"
+                                         append="GB"></x-info-card>
+                        @endif
+                    </div>
+                    <div class="col-6 col-lg-2 mb-3">
+                        <x-info-card
+                            value="{{number_format($information['servers_summary']['bandwidth_sum'] / 1024, 2)}}"
+                            title="Bandwidth" append="TB"></x-info-card>
+                    </div>
+                    <div class="col-6 col-lg-2 mb-3">
+                        <x-info-card value="{{$information['servers_summary']['locations_sum']}}"
+                                     title="Locations"></x-info-card>
+                    </div>
+                    <div class="col-6 col-lg-2 mb-3">
+                        <x-info-card value="{{$information['servers_summary']['providers_sum']}}"
+                                     title="Providers"></x-info-card>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="row mt-3">
         @if(Session::get('due_soon_amount') > 0)
             <h3 class="my-3">Due soon</h3>
