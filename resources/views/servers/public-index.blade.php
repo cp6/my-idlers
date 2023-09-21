@@ -22,8 +22,8 @@
                         <th class="text-nowrap">Provider</th>
                         <th class="text-nowrap">Price</th>
                         <th class="text-nowrap">Had since</th>
-                        <th class="text-nowrap">GB5 S</th>
-                        <th class="text-nowrap">GB5 M</th>
+                        <th class="text-nowrap">GB6 S</th>
+                        <th class="text-nowrap">GB6 M</th>
                         <th class="text-nowrap">4k</th>
                         <th class="text-nowrap">64k</th>
                         <th class="text-nowrap">512k</th>
@@ -76,12 +76,12 @@
                                 <td class="text-nowrap"> {{ $s->owned_since }}</td>
                                 <td class="text-nowrap">
                                     @if(Session::get('show_server_value_yabs') === 1)
-                                        {{$s->yabs[0]->gb5_single ?? null}}
+                                        {{$s->yabs[0]->gb6_single ?? null}}
                                     @endif
                                 </td>
                                 <td class="text-nowrap">
                                     @if(Session::get('show_server_value_yabs') === 1)
-                                        {{$s->yabs[0]->gb5_multi ?? null}}
+                                        {{$s->yabs[0]->gb6_multi ?? null}}
                                     @endif
                                 </td>
                                 <td class="text-nowrap">
