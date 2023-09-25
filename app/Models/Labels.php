@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
+use Mockery\Exception;
 
 class Labels extends Model
 {
@@ -32,10 +33,14 @@ class Labels extends Model
     {
         for ($i = 1; $i <= 4; $i++) {
             if (!is_null($labels_array[($i - 1)])) {
-                LabelsAssigned::create([
-                    'label_id' => $labels_array[($i - 1)],
-                    'service_id' => $service_id
-                ]);
+                try {
+                    LabelsAssigned::create([
+                        'label_id' => $labels_array[($i - 1)],
+                        'service_id' => $service_id
+                    ]);
+                } catch (Exception $exception) {
+
+                }
             }
         }
     }
