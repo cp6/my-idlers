@@ -20,7 +20,7 @@ class Yabs extends Model
 
     protected $table = 'yabs';
 
-    protected $fillable = ['id', 'server_id', 'has_ipv6', 'aes', 'vm', 'output_date', 'cpu_cores', 'cpu_freq', 'cpu_model', 'ram', 'ram_type', 'ram_mb', 'disk', 'disk_type', 'disk_gb', 'gb5_single', 'gb5_multi', 'gb5_id', '4k', '4k_type', '4k_as_mbps', '64k', '64k_type', '64k_as_mbps', '512k', '512k_type', '512k_as_mbps', '1m', '1m_type', '1m_as_mbps', 'location', 'send', 'send_type', 'send_as_mbps', 'receive', 'receive_type', 'receive_as_mbps', 'uptime', 'distro', 'kernel', 'swap', 'swap_type', 'swap_mb'];
+    protected $fillable = ['id', 'server_id', 'has_ipv6', 'aes', 'vm', 'output_date', 'cpu_cores', 'cpu_freq', 'cpu_model', 'ram', 'ram_type', 'ram_mb', 'disk', 'disk_type', 'disk_gb', 'gb5_single', 'gb5_multi', 'gb5_id', 'gb6_single', 'gb6_multi', 'gb6_id', '4k', '4k_type', '4k_as_mbps', '64k', '64k_type', '64k_as_mbps', '512k', '512k_type', '512k_as_mbps', '1m', '1m_type', '1m_as_mbps', 'location', 'send', 'send_type', 'send_as_mbps', 'receive', 'receive_type', 'receive_as_mbps', 'uptime', 'distro', 'kernel', 'swap', 'swap_type', 'swap_mb'];
 
     public static function yabs(string $yabs_id)
     {
@@ -153,6 +153,11 @@ class Yabs extends Model
         return str_replace("https://browser.geekbench.com/v5/cpu/", "", $url);
     }
 
+    public static function gb6IdFromURL(string $url): int
+    {
+        return str_replace("https://browser.geekbench.com/v6/cpu/", "", $url);
+    }
+
     public static function KBstoMBs(int $kbs): float
     {
         return $kbs / 1000;
@@ -181,16 +186,18 @@ class Yabs extends Model
             $ram = $data['mem']['ram'];
             $swap = $data['mem']['swap'];
             $disk = $data['mem']['disk'];
-            if (isset($data['geekbench'][0]) && $data['geekbench'][0]['version'] === 5) {
-                $gb5_single = $data['geekbench'][0]['single'];
-                $gb5_multi = $data['geekbench'][0]['multi'];
-                $gb5_id = self::gb5IdFromURL($data['geekbench'][0]['url']);
-            } elseif (isset($data['geekbench'][1]) && $data['geekbench'][1]['version'] === 5) {
-                $gb5_single = $data['geekbench'][1]['single'];
-                $gb5_multi = $data['geekbench'][1]['multi'];
-                $gb5_id = self::gb5IdFromURL($data['geekbench'][1]['url']);
-            } else {
-                $gb5_single = $gb5_multi = $gb5_id = null;
+
+            $gb5_single = $gb5_multi = $gb5_id = $gb6_single = $gb6_multi = $gb6_id = null;
+            foreach ($data['geekbench'] as $gb) {
+                if ($gb['version'] === 5) {
+                    $gb5_single = $gb['single'];
+                    $gb5_multi = $gb['multi'];
+                    $gb5_id = self::gb5IdFromURL($gb['url']);
+                } elseif ($gb['version'] === 6) {
+                    $gb6_single = $gb['single'];
+                    $gb6_multi = $gb['multi'];
+                    $gb6_id = self::gb6IdFromURL($gb['url']);
+                }
             }
 
             $yabs_id = Str::random(8);
@@ -235,7 +242,10 @@ class Yabs extends Model
                 'output_date' => $date_ran,
                 'gb5_single' => $gb5_single,
                 'gb5_multi' => $gb5_multi,
-                'gb5_id' => $gb5_id
+                'gb5_id' => $gb5_id,
+                'gb6_single' => $gb6_single,
+                'gb6_multi' => $gb6_multi,
+                'gb6_id' => $gb6_id
             ]);
 
             //fio

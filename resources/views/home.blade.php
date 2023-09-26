@@ -289,7 +289,7 @@
             @endif
         @endif
 
-        @if(Session::has('timer_version_footer') && Session::get('timer_version_footer') === 1)
+        @if(Session::get('timer_version_footer', 0) === 1)
             <p class="text-muted mt-4 text-end"><small>Page took {{$information['execution_time']}} seconds,
                     Built on Laravel v{{ Illuminate\Foundation\Application::VERSION }} (PHP v{{ PHP_VERSION }}),
                     Rates By <a href="https://www.exchangerate-api.com">Exchange Rate API</a>

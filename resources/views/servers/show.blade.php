@@ -151,6 +151,10 @@
                             <table class="table table-borderless text-nowrap">
                                 <tbody>
                                 <tr>
+                                    <td class="px-2 py-2 font-bold text-muted">GB6 S/M</td>
+                                    <td>{{$server_data->yabs[0]->gb6_single ?? null}} / {{$server_data->yabs[0]->gb6_multi ?? null}}</td>
+                                </tr>
+                                <tr>
                                     <td class="px-2 py-2 font-bold text-muted">CPU</td>
                                     <td>{{$server_data->yabs[0]->cpu_model}}</td>
                                 </tr>
