@@ -12,11 +12,20 @@ const mix = require('laravel-mix');
  */
 
 mix.js('resources/js/app.js', 'public/js').postCss('resources/css/app.css', 'public/css');
-mix.sass('resources/sass/app.scss', 'public/css');
-mix.options({
-    fileLoaderDirs:  {
-        fonts: 'css/webfonts'
-    }
-});
+mix.sass('resources/sass/app.scss', 'public/css').options({
+    processCssUrls: false
+}).copy(
+    'node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.ttf',
+    'public/webfonts/webfa-regular-400.ttf'
+).copy(
+    'node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.woff2',
+    'public/webfonts/webfa-regular-400.woff2'
+).copy(
+    'node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.ttf',
+    'public/webfonts/webfa-solid-900.ttf'
+).copy(
+    'node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff2',
+    'public/webfonts/webfa-solid-900.woff2'
+);
 mix.postCss('resources/css/light.css', 'public/css');
 mix.postCss('resources/css/dark.css', 'public/css');
