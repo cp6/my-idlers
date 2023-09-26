@@ -47,10 +47,8 @@
                                 @foreach($servers as $server)
                                     <tr>
                                         <td>{{ $server->hostname }}</td>
-                                        <td class="text-center">
-                                            {{ App\Models\Server::serviceServerType($server->server_type) }}
-                                        </td>
-                                        <td class="text-center">{!!App\Models\Server::osIntToIcon($server->os->id, $server->os->name)!!}</td>
+                                        <td class="text-center">{{ App\Models\Server::serviceServerType($server->server_type) }}</td>
+                                        <td class="text-center">@if(isset($server->os)){!!App\Models\Server::osIntToIcon($server->os->id, $server->os->name)!!}@endif</td>
                                         <td class="text-center">{{$server->cpu}}</td>
                                         <td class="text-center">
                                             @if(isset($server->ram))
@@ -83,7 +81,6 @@
                                                    class="text-body mx-1">
                                                     <i class="fas fa-pen" title="edit"></i>
                                                 </a>
-
                                                 <i class="fas fa-plug mx-1" id="{{$server->hostname}}"
                                                    title="check if up"
                                                    @click="checkIfUp">
