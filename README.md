@@ -8,7 +8,7 @@ Despite what the name infers this self hosted web app isn't just for storing idl
 a [YABS](https://github.com/masonr/yet-another-bench-script) output you can get disk & network speed values along with
 GeekBench 5 & 6 scores to do easier comparing and sorting. Ofcourse storing other services e.g. web hosting is possible and supported too.
 
-[![Generic badge](https://img.shields.io/badge/version-2.3.1-blue.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Laravel-10.0-red.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/PHP-8.1-purple.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Bootstrap-5.2-pink.svg)](https://shields.io/)
+[![Generic badge](https://img.shields.io/badge/version-2.3.2-blue.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Laravel-10.0-red.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/PHP-8.1-purple.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Bootstrap-5.2-pink.svg)](https://shields.io/)
 
 <img src="https://raw.githubusercontent.com/cp6/my-idlers/main/public/My%20Idlers%20logo.jpg" width="128" height="128" />
 
@@ -20,14 +20,22 @@ GeekBench 5 & 6 scores to do easier comparing and sorting. Ofcourse storing othe
 
 Currently seeking a project sponsor
 
-## 2.3.1 changes (17th August 2023):
+## 2.3.2 changes (26th September 2023):
 
-* Updated resource files
-* Updated composer.json
-* Updated packages.json
-* Fixed dashboard price summary including non active services
+* Added tabs to the homepage for stats and avg summary cards
+* Added Geekbench 6 columns to YABS table
+* Added Geekbench 6 insert from YABS result
+* Updated YABS insert to include Geekbench 5 results also
+* Updated server show page and public show to display Geekbench 6 values
+* Updated tests to pass
+* Updated footer to only have one conditional check for the setting
+* Updated homepage table to be rounded
+* Fixed setting causing a fail with validation
+* Fixed pricing cache not being refreshed
+* Fixed object being accessed instead of array for certain models
+* Removed unused Vue component
 
-#### Please run the following if updating from existing install:
+#### Please run the following if updating from an existing install:
 
 ```shell
 composer update
