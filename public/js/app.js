@@ -5681,7 +5681,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _popperjs_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @popperjs/core */ "./node_modules/@popperjs/core/lib/index.js");
 /* harmony import */ var _popperjs_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @popperjs/core */ "./node_modules/@popperjs/core/lib/popper.js");
 /*!
-  * Bootstrap v5.3.1 (https://getbootstrap.com/)
+  * Bootstrap v5.3.2 (https://getbootstrap.com/)
   * Copyright 2011-2023 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
   * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
   */
@@ -6326,7 +6326,7 @@ class Config {
  * Constants
  */
 
-const VERSION = '5.3.1';
+const VERSION = '5.3.2';
 
 /**
  * Class definition
@@ -6407,9 +6407,9 @@ const getSelector = element => {
     if (hrefAttribute.includes('#') && !hrefAttribute.startsWith('#')) {
       hrefAttribute = `#${hrefAttribute.split('#')[1]}`;
     }
-    selector = hrefAttribute && hrefAttribute !== '#' ? hrefAttribute.trim() : null;
+    selector = hrefAttribute && hrefAttribute !== '#' ? parseSelector(hrefAttribute.trim()) : null;
   }
-  return parseSelector(selector);
+  return selector;
 };
 const SelectorEngine = {
   find(selector, element = document.documentElement) {
@@ -9705,7 +9705,7 @@ const CLASS_NAME_SHOW$1 = 'show';
 const CLASS_DROPDOWN = 'dropdown';
 const SELECTOR_DROPDOWN_TOGGLE = '.dropdown-toggle';
 const SELECTOR_DROPDOWN_MENU = '.dropdown-menu';
-const NOT_SELECTOR_DROPDOWN_TOGGLE = ':not(.dropdown-toggle)';
+const NOT_SELECTOR_DROPDOWN_TOGGLE = `:not(${SELECTOR_DROPDOWN_TOGGLE})`;
 const SELECTOR_TAB_PANEL = '.list-group, .nav, [role="tablist"]';
 const SELECTOR_OUTER = '.nav-item, .list-group-item';
 const SELECTOR_INNER = `.nav-link${NOT_SELECTOR_DROPDOWN_TOGGLE}, .list-group-item${NOT_SELECTOR_DROPDOWN_TOGGLE}, [role="tab"]${NOT_SELECTOR_DROPDOWN_TOGGLE}`;
@@ -27334,14 +27334,14 @@ module.exports = Array.isArray || function (arr) {
 /***/ (function(module, exports) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
- * jQuery JavaScript Library v3.7.0
+ * jQuery JavaScript Library v3.7.1
  * https://jquery.com/
  *
  * Copyright OpenJS Foundation and other contributors
  * Released under the MIT license
  * https://jquery.org/license
  *
- * Date: 2023-05-11T18:29Z
+ * Date: 2023-08-28T13:37Z
  */
 ( function( global, factory ) {
 
@@ -27482,7 +27482,7 @@ function toType( obj ) {
 
 
 
-var version = "3.7.0",
+var version = "3.7.1",
 
 	rhtmlSuffix = /HTML$/i,
 
@@ -27746,9 +27746,14 @@ jQuery.extend( {
 				// Do not traverse comment nodes
 				ret += jQuery.text( node );
 			}
-		} else if ( nodeType === 1 || nodeType === 9 || nodeType === 11 ) {
+		}
+		if ( nodeType === 1 || nodeType === 11 ) {
 			return elem.textContent;
-		} else if ( nodeType === 3 || nodeType === 4 ) {
+		}
+		if ( nodeType === 9 ) {
+			return elem.documentElement.textContent;
+		}
+		if ( nodeType === 3 || nodeType === 4 ) {
 			return elem.nodeValue;
 		}
 
@@ -28461,12 +28466,17 @@ function setDocument( node ) {
 		documentElement.msMatchesSelector;
 
 	// Support: IE 9 - 11+, Edge 12 - 18+
-	// Accessing iframe documents after unload throws "permission denied" errors (see trac-13936)
-	// Support: IE 11+, Edge 17 - 18+
-	// IE/Edge sometimes throw a "Permission denied" error when strict-comparing
-	// two documents; shallow comparisons work.
-	// eslint-disable-next-line eqeqeq
-	if ( preferredDoc != document &&
+	// Accessing iframe documents after unload throws "permission denied" errors
+	// (see trac-13936).
+	// Limit the fix to IE & Edge Legacy; despite Edge 15+ implementing `matches`,
+	// all IE 9+ and Edge Legacy versions implement `msMatchesSelector` as well.
+	if ( documentElement.msMatchesSelector &&
+
+		// Support: IE 11+, Edge 17 - 18+
+		// IE/Edge sometimes throw a "Permission denied" error when strict-comparing
+		// two documents; shallow comparisons work.
+		// eslint-disable-next-line eqeqeq
+		preferredDoc != document &&
 		( subWindow = document.defaultView ) && subWindow.top !== subWindow ) {
 
 		// Support: IE 9 - 11+, Edge 12 - 18+
@@ -30029,12 +30039,12 @@ jQuery.find = find;
 jQuery.expr[ ":" ] = jQuery.expr.pseudos;
 jQuery.unique = jQuery.uniqueSort;
 
-// These have always been private, but they used to be documented
-// as part of Sizzle so let's maintain them in the 3.x line
-// for backwards compatibility purposes.
+// These have always been private, but they used to be documented as part of
+// Sizzle so let's maintain them for now for backwards compatibility purposes.
 find.compile = compile;
 find.select = select;
 find.setDocument = setDocument;
+find.tokenize = tokenize;
 
 find.escape = jQuery.escapeSelector;
 find.getText = jQuery.text;
@@ -33248,7 +33258,7 @@ function domManip( collection, args, callback, ignored ) {
 			if ( hasScripts ) {
 				doc = scripts[ scripts.length - 1 ].ownerDocument;
 
-				// Reenable scripts
+				// Re-enable scripts
 				jQuery.map( scripts, restoreScript );
 
 				// Evaluate executable scripts on first document insertion
@@ -33705,7 +33715,7 @@ var rboxStyle = new RegExp( cssExpand.join( "|" ), "i" );
 				trChild = document.createElement( "div" );
 
 				table.style.cssText = "position:absolute;left:-11111px;border-collapse:separate";
-				tr.style.cssText = "border:1px solid";
+				tr.style.cssText = "box-sizing:content-box;border:1px solid";
 
 				// Support: Chrome 86+
 				// Height set through cssText does not get applied.
@@ -33717,7 +33727,7 @@ var rboxStyle = new RegExp( cssExpand.join( "|" ), "i" );
 				// In our bodyBackground.html iframe,
 				// display for all div elements is set to "inline",
 				// which causes a problem only in Android 8 Chrome 86.
-				// Ensuring the div is display: block
+				// Ensuring the div is `display: block`
 				// gets around this issue.
 				trChild.style.display = "block";
 
@@ -37885,7 +37895,9 @@ jQuery.fn.extend( {
 	},
 
 	hover: function( fnOver, fnOut ) {
-		return this.mouseenter( fnOver ).mouseleave( fnOut || fnOver );
+		return this
+			.on( "mouseenter", fnOver )
+			.on( "mouseleave", fnOut || fnOver );
 	}
 } );
 
@@ -38038,6 +38050,19 @@ if ( typeof noGlobal === "undefined" ) {
 
 return jQuery;
 } );
+
+
+/***/ }),
+
+/***/ "./resources/sass/app.scss":
+/*!*********************************!*\
+  !*** ./resources/sass/app.scss ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
 
 
 /***/ }),
@@ -66221,6 +66246,7 @@ $.each( DataTable, function ( prop, val ) {
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
 /******/ 	__webpack_require__.O(undefined, ["css/app","css/dark","css/light"], () => (__webpack_require__("./resources/js/app.js")))
+/******/ 	__webpack_require__.O(undefined, ["css/app","css/dark","css/light"], () => (__webpack_require__("./resources/sass/app.scss")))
 /******/ 	__webpack_require__.O(undefined, ["css/app","css/dark","css/light"], () => (__webpack_require__("./resources/css/app.css")))
 /******/ 	__webpack_require__.O(undefined, ["css/app","css/dark","css/light"], () => (__webpack_require__("./resources/css/light.css")))
 /******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["css/app","css/dark","css/light"], () => (__webpack_require__("./resources/css/dark.css")))

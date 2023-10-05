@@ -2,5 +2,9 @@
     "/js/app.js": "/js/app.js",
     "/css/app.css": "/css/app.css",
     "/css/dark.css": "/css/dark.css",
-    "/css/light.css": "/css/light.css"
+    "/css/light.css": "/css/light.css",
+    "/webfonts/fa-regular-400.ttf": "/webfonts/fa-regular-400.ttf",
+    "/webfonts/fa-regular-400.woff2": "/webfonts/fa-regular-400.woff2",
+    "/webfonts/fa-solid-900.ttf": "/webfonts/fa-solid-900.ttf",
+    "/webfonts/fa-solid-900.woff2": "/webfonts/fa-solid-900.woff2"
 }

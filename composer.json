@@ -11,18 +11,18 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
-        "guzzlehttp/guzzle": "^7.7",
+        "guzzlehttp/guzzle": "^7.8",
         "laravel/framework": "^10",
         "laravel/tinker": "^2.8",
         "laravel/ui": "^4.2",
-        "yajra/laravel-datatables-oracle": "~10.7",
+        "yajra/laravel-datatables-oracle": "~10.8",
         "ext-json": "*",
-        "doctrine/dbal": "v3.6"
+        "doctrine/dbal": "^3"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
-        "laravel/breeze": "^1.22",
-        "laravel/sail": "^1.23",
+        "laravel/breeze": "^1.24",
+        "laravel/sail": "^1.25",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^7",
         "phpunit/phpunit": "^10",
