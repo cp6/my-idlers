@@ -25,5 +25,5 @@ jobs:
     - name: Push image to GHCR
       if: github.ref == 'refs/heads/main'
       run: |
-        docker push ghcr.io/cp6/my-idlers:$(echo $GITHUB_SHA | head -c7)
-        docker push ghcr.io/cp6/my-idlers:latest
+        docker push ghcr.io/hra42/my-idlers-arm64:$(echo $GITHUB_SHA | head -c7)
+        docker push ghcr.io/hra42/my-idlers-arm64:latest
