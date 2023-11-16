@@ -15,8 +15,8 @@ jobs:
       platforms: linux/amd64,linux/arm64
       run: |
         docker build \
-        --tag ghcr.io/cp6/my-idlers:$(echo $GITHUB_SHA | head -c7) \
-        --tag ghcr.io/cp6/my-idlers:latest \
+        --tag ghcr.io/hra42/my-idlers-arm64:$(echo $GITHUB_SHA | head -c7) \
+        --tag ghcr.io/hra42/my-idlers-arm64:latest \
         .
     - name: Container registry login
       run: |
