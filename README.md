@@ -1,12 +1,11 @@
 # My idlers
 
-A self hosted web app for displaying, organizing and storing information about servers (VPS), shared & reseller hosting, seed boxes,
-domains,
-DNS and misc services.
+A self-hosted web app for displaying, organizing and storing information about your servers (VPS/Dedi), shared & reseller hosting, seedboxes,
+domains, DNS and misc services.
 
-Despite what the name infers this self hosted web app isn't just for storing idling server information. By using
+Despite what the name infers this self-hosted web app isn't just for storing idling server information. By using
 a [YABS](https://github.com/masonr/yet-another-bench-script) output you can get disk & network speed values along with
-GeekBench 5 & 6 scores to do easier comparing and sorting. Ofcourse storing other services e.g. web hosting is possible and supported too.
+GeekBench 5 & 6 scores to do easier comparing and sorting. Of course storing other services e.g. web hosting is possible and supported too with My idlers.
 
 [![Generic badge](https://img.shields.io/badge/version-2.3.2-blue.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Laravel-10.0-red.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/PHP-8.1-purple.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Bootstrap-5.2-pink.svg)](https://shields.io/)
 
@@ -14,7 +13,7 @@ GeekBench 5 & 6 scores to do easier comparing and sorting. Ofcourse storing othe
 
 [View demo site](https://demo.myidlers.com/)
 
-**Note:** Create, Update and Delete are disabled on demo site.
+**Note:** Create, Update and Delete are disabled on the demo site.
 
 ## Project sponsor
 
