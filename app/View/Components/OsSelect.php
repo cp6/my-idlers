@@ -11,7 +11,7 @@ class OsSelect extends Component
     public function render()
     {
         return view('components.os-select', [
-            'os' => OS::allOS()
+            'os' => OS::allOS()->toArray()
         ]);
     }
 }
