@@ -26,6 +26,12 @@ Custom styles go in here
     border-radius: var(--bs-border-radius) !important;
 }
 
+@media (prefers-color-scheme: dark) {
+    .card {
+        background-color: #1d1d1d;
+    }
+}
+
 @media (min-width: 1400px) {
     .container-xxl, .container-xl, .container-lg, .container-md, .container-sm, .container {
         max-width: 1520px;
