@@ -1,7 +1,7 @@
 /*!
- * Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com
+ * Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com
  * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
- * Copyright 2023 Fonticons, Inc.
+ * Copyright 2024 Fonticons, Inc.
  */
 .fa {
   font-family: var(--fa-style-family, "Font Awesome 6 Free");
@@ -362,7 +362,7 @@
 }
 
 .fa-rotate-by {
-  transform: rotate(var(--fa-rotate-angle, none));
+  transform: rotate(var(--fa-rotate-angle, 0));
 }
 
 .fa-stack {
@@ -3429,6 +3429,10 @@ readers do not read off random characters that represent icons */
   content: "\f033";
 }
 
+.fa-table-cells-column-lock::before {
+  content: "\e678";
+}
+
 .fa-church::before {
   content: "\f51d";
 }
@@ -6325,6 +6329,10 @@ readers do not read off random characters that represent icons */
   content: "\f031";
 }
 
+.fa-table-cells-row-lock::before {
+  content: "\e67a";
+}
+
 .fa-rupiah-sign::before {
   content: "\e23d";
 }
@@ -7697,10 +7705,6 @@ readers do not read off random characters that represent icons */
   content: "\f064";
 }
 
-.fa-arrow-turn-right::before {
-  content: "\f064";
-}
-
 .fa-mail-forward::before {
   content: "\f064";
 }
@@ -8228,9 +8232,9 @@ readers do not read off random characters that represent icons */
 }
 
 /*!
- * Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com
+ * Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com
  * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
- * Copyright 2023 Fonticons, Inc.
+ * Copyright 2024 Fonticons, Inc.
  */
 :root, :host {
   --fa-style-family-classic: "Font Awesome 6 Free";
@@ -8250,9 +8254,9 @@ readers do not read off random characters that represent icons */
 }
 
 /*!
- * Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com
+ * Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com
  * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
- * Copyright 2023 Fonticons, Inc.
+ * Copyright 2024 Fonticons, Inc.
  */
 :root, :host {
   --fa-style-family-classic: "Font Awesome 6 Free";
@@ -8291,16 +8295,18 @@ table.dataTable td.dt-control {
 table.dataTable td.dt-control:before {
   display: inline-block;
   color: rgba(0, 0, 0, 0.5);
-  content: "►";
+  content: "▶";
 }
 table.dataTable tr.dt-hasChild td.dt-control:before {
   content: "▼";
 }
 
-html.dark table.dataTable td.dt-control:before {
+html.dark table.dataTable td.dt-control:before,
+:root[data-bs-theme=dark] table.dataTable td.dt-control:before {
   color: rgba(255, 255, 255, 0.5);
 }
-html.dark table.dataTable tr.dt-hasChild td.dt-control:before {
+html.dark table.dataTable tr.dt-hasChild td.dt-control:before,
+:root[data-bs-theme=dark] table.dataTable tr.dt-hasChild td.dt-control:before {
   color: rgba(255, 255, 255, 0.5);
 }
 
@@ -8382,6 +8388,7 @@ div.dataTables_processing {
   margin-top: -26px;
   text-align: center;
   padding: 2px;
+  z-index: 10;
 }
 div.dataTables_processing > div:last-child {
   position: relative;
@@ -8395,7 +8402,7 @@ div.dataTables_processing > div:last-child > div {
   width: 13px;
   height: 13px;
   border-radius: 50%;
-  background: #0d6efd;
+  background: rgb(13, 110, 253);
   background: rgb(var(--dt-row-selected));
   animation-timing-function: cubic-bezier(0, 1, 1, 0);
 }
@@ -8553,19 +8560,19 @@ table.dataTable > tbody > tr {
   background-color: transparent;
 }
 table.dataTable > tbody > tr.selected > * {
-  box-shadow: inset 0 0 0 9999px #0d6efd;
+  box-shadow: inset 0 0 0 9999px rgb(13, 110, 253);
   box-shadow: inset 0 0 0 9999px rgb(var(--dt-row-selected));
-  color: white;
+  color: rgb(255, 255, 255);
   color: rgb(var(--dt-row-selected-text));
 }
 table.dataTable > tbody > tr.selected a {
-  color: #090a0b;
+  color: rgb(9, 10, 11);
   color: rgb(var(--dt-row-selected-link));
 }
-table.dataTable.table-striped > tbody > tr.odd > * {
+table.dataTable.table-striped > tbody > tr:nth-of-type(2n+1) > * {
   box-shadow: inset 0 0 0 9999px rgba(var(--dt-row-stripe), 0.05);
 }
-table.dataTable.table-striped > tbody > tr.odd.selected > * {
+table.dataTable.table-striped > tbody > tr:nth-of-type(2n+1).selected > * {
   box-shadow: inset 0 0 0 9999px rgba(13, 110, 253, 0.95);
   box-shadow: inset 0 0 0 9999px rgba(var(--dt-row-selected), 0.95);
 }
@@ -8648,9 +8655,9 @@ div.dataTables_scrollFoot > .dataTables_scrollFootInner > table {
 
 @media screen and (max-width: 767px) {
   div.dataTables_wrapper div.dataTables_length,
-div.dataTables_wrapper div.dataTables_filter,
-div.dataTables_wrapper div.dataTables_info,
-div.dataTables_wrapper div.dataTables_paginate {
+  div.dataTables_wrapper div.dataTables_filter,
+  div.dataTables_wrapper div.dataTables_info,
+  div.dataTables_wrapper div.dataTables_paginate {
     text-align: center;
   }
   div.dataTables_wrapper div.dataTables_paginate ul.pagination {
@@ -8659,6 +8666,9 @@ div.dataTables_wrapper div.dataTables_paginate {
 }
 table.dataTable.table-sm > thead > tr > th:not(.sorting_disabled) {
   padding-right: 20px;
+}
+table.dataTable.table-sm > thead > tr > th:not(.sorting_disabled):before, table.dataTable.table-sm > thead > tr > th:not(.sorting_disabled):after {
+  right: 5px;
 }
 
 table.table-bordered.dataTable {
