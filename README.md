@@ -7,7 +7,7 @@ Despite what the name infers this self-hosted web app isn't just for storing idl
 a [YABS](https://github.com/masonr/yet-another-bench-script) output you can get disk & network speed values along with
 GeekBench 5 & 6 scores to do easier comparing and sorting. Of course storing other services e.g. web hosting is possible and supported too with My idlers.
 
-[![Generic badge](https://img.shields.io/badge/version-3.0.0-blue.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Laravel-11.0-red.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/PHP-8.2-purple.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Bootstrap-5.2-pink.svg)](https://shields.io/)
+[![Generic badge](https://img.shields.io/badge/version-3.0.0-blue.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Laravel-11.0-red.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/PHP-8.2-purple.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Bootstrap-5.3-pink.svg)](https://shields.io/)
 
 <img src="https://raw.githubusercontent.com/cp6/my-idlers/main/public/My%20Idlers%20logo.jpg" width="128" height="128" />
 
@@ -24,8 +24,11 @@ Currently seeking a project sponsor
 * Updated PHP version to 8.2
 * Updated Laravel version to ^11
 * Updated composer package versions
-* Updated X
+* Updated routes into middleware grouping for auth
+* Updated login and register forms
 * Fixed X
+* Fixed Settings being called without being created (existing)
+* Fixed issue with OS: `Call to a member function toJson() on array`
 * Removed doctrine/dbal
 * Removed X
 
@@ -40,7 +43,7 @@ php artisan cache:clear
 
 ## Requires
 
-* PHP 8.1
+* PHP 8.2
 
 ## Features
 
@@ -301,10 +304,6 @@ E.g if the term is a month then the due date gets updated to be 1 month from the
 or
 
 ```curl -sL yabs.sh | bash -s -- -r```
-
-**Make sure YABS output starts at the first line which is:**
-
-```# ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## #```
 
 Logo icons created by Freepik - Flaticon
 
