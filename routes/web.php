@@ -3,6 +3,7 @@
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\DNSController;
 use App\Http\Controllers\DomainsController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\IPsController;
 use App\Http\Controllers\LabelsController;
 use App\Http\Controllers\LocationsController;
@@ -19,11 +20,11 @@ use App\Http\Controllers\YabsController;
 use Illuminate\Support\Facades\Route;
 
 
-Route::get('/', 'App\Http\Controllers\HomeController@index')->name('/');
+Route::get('/', [HomeController::class, 'index'])->name('/');
 
 require __DIR__ . '/auth.php';
 
-Route::get('servers/public', 'App\Http\Controllers\ServerController@showServersPublic')->name('servers/public');
+Route::get('servers/public', [ServerController::class, 'showServersPublic'])->name('servers/public');
 
 Route::middleware(['auth'])->group(function () {
     Route::resource('account', AccountController::class);
@@ -58,13 +59,10 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource('notes', NoteController::class);
 
-    Route::get('yabs/{yab}/json', 'App\Http\Controllers\YabsController@yabsToJson')->name('yabs.json');
+    Route::get('yabs/{yab}/json', [YabsController::class, 'yabsToJson'])->name('yabs.json');
+    Route::get('yabs-compare-choose', [YabsController::class, 'chooseYabsCompare'])->name('yabs.compare-choose');
+    Route::get('yabs-compare/{yabs1}/{yabs2}', [YabsController::class, 'compareYabs'])->name('yabs.compare');
 
-    Route::get('yabs-compare-choose', 'App\Http\Controllers\YabsController@chooseYabsCompare')->name('yabs.compare-choose');
-
-    Route::get('yabs-compare/{yabs1}/{yabs2}', 'App\Http\Controllers\YabsController@compareYabs')->name('yabs.compare');
-
-    Route::get('servers-compare-choose', 'App\Http\Controllers\ServerController@chooseCompare')->name('servers-compare-choose');
-
-    Route::get('servers-compare/{server1}/{server2}', 'App\Http\Controllers\ServerController@compareServers')->name('servers.compare');
+    Route::get('servers-compare-choose', [ServerController::class, 'chooseCompare'])->name('servers-compare-choose');
+    Route::get('servers-compare/{server1}/{server2}', [ServerController::class, 'compareServers'])->name('servers.compare');
 });
