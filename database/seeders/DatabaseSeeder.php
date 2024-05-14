@@ -8,7 +8,7 @@ class DatabaseSeeder extends Seeder
 {
     public function run()
     {
-        //\App\Models\User::factory(1)->create();//Disable demo first user creation
+        \App\Models\User::factory(1)->create();//Disable demo first user creation
         $this->call(SettingsSeeder::class);
         $this->call(ProvidersSeeder::class);
         $this->call(LocationsSeeder::class);

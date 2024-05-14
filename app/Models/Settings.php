@@ -22,7 +22,7 @@ class Settings extends Model
             if (is_null($settings)){
                 $settings = Settings::create();
             }
-            return self::where('id', 1)->first();
+            return $settings;
         });
     }
 
