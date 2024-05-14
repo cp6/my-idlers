@@ -26,6 +26,7 @@ Currently seeking a project sponsor
 * Updated composer package versions
 * Updated routes into middleware grouping for auth
 * Updated login and register forms
+* Added darker card background style to style.css
 * Fixed X
 * Fixed Settings being called without being created (existing)
 * Fixed issue with OS: `Call to a member function toJson() on array`
