@@ -23,46 +23,48 @@ Route::get('/', 'App\Http\Controllers\HomeController@index')->name('/');
 
 require __DIR__ . '/auth.php';
 
-Route::resource('account', AccountController::class)->middleware(['auth']);
-
-Route::resource('dns', DNSController::class)->middleware(['auth']);
-
-Route::resource('domains', DomainsController::class)->middleware(['auth']);
-
-Route::resource('IPs', IPsController::class)->middleware(['auth']);
-
-Route::resource('labels', LabelsController::class)->middleware(['auth']);
-
-Route::resource('locations', LocationsController::class)->middleware(['auth']);
-
-Route::resource('misc', MiscController::class)->middleware(['auth']);
-
-Route::resource('os', OsController::class)->middleware(['auth']);
-
-Route::resource('providers', ProvidersController::class)->middleware(['auth']);
-
-Route::resource('reseller', ResellerController::class)->middleware(['auth']);
-
 Route::get('servers/public', 'App\Http\Controllers\ServerController@showServersPublic')->name('servers/public');
 
-Route::resource('servers', ServerController::class)->middleware(['auth']);
+Route::middleware(['auth'])->group(function () {
+    Route::resource('account', AccountController::class);
 
-Route::resource('settings', SettingsController::class)->middleware(['auth']);
+    Route::resource('dns', DNSController::class);
 
-Route::resource('seedboxes', SeedBoxesController::class)->middleware(['auth']);
+    Route::resource('domains', DomainsController::class);
 
-Route::resource('shared', SharedController::class)->middleware(['auth']);
+    Route::resource('IPs', IPsController::class);
 
-Route::resource('yabs', YabsController::class)->middleware(['auth']);
+    Route::resource('labels', LabelsController::class);
 
-Route::resource('notes', NoteController::class)->middleware(['auth']);
+    Route::resource('locations', LocationsController::class);
 
-Route::get('yabs/{yab}/json', 'App\Http\Controllers\YabsController@yabsToJson')->middleware(['auth'])->name('yabs.json');
+    Route::resource('misc', MiscController::class);
 
-Route::get('yabs-compare-choose', 'App\Http\Controllers\YabsController@chooseYabsCompare')->middleware(['auth'])->name('yabs.compare-choose');
+    Route::resource('os', OsController::class);
 
-Route::get('yabs-compare/{yabs1}/{yabs2}', 'App\Http\Controllers\YabsController@compareYabs')->middleware(['auth'])->name('yabs.compare');
+    Route::resource('providers', ProvidersController::class);
 
-Route::get('servers-compare-choose', 'App\Http\Controllers\ServerController@chooseCompare')->middleware(['auth'])->name('servers-compare-choose');
+    Route::resource('reseller', ResellerController::class);
 
-Route::get('servers-compare/{server1}/{server2}', 'App\Http\Controllers\ServerController@compareServers')->middleware(['auth'])->name('servers.compare');
+    Route::resource('servers', ServerController::class);
+
+    Route::resource('settings', SettingsController::class);
+
+    Route::resource('seedboxes', SeedBoxesController::class);
+
+    Route::resource('shared', SharedController::class);
+
+    Route::resource('yabs', YabsController::class);
+
+    Route::resource('notes', NoteController::class);
+
+    Route::get('yabs/{yab}/json', 'App\Http\Controllers\YabsController@yabsToJson')->name('yabs.json');
+
+    Route::get('yabs-compare-choose', 'App\Http\Controllers\YabsController@chooseYabsCompare')->name('yabs.compare-choose');
+
+    Route::get('yabs-compare/{yabs1}/{yabs2}', 'App\Http\Controllers\YabsController@compareYabs')->name('yabs.compare');
+
+    Route::get('servers-compare-choose', 'App\Http\Controllers\ServerController@chooseCompare')->name('servers-compare-choose');
+
+    Route::get('servers-compare/{server1}/{server2}', 'App\Http\Controllers\ServerController@compareServers')->name('servers.compare');
+});
