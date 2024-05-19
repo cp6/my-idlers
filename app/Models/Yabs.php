@@ -188,15 +188,17 @@ class Yabs extends Model
             $disk = $data['mem']['disk'];
 
             $gb5_single = $gb5_multi = $gb5_id = $gb6_single = $gb6_multi = $gb6_id = null;
-            foreach ($data['geekbench'] as $gb) {
-                if ($gb['version'] === 5) {
-                    $gb5_single = $gb['single'];
-                    $gb5_multi = $gb['multi'];
-                    $gb5_id = self::gb5IdFromURL($gb['url']);
-                } elseif ($gb['version'] === 6) {
-                    $gb6_single = $gb['single'];
-                    $gb6_multi = $gb['multi'];
-                    $gb6_id = self::gb6IdFromURL($gb['url']);
+            if ($data['geekbench']) {
+                foreach ($data['geekbench'] as $gb) {
+                    if ($gb['version'] === 5) {
+                        $gb5_single = $gb['single'];
+                        $gb5_multi = $gb['multi'];
+                        $gb5_id = self::gb5IdFromURL($gb['url']);
+                    } elseif ($gb['version'] === 6) {
+                        $gb6_single = $gb['single'];
+                        $gb6_multi = $gb['multi'];
+                        $gb6_id = self::gb6IdFromURL($gb['url']);
+                    }
                 }
             }
 
@@ -249,65 +251,83 @@ class Yabs extends Model
             ]);
 
             //fio
-            foreach ($data['fio'] as $ds) {
-                if ($ds['bs'] === '4k') {
-                    $d4k = ($ds['speed_rw'] > 999999) ? ($ds['speed_rw'] / 1000 / 1000) : $ds['speed_rw'] / 1000;
-                    $d4k_type = ($ds['speed_rw'] > 999999) ? 'GB/s' : 'MB/s';
-                    $d4k_mbps = self::KBstoMBs($ds['speed_rw']);
+            if ($data['fio']) {
+                foreach ($data['fio'] as $ds) {
+                    if ($ds['bs'] === '4k') {
+                        $d4k = ($ds['speed_rw'] > 999999) ? ($ds['speed_rw'] / 1000 / 1000) : $ds['speed_rw'] / 1000;
+                        $d4k_type = ($ds['speed_rw'] > 999999) ? 'GB/s' : 'MB/s';
+                        $d4k_mbps = self::KBstoMBs($ds['speed_rw']);
+                    }
+                    if ($ds['bs'] === '64k') {
+                        $d64k = ($ds['speed_rw'] > 999999) ? ($ds['speed_rw'] / 1000 / 1000) : $ds['speed_rw'] / 1000;
+                        $d64k_type = ($ds['speed_rw'] > 999999) ? 'GB/s' : 'MB/s';
+                        $d64k_mbps = self::KBstoMBs($ds['speed_rw']);
+                    }
+                    if ($ds['bs'] === '512k') {
+                        $d512k = ($ds['speed_rw'] > 999999) ? ($ds['speed_rw'] / 1000 / 1000) : $ds['speed_rw'] / 1000;
+                        $d512k_type = ($ds['speed_rw'] > 999999) ? 'GB/s' : 'MB/s';
+                        $d512k_mbps = self::KBstoMBs($ds['speed_rw']);
+                    }
+                    if ($ds['bs'] === '1m') {
+                        $d1m = ($ds['speed_rw'] > 999999) ? ($ds['speed_rw'] / 1000 / 1000) : $ds['speed_rw'] / 1000;
+                        $d1m_type = ($ds['speed_rw'] > 999999) ? 'GB/s' : 'MB/s';
+                        $d1m_mbps = self::KBstoMBs($ds['speed_rw']);
+                    }
                 }
-                if ($ds['bs'] === '64k') {
-                    $d64k = ($ds['speed_rw'] > 999999) ? ($ds['speed_rw'] / 1000 / 1000) : $ds['speed_rw'] / 1000;
-                    $d64k_type = ($ds['speed_rw'] > 999999) ? 'GB/s' : 'MB/s';
-                    $d64k_mbps = self::KBstoMBs($ds['speed_rw']);
-                }
-                if ($ds['bs'] === '512k') {
-                    $d512k = ($ds['speed_rw'] > 999999) ? ($ds['speed_rw'] / 1000 / 1000) : $ds['speed_rw'] / 1000;
-                    $d512k_type = ($ds['speed_rw'] > 999999) ? 'GB/s' : 'MB/s';
-                    $d512k_mbps = self::KBstoMBs($ds['speed_rw']);
-                }
-                if ($ds['bs'] === '1m') {
-                    $d1m = ($ds['speed_rw'] > 999999) ? ($ds['speed_rw'] / 1000 / 1000) : $ds['speed_rw'] / 1000;
-                    $d1m_type = ($ds['speed_rw'] > 999999) ? 'GB/s' : 'MB/s';
-                    $d1m_mbps = self::KBstoMBs($ds['speed_rw']);
-                }
+
             }
 
             DiskSpeed::create([
-                'id' => $yabs_id,
-                'server_id' => $server_id,
-                'd_4k' => $d4k,
-                'd_4k_type' => $d4k_type,
-                'd_4k_as_mbps' => $d4k_mbps,
-                'd_64k' => $d64k,
-                'd_64k_type' => $d64k_type,
-                'd_64k_as_mbps' => $d64k_mbps,
-                'd_512k' => $d512k,
-                'd_512k_type' => $d512k_type,
-                'd_512k_as_mbps' => $d512k_mbps,
-                'd_1m' => $d1m,
-                'd_1m_type' => $d1m_type,
-                'd_1m_as_mbps' => $d1m_mbps
-            ]);
+                    'id' => $yabs_id,
+                    'server_id' => $server_id,
+                    'd_4k' => isset($d4k) ? $d4k : 0.0,
+                    'd_4k_type' => isset($d4k_type) ? $d4k_type : 'MB/s',
+                    'd_4k_as_mbps' => isset($d4k_mbps) ? $d4k_mbps : 0.0,
+                    'd_64k' => isset($d64k) ? $d64k : 0.0,
+                    'd_64k_type' => isset($d64k_type) ? $d64k_type : 'MB/s',
+                    'd_64k_as_mbps' => isset($d64k_mbps) ? $d64k_mbps : 0.0,
+                    'd_512k' => isset($d512k) ? $d512k : 0.0,
+                    'd_512k_type' => isset($d512k_type) ? $d512k_type : 'MB/s',
+                    'd_512k_as_mbps' => isset($d512k_mbps) ? $d512k_mbps : 0.0,
+                    'd_1m' => isset($d1m) ? $d1m : 0.0,
+                    'd_1m_type' => isset($d1m_type) ? $d1m_type : 'MB/s',
+                    'd_1m_as_mbps' => isset($d1m_mbps) ? $d1m_mbps : 0.0,
+                ]);            
 
             //iperf
-            foreach ($data['iperf'] as $st) {
-                ($has_ipv4) ? $match = 'IPv4' : $match = 'IPv6';
-                if ($st['mode'] === $match) {
-                    if ($st['send'] !== "busy " || $st['recv'] !== "busy ") {
-                        NetworkSpeed::create([
-                            'id' => $yabs_id,
-                            'server_id' => $server_id,
-                            'location' => $st['loc'],
-                            'send' => self::speedAsFloat($st['send']),
-                            'send_type' => self::speedType($st['send']),
-                            'send_as_mbps' => self::speedAsMbps($st['send']),
-                            'receive' => self::speedAsFloat($st['recv']),
-                            'receive_type' => self::speedType($st['recv']),
-                            'receive_as_mbps' => self::speedAsMbps($st['recv'])
-                        ]);
+            if ($data['iperf']) {
+                foreach ($data['iperf'] as $st) {
+                    ($has_ipv4) ? $match = 'IPv4' : $match = 'IPv6';
+                    if ($st['mode'] === $match) {
+                        if ($st['send'] !== "busy " || $st['recv'] !== "busy ") {
+                            NetworkSpeed::create([
+                                'id' => $yabs_id,
+                                'server_id' => $server_id,
+                                'location' => $st['loc'],
+                                'send' => self::speedAsFloat($st['send']),
+                                'send_type' => self::speedType($st['send']),
+                                'send_as_mbps' => self::speedAsMbps($st['send']),
+                                'receive' => self::speedAsFloat($st['recv']),
+                                'receive_type' => self::speedType($st['recv']),
+                                'receive_as_mbps' => self::speedAsMbps($st['recv'])
+                            ]);
+                        }
                     }
                 }
+            } else {
+                NetworkSpeed::create([
+                    'id' => $yabs_id,
+                    'server_id' => $server_id,
+                    'location' => 'None',
+                    'send' => 0.0,
+                    'send_type' => 'MB/s',
+                    'send_as_mbps' => 0.0,
+                    'receive' => 0.0,
+                    'receive_type' => 'MB/s',
+                    'receive_as_mbps' => 0.0
+                ]);
             }
+            
 
             //Update server
             $update_server = DB::table('servers')
