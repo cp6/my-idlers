@@ -190,7 +190,8 @@ class ApiController extends Controller
 
     protected function getAllOs()
     {
-        $os = OS::allOS()->toJson(JSON_PRETTY_PRINT);
+        $os = OS::allOS();
+        $os = json_encode($os, JSON_PRETTY_PRINT);
         return response($os, 200);
     }
 
