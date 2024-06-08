@@ -39,6 +39,9 @@
                                 <option value="7" {{ ($server_data->server_type === 7) ? 'selected' : '' }}>
                                     NAT
                                 </option>
+                                <option value="7" {{ ($server_data->server_type === 8) ? 'selected' : '' }}>
+                                    COLO
+                                </option>
                             </select></div>
                     </div>
                     <div class="col-12 col-lg-3 mb-4">
