@@ -98,7 +98,7 @@ docker run \
   -e DB_DATABASE=... \
   -e DB_USERNAME=... \
   -e DB_PASSWORD=... \
-  ghcr.io/cp6/my-idlers:latest
+  ghcr.io/Ne00n/my-idlers:latest
 docker exec ... php artisan migrate:fresh --seed --force  # Set up database one time
 ```
 
@@ -163,6 +163,10 @@ All API requests must be appended with `api/` e.g `mydomain.com/api/servers/gYk8
 `networkSpeeds/{id}`
 
 `os/`
+
+`notes/`
+
+`notes/{id}`
 
 `os/{id}`
 
