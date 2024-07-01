@@ -7,6 +7,7 @@ use App\Models\IPs;
 use App\Models\Labels;
 use App\Models\Misc;
 use App\Models\NetworkSpeed;
+use App\Models\Note;
 use App\Models\OS;
 use App\Models\Pricing;
 use App\Models\Providers;
@@ -190,7 +191,8 @@ class ApiController extends Controller
 
     protected function getAllOs()
     {
-        $os = OS::allOS()->toJson(JSON_PRETTY_PRINT);
+        $os = OS::allOS();
+        $os = json_encode($os, JSON_PRETTY_PRINT);
         return response($os, 200);
     }
 
@@ -498,6 +500,61 @@ class ApiController extends Controller
     {
         $yabs = Yabs::yabs($id)->toJson(JSON_PRETTY_PRINT);
         return response($yabs, 200);
+    }
+
+    protected function getAllNotes()
+    {
+        $notes = Note::allNotes()->toJson(JSON_PRETTY_PRINT);
+        return response($notes, 200);
+    }
+
+    protected function getNote($id)
+    {
+        $note = Note::note($id)->toJson(JSON_PRETTY_PRINT);
+        return response($note, 200);
+    }
+
+    protected function storeNote(Request $request)
+    {
+        $request->validate([
+            'service_id' => 'required|string|size:8',
+            'note' => 'required|string'
+        ]);
+
+        try {
+            $note_id = Str::random(8);
+            $note = Note::create([
+                'id' => $note_id,
+                'service_id' => $request->service_id,
+                'note' => $request->note
+            ]);
+        } catch (\Exception $e) {
+            if ($e->getCode() === "23000") {
+                return response("A note already exists for this service", 409);
+            } else {
+                return response("Error inserting note", 500);
+            }
+        }
+
+        Cache::forget('all_notes');
+
+        return response()->json(array('result' => 'success', 'note_id' => $note_id), 201);
+    }
+
+    public function updateNote(Request $request)
+    {
+        $request->validate([
+            'service_id' => 'required|string|size:8',
+            'note' => 'required|string'
+        ]);
+        $note = Note::note($request->id);
+        $note->update([
+            'service_id' => $request->service_id,
+            'note' => $request->note
+        ]);
+        Cache::forget('all_notes');
+        Cache::forget("note.$note->service_id");
+        return response()->json(array('result' => 'success', 'note_id' => $note->id), 200);
     }
 
 }

@@ -106,6 +106,11 @@ class Server extends Model
             return "VMware";
         } elseif ($type === 7) {
             return "NAT";
+        } elseif ($type === 8) {
+            if (!$short) {
+                return "Colocated";
+            }
+            return "COLO";
         } else {
             if (!$short) {
                 return "Semi-dedicated";

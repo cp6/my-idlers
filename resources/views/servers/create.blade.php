@@ -39,6 +39,7 @@
                                 <option value="5">SEMI-DEDI</option>
                                 <option value="6">VMware</option>
                                 <option value="7">NAT</option>
+                                <option value="8">COLO</option>
                             </select></div>
                     </div>
                     <div class="col-12 col-lg-3 mb-4">
