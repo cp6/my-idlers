@@ -28,7 +28,7 @@
                                                            class="text-decoration-none">{{ $domain->domain }}
                                         .{{$domain->extension}}</a></td>
                                 <td class="text-nowrap">{{ $domain->owned_since}}</td>
-                                <td class="text-nowrap">{{ now()->diffInDays($domain->price->next_due_date) }} <small>days</small>
+                                <td class="text-nowrap">{{ number_format(now()->diffInDays(Carbon\Carbon::parse($domain->price->next_due_date), false), 0) }} <small>days</small>
                                 </td>
                                 <td class="text-nowrap">{{ $domain->provider->name}}</td>
                                 <td class="text-nowrap">{{ $domain->price->price }}
