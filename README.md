@@ -34,13 +34,14 @@ Currently seeking a project sponsor
 * Added several updated OS versions to OsSeeder
 * Added Font awesome Brands webfont
 * Added IP whois data columns to the ips table
+* Added IP whois data fetching and updating DB
 * Added Note to API
 * Fixed OS icons not loading in servers index page
 * Fixed Settings being called without being created (existing)
 * Fixed issue with OS: `Call to a member function toJson() on array`
+* Fixed due in (days) column showing a massive float
 * Removed 1 user being seeded
 * Removed doctrine/dbal
-* Removed X
 
 #### Please run the following if updating from an existing install:
 
