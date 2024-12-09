@@ -1,11 +1,13 @@
 # My idlers
 
-A self-hosted web app for displaying, organizing and storing information about your servers (VPS/Dedi), shared & reseller hosting, seedboxes,
+A self-hosted web app for displaying, organizing and storing information about your servers (VPS/Dedi), shared &
+reseller hosting, seedboxes,
 domains, DNS and misc services.
 
 Despite what the name infers this self-hosted web app isn't just for storing idling server information. By using
 a [YABS](https://github.com/masonr/yet-another-bench-script) output you can get disk & network speed values along with
-GeekBench 5 & 6 scores to do easier comparing and sorting. Of course storing other services e.g. web hosting is possible and supported too with My idlers.
+GeekBench 5 & 6 scores to do easier comparing and sorting. Of course storing other services e.g. web hosting is possible
+and supported too with My idlers.
 
 [![Generic badge](https://img.shields.io/badge/version-3.0.0-blue.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Laravel-11.0-red.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/PHP-8.3-purple.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Bootstrap-5.3-pink.svg)](https://shields.io/)
 
@@ -32,6 +34,7 @@ Currently seeking a project sponsor
 * Added several updated OS versions to OsSeeder
 * Added Font awesome Brands webfont
 * Added IP whois data columns to the ips table
+* Added Note to API
 * Fixed OS icons not loading in servers index page
 * Fixed Settings being called without being created (existing)
 * Fixed issue with OS: `Call to a member function toJson() on array`
@@ -126,8 +129,9 @@ Example yabs.sh call to POST the result:
 
 `curl -sL yabs.sh | bash -s -- -s "https://yourdomain.com/api/yabs/SERVERID/USERAPIKEYISHERE"`
 
-## TODO
+## Credits
 
+IP who is data provided by [ipwhois.io](https://ipwhois.io/documentation)
 
 ## API endpoints
 
@@ -192,6 +196,8 @@ All API requests must be appended with `api/` e.g `mydomain.com/api/servers/gYk8
 `shared/`
 
 `shared/{id}`
+
+`note/{id}`
 
 **POST requests**
 
