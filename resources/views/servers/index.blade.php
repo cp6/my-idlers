@@ -233,8 +233,7 @@
                     }
                 });
             })
-        </script>
-        <script>
+
             window.addEventListener('load', function () {
                 $('#servers-table').DataTable({
                     "pageLength": 15,
