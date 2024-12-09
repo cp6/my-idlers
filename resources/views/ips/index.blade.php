@@ -7,13 +7,17 @@
             <x-response-alerts></x-response-alerts>
             <x-card class="shadow mt-3">
                 <a href="{{ route('IPs.create') }}" class="btn btn-primary mb-3">Add IP</a>
-                <x-response-alerts></x-response-alerts>
                 <div class="table-responsive">
                     <table class="table table-bordered" id="ips-table">
                         <thead class="table-light">
                         <tr>
                             <th class="text-nowrap">Type</th>
                             <th class="text-nowrap">Address</th>
+                            <th class="text-nowrap">Country</th>
+                            <th class="text-nowrap">City</th>
+                            <th class="text-nowrap">ORG</th>
+                            <th class="text-nowrap">ASN</th>
+                            <th class="text-nowrap">ISP</th>
                             <th class="text-nowrap">Actions</th>
                         </tr>
                         </thead>
@@ -27,8 +31,17 @@
                                             IPv6
                                         @endif</td>
                                     <td class="text-nowrap">{{ $ip->address}}</td>
+                                    <td class="text-nowrap">{{ $ip->country}}</td>
+                                    <td class="text-nowrap">{{ $ip->city}}</td>
+                                    <td class="text-nowrap">{{ $ip->org}}</td>
+                                    <td class="text-nowrap">{{ $ip->asn}}</td>
+                                    <td class="text-nowrap">{{ $ip->isp}}</td>
                                     <td class="text-nowrap">
                                         <form action="{{ route('IPs.destroy', $ip->id) }}" method="POST">
+                                            <a href="{{ route('ip.pull.info', $ip->id) }}"
+                                               class="text-body mx-1">
+                                                <i class="fa-solid fa-arrows-rotate" title="Pull IP info"></i>
+                                            </a>
                                             @csrf
                                             @method('DELETE')
                                             <i class="fas fa-trash text-danger ms-3" @click="confirmDeleteModal"

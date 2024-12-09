@@ -65,4 +65,6 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('servers-compare-choose', [ServerController::class, 'chooseCompare'])->name('servers-compare-choose');
     Route::get('servers-compare/{server1}/{server2}', [ServerController::class, 'compareServers'])->name('servers.compare');
+
+    Route::get('ip/{IP}/pull-ip-info', [IPsController::class, 'getUpdateWhoIs'])->middleware(['throttle:10,1'])->name('ip.pull.info');
 });

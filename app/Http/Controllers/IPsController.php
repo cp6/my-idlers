@@ -8,6 +8,7 @@ use App\Models\SeedBoxes;
 use App\Models\Server;
 use App\Models\Shared;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
 class IPsController extends Controller
@@ -37,13 +38,15 @@ class IPsController extends Controller
 
         $ip_id = Str::random(8);
 
-        IPs::create([
+        $ip = IPs::create([
             'id' => $ip_id,
             'address' => $request->address,
             'is_ipv4' => ($request->ip_type === 'ipv4') ? 1 : 0,
             'service_id' => $request->service_id,
             'active' => 1
         ]);
+
+        $fetch = IPs::getUpdateIpInfo($ip);
 
         return redirect()->route('IPs.index')
             ->with('success', 'IP address created Successfully.');
@@ -58,4 +61,17 @@ class IPsController extends Controller
         return redirect()->route('IPs.index')
             ->with('error', 'IP was not deleted.');
     }
+
+    public function getUpdateWhoIs(IPs $IP): \Illuminate\Http\RedirectResponse
+    {
+        $result = IPs::getUpdateIpInfo($IP);
+
+        if ($result) {
+            return redirect()->route('IPs.index')
+                ->with('success', 'IP address updated Successfully.');
+        }
+        return redirect()->route('IPs.index')
+            ->with('error', 'IP was not updated.');
+    }
+
 }
