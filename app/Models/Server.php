@@ -120,17 +120,17 @@ class Server extends Model
             return "<i class='fas fa-expand' title='{$os_name}'></i>";
         } else if ($os <= 3) {//Centos
             return "<i class='fa-brands fa-centos os-icon' title='{$os_name}'></i>";
-        } elseif (($os > 7 && $os <= 11) || $os === 45) {//Debian
+        } elseif (($os > 7 && $os <= 10) || $os === 44) {//Debian
             return "<i class='fa-brands fa-linux os-icon' title='{$os_name}'></i>";
-        } elseif (($os > 12 && $os < 15) || $os === 44) {//Fedora
+        } elseif (($os > 11 && $os < 15) || $os === 43) {//Fedora
             return "<i class='fa-brands fa-fedora os-icon' title='{$os_name}'></i>";
-        } elseif (($os > 14 && $os < 18) || $os === 47) {//FreeBSD
+        } elseif (($os > 14 && $os < 18) || $os === 46) {//FreeBSD
             return "<i class='fa-brands fa-linux os-icon' title='{$os_name}'></i>";
-        } elseif (($os > 17 && $os < 21) || $os === 43) {//OpenBSD
+        } elseif (($os > 17 && $os < 21) || $os === 42) {//OpenBSD
             return "<i class='fa-brands fa-linux os-icon' title='{$os_name}'></i>";
-        } elseif (($os > 25 && $os < 32) || $os === 42) {//Ubuntu
+        } elseif (($os > 25 && $os < 32) || $os === 41) {//Ubuntu
             return "<i class='fa-brands fa-ubuntu os-icon' title='{$os_name}'></i>";
-        } elseif (($os > 32 && $os < 38) || $os === 41) {//Windows
+        } elseif (($os > 32 && $os < 38) || $os === 40) {//Windows
             return "<i class='fa-brands fa-windows os-icon' title='{$os_name}'></i>";
         } else {//OTHER ISO CUSTOM etc
             return "<i class='fa-solid fa-compact-disc os-icon' title='{$os_name}'></i>";
