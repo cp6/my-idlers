@@ -7,7 +7,7 @@ Despite what the name infers this self-hosted web app isn't just for storing idl
 a [YABS](https://github.com/masonr/yet-another-bench-script) output you can get disk & network speed values along with
 GeekBench 5 & 6 scores to do easier comparing and sorting. Of course storing other services e.g. web hosting is possible and supported too with My idlers.
 
-[![Generic badge](https://img.shields.io/badge/version-3.0.0-blue.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Laravel-11.0-red.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/PHP-8.2-purple.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Bootstrap-5.3-pink.svg)](https://shields.io/)
+[![Generic badge](https://img.shields.io/badge/version-3.0.0-blue.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Laravel-11.0-red.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/PHP-8.3-purple.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Bootstrap-5.3-pink.svg)](https://shields.io/)
 
 <img src="https://raw.githubusercontent.com/cp6/my-idlers/main/public/My%20Idlers%20logo.jpg" width="128" height="128" />
 
@@ -19,17 +19,23 @@ GeekBench 5 & 6 scores to do easier comparing and sorting. Of course storing oth
 
 Currently seeking a project sponsor
 
-## 3.0.0 changes (X May 2024):
+## 3.0.0 changes (9 December 2024):
 
-* Updated PHP version to 8.2
+* Updated PHP version to 8.3
 * Updated Laravel version to ^11
 * Updated composer package versions
 * Updated routes into middleware grouping for auth
 * Updated login and register forms
-* Added darker card background style to style.css
-* Fixed X
+* Updated servers, shared, reseller and domains pages to use Datatables
+* Added icons to back and submit button components
+* Added icon button to shared and reseller create pages
+* Added several updated OS versions to OsSeeder
+* Added Font awesome Brands webfont
+* Added IP whois data columns to the ips table
+* Fixed OS icons not loading in servers index page
 * Fixed Settings being called without being created (existing)
 * Fixed issue with OS: `Call to a member function toJson() on array`
+* Removed 1 user being seeded
 * Removed doctrine/dbal
 * Removed X
 
@@ -44,7 +50,7 @@ php artisan cache:clear
 
 ## Requires
 
-* PHP 8.2
+* PHP 8.3
 
 ## Features
 
@@ -122,7 +128,6 @@ Example yabs.sh call to POST the result:
 
 ## TODO
 
-Add Geekbench 6 single and multi-core scores (On dev branch)
 
 ## API endpoints
 
