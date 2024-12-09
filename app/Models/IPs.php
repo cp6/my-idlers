@@ -55,15 +55,11 @@ class IPs extends Model
 
     public static function getUpdateIpInfo(IPs $IP): bool
     {
-        \Log::debug($IP->address);
-
         $response = Http::get("https://ipwhois.app/json/{{$IP->address}}");
 
         if ($response->ok()) {
 
             $data = $response->json();
-
-            \Log::debug($data);
 
             $IP->update([
                 'continent' => $data['continent'],
