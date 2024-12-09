@@ -8,10 +8,10 @@
             <div class="card-body">
                 <h4 class="mb-3">Shared hosting information</h4>
                 <x-auth-validation-errors></x-auth-validation-errors>
-                <a href="{{ route('shared.index') }}"
-                   class="btn btn-primary py-0 px-4 mb-4">
+                <x-back-button>
+                    <x-slot name="href">{{ route('shared.index') }}</x-slot>
                     Go back
-                </a>
+                </x-back-button>
                 <form action="{{ route('shared.store') }}" method="POST">
                     @csrf
                     <div class="row">
@@ -199,10 +199,7 @@
                         </div>
                     </div>
                     <div>
-                        <button type="submit"
-                                class="btn btn-success py-0 px-4 mt-2">
-                            Insert Shared hosting
-                        </button>
+                        <x-submit-button>Insert Shared hosting</x-submit-button>
                     </div>
                 </form>
             </div>
