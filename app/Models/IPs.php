@@ -55,7 +55,7 @@ class IPs extends Model
 
     public static function getUpdateIpInfo(IPs $IP): bool
     {
-        $response = Http::get("https://ipwhois.app/json/{{$IP->address}}");
+        $response = Http::get("https://ipwhois.app/json/{$IP->address}");
 
         if ($response->ok()) {
 
