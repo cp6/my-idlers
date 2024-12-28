@@ -4,7 +4,7 @@
         <!-- Validation Errors -->
         <x-auth-validation-errors class="mb-4" :errors="$errors"/>
 
-        <h3 class="text-center mb-4">@if (config()->has('app.name')) {{ config('app.name') }} @else My idlers @endif Register</h3>
+        <h3 class="text-center mb-5">@if (config()->has('app.name')) {{ config('app.name') }} @else My idlers @endif Register</h3>
         <form method="POST" action="{{ route('register') }}">
         @csrf
 
@@ -50,7 +50,7 @@
                     </a>
                 </div>
                 <div class="col-12">
-                    <x-button class="mt-3 w-100 btn btn-lg btn-primary">
+                    <x-button class="mt-4 w-100 btn btn-lg btn-primary">
                         {{ __('Register') }}
                     </x-button>
                 </div>

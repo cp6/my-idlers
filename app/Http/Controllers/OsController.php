@@ -10,7 +10,7 @@ class OsController extends Controller
 {
     public function index()
     {
-        $os = OS::allOS();
+        $os = OS::allOS()->toArray();
         return view('os.index', compact(['os']));
     }
 

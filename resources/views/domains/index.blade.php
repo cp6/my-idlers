@@ -9,7 +9,7 @@
             <a href="{{ route('domains.create') }}" class="btn btn-primary mb-3">Add a domain</a>
             <x-response-alerts></x-response-alerts>
             <div class="table-responsive">
-                <table class="table table-bordered">
+                <table class="table table-bordered" id="domain-table">
                     <thead class="table-light">
                     <tr>
                         <th class="text-nowrap">Domain</th>
@@ -28,7 +28,7 @@
                                                            class="text-decoration-none">{{ $domain->domain }}
                                         .{{$domain->extension}}</a></td>
                                 <td class="text-nowrap">{{ $domain->owned_since}}</td>
-                                <td class="text-nowrap">{{ now()->diffInDays($domain->price->next_due_date) }} <small>days</small>
+                                <td class="text-nowrap">{{ number_format(now()->diffInDays(Carbon\Carbon::parse($domain->price->next_due_date), false), 0) }} <small>days</small>
                                 </td>
                                 <td class="text-nowrap">{{ $domain->provider->name}}</td>
                                 <td class="text-nowrap">{{ $domain->price->price }}
@@ -63,4 +63,23 @@
     <x-modal-delete-script>
         <x-slot name="uri">domains</x-slot>
     </x-modal-delete-script>
+
+    @section('scripts')
+        <script>
+            window.addEventListener('load', function () {
+                $('#domain-table').DataTable({
+                    "pageLength": 15,
+                    "lengthMenu": [5, 10, 15, 25, 30, 50, 75, 100],
+                    "columnDefs": [
+                        {"orderable": false, "targets": [5]}
+                    ],
+                    "initComplete": function () {
+                        $('.dataTables_length,.dataTables_filter').addClass('mb-2');
+                        $('.dataTables_paginate').addClass('mt-2');
+                        $('.dataTables_info').addClass('mt-2 text-muted ');
+                    }
+                });
+            })
+        </script>
+    @endsection
 </x-app-layout>

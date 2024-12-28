@@ -1,13 +1,15 @@
 # My idlers
 
-A self-hosted web app for displaying, organizing and storing information about your servers (VPS/Dedi), shared & reseller hosting, seedboxes,
+A self-hosted web app for displaying, organizing and storing information about your servers (VPS/Dedi), shared &
+reseller hosting, seedboxes,
 domains, DNS and misc services.
 
 Despite what the name infers this self-hosted web app isn't just for storing idling server information. By using
 a [YABS](https://github.com/masonr/yet-another-bench-script) output you can get disk & network speed values along with
-GeekBench 5 & 6 scores to do easier comparing and sorting. Of course storing other services e.g. web hosting is possible and supported too with My idlers.
+GeekBench 5 & 6 scores to do easier comparing and sorting. Of course storing other services e.g. web hosting is possible
+and supported too with My idlers.
 
-[![Generic badge](https://img.shields.io/badge/version-2.3.2-blue.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Laravel-10.0-red.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/PHP-8.1-purple.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Bootstrap-5.2-pink.svg)](https://shields.io/)
+[![Generic badge](https://img.shields.io/badge/version-3.0.0-blue.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Laravel-11.0-red.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/PHP-8.3-purple.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Bootstrap-5.3-pink.svg)](https://shields.io/)
 
 <img src="https://raw.githubusercontent.com/cp6/my-idlers/main/public/My%20Idlers%20logo.jpg" width="128" height="128" />
 
@@ -19,20 +21,27 @@ GeekBench 5 & 6 scores to do easier comparing and sorting. Of course storing oth
 
 Currently seeking a project sponsor
 
-## 2.3.2 changes (26th September 2023):
+## 3.0.0 changes (9 December 2024):
 
-* Added tabs to the homepage for stats and avg summary cards
-* Added Geekbench 6 columns to YABS table
-* Added Geekbench 6 insert from YABS result
-* Updated YABS insert to include Geekbench 5 results also
-* Updated server show page and public show to display Geekbench 6 values
-* Updated tests to pass
-* Updated footer to only have one conditional check for the setting
-* Updated homepage table to be rounded
-* Fixed setting causing a fail with validation
-* Fixed pricing cache not being refreshed
-* Fixed object being accessed instead of array for certain models
-* Removed unused Vue component
+* Updated PHP version to 8.3
+* Updated Laravel version to ^11
+* Updated composer package versions
+* Updated routes into middleware grouping for auth
+* Updated login and register forms
+* Updated servers, shared, reseller and domains pages to use Datatables
+* Added icons to back and submit button components
+* Added icon button to shared and reseller create pages
+* Added several updated OS versions to OsSeeder
+* Added Font awesome Brands webfont
+* Added IP whois data columns to the ips table
+* Added IP whois data fetching and updating DB
+* Added Note to API
+* Fixed OS icons not loading in servers index page
+* Fixed Settings being called without being created (existing)
+* Fixed issue with OS: `Call to a member function toJson() on array`
+* Fixed due in (days) column showing a massive float
+* Removed 1 user being seeded
+* Removed doctrine/dbal
 
 #### Please run the following if updating from an existing install:
 
@@ -45,7 +54,7 @@ php artisan cache:clear
 
 ## Requires
 
-* PHP 8.1
+* PHP 8.3
 
 ## Features
 
@@ -121,9 +130,9 @@ Example yabs.sh call to POST the result:
 
 `curl -sL yabs.sh | bash -s -- -s "https://yourdomain.com/api/yabs/SERVERID/USERAPIKEYISHERE"`
 
-## TODO
+## Credits
 
-Add Geekbench 6 single and multi-core scores (On dev branch)
+IP who is data provided by [ipwhois.io](https://ipwhois.io/documentation)
 
 ## API endpoints
 
@@ -188,6 +197,8 @@ All API requests must be appended with `api/` e.g `mydomain.com/api/servers/gYk8
 `shared/`
 
 `shared/{id}`
+
+`note/{id}`
 
 **POST requests**
 
@@ -306,10 +317,6 @@ E.g if the term is a month then the due date gets updated to be 1 month from the
 or
 
 ```curl -sL yabs.sh | bash -s -- -r```
-
-**Make sure YABS output starts at the first line which is:**
-
-```# ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## #```
 
 Logo icons created by Freepik - Flaticon
 

@@ -7,6 +7,7 @@ use App\Models\IPs;
 use App\Models\Labels;
 use App\Models\Misc;
 use App\Models\NetworkSpeed;
+use App\Models\Note;
 use App\Models\OS;
 use App\Models\Pricing;
 use App\Models\Providers;
@@ -498,6 +499,12 @@ class ApiController extends Controller
     {
         $yabs = Yabs::yabs($id)->toJson(JSON_PRETTY_PRINT);
         return response($yabs, 200);
+    }
+
+    protected function getNote($id)
+    {
+        $note = Note::where('id', $id)->firstOrFail('note')->pluck('note');
+        return response($note, 200)->header('Content-Type', 'text/plain');
     }
 
 }

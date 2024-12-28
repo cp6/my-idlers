@@ -9,7 +9,7 @@
                 <a href="{{ route('reseller.create') }}" class="btn btn-primary mb-3">Add a reseller</a>
                 <x-response-alerts></x-response-alerts>
                 <div class="table-responsive">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered" id="reseller-table">
                         <thead class="table-light">
                         <tr>
                             <th>Name</th>
@@ -68,4 +68,23 @@
     <x-modal-delete-script>
         <x-slot name="uri">reseller</x-slot>
     </x-modal-delete-script>
+
+    @section('scripts')
+        <script>
+            window.addEventListener('load', function () {
+                $('#reseller-table').DataTable({
+                    "pageLength": 15,
+                    "lengthMenu": [5, 10, 15, 25, 30, 50, 75, 100],
+                    "columnDefs": [
+                        {"orderable": false, "targets": [10]}
+                    ],
+                    "initComplete": function () {
+                        $('.dataTables_length,.dataTables_filter').addClass('mb-2');
+                        $('.dataTables_paginate').addClass('mt-2');
+                        $('.dataTables_info').addClass('mt-2 text-muted ');
+                    }
+                });
+            })
+        </script>
+    @endsection
 </x-app-layout>

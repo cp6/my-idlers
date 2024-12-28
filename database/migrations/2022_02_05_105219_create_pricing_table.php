@@ -18,10 +18,10 @@ class CreatePricingTable extends Migration
             $table->tinyInteger('service_type');
             $table->tinyInteger('active')->default(1);
             $table->char('currency', 3);
-            $table->decimal('price',10,2);
+            $table->decimal('price', 10, 2);
             $table->tinyInteger('term');
-            $table->decimal('as_usd',10,2);
-            $table->decimal('usd_per_month',10,2);
+            $table->decimal('as_usd', 10, 2);
+            $table->decimal('usd_per_month', 10, 2);
             $table->date('next_due_date');
             $table->timestamps();
         });
@@ -34,6 +34,6 @@ class CreatePricingTable extends Migration
      */
     public function down()
     {
-         Schema::dropIfExists('pricings');
+        Schema::dropIfExists('pricings');
     }
 }

@@ -26,6 +26,9 @@ mix.sass('resources/sass/app.scss', 'public/css').options({
 ).copy(
     'node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff2',
     'public/webfonts/fa-solid-900.woff2'
+).copy(
+    'node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.ttf',
+    'public/webfonts/fa-brands-400.ttf'
 );
 mix.postCss('resources/css/light.css', 'public/css');
 mix.postCss('resources/css/dark.css', 'public/css');

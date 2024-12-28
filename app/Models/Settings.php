@@ -18,7 +18,11 @@ class Settings extends Model
     public static function getSettings(): Settings
     {
         return Cache::remember('settings', now()->addWeek(1), function () {
-            return self::where('id', 1)->first();
+            $settings = self::where('id', 1)->first();
+            if (is_null($settings)){
+                $settings = Settings::create();
+            }
+            return $settings;
         });
     }
 

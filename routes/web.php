@@ -3,6 +3,7 @@
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\DNSController;
 use App\Http\Controllers\DomainsController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\IPsController;
 use App\Http\Controllers\LabelsController;
 use App\Http\Controllers\LocationsController;
@@ -18,61 +19,52 @@ use App\Http\Controllers\SharedController;
 use App\Http\Controllers\YabsController;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
 
-Route::get('/', 'App\Http\Controllers\HomeController@index')->name('/');
+Route::get('/', [HomeController::class, 'index'])->name('/');
 
 require __DIR__ . '/auth.php';
 
-Route::resource('account', AccountController::class)->middleware(['auth']);
+Route::get('servers/public', [ServerController::class, 'showServersPublic'])->name('servers/public');
 
-Route::resource('dns', DNSController::class)->middleware(['auth']);
+Route::middleware(['auth'])->group(function () {
+    Route::resource('account', AccountController::class);
 
-Route::resource('domains', DomainsController::class)->middleware(['auth']);
+    Route::resource('dns', DNSController::class);
 
-Route::resource('IPs', IPsController::class)->middleware(['auth']);
+    Route::resource('domains', DomainsController::class);
 
-Route::resource('labels', LabelsController::class)->middleware(['auth']);
+    Route::resource('IPs', IPsController::class);
 
-Route::resource('locations', LocationsController::class)->middleware(['auth']);
+    Route::resource('labels', LabelsController::class);
 
-Route::resource('misc', MiscController::class)->middleware(['auth']);
+    Route::resource('locations', LocationsController::class);
 
-Route::resource('os', OsController::class)->middleware(['auth']);
+    Route::resource('misc', MiscController::class);
 
-Route::resource('providers', ProvidersController::class)->middleware(['auth']);
+    Route::resource('os', OsController::class);
 
-Route::resource('reseller', ResellerController::class)->middleware(['auth']);
+    Route::resource('providers', ProvidersController::class);
 
-Route::get('servers/public', 'App\Http\Controllers\ServerController@showServersPublic')->name('servers/public');
+    Route::resource('reseller', ResellerController::class);
 
-Route::resource('servers', ServerController::class)->middleware(['auth']);
+    Route::resource('servers', ServerController::class);
 
-Route::resource('settings', SettingsController::class)->middleware(['auth']);
+    Route::resource('settings', SettingsController::class);
 
-Route::resource('seedboxes', SeedBoxesController::class)->middleware(['auth']);
+    Route::resource('seedboxes', SeedBoxesController::class);
 
-Route::resource('shared', SharedController::class)->middleware(['auth']);
+    Route::resource('shared', SharedController::class);
 
-Route::resource('yabs', YabsController::class)->middleware(['auth']);
+    Route::resource('yabs', YabsController::class);
 
-Route::resource('notes', NoteController::class)->middleware(['auth']);
+    Route::resource('notes', NoteController::class);
 
-Route::get('yabs/{yab}/json', 'App\Http\Controllers\YabsController@yabsToJson')->middleware(['auth'])->name('yabs.json');
+    Route::get('yabs/{yab}/json', [YabsController::class, 'yabsToJson'])->name('yabs.json');
+    Route::get('yabs-compare-choose', [YabsController::class, 'chooseYabsCompare'])->name('yabs.compare-choose');
+    Route::get('yabs-compare/{yabs1}/{yabs2}', [YabsController::class, 'compareYabs'])->name('yabs.compare');
 
-Route::get('yabs-compare-choose', 'App\Http\Controllers\YabsController@chooseYabsCompare')->middleware(['auth'])->name('yabs.compare-choose');
+    Route::get('servers-compare-choose', [ServerController::class, 'chooseCompare'])->name('servers-compare-choose');
+    Route::get('servers-compare/{server1}/{server2}', [ServerController::class, 'compareServers'])->name('servers.compare');
 
-Route::get('yabs-compare/{yabs1}/{yabs2}', 'App\Http\Controllers\YabsController@compareYabs')->middleware(['auth'])->name('yabs.compare');
-
-Route::get('servers-compare-choose', 'App\Http\Controllers\ServerController@chooseCompare')->middleware(['auth'])->name('servers-compare-choose');
-
-Route::get('servers-compare/{server1}/{server2}', 'App\Http\Controllers\ServerController@compareServers')->middleware(['auth'])->name('servers.compare');
+    Route::get('ip/{IP}/pull-ip-info', [IPsController::class, 'getUpdateWhoIs'])->middleware(['throttle:10,1'])->name('ip.pull.info');
+});

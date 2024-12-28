@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
 class IPs extends Model
@@ -16,7 +17,7 @@ class IPs extends Model
 
     protected $keyType = 'string';
 
-    protected $fillable = ['id', 'active', 'service_id', 'address', 'is_ipv4'];
+    protected $fillable = ['id', 'service_id', 'address', 'is_ipv4', 'active', 'continent', 'country', 'region', 'city', 'org', 'isp', 'asn', 'timezone_gmt', 'fetched_at'];
 
     public $incrementing = false;
 
@@ -50,6 +51,31 @@ class IPs extends Model
     public function note(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(Note::class, 'service_id', 'id');
+    }
+
+    public static function getUpdateIpInfo(IPs $IP): bool
+    {
+        $response = Http::get("https://ipwhois.app/json/{$IP->address}");
+
+        if ($response->ok()) {
+
+            $data = $response->json();
+
+            $IP->update([
+                'continent' => $data['continent'],
+                'country' => $data['country'],
+                'region' => $data['region'],
+                'city' => $data['city'],
+                'org' => $data['org'],
+                'isp' => $data['isp'],
+                'asn' => $data['asn'],
+                'timezone_gmt' => $data['timezone_gmt'],
+                'fetched_at' => now()
+            ]);
+
+        }
+
+        return $response->ok();
     }
 
 }

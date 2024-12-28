@@ -16,10 +16,10 @@ class OS extends Model
 
     protected $table = 'os';
 
-    public static function allOS(): array
+    public static function allOS()
     {
         return Cache::remember("operating_systems", now()->addMonth(1), function () {
-            return self::orderBy('name')->get()->toArray();
+            return self::orderBy('name')->get();
         });
     }
 }
