@@ -104,6 +104,7 @@ If you already have at least version 2.0 installed:
 docker run \
   -p 8000:8000\
   -e APP_URL=https://... \
+  -e APP_FORCE_SSL=true \
   -e DB_HOST=... \
   -e DB_DATABASE=... \
   -e DB_USERNAME=... \
