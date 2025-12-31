@@ -1,66 +1,97 @@
-# My Idlers - Server/VPS Inventory Manager
+# CLAUDE.md
 
-> Personal fork of cp6/my-idlers
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
----
 
-## Fork Information
 
-| Property | Value |
-|----------|-------|
-| **Upstream** | https://github.com/cp6/my-idlers |
-| **Fork Purpose** | Track VPS, dedicated servers, and domains inventory |
-| **Local Modifications** | None yet - evaluating for personal use |
-| **Sync Strategy** | `git fetch upstream && git merge upstream/master` |
+## Project Overview
+
+Web app for displaying, organizing and storing information about servers, shared/reseller hosting and domains.
+
+### Key Features
+- {{TODO: Add key features}}
 
 ---
 
-## Tech Stack
+## Architecture
 
-| Component | Technology |
-|-----------|------------|
-| **Framework** | Laravel 10+ |
-| **Database** | MySQL/MariaDB |
-| **Frontend** | Blade + Tailwind CSS |
-| **Auth** | Laravel Breeze |
+```
+my-idlers/
+{{TODO: Add project structure}}
+```
+
+### Main Components
+
+| File | Purpose |
+|------|---------|
+| {{main_file}} | Main entry point |
 
 ---
 
-## Quick Start
+## Key Functions/Classes
+
+| Name | Purpose |
+|------|---------|
+| {{TODO}} | {{TODO}} |
+
+---
+
+## Configuration
+
+{{TODO: Document configuration options}}
+
+---
+
+## Dependencies
+
+| Dependency | Version | Purpose |
+|------------|---------|---------|
+| {{TODO}} | {{version}} | {{purpose}} |
+
+---
+
+## Common Commands
 
 ```bash
-cd C:\GIT\my-idlers
-
-# Install dependencies
-composer install
-npm install
-
-# Copy environment
-cp .env.example .env
-
-# Generate key
-php artisan key:generate
-
-# Run migrations
-php artisan migrate
-
-# Compile assets
-npm run build
-
-# Serve
-php artisan serve
+# Run tests
+php artisan test
 ```
 
 ---
 
-## Key Features
+## CI/CD
 
-- Track VPS/dedicated server inventory
-- Domain management
-- Pricing/renewal tracking
-- Provider comparison
-- Notes and labels
+{{TODO: Document CI/CD pipeline}}
 
 ---
 
-*Last updated: 2026-01-01*
+## Known Issues / Gotchas
+
+{{TODO: Document known issues}}
+
+---
+
+## Development Guidelines
+
+### Making Changes
+- Run tests before committing
+- Follow existing code patterns and naming conventions
+- Update documentation if adding new features
+
+### Testing
+Run tests: `php artisan test`
+
+---
+
+## Git Attribution
+
+**This is a TomsTech repository.**
+
+Before ANY git operations:
+```bash
+git config user.name "TomsTech"
+git config user.email "82087949+TomsTech@users.noreply.github.com"
+```
+
+Commit messages should be simple and clean. No AI attribution footers.
+

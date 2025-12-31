@@ -13,6 +13,7 @@
 
     @if(Session::get('dark_mode'))
         <link rel="stylesheet" href="{{ asset('css/dark.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/minimal-dark.css') }}">
     @else
         <link rel="stylesheet" href="{{ asset('css/light.css') }}">
     @endif

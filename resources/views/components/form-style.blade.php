@@ -1,14 +1,4 @@
 <style>
-    html,
-    body {
-        height: 100%;
-    }
-
-    body {
-        display: grid;
-        align-items: center;
-    }
-
     .form-signin {
         width: 100%;
         max-width: 330px;

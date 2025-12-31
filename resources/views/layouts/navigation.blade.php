@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-md navbar-light bg-light shadow-sm" aria-label="Eleventh navbar example">
+<nav class="navbar navbar-expand-md navbar-dark" aria-label="Main navigation">
     <div class="container">
         <a class="navbar-brand" href="{{route('/')}}">@if (config()->has('app.name')) {{ config('app.name') }} @else My idlers @endif</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample09"
