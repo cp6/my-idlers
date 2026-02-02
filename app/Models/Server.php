@@ -116,51 +116,37 @@ class Server extends Model
 
     public static function osIntToIcon(int $os, string $os_name): string
     {
-        // OS IDs based on OsSeeder:
-        // 1: None
-        // 2-3: AlmaLinux, 46: AlmaLinux 9
-        // 4-7: CentOS
-        // 8-10: Debian, 45: Debian 11
-        // 11-14: Fedora, 44: Fedora 41
-        // 15-17: FreeBSD, 47: FreeBSD 14.1
-        // 18-20: OpenBSD, 43: OpenBSD 7.5
-        // 21-25: RHEL/Rocky
-        // 26-31: Ubuntu, 42: Ubuntu 24.04
-        // 32-38: Windows, 41: Windows Server 2022
-        // 39-40: Custom/Other
-
-        if ($os === 1) {//None
+        $name = strtolower(str_replace(' ', '', $os_name));
+        if ($name === "none") {//None
             return "<i class='fas fa-expand' title='{$os_name}'></i>";
-        } elseif ($os === 2 || $os === 3 || $os === 46) {//AlmaLinux
-            return "<i class='fa-brands fa-linux os-icon' title='{$os_name}'></i>";
-        } elseif ($os >= 4 && $os <= 7) {//CentOS
+        } else if (str_contains($name, "centos")) {//CentOS
             return "<i class='fa-brands fa-centos os-icon' title='{$os_name}'></i>";
-        } elseif (($os >= 8 && $os <= 10) || $os === 45) {//Debian
+        } elseif (str_contains($name, "debian")) {//Debian
             return "<i class='fa-brands fa-debian os-icon' title='{$os_name}'></i>";
-        } elseif (($os >= 11 && $os <= 14) || $os === 44) {//Fedora
+        } elseif (str_contains($name, "fedora")) {//Fedora
             return "<i class='fa-brands fa-fedora os-icon' title='{$os_name}'></i>";
-        } elseif (($os >= 15 && $os <= 17) || $os === 47) {//FreeBSD
+        } elseif (str_contains($name, "freebsd")) {//FreeBSD
             return "<i class='fa-brands fa-freebsd os-icon' title='{$os_name}'></i>";
-        } elseif (($os >= 18 && $os <= 20) || $os === 43) {//OpenBSD
+        } elseif (str_contains($name, "openbsd")) {//OpenBSD
             return "<i class='fa-brands fa-linux os-icon' title='{$os_name}'></i>";
-        } elseif ($os >= 21 && $os <= 25) {//RHEL/Rocky
-            return "<i class='fa-brands fa-redhat os-icon' title='{$os_name}'></i>";
-        } elseif (($os >= 26 && $os <= 31) || $os === 42) {//Ubuntu
+        } elseif (str_contains($name, "ubuntu")) {//Ubuntu
             return "<i class='fa-brands fa-ubuntu os-icon' title='{$os_name}'></i>";
-        } elseif (($os >= 32 && $os <= 38) || $os === 41) {//Windows
+        } elseif (str_contains($name, "windows")) {//Windows
             return "<i class='fa-brands fa-windows os-icon' title='{$os_name}'></i>";
-        } else {//Custom, Other, or unknown
+        } elseif (str_contains($name, "opensuse")) {//OpenSUSE
+            return "<i class='fa-brands fa-opensuse os-icon' title='{$os_name}'></i>";
+        } elseif (str_contains($name, "redhat")) {//Red Hat
+            return "<i class='fa-brands fa-redhat os-icon' title='{$os_name}'></i>";
+        } elseif (str_contains($name, "linux")) {//Linux
+            return "<i class='fa-brands fa-linux os-icon' title='{$os_name}'></i>";
+        } else {//OTHER ISO CUSTOM etc
             return "<i class='fa-solid fa-compact-disc os-icon' title='{$os_name}'></i>";
         }
     }
 
-    public static function tableRowCompare(?string $val1, ?string $val2, string $value_type = '', bool $is_int = true): string
+    public static function tableRowCompare(string $val1, string $val2, string $value_type = '', bool $is_int = true): string
     {
         //<td class="td-nowrap plus-td">+303<span class="data-type">MBps</span></td>
-        if ($val1 === null || $val2 === null) {
-            return '<td class="text-center equal-td">—</td>';
-        }
-        
         $str = '<td class="td-nowrap ';
         $value_append = '<span class="data-type">' . $value_type . '</span>';
         if ($is_int) {
