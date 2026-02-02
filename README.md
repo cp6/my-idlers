@@ -38,16 +38,32 @@ Currently seeking a project sponsor
 * Redesigned dashboard with cleaner stat cards, costs and resources sections
 * Modernized navbar with improved styling and hover states
 * Updated dark mode with new color scheme and page background
+* Made demo user and sample data seeding optional via `SEED_DEMO_DATA` env variable
 
-### Demo/Seeder Login Credentials
+### Database Seeding
 
-After running `php artisan migrate:fresh --seed`, you can login with:
+The seeder is split into two parts:
 
-| Name | Email | Password |
-|------|-------|----------|
-| Admin User | admin@example.com | password |
-| John Developer | john@example.com | password |
-| Jane Sysadmin | jane@example.com | password |
+**Core data (always seeded):** Settings, Providers, Locations, OS, Labels - required for the app to function.
+
+**Demo data (optional):** Admin user and sample services (servers, domains, shared hosting, etc.)
+
+```shell
+# Fresh install (core data only - recommended for production)
+php artisan migrate:fresh --seed
+
+# Fresh install with demo data
+# First add SEED_DEMO_DATA=true to your .env file, then:
+php artisan migrate:fresh --seed
+```
+
+### Demo Login Credentials
+
+When `SEED_DEMO_DATA=true` is set, a demo user is created:
+
+| Email | Password |
+|-------|----------|
+| admin@admin.com | password |
 
 #### Please run the following if updating from an existing install:
 
