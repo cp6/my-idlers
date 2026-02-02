@@ -111,6 +111,8 @@ class SeedBoxesController extends Controller
             'label4' => 'sometimes|nullable|string',
         ]);
 
+        $is_active = (isset($request->is_active)) ? 1 : 0;
+
         $seedbox->update([
             'title' => $request->title,
             'hostname' => $request->hostname,
@@ -123,11 +125,12 @@ class SeedBoxesController extends Controller
             'owned_since' => $request->owned_since,
             'bandwidth' => $request->bandwidth,
             'port_speed' => $request->port_speed,
-            'was_promo' => $request->was_promo
+            'was_promo' => $request->was_promo,
+            'active' => $is_active
         ]);
 
         $pricing = new Pricing();
-        $pricing->updatePricing($seedbox->id, $request->currency, $request->price, $request->payment_term, $request->next_due_date);
+        $pricing->updatePricing($seedbox->id, $request->currency, $request->price, $request->payment_term, $request->next_due_date, $is_active);
 
         Labels::deleteLabelsAssignedTo($seedbox->id);
         Labels::insertLabelsAssigned([$request->label1, $request->label2, $request->label3, $request->label4], $seedbox->id);

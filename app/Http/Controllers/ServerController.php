@@ -152,6 +152,8 @@ class ServerController extends Controller
             'label4' => 'sometimes|nullable|string',
         ]);
 
+        $is_active = (isset($request->is_active)) ? 1 : 0;
+
         $server->update([
             'hostname' => $request->hostname,
             'server_type' => $request->server_type,
@@ -171,12 +173,12 @@ class ServerController extends Controller
             'bandwidth' => $request->bandwidth,
             'cpu' => $request->cpu,
             'was_promo' => $request->was_promo,
-            'active' => (isset($request->is_active)) ? 1 : 0,
+            'active' => $is_active,
             'show_public' => (isset($request->show_public)) ? 1 : 0
         ]);
 
         $pricing = new Pricing();
-        $pricing->updatePricing($server->id, $request->currency, $request->price, $request->payment_term, $request->next_due_date);
+        $pricing->updatePricing($server->id, $request->currency, $request->price, $request->payment_term, $request->next_due_date, $is_active);
 
         Labels::deleteLabelsAssignedTo($server->id);
 

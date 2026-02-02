@@ -99,8 +99,10 @@ class DomainsController extends Controller
             'label4' => 'sometimes|nullable|string',
         ]);
 
+        $is_active = (isset($request->is_active)) ? 1 : 0;
+
         $pricing = new Pricing();
-        $pricing->updatePricing($domain->id, $request->currency, $request->price, $request->payment_term, $request->next_due_date);
+        $pricing->updatePricing($domain->id, $request->currency, $request->price, $request->payment_term, $request->next_due_date, $is_active);
 
         $domain->update([
             'domain' => $request->domain,
@@ -110,7 +112,7 @@ class DomainsController extends Controller
             'ns3' => $request->ns3,
             'provider_id' => $request->provider_id,
             'owned_since' => $request->owned_since,
-            'active' => (isset($request->is_active)) ? 1 : 0
+            'active' => $is_active
         ]);
 
         Labels::deleteLabelsAssignedTo($domain->id);

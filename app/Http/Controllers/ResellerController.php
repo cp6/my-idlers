@@ -128,6 +128,8 @@ class ResellerController extends Controller
             'label4' => 'sometimes|nullable|string',
         ]);
 
+        $is_active = (isset($request->is_active)) ? 1 : 0;
+
         $reseller->update([
             'main_domain' => $request->domain,
             'reseller_type' => $request->reseller_type,
@@ -144,11 +146,12 @@ class ResellerController extends Controller
             'subdomains_limit' => $request->sub_domains,
             'email_limit' => $request->email,
             'ftp_limit' => $request->ftp,
-            'db_limit' => $request->db
+            'db_limit' => $request->db,
+            'active' => $is_active
         ]);
 
         $pricing = new Pricing();
-        $pricing->updatePricing($reseller->id, $request->currency, $request->price, $request->payment_term, $request->next_due_date);
+        $pricing->updatePricing($reseller->id, $request->currency, $request->price, $request->payment_term, $request->next_due_date, $is_active);
 
         Labels::deleteLabelsAssignedTo($reseller->id);
         Labels::insertLabelsAssigned([$request->label1, $request->label2, $request->label3, $request->label4], $reseller->id);

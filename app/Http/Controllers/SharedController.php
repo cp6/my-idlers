@@ -127,6 +127,8 @@ class SharedController extends Controller
             'label4' => 'sometimes|nullable|string',
         ]);
 
+        $is_active = (isset($request->is_active)) ? 1 : 0;
+
         $shared->update([
             'main_domain' => $request->domain,
             'shared_type' => $request->shared_type,
@@ -142,11 +144,12 @@ class SharedController extends Controller
             'subdomains_limit' => $request->sub_domains,
             'email_limit' => $request->email,
             'ftp_limit' => $request->ftp,
-            'db_limit' => $request->db
+            'db_limit' => $request->db,
+            'active' => $is_active
         ]);
 
         $pricing = new Pricing();
-        $pricing->updatePricing($shared->id, $request->currency, $request->price, $request->payment_term, $request->next_due_date);
+        $pricing->updatePricing($shared->id, $request->currency, $request->price, $request->payment_term, $request->next_due_date, $is_active);
 
         Labels::deleteLabelsAssignedTo($shared->id);
         Labels::insertLabelsAssigned([$request->label1, $request->label2, $request->label3, $request->label4], $shared->id);

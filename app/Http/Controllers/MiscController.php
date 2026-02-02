@@ -74,14 +74,16 @@ class MiscController extends Controller
             'next_due_date' => 'required|date'
         ]);
 
+        $is_active = (isset($request->is_active)) ? 1 : 0;
+
         $misc->update([
             'name' => $request->name,
             'owned_since' => $request->owned_since,
-            'active' => (isset($request->is_active)) ? 1 : 0
+            'active' => $is_active
         ]);
 
         $pricing = new Pricing();
-        $pricing->updatePricing($misc->id, $request->currency, $request->price, $request->payment_term, $request->next_due_date);
+        $pricing->updatePricing($misc->id, $request->currency, $request->price, $request->payment_term, $request->next_due_date, $is_active);
 
         Cache::forget("all_misc");
         Cache::forget("misc.{$misc->id}");
