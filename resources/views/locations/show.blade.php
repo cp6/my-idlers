@@ -1,60 +1,77 @@
 @section("title", "{$location->name} location")
 <x-app-layout>
-    <x-slot name="header">
-        {{ __('Location details') }}
-    </x-slot>
     <div class="container">
-        <x-card class="shadow mt-3">
-            <div class="row">
-                <div class="col-12 col-md-6 mb-2">
-                    <h2>{{ $location->name }}</h2>
-                </div>
-                <div class="col-12 col-md-6 text-md-end">
-                    <h6 class="text-muted pe-lg-4">{{ $location->id }}</h6>
-                </div>
+        <div class="page-header">
+            <div>
+                <h2 class="page-title">{{ $location->name }}</h2>
             </div>
-            <div class="row">
-                <div class="col-12 col-lg-6">
-                    <div class="table-responsive">
-                        <table class="table table-borderless text-nowrap">
+            <div class="page-actions">
+                <a href="{{ route('locations.index') }}" class="btn btn-outline-secondary">Back to locations</a>
+            </div>
+        </div>
+
+        <x-response-alerts></x-response-alerts>
+
+        <div class="row g-4">
+            <!-- Services at this location -->
+            <div class="col-12">
+                <div class="card content-card">
+                    <div class="card-header card-section-header">
+                        <h5 class="card-section-title mb-0">Services at this location</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <table class="table table-borderless mb-0">
                             <tbody>
-                            @if(!empty($data))
-                                @foreach($data as $l)
-                                    <tr>
-                                    <td class="py-2 text-muted">
-                                        @if(isset($l->hostname))
+                            @forelse($data as $item)
+                                <tr>
+                                    <td class="px-3 py-2 text-muted" style="width: 20%;">
+                                        @if(isset($item->hostname))
                                             Server
-                                        @elseif(isset($l->main_domain_shared))
+                                        @elseif(isset($item->main_domain_shared))
                                             Shared
-                                        @elseif(isset($l->main_domain_reseller))
+                                        @elseif(isset($item->main_domain_reseller))
                                             Reseller
                                         @endif
                                     </td>
-                                    <td>
-                                        @if(isset($l->hostname))
-                                            <a href="{{ route('servers.show', $l->id) }}" class="text-decoration-none">{{$l->hostname}}</a>
-                                        @elseif(isset($l->main_domain_shared))
-                                            <a href="{{ route('shared.show', $l->id) }}" class="text-decoration-none">{{$l->main_domain_shared}}</a>
-                                        @elseif(isset($l->main_domain_reseller))
-                                            <a href="{{ route('reseller.show', $l->id) }}" class="text-decoration-none">{{$l->main_domain_reseller}}</a>
+                                    <td class="px-3 py-2">
+                                        @if(isset($item->hostname))
+                                            <a href="{{ route('servers.show', $item->id) }}" class="text-decoration-none">{{ $item->hostname }}</a>
+                                        @elseif(isset($item->main_domain_shared))
+                                            <a href="{{ route('shared.show', $item->id) }}" class="text-decoration-none">{{ $item->main_domain_shared }}</a>
+                                        @elseif(isset($item->main_domain_reseller))
+                                            <a href="{{ route('reseller.show', $item->id) }}" class="text-decoration-none">{{ $item->main_domain_reseller }}</a>
                                         @endif
                                     </td>
-                                    </tr>
-                                @endforeach
-                            @else
-                                <tr>
-                                    <td class="px-4 py-2 text-muted" colspan="3">No services found for {{ $location ->name }}</td>
                                 </tr>
-                            @endif
+                            @empty
+                                <tr>
+                                    <td class="px-3 py-2 text-muted" colspan="2">No services found at {{ $location->name }}</td>
+                                </tr>
+                            @endforelse
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
-            <x-back-button>
-                <x-slot name="href">{{ route('locations.index') }}</x-slot>
-                Go back
-            </x-back-button>
-        </x-card>
+
+            <!-- Record Info -->
+            <div class="col-12">
+                <div class="card content-card">
+                    <div class="card-header card-section-header">
+                        <h5 class="card-section-title mb-0">Record Info</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <table class="table table-borderless mb-0">
+                            <tbody>
+                            <tr>
+                                <td class="px-3 py-2 text-muted" style="width: 20%;">ID</td>
+                                <td class="px-3 py-2"><code>{{ $location->id }}</code></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </x-app-layout>

@@ -1,96 +1,73 @@
 @section("title", "{$reseller->main_domain} reseller hosting")
 <x-app-layout>
-    <x-slot name="header">
-        {{ __('Reseller hosting details') }}
-    </x-slot>
     <div class="container">
-        <x-card class="shadow mt-3">
-            <div class="row">
-                <div class="col-12 col-md-6 mb-2">
-                    <h2>{{ $reseller->main_domain }}</h2>
+        <div class="page-header">
+            <div>
+                <h2 class="page-title">{{ $reseller->main_domain }}</h2>
+                <div class="mt-2">
                     @foreach($reseller->labels as $label)
-                        <span class="badge bg-primary mx-1">{{$label->label->label}}</span>
+                        <span class="badge bg-primary">{{$label->label->label}}</span>
                     @endforeach
-                </div>
-                <div class="col-12 col-md-6 text-md-end">
-                    <h6 class="text-muted pe-lg-4">{{ $reseller->id }}</h6>
                     @if($reseller->active !== 1)
-                        <h6 class="text-danger pe-lg-4">not active</h6>
+                        <span class="badge bg-danger">Not Active</span>
                     @endif
                 </div>
             </div>
-            <div class="row">
-                <div class="'col-12 col-lg-6">
-                    <div class="table-responsive">
-                        <table class="table table-borderless text-nowrap">
+            <div class="page-actions">
+                <a href="{{ route('reseller.index') }}" class="btn btn-outline-secondary">Back to reseller</a>
+                <a href="{{ route('reseller.edit', $reseller->id) }}" class="btn btn-primary">Edit</a>
+            </div>
+        </div>
+
+        <x-response-alerts></x-response-alerts>
+
+        <div class="row g-4">
+            <!-- Hosting Details -->
+            <div class="col-12 col-lg-6">
+                <div class="card content-card">
+                    <div class="card-header card-section-header">
+                        <h5 class="card-section-title mb-0">Hosting Details</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <table class="table table-borderless mb-0">
                             <tbody>
                             <tr>
-                                <td class="px-2 py-2 font-bold text-muted">Type</td>
-                                <td>{{ $reseller->reseller_type }}</td>
+                                <td class="px-3 py-2 text-muted" style="width: 40%;">Type</td>
+                                <td class="px-3 py-2">{{ $reseller->reseller_type }}</td>
                             </tr>
                             <tr>
-                                <td class="px-2 py-2 font-bold text-muted">Main domain</td>
-                                <td><a href="https://{{ $reseller->main_domain }}"
-                                       class="text-decoration-none">{{ $reseller->main_domain }}</a></td>
-                            </tr>
-                            <tr>
-                                <td class="px-2 py-2 font-bold text-muted">Location</td>
-                                <td>{{ $reseller->location->name }}</td>
-                            </tr>
-                            <tr>
-                                <td class="px-2 py-2 font-bold text-muted">Provider</td>
-                                <td>{{ $reseller->provider->name }}</td>
-                            </tr>
-                            <tr>
-                                <td class="px-2 py-2 font-bold text-muted">Price</td>
-                                <td>{{ $reseller->price->price }} {{ $reseller->price->currency }}
-                                    <small>{{\App\Process::paymentTermIntToString($reseller->price->term)}}</small>
+                                <td class="px-3 py-2 text-muted">Main Domain</td>
+                                <td class="px-3 py-2">
+                                    <a href="https://{{ $reseller->main_domain }}" class="text-decoration-none">{{ $reseller->main_domain }}</a>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="px-2 py-2 font-bold text-muted">Has dedicated IP?</td>
-                                <td>
-                                    @if(isset($reseller->ips[0]->address))
-                                        Yes
-                                    @else
-                                        No
-                                    @endif
+                                <td class="px-3 py-2 text-muted">Location</td>
+                                <td class="px-3 py-2">{{ $reseller->location->name }}</td>
+                            </tr>
+                            <tr>
+                                <td class="px-3 py-2 text-muted">Provider</td>
+                                <td class="px-3 py-2">{{ $reseller->provider->name }}</td>
+                            </tr>
+                            <tr>
+                                <td class="px-3 py-2 text-muted">Price</td>
+                                <td class="px-3 py-2">
+                                    {{ $reseller->price->price }} {{ $reseller->price->currency }}
+                                    <small class="text-muted">{{ \App\Process::paymentTermIntToString($reseller->price->term) }}</small>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="px-2 py-2 font-bold text-muted">IP</td>
-                                <td><code>@if(isset($reseller->ips[0]->address))
-                                            {{$reseller->ips[0]->address}}
-                                        @endif
-                                    </code></td>
+                                <td class="px-3 py-2 text-muted">Next Due Date</td>
+                                <td class="px-3 py-2">
+                                    {{ Carbon\Carbon::parse($reseller->price->next_due_date)->diffForHumans() }}
+                                    <small class="text-muted">({{ Carbon\Carbon::parse($reseller->price->next_due_date)->format('d/m/Y') }})</small>
+                                </td>
                             </tr>
                             <tr>
-                                <td class="px-2 py-2 font-bold text-muted">Owned since</td>
-                                <td>
-                                    @if(!is_null($reseller->owned_since))
+                                <td class="px-3 py-2 text-muted">Owned Since</td>
+                                <td class="px-3 py-2">
+                                    @if($reseller->owned_since !== null)
                                         {{ date_format(new DateTime($reseller->owned_since), 'jS F Y') }}
-                                    @endif
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="px-2 py-2 font-bold text-muted">Next due date</td>
-                                <td>{{Carbon\Carbon::parse($reseller->price->next_due_date)->diffForHumans()}}
-                                    ({{Carbon\Carbon::parse($reseller->price->next_due_date)->format('d/m/Y')}})
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="px-2 py-2 font-bold text-muted">Inserted</td>
-                                <td>
-                                    @if(!is_null($reseller->created_at))
-                                        {{ date_format(new DateTime($reseller->created_at), 'jS M y g:i a') }}
-                                    @endif
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="px-2 py-2 font-bold text-muted">Updated</td>
-                                <td>
-                                    @if(!is_null($reseller->updated_at))
-                                        {{ date_format(new DateTime($reseller->updated_at), 'jS M y g:i a') }}
                                     @endif
                                 </td>
                             </tr>
@@ -98,59 +75,113 @@
                         </table>
                     </div>
                 </div>
-                <div class="'col-12 col-lg-6">
-                    <table class="table table-borderless">
-                        <tbody>
-                        <tr>
-                            <td class="px-2 py-2 font-bold text-muted">Disk GB</td>
-                            <td>{{$reseller->disk_as_gb}}</td>
-                        </tr>
-                        <tr>
-                            <td class="px-2 py-2 font-bold text-muted">Accounts</td>
-                            <td>{{$reseller->accounts}}</td>
-                        </tr>
-                        <tr>
-                            <td class="px-2 py-2 font-bold text-muted">Domains Limit</td>
-                            <td>{{$reseller->domains_limit}}</td>
-                        </tr>
-                        <tr>
-                            <td class="px-2 py-2 font-bold text-muted">Subdomains Limit</td>
-                            <td>{{$reseller->subdomains_limit}}</td>
-                        </tr>
-                        <tr>
-                            <td class="px-2 py-2 font-bold text-muted">Bandwidth GB</td>
-                            <td>{{$reseller->bandwidth}}</td>
-                        </tr>
-                        <tr>
-                            <td class="px-2 py-2 font-bold text-muted">Email Limit</td>
-                            <td>{{$reseller->email_limit}}</td>
-                        </tr>
-                        <tr>
-                            <td class="px-2 py-2 font-bold text-muted">DB Limit</td>
-                            <td>{{$reseller->db_limit}}</td>
-                        </tr>
-                        <tr>
-                            <td class="px-2 py-2 font-bold text-muted">FTP Limit</td>
-                            <td>{{$reseller->ftp_limit}}</td>
-                        </tr>
-                        @if(isset($reseller->note))
-                            <tr>
-                                <td class="px-2 py-2 font-bold text-muted">Note:</td>
-                                <td>{{$reseller->note->note}}</td>
-                            </tr>
-                        @endif
-                        </tbody>
-                    </table>
+            </div>
 
+            <!-- Specifications -->
+            <div class="col-12 col-lg-6">
+                <div class="card content-card">
+                    <div class="card-header card-section-header">
+                        <h5 class="card-section-title mb-0">Specifications</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <table class="table table-borderless mb-0">
+                            <tbody>
+                            <tr>
+                                <td class="px-3 py-2 text-muted" style="width: 40%;">Disk</td>
+                                <td class="px-3 py-2">{{ $reseller->disk_as_gb }} GB</td>
+                            </tr>
+                            <tr>
+                                <td class="px-3 py-2 text-muted">Bandwidth</td>
+                                <td class="px-3 py-2">{{ $reseller->bandwidth }} GB</td>
+                            </tr>
+                            <tr>
+                                <td class="px-3 py-2 text-muted">Accounts</td>
+                                <td class="px-3 py-2">{{ $reseller->accounts }}</td>
+                            </tr>
+                            <tr>
+                                <td class="px-3 py-2 text-muted">Domains Limit</td>
+                                <td class="px-3 py-2">{{ $reseller->domains_limit }}</td>
+                            </tr>
+                            <tr>
+                                <td class="px-3 py-2 text-muted">Subdomains Limit</td>
+                                <td class="px-3 py-2">{{ $reseller->subdomains_limit }}</td>
+                            </tr>
+                            <tr>
+                                <td class="px-3 py-2 text-muted">Email Limit</td>
+                                <td class="px-3 py-2">{{ $reseller->email_limit }}</td>
+                            </tr>
+                            <tr>
+                                <td class="px-3 py-2 text-muted">DB Limit</td>
+                                <td class="px-3 py-2">{{ $reseller->db_limit }}</td>
+                            </tr>
+                            <tr>
+                                <td class="px-3 py-2 text-muted">FTP Limit</td>
+                                <td class="px-3 py-2">{{ $reseller->ftp_limit }}</td>
+                            </tr>
+                            <tr>
+                                <td class="px-3 py-2 text-muted">Dedicated IP</td>
+                                <td class="px-3 py-2">
+                                    @if(isset($reseller->ips[0]->address))
+                                        <code>{{ $reseller->ips[0]->address }}</code>
+                                    @else
+                                        No
+                                    @endif
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-            <x-back-btn>
-                <x-slot name="route">{{ route('reseller.index') }}</x-slot>
-            </x-back-btn>
-            <x-edit-btn>
-                <x-slot name="route">{{ route('reseller.edit', $reseller->id) }}</x-slot>
-            </x-edit-btn>
-        </x-card>
-              <x-details-footer></x-details-footer>
+
+            @if(isset($reseller->note))
+            <!-- Note -->
+            <div class="col-12">
+                <div class="card content-card">
+                    <div class="card-header card-section-header">
+                        <h5 class="card-section-title mb-0">Note</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-0">{{ $reseller->note->note }}</p>
+                    </div>
+                </div>
+            </div>
+            @endif
+
+            <!-- Timestamps -->
+            <div class="col-12">
+                <div class="card content-card">
+                    <div class="card-header card-section-header">
+                        <h5 class="card-section-title mb-0">Record Info</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <table class="table table-borderless mb-0">
+                            <tbody>
+                            <tr>
+                                <td class="px-3 py-2 text-muted" style="width: 20%;">ID</td>
+                                <td class="px-3 py-2"><code>{{ $reseller->id }}</code></td>
+                            </tr>
+                            <tr>
+                                <td class="px-3 py-2 text-muted">Created</td>
+                                <td class="px-3 py-2">
+                                    @if($reseller->created_at !== null)
+                                        {{ date_format(new DateTime($reseller->created_at), 'jS M Y, g:i a') }}
+                                    @endif
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-3 py-2 text-muted">Updated</td>
+                                <td class="px-3 py-2">
+                                    @if($reseller->updated_at !== null)
+                                        {{ date_format(new DateTime($reseller->updated_at), 'jS M Y, g:i a') }}
+                                    @endif
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </x-app-layout>

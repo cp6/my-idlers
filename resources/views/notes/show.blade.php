@@ -1,40 +1,50 @@
 @section("title", "Note $note->id")
 <x-app-layout>
-    <x-slot name="header">
-        {{ __('Note') }}
-    </x-slot>
     <div class="container">
-        <x-card class="shadow mt-3">
-            <div class="row">
-                <div class="col-12 mb-2">
-                    <h2>
-                        @if(!is_null($note->server))
-                            {{$note->server->hostname}} (server)
-                        @elseif(!is_null($note->shared))
-                            {{$note->shared->main_domain}} (shared)
-                        @elseif(!is_null($note->reseller))
-                            {{$note->reseller->main_domain}} (reseller)
-                        @elseif(!is_null($note->domain))
-                            {{$note->domain->domain}}.{{$note->domain->extension}} (domain)
-                        @elseif(!is_null($note->dns))
-                            {{$note->dns->dns_type}} {{$note->dns->hostname}} (DNS)
-                        @elseif(!is_null($note->ip))
-                            {{$note->ip->address}} (IP)
-                        @endif
-                    </h2>
+        <div class="page-header">
+            <div>
+                <h2 class="page-title">
+                    @if($note->server !== null)
+                        {{ $note->server->hostname }}
+                        <small class="text-muted">(server)</small>
+                    @elseif($note->shared !== null)
+                        {{ $note->shared->main_domain }}
+                        <small class="text-muted">(shared)</small>
+                    @elseif($note->reseller !== null)
+                        {{ $note->reseller->main_domain }}
+                        <small class="text-muted">(reseller)</small>
+                    @elseif($note->domain !== null)
+                        {{ $note->domain->domain }}.{{ $note->domain->extension }}
+                        <small class="text-muted">(domain)</small>
+                    @elseif($note->dns !== null)
+                        {{ $note->dns->dns_type }} {{ $note->dns->hostname }}
+                        <small class="text-muted">(DNS)</small>
+                    @elseif($note->ip !== null)
+                        {{ $note->ip->address }}
+                        <small class="text-muted">(IP)</small>
+                    @endif
+                </h2>
+            </div>
+            <div class="page-actions">
+                <a href="{{ route('notes.index') }}" class="btn btn-outline-secondary">Back to notes</a>
+                <a href="{{ route('notes.edit', $note->id) }}" class="btn btn-primary">Edit</a>
+            </div>
+        </div>
+
+        <x-response-alerts></x-response-alerts>
+
+        <div class="row g-4">
+            <!-- Note Content -->
+            <div class="col-12">
+                <div class="card content-card">
+                    <div class="card-header card-section-header">
+                        <h5 class="card-section-title mb-0">Note Content</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-0">{{ $note->note }}</p>
+                    </div>
                 </div>
             </div>
-            <div class="row mb-4">
-                <div class="col-12 px-lg-4">
-                    <code>{{$note->note}}</code>
-                </div>
-            </div>
-            <x-back-btn>
-                <x-slot name="route">{{ route('notes.index') }}</x-slot>
-            </x-back-btn>
-            <x-edit-btn>
-                <x-slot name="route">{{ route('notes.edit', $note->id) }}</x-slot>
-            </x-edit-btn>
-        </x-card>
+        </div>
     </div>
 </x-app-layout>
