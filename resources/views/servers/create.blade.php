@@ -286,12 +286,14 @@
                                 .get('/api/dns/' + hostname + '/A', {
                                     headers: {'Authorization': 'Bearer ' + document.querySelector('meta[name="api_token"]').getAttribute('content')}
                                 })
-                                .then(response => (this.ipv4_in = response.data.ip));
+                                .then(response => (this.ipv4_in = response.data.ip))
+                                .catch(error => {});
                             axios
                                 .get('/api/dns/' + hostname + '/AAAA', {
                                     headers: {'Authorization': 'Bearer ' + document.querySelector('meta[name="api_token"]').getAttribute('content')}
                                 })
-                                .then(response => (this.ipv6_in = response.data.ip));
+                                .then(response => (this.ipv6_in = response.data.ip))
+                                .catch(error => {});
                         }
                     }
                 }
