@@ -1,137 +1,144 @@
 @section("title", "Edit {$dn->hostname} {$dn->dns_type} DNS")
 <x-app-layout>
-    <x-slot name="header">
-        Edit {{ $dn->hostname }} {{$dn->dns_type}} record
-    </x-slot>
     <div class="container">
-        <x-card class="shadow mt-3">
-            <h4 class="mb-3">DNS information</h4>
-            <x-back-button>
-                <x-slot name="href">{{ route('dns.index') }}</x-slot>
-                Go back
-            </x-back-button>
-            <x-response-alerts></x-response-alerts>
-            <form action="{{ route('dns.update', $dn->id) }}" method="POST">
-                @csrf
-                @method('PUT')
-                <div class="row mt-4">
-                    <div class="col-12 col-lg-4 mb-4">
-                        <x-text-input title="Hostname" name="hostname" value="{{ $dn->hostname }}"></x-text-input>
-                    </div>
-                    <div class="col-12 col-lg-4 mb-4">
-                        <x-text-input title="Address" name="address" value="{{ $dn->address }}"></x-text-input>
-                    </div>
-                    <div class="col-12 col-lg-4 mb-4">
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span class="input-group-text">Type</span></div>
-                            <select class="form-control" name="dns_type">
-                                @foreach (App\Models\DNS::$dns_types as $item)
-                                    <option
-                                        value="{{ $item }}" {{ ( $item == $dn->dns_type) ? 'selected' : '' }}> {{ $item }} </option>
+        <div class="page-header">
+            <h2 class="page-title">Edit {{ $dn->hostname }} {{ $dn->dns_type }}</h2>
+            <div class="page-actions">
+                <a href="{{ route('dns.index') }}" class="btn btn-outline-secondary">Back to DNS</a>
+            </div>
+        </div>
+
+        <x-response-alerts></x-response-alerts>
+
+        <form action="{{ route('dns.update', $dn->id) }}" method="POST">
+            @csrf
+            @method('PUT')
+
+            <!-- DNS Information -->
+            <div class="card content-card mb-4">
+                <div class="card-header card-section-header">
+                    <h5 class="card-section-title mb-0">DNS Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-12 col-lg-4">
+                            <label class="form-label">Hostname</label>
+                            <input type="text" class="form-control" name="hostname" value="{{ $dn->hostname }}" required>
+                        </div>
+                        <div class="col-12 col-lg-4">
+                            <label class="form-label">Address</label>
+                            <input type="text" class="form-control" name="address" value="{{ $dn->address }}">
+                        </div>
+                        <div class="col-12 col-lg-4">
+                            <label class="form-label">Type</label>
+                            <select class="form-select" name="dns_type">
+                                @foreach (App\Models\DNS::$dns_types as $type)
+                                    <option value="{{ $type }}" {{ $dn->dns_type == $type ? 'selected' : '' }}>{{ $type }}</option>
                                 @endforeach
                             </select>
                         </div>
                     </div>
                 </div>
-                <div class="row mb-2">
-                    <div class="col-12 col-lg-3 mb-4">
-                        <x-labels-select>
-                            <x-slot name="title">label</x-slot>
-                            <x-slot name="name">label1</x-slot>
-                            @if(isset($labels[0]->id))
-                                <x-slot name="current">{{$labels[0]->id}}</x-slot>
-                            @endif
-                        </x-labels-select>
-                    </div>
-                    <div class="col-12 col-lg-3 mb-4">
-                        <x-labels-select>
-                            <x-slot name="title">label</x-slot>
-                            <x-slot name="name">label2</x-slot>
-                            @if(isset($labels[1]->id))
-                                <x-slot name="current">{{$labels[1]->id}}</x-slot>
-                            @endif
-                        </x-labels-select>
-                    </div>
-                    <div class="col-12 col-lg-3 mb-4">
-                        <x-labels-select>
-                            <x-slot name="title">label</x-slot>
-                            <x-slot name="name">label3</x-slot>
-                            @if(isset($labels[2]->id))
-                                <x-slot name="current">{{$labels[2]->id}}</x-slot>
-                            @endif
-                        </x-labels-select>
-                    </div>
-                    <div class="col-12 col-lg-3 mb-4">
-                        <x-labels-select>
-                            <x-slot name="title">label</x-slot>
-                            <x-slot name="name">label4</x-slot>
-                            @if(isset($labels[3]->id))
-                                <x-slot name="current">{{$labels[3]->id}}</x-slot>
-                            @endif
-                        </x-labels-select>
+            </div>
+
+            <!-- Labels -->
+            <div class="card content-card mb-4">
+                <div class="card-header card-section-header">
+                    <h5 class="card-section-title mb-0">Labels</h5>
+                    <span class="text-muted small">Optional</span>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        @php $allLabels = App\Models\Labels::all(); @endphp
+                        <div class="col-6 col-md-3">
+                            <label class="form-label">Label 1</label>
+                            <select class="form-select" name="label1">
+                                <option value="">None</option>
+                                @foreach ($allLabels as $label)
+                                    <option value="{{ $label->id }}" {{ isset($labels[0]->id) && $labels[0]->id == $label->id ? 'selected' : '' }}>{{ $label->label }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label class="form-label">Label 2</label>
+                            <select class="form-select" name="label2">
+                                <option value="">None</option>
+                                @foreach ($allLabels as $label)
+                                    <option value="{{ $label->id }}" {{ isset($labels[1]->id) && $labels[1]->id == $label->id ? 'selected' : '' }}>{{ $label->label }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label class="form-label">Label 3</label>
+                            <select class="form-select" name="label3">
+                                <option value="">None</option>
+                                @foreach ($allLabels as $label)
+                                    <option value="{{ $label->id }}" {{ isset($labels[2]->id) && $labels[2]->id == $label->id ? 'selected' : '' }}>{{ $label->label }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label class="form-label">Label 4</label>
+                            <select class="form-select" name="label4">
+                                <option value="">None</option>
+                                @foreach ($allLabels as $label)
+                                    <option value="{{ $label->id }}" {{ isset($labels[3]->id) && $labels[3]->id == $label->id ? 'selected' : '' }}>{{ $label->label }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                 </div>
-                <div class="row mt-2">
-                    <p>Related to:</p>
-                    <div class="col-md-3 mb-3">
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span class="input-group-text">Server</span></div>
-                            <select class="form-control" name="server_id">
+            </div>
+
+            <!-- Related To -->
+            <div class="card content-card mb-4">
+                <div class="card-header card-section-header">
+                    <h5 class="card-section-title mb-0">Related To</h5>
+                    <span class="text-muted small">Optional</span>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <label class="form-label">Server</label>
+                            <select class="form-select" name="server_id">
                                 <option value="null"></option>
                                 @foreach ($Servers as $server)
-                                    <option
-                                        value="{{ $server['id'] }}" {{($server['id'] == $dn->server_id)? 'selected':''}}>
-                                        {{ $server['hostname'] }}
-                                    </option>
+                                    <option value="{{ $server['id'] }}" {{ $server['id'] == $dn->server_id ? 'selected' : '' }}>{{ $server['hostname'] }}</option>
                                 @endforeach
-                            </select></div>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span class="input-group-text">Shared</span></div>
-                            <select class="form-control" name="shared_id">
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <label class="form-label">Shared</label>
+                            <select class="form-select" name="shared_id">
                                 <option value="null"></option>
                                 @foreach ($Shareds as $shared)
-                                    <option
-                                        value="{{ $shared['id'] }}" {{($shared['id'] == $dn->shared_id)? 'selected':''}}>
-                                        {{ $shared['hostname'] }}
-                                    </option>
+                                    <option value="{{ $shared['id'] }}" {{ $shared['id'] == $dn->shared_id ? 'selected' : '' }}>{{ $shared['hostname'] }}</option>
                                 @endforeach
-                            </select></div>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span class="input-group-text">Reseller</span></div>
-                            <select class="form-control" name="reseller_id">
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <label class="form-label">Reseller</label>
+                            <select class="form-select" name="reseller_id">
                                 <option value="null"></option>
                                 @foreach ($Resellers as $reseller)
-                                    <option
-                                        value="{{ $reseller['id'] }}" {{($reseller['id'] == $dn->reseller_id)? 'selected':''}}>
-                                        {{ $reseller['hostname'] }}
-                                    </option>
+                                    <option value="{{ $reseller['id'] }}" {{ $reseller['id'] == $dn->reseller_id ? 'selected' : '' }}>{{ $reseller['hostname'] }}</option>
                                 @endforeach
-                            </select></div>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span class="input-group-text">Domain</span></div>
-                            <select class="form-control" name="domain_id">
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <label class="form-label">Domain</label>
+                            <select class="form-select" name="domain_id">
                                 <option value="null"></option>
                                 @foreach ($Domains as $domain)
-                                    <option
-                                        value="{{ $domain['id'] }}" {{($domain['id'] == $dn->domain_id)? 'selected':''}}>
-                                        {{ $domain['domain'] }}.{{$domain['extension']}}
-                                    </option>
+                                    <option value="{{ $domain['id'] }}" {{ $domain['id'] == $dn->domain_id ? 'selected' : '' }}>{{ $domain['domain'] }}.{{ $domain['extension'] }}</option>
                                 @endforeach
-                            </select></div>
+                            </select>
+                        </div>
                     </div>
                 </div>
-                <div class="row mt-2">
-                    <div class="col-12 col-lg-4">
-                        <x-submit-button>Update DNS</x-submit-button>
-                    </div>
-                </div>
-            </form>
-        </x-card>
+            </div>
+
+            <button type="submit" class="btn btn-primary mb-4">Update DNS Record</button>
+        </form>
     </div>
 </x-app-layout>
