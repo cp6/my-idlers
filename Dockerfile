@@ -1,4 +1,4 @@
-FROM php:8.3-fpm-alpine
+FROM php:8.4-fpm-alpine
 
 # Install dependencies for PHP extensions
 RUN apk add --no-cache linux-headers
