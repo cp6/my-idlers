@@ -53,7 +53,7 @@ Currently seeking a project sponsor
 * Added servers index card view option in settings (table or cards layout)
 * Fixed Vue.js loading issues on comparison pages
 * Fixed server comparison null value handling
-* Fixed inactive services still being counted in cost calculations ([#125](https://github.com/cp6/my-idlers/issues/125))
+* Fixed inactive services still being counted in cost calculations and "Due Soon" ([#125](https://github.com/cp6/my-idlers/issues/125), [#112](https://github.com/cp6/my-idlers/issues/112))
 * Fixed OS icons showing wrong icons for certain OS IDs ([#123](https://github.com/cp6/my-idlers/pull/123))
 * Removed unused legacy auth pages and components
 
