@@ -42,6 +42,7 @@ Currently seeking a project sponsor
 * Improved DataTables styling (search, pagination, dropdown) for light and dark modes
 * Fixed DataTables error alerts on empty tables
 * Made demo user and sample data seeding optional via `SEED_DEMO_DATA` env variable
+* Redesigned all create and edit pages with organized card sections and consistent form styling
 
 ### Database Seeding
 

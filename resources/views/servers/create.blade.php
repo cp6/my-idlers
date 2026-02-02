@@ -1,37 +1,39 @@
 @section("title", "Add a server")
 <x-app-layout>
-    <x-slot name="header">
-        {{ __('Insert a new server') }}
-    </x-slot>
     <div class="container" id="app">
-        <x-card class="shadow mt-3">
-            <h4 class="mb-3">Server information</h4>
-            <x-back-button>
-                <x-slot name="href">{{ route('servers.index') }}</x-slot>
-                Go back
-            </x-back-button>
-            <x-response-alerts></x-response-alerts>
-            <form action="{{ route('servers.store') }}" method="POST">
-                @csrf
-                <div class="row">
-                    <div class="col-12 col-lg-6 mb-4">
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span class="input-group-text">Hostname</span></div>
-                            <input type="text"
-                                   class="form-control"
-                                   name="hostname" id="hostname"
-                                   placeholder="Enter server hostname">
-                            @error('name') <span class="text-red-500">{{ $message }}
-                    </span>@enderror
-                            <div class="input-group-append"><span class="input-group-text"><a id="fillIps" href="#"><i
-                                            class="fas fa-search py-1" @click="fetchDnsRecords"
-                                            title="Auto fill A and AAAA records"></i></a></span></div>
+        <div class="page-header">
+            <h2 class="page-title">Add Server</h2>
+            <div class="page-actions">
+                <a href="{{ route('servers.index') }}" class="btn btn-outline-secondary">Back to servers</a>
+            </div>
+        </div>
+
+        <x-response-alerts></x-response-alerts>
+
+        <form action="{{ route('servers.store') }}" method="POST">
+            @csrf
+
+            <!-- Basic Information -->
+            <div class="card content-card mb-4">
+                <div class="card-header card-section-header">
+                    <h5 class="card-section-title mb-0">Basic Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-12 col-lg-6">
+                            <label class="form-label">Hostname</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="hostname" id="hostname" 
+                                       placeholder="server.example.com">
+                                <button type="button" class="btn btn-outline-secondary" @click="fetchDnsRecords" title="Auto fill IPs from DNS">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                            @error('hostname') <span class="text-danger small">{{ $message }}</span> @enderror
                         </div>
-                    </div>
-                    <div class="col-12 col-lg-3 mb-4">
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span class="input-group-text">Server type</span></div>
-                            <select class="form-control" name="server_type">
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <label class="form-label">Server Type</label>
+                            <select class="form-select" name="server_type">
                                 <option value="1" selected>KVM</option>
                                 <option value="2">OVZ</option>
                                 <option value="3">DEDI</option>
@@ -39,230 +41,262 @@
                                 <option value="5">SEMI-DEDI</option>
                                 <option value="6">VMware</option>
                                 <option value="7">NAT</option>
-                            </select></div>
-                    </div>
-                    <div class="col-12 col-lg-3 mb-4">
-                        <x-os-select>
-                            <x-slot name="title">OS</x-slot>
-                            <x-slot name="name">os_id</x-slot>
-                            <x-slot name="current">{{Session::get('default_server_os')}}</x-slot>
-                        </x-os-select>
-                    </div>
-                </div>
-                <div class="row">
-                    <p class="text-muted">If you need to add more IPs go to /IPs after creation.</p>
-                    <div class="col-12 col-lg-3 mb-4">
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span class="input-group-text">IP</span></div>
-                            <input type="text" name="ip1" class="form-control" minlength="4"
-                                   maxlength="255" v-model="ipv4_in">
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <label class="form-label">Operating System</label>
+                            <select class="form-select" name="os_id">
+                                @foreach (App\Models\OS::all() as $os)
+                                    <option value="{{ $os->id }}" {{ Session::get('default_server_os') == $os->id ? 'selected' : '' }}>
+                                        {{ $os->name }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
-                    <div class="col-12 col-lg-3 mb-4">
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span class="input-group-text">IP</span></div>
-                            <input type="text" name="ip2" class="form-control" minlength="4"
-                                   maxlength="255" v-model="ipv6_in">
+                </div>
+            </div>
+
+            <!-- Network -->
+            <div class="card content-card mb-4">
+                <div class="card-header card-section-header">
+                    <h5 class="card-section-title mb-0">Network</h5>
+                    <span class="text-muted small">Additional IPs can be added after creation</span>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <label class="form-label">IP Address 1</label>
+                            <input type="text" class="form-control" name="ip1" minlength="4" maxlength="255" 
+                                   v-model="ipv4_in" placeholder="IPv4 or IPv6">
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <label class="form-label">IP Address 2</label>
+                            <input type="text" class="form-control" name="ip2" minlength="4" maxlength="255" 
+                                   v-model="ipv6_in" placeholder="IPv4 or IPv6">
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <label class="form-label">NS1</label>
+                            <input type="text" class="form-control" name="ns1" maxlength="255">
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <label class="form-label">NS2</label>
+                            <input type="text" class="form-control" name="ns2" maxlength="255">
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <label class="form-label">SSH Port</label>
+                            <input type="number" class="form-control" name="ssh_port" value="22" min="1" max="65535">
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <label class="form-label">Bandwidth (GB)</label>
+                            <input type="number" class="form-control" name="bandwidth" value="1000" min="0" max="999999">
                         </div>
                     </div>
-                    <div class="col-12 col-lg-3 mb-4">
-                        <x-text-input>
-                            <x-slot name="title">NS1</x-slot>
-                            <x-slot name="name">ns1</x-slot>
-                            <x-slot name="max">255</x-slot>
-                        </x-text-input>
-                    </div>
-                    <div class="col-12 col-lg-3 mb-4">
-                        <x-text-input>
-                            <x-slot name="title">NS2</x-slot>
-                            <x-slot name="name">ns2</x-slot>
-                            <x-slot name="max">255</x-slot>
-                        </x-text-input>
+                </div>
+            </div>
+
+            <!-- Specifications -->
+            <div class="card content-card mb-4">
+                <div class="card-header card-section-header">
+                    <h5 class="card-section-title mb-0">Specifications</h5>
+                    <span class="text-muted small">YABS output will overwrite these values</span>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-6 col-md-4 col-lg-2">
+                            <label class="form-label">CPU Cores</label>
+                            <input type="number" class="form-control" name="cpu" value="2" min="1" max="128">
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-2">
+                            <label class="form-label">RAM (MB)</label>
+                            <input type="number" class="form-control" name="ram" value="2048" min="1" max="999999">
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-2">
+                            <label class="form-label">RAM Type</label>
+                            <select class="form-select" name="ram_type">
+                                <option value="MB" selected>MB</option>
+                                <option value="GB">GB</option>
+                            </select>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-2">
+                            <label class="form-label">Disk</label>
+                            <input type="number" class="form-control" name="disk" value="20" min="0" max="999999" step="0.1">
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-2">
+                            <label class="form-label">Disk Type</label>
+                            <select class="form-select" name="disk_type">
+                                <option value="GB" selected>GB</option>
+                                <option value="TB">TB</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-4 col-lg-2">
+                            <label class="form-label">Location</label>
+                            <select class="form-select" name="location_id">
+                                @foreach (App\Models\Locations::all() as $location)
+                                    <option value="{{ $location->id }}">{{ $location->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-12 col-lg-3 mb-4">
-                        <x-number-input>
-                            <x-slot name="title">SSH</x-slot>
-                            <x-slot name="name">ssh_port</x-slot>
-                            <x-slot name="value">22</x-slot>
-                            <x-slot name="max">999999</x-slot>
-                            <x-slot name="step">1</x-slot>
-                        </x-number-input>
+            </div>
+
+            <!-- Billing -->
+            <div class="card content-card mb-4">
+                <div class="card-header card-section-header">
+                    <h5 class="card-section-title mb-0">Billing</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <label class="form-label">Provider</label>
+                            <select class="form-select" name="provider_id">
+                                @foreach (App\Models\Providers::all() as $provider)
+                                    <option value="{{ $provider->id }}">{{ $provider->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-6 col-md-6 col-lg-2">
+                            <label class="form-label">Price</label>
+                            <input type="number" class="form-control" name="price" value="5.00" min="0" max="99999" step="0.01" required>
+                        </div>
+                        <div class="col-6 col-md-6 col-lg-2">
+                            <label class="form-label">Currency</label>
+                            <select class="form-select" name="currency">
+                                @foreach (App\Models\Pricing::getCurrencyList() as $currency)
+                                    <option value="{{ $currency }}" {{ Session::get('default_currency') == $currency ? 'selected' : '' }}>
+                                        {{ $currency }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-2">
+                            <label class="form-label">Term</label>
+                            <select class="form-select" name="payment_term">
+                                <option value="1">Monthly</option>
+                                <option value="2">Quarterly</option>
+                                <option value="3">Half annual</option>
+                                <option value="4">Annual</option>
+                                <option value="5">Biennial</option>
+                                <option value="6">Triennial</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <label class="form-label">Promo Price</label>
+                            <select class="form-select" name="was_promo">
+                                <option value="0" selected>No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="col-12 col-lg-3 mb-4">
-                        <x-number-input>
-                            <x-slot name="title">Bandwidth GB</x-slot>
-                            <x-slot name="name">bandwidth</x-slot>
-                            <x-slot name="value">1000</x-slot>
-                            <x-slot name="max">99999</x-slot>
-                            <x-slot name="step">1</x-slot>
-                        </x-number-input>
-                    </div>
-                    <div class="col-12 col-lg-3 mb-4">
-                        <x-yes-no-select>
-                            <x-slot name="title">Promo price</x-slot>
-                            <x-slot name="name">was_promo</x-slot>
-                            <x-slot name="value">1</x-slot>
-                        </x-yes-no-select>
+                    <div class="row g-3 mt-1">
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <label class="form-label">Owned Since</label>
+                            <input type="date" class="form-control" name="owned_since" value="{{ Carbon\Carbon::now()->format('Y-m-d') }}">
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <label class="form-label">Next Due Date</label>
+                            <input type="date" class="form-control" name="next_due_date" value="{{ Carbon\Carbon::now()->addMonth()->format('Y-m-d') }}">
+                        </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-3 mb-3">
-                        <x-providers-select>
-                            <x-slot name="current">{{random_int(1,98)}}</x-slot>
-                        </x-providers-select>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <x-number-input>
-                            <x-slot name="title">Price</x-slot>
-                            <x-slot name="name">price</x-slot>
-                            <x-slot name="value">2.50</x-slot>
-                            <x-slot name="max">9999</x-slot>
-                            <x-slot name="step">0.01</x-slot>
-                            <x-slot name="required"></x-slot>
-                        </x-number-input>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <x-term-select></x-term-select>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <x-currency-select>
-                            <x-slot name="current">{{Session::get('default_currency')}}</x-slot>
-                        </x-currency-select>
+            </div>
+
+            <!-- Labels -->
+            <div class="card content-card mb-4">
+                <div class="card-header card-section-header">
+                    <h5 class="card-section-title mb-0">Labels</h5>
+                    <span class="text-muted small">Optional</span>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        @php $labels = App\Models\Labels::all(); @endphp
+                        <div class="col-6 col-md-3">
+                            <label class="form-label">Label 1</label>
+                            <select class="form-select" name="label1">
+                                <option value="">None</option>
+                                @foreach ($labels as $label)
+                                    <option value="{{ $label->id }}">{{ $label->label }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label class="form-label">Label 2</label>
+                            <select class="form-select" name="label2">
+                                <option value="">None</option>
+                                @foreach ($labels as $label)
+                                    <option value="{{ $label->id }}">{{ $label->label }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label class="form-label">Label 3</label>
+                            <select class="form-select" name="label3">
+                                <option value="">None</option>
+                                @foreach ($labels as $label)
+                                    <option value="{{ $label->id }}">{{ $label->label }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label class="form-label">Label 4</label>
+                            <select class="form-select" name="label4">
+                                <option value="">None</option>
+                                @foreach ($labels as $label)
+                                    <option value="{{ $label->id }}">{{ $label->label }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                 </div>
-                <div class="row">
-                    <p class="text-muted">Note adding a YABS output will overwrite RAM, disk and CPU values.</p>
-                    <div class="col-md-3 mb-3">
-                        <x-number-input>
-                            <x-slot name="title">RAM</x-slot>
-                            <x-slot name="name">ram</x-slot>
-                            <x-slot name="value">2024</x-slot>
-                            <x-slot name="max">100000</x-slot>
-                        </x-number-input>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <x-ram-type-select>
-                            <x-slot name="title">RAM type</x-slot>
-                            <x-slot name="name">ram_type</x-slot>
-                        </x-ram-type-select>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <x-number-input>
-                            <x-slot name="title">Disk</x-slot>
-                            <x-slot name="name">disk</x-slot>
-                            <x-slot name="value">10</x-slot>
-                            <x-slot name="max">99999</x-slot>
-                            <x-slot name="step">0.1</x-slot>
-                        </x-number-input>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <x-disk-type-select>
-                            <x-slot name="title">Disk type</x-slot>
-                            <x-slot name="name">disk_type</x-slot>
-                        </x-disk-type-select>
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-12 col-md-2 mb-3">
-                        <x-number-input>
-                            <x-slot name="title">CPU</x-slot>
-                            <x-slot name="name">cpu</x-slot>
-                            <x-slot name="value">2</x-slot>
-                            <x-slot name="max">64</x-slot>
-                            <x-slot name="step">1</x-slot>
-                        </x-number-input>
-                    </div>
-                    <div class="col-12 col-md-4 mb-3">
-                        <x-locations-select>
-                            <x-slot name="current">1</x-slot>
-                        </x-locations-select>
-                    </div>
-                    <div class="col-12 col-md-3">
-                        <x-date-input>
-                            <x-slot name="title">Owned since</x-slot>
-                            <x-slot name="name">owned_since</x-slot>
-                            <x-slot name="value">{{Carbon\Carbon::now()->format('Y-m-d') }}</x-slot>
-                        </x-date-input>
-                    </div>
-                    <div class="col-12 col-md-3 mb-3">
-                        <x-date-input>
-                            <x-slot name="title">Next due date</x-slot>
-                            <x-slot name="name">next_due_date</x-slot>
-                            <x-slot name="value">{{Carbon\Carbon::now()->addDays(30)->format('Y-m-d') }}</x-slot>
-                        </x-date-input>
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-12 col-lg-3 mb-4">
-                        <x-labels-select>
-                            <x-slot name="title">label</x-slot>
-                            <x-slot name="name">label1</x-slot>
-                        </x-labels-select>
-                    </div>
-                    <div class="col-12 col-lg-3 mb-4">
-                        <x-labels-select>
-                            <x-slot name="title">label</x-slot>
-                            <x-slot name="name">label2</x-slot>
-                        </x-labels-select>
-                    </div>
-                    <div class="col-12 col-lg-3 mb-4">
-                        <x-labels-select>
-                            <x-slot name="title">label</x-slot>
-                            <x-slot name="name">label3</x-slot>
-                        </x-labels-select>
-                    </div>
-                    <div class="col-12 col-lg-3 mb-4">
-                        <x-labels-select>
-                            <x-slot name="title">label</x-slot>
-                            <x-slot name="name">label4</x-slot>
-                        </x-labels-select>
-                    </div>
-                </div>
-                <x-form-check text="Allow this data to be public, restrict values in settings"
-                              name="show_public"></x-form-check>
-                <div class="row">
-                    <div class="col-12 col-lg-4">
-                        <x-submit-button>Insert server</x-submit-button>
-                    </div>
-                </div>
-            </form>
-        </x-card>
+            </div>
+
+            <!-- Options & Submit -->
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" name="show_public" id="show_public" value="1">
+                <label class="form-check-label" for="show_public">
+                    Allow this server to be shown publicly (configure visible fields in settings)
+                </label>
+            </div>
+            <button type="submit" class="btn btn-primary mb-4">Add Server</button>
+        </form>
     </div>
+
     @section('scripts')
-        <script>
-            window.addEventListener('load', function () {
+    <script>
+        window.addEventListener('load', function () {
+            axios.defaults.headers.common = {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Accept': 'application/json',
+            };
 
-                axios.defaults.headers.common = {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                    'Accept': 'application/json',
-                };
-
-                let app = new Vue({
-                    el: "#app",
-                    data: {
-                        "ipv4_in": '',
-                        "ipv6_in": ''
-                    },
-                    methods: {
-                        fetchDnsRecords(event) {
-                            var hostname = document.getElementById('hostname').value;
-
-                            if (hostname) {
-                                axios
-                                    .get('/api/dns/' + hostname + '/A', {headers: {'Authorization': 'Bearer ' + document.querySelector('meta[name="api_token"]').getAttribute('content')}})
-                                    .then(response => (this.ipv4_in = response.data.ip));
-                                axios
-                                    .get('/api/dns/' + hostname + '/AAAA', {headers: {'Authorization': 'Bearer ' + document.querySelector('meta[name="api_token"]').getAttribute('content')}})
-                                    .then(response => (this.ipv6_in = response.data.ip));
-                            }
+            let app = new Vue({
+                el: "#app",
+                data: {
+                    ipv4_in: '',
+                    ipv6_in: ''
+                },
+                methods: {
+                    fetchDnsRecords(event) {
+                        var hostname = document.getElementById('hostname').value;
+                        if (hostname) {
+                            axios
+                                .get('/api/dns/' + hostname + '/A', {
+                                    headers: {'Authorization': 'Bearer ' + document.querySelector('meta[name="api_token"]').getAttribute('content')}
+                                })
+                                .then(response => (this.ipv4_in = response.data.ip));
+                            axios
+                                .get('/api/dns/' + hostname + '/AAAA', {
+                                    headers: {'Authorization': 'Bearer ' + document.querySelector('meta[name="api_token"]').getAttribute('content')}
+                                })
+                                .then(response => (this.ipv6_in = response.data.ip));
                         }
                     }
-                });
-            })
-        </script>
+                }
+            });
+        });
+    </script>
     @endsection
 </x-app-layout>

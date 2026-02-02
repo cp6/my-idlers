@@ -314,6 +314,19 @@ body {
     border: 1px solid #334155;
     border-radius: 12px;
     overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.content-card .card-body .form-control,
+.content-card .card-body .form-select {
+    background-color: #0f172a;
+    border-color: #475569;
+}
+
+.content-card .card-body .form-control:focus,
+.content-card .card-body .form-select:focus {
+    background-color: #0f172a;
+    border-color: #3b82f6;
 }
 
 .card-tabs {
@@ -607,4 +620,121 @@ div.dataTables_wrapper div.dataTables_paginate ul.pagination li a {
     border-color: #334155 !important;
     color: #64748b !important;
     box-shadow: none !important;
+}
+
+
+/* ==========================================
+   Form Pages - Dark Mode
+   ========================================== */
+
+.card.content-card .card-header.card-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #334155;
+    background-color: #0f172a;
+}
+
+.card-section-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #f1f5f9;
+    margin: 0;
+}
+
+.card.content-card .card-body {
+    padding: 1.25rem;
+}
+
+.form-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #cbd5e1;
+    margin-bottom: 0.375rem;
+}
+
+.form-control,
+.form-select {
+    font-size: 0.9375rem;
+    background-color: #0f172a;
+    border-color: #334155;
+    border-radius: 6px;
+    padding: 0.5rem 0.75rem;
+    color: #f1f5f9;
+}
+
+.form-control:focus,
+.form-select:focus {
+    background-color: #0f172a;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    color: #f1f5f9;
+}
+
+.form-control::placeholder {
+    color: #64748b;
+}
+
+.form-select option {
+    background-color: #1e293b;
+    color: #f1f5f9;
+}
+
+.input-group .form-control {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.input-group .btn {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-color: #334155;
+}
+
+.input-group .btn-outline-secondary {
+    color: #94a3b8;
+    border-color: #334155;
+}
+
+.input-group .btn-outline-secondary:hover {
+    background-color: #334155;
+    color: #f1f5f9;
+}
+
+.input-group-text {
+    background-color: #1e293b;
+    border-color: #334155;
+    color: #cbd5e1;
+    font-size: 0.875rem;
+    font-weight: 500;
+    min-width: fit-content;
+    white-space: nowrap;
+}
+
+.input-group .form-control,
+.input-group .form-select {
+    border-color: #334155;
+}
+
+.input-group .form-control:focus,
+.input-group .form-select:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    z-index: 3;
+}
+
+.form-check-input {
+    background-color: #0f172a;
+    border-color: #475569;
+}
+
+.form-check-input:checked {
+    background-color: #3b82f6;
+    border-color: #3b82f6;
+}
+
+.form-check-label {
+    color: #cbd5e1;
+    font-size: 0.9375rem;
 }

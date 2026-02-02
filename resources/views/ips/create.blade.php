@@ -1,66 +1,69 @@
 @section("title", "Add an IP address")
 <x-app-layout>
-    <x-slot name="header">
-        {{ __('Insert a new IP') }}
-    </x-slot>
     <div class="container">
-        <x-card class="shadow mt-3">
-            <h4 class="mb-3">IP information</h4>
-            <x-back-button>
-                <x-slot name="href">{{ route('IPs.index') }}</x-slot>
-                Go back
-            </x-back-button>
-            <x-response-alerts></x-response-alerts>
-            <form action="{{ route('IPs.store') }}" method="POST">
-                @csrf
-                <div class="row">
-                    <div class="col-12 col-lg-6 mb-4">
-                        <x-text-input title="IP address" name="address"></x-text-input>
-                    </div>
-                    <div class="col-12 col-lg-4 mb-3">
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span class="input-group-text">Type</span></div>
-                            <select class="form-control" name="ip_type">
+        <div class="page-header">
+            <h2 class="page-title">Add IP Address</h2>
+            <div class="page-actions">
+                <a href="{{ route('IPs.index') }}" class="btn btn-outline-secondary">Back to IPs</a>
+            </div>
+        </div>
+
+        <x-response-alerts></x-response-alerts>
+
+        <form action="{{ route('IPs.store') }}" method="POST">
+            @csrf
+
+            <!-- IP Information -->
+            <div class="card content-card mb-4">
+                <div class="card-header card-section-header">
+                    <h5 class="card-section-title mb-0">IP Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-12 col-lg-6">
+                            <label class="form-label">IP Address</label>
+                            <input type="text" class="form-control" name="address" required>
+                        </div>
+                        <div class="col-12 col-lg-3">
+                            <label class="form-label">Type</label>
+                            <select class="form-select" name="ip_type">
                                 <option value="ipv4" selected>IPv4</option>
                                 <option value="ipv6">IPv6</option>
-                            </select></div>
+                            </select>
+                        </div>
                     </div>
                 </div>
-                <div class="row">
-                    <p>Attached to:</p>
-                    <div class="col-12 col-md-6 mb-3">
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span class="input-group-text">Service</span></div>
-                            <select class="form-control" name="service_id">
+            </div>
+
+            <!-- Attached To -->
+            <div class="card content-card mb-4">
+                <div class="card-header card-section-header">
+                    <h5 class="card-section-title mb-0">Attached To</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6">
+                            <label class="form-label">Service</label>
+                            <select class="form-select" name="service_id">
                                 @foreach ($servers as $server)
-                                    <option value="{{ $server['id'] }}">
-                                        {{ $server['hostname'] }} (Server)
-                                    </option>
+                                    <option value="{{ $server['id'] }}">{{ $server['hostname'] }} (Server)</option>
                                 @endforeach
                                 @foreach ($shareds as $shared)
-                                    <option value="{{ $shared['id'] }}">
-                                        {{ $shared['main_domain'] }} (Shared)
-                                    </option>
+                                    <option value="{{ $shared['id'] }}">{{ $shared['main_domain'] }} (Shared)</option>
                                 @endforeach
                                 @foreach ($resellers as $reseller)
-                                    <option value="{{ $reseller['id'] }}">
-                                        {{ $reseller['main_domain'] }} (Reseller)
-                                    </option>
+                                    <option value="{{ $reseller['id'] }}">{{ $reseller['main_domain'] }} (Reseller)</option>
                                 @endforeach
                                 @foreach ($seed_boxes as $seed_box)
-                                    <option value="{{ $seed_box['id'] }}">
-                                        {{ $seed_box['title'] }} (Seed box)
-                                    </option>
+                                    <option value="{{ $seed_box['id'] }}">{{ $seed_box['title'] }} (Seed box)</option>
                                 @endforeach
-                            </select></div>
+                            </select>
+                        </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-12 col-lg-4">
-                        <x-submit-button>Insert IP</x-submit-button>
-                    </div>
-                </div>
-            </form>
-        </x-card>
+            </div>
+
+            <button type="submit" class="btn btn-primary mb-4">Add IP Address</button>
+        </form>
     </div>
 </x-app-layout>

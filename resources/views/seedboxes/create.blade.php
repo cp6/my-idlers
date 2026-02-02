@@ -1,166 +1,190 @@
 @section("title", "Add a seed box")
 <x-app-layout>
-    <x-slot name="header">
-        {{ __('Insert a new seed box') }}
-    </x-slot>
     <div class="container">
-        <div class="card shadow mt-3">
-            <div class="card-body">
-                <h4 class="mb-3">Seed box information</h4>
-                <x-auth-validation-errors></x-auth-validation-errors>
-                <a href="{{ route('shared.index') }}"
-                   class="btn btn-primary py-0 px-4 mb-4">
-                    Go back
-                </a>
-                <form action="{{ route('seedboxes.store') }}" method="POST">
-                    @csrf
-                    <div class="row">
-                        <div class="col-12 col-lg-4 mb-4">
-                            <x-text-input title="Title" name="title"></x-text-input>
-                        </div>
-                        <div class="col-12 col-lg-4 mb-4">
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text">Hostname</span></div>
-                                <input type="text"
-                                       class="form-control"
-                                       name="hostname">
-                            </div>
-                        </div>
-                        <div class="col-12 col-lg-4 mb-4">
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text">Type</span></div>
-                                <select class="form-control" id="seed_box_type" name="seed_box_type">
-                                    <option value="uTorrent" selected="">uTorrent</option>
-                                    <option value="BitTorrent">BitTorrent</option>
-                                    <option value="ruTorrent">ruTorrent</option>
-                                    <option value="Transmission">Transmission</option>
-                                    <option value="qBitTorrent">qBitTorrent</option>
-                                    <option value="Zona">Zona</option>
-                                    <option value="Deluge">Deluge</option>
-                                    <option value="Other">Other</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-3 mb-3">
-                            <x-providers-select>
-                                <x-slot name="current">{{random_int(1,98)}}</x-slot>
-                            </x-providers-select>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <x-number-input>
-                                <x-slot name="title">Price</x-slot>
-                                <x-slot name="name">price</x-slot>
-                                <x-slot name="value">2.50</x-slot>
-                                <x-slot name="max">9999</x-slot>
-                                <x-slot name="step">0.01</x-slot>
-                                <x-slot name="required"></x-slot>
-                            </x-number-input>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <x-term-select></x-term-select>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <x-currency-select>
-                                <x-slot name="current">{{Session::get('default_currency')}}</x-slot>
-                            </x-currency-select>
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-12 col-md-3 mb-3">
-                            <x-locations-select>
-                                <x-slot name="current">1</x-slot>
-                            </x-locations-select>
-                        </div>
-                        <div class="col-12 col-md-3 mb-3">
-                            <x-yes-no-select>
-                                <x-slot name="title">Was promo</x-slot>
-                                <x-slot name="name">was_promo</x-slot>
-                                <x-slot name="value">0</x-slot>
-                            </x-yes-no-select>
-                        </div>
-                        <div class="col-12 col-md-3 mb-3">
-                            <x-date-input>
-                                <x-slot name="title">Owned since</x-slot>
-                                <x-slot name="name">owned_since</x-slot>
-                                <x-slot name="value">{{Carbon\Carbon::now()->format('Y-m-d') }}</x-slot>
-                            </x-date-input>
-                        </div>
-                        <div class="col-12 col-md-3 mb-3">
-                            <x-date-input>
-                                <x-slot name="title">Next due date</x-slot>
-                                <x-slot name="name">next_due_date</x-slot>
-                                <x-slot name="value">{{Carbon\Carbon::now()->addDays(30)->format('Y-m-d') }}</x-slot>
-                            </x-date-input>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12 col-lg-3 mb-4">
-                            <x-number-input>
-                                <x-slot name="title">Disk GB</x-slot>
-                                <x-slot name="name">disk</x-slot>
-                                <x-slot name="value">1</x-slot>
-                                <x-slot name="max">999999</x-slot>
-                                <x-slot name="step">1</x-slot>
-                                <x-slot name="value">500</x-slot>
-                            </x-number-input>
-                        </div>
-                        <div class="col-12 col-lg-3 mb-4">
-                            <x-number-input>
-                                <x-slot name="title">Bandwidth GB</x-slot>
-                                <x-slot name="name">bandwidth</x-slot>
-                                <x-slot name="value">1</x-slot>
-                                <x-slot name="max">999999</x-slot>
-                                <x-slot name="step">1</x-slot>
-                                <x-slot name="value">1000</x-slot>
-                            </x-number-input>
-                        </div>
-                        <div class="col-12 col-lg-3 mb-4">
-                            <x-number-input>
-                                <x-slot name="title">Port speed Mbps</x-slot>
-                                <x-slot name="name">port_speed</x-slot>
-                                <x-slot name="value">1</x-slot>
-                                <x-slot name="max">999999</x-slot>
-                                <x-slot name="step">1</x-slot>
-                                <x-slot name="value">1000</x-slot>
-                            </x-number-input>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-12 col-lg-3 mb-4">
-                            <x-labels-select>
-                                <x-slot name="title">label</x-slot>
-                                <x-slot name="name">label1</x-slot>
-                            </x-labels-select>
-                        </div>
-                        <div class="col-12 col-lg-3 mb-4">
-                            <x-labels-select>
-                                <x-slot name="title">label</x-slot>
-                                <x-slot name="name">label2</x-slot>
-                            </x-labels-select>
-                        </div>
-                        <div class="col-12 col-lg-3 mb-4">
-                            <x-labels-select>
-                                <x-slot name="title">label</x-slot>
-                                <x-slot name="name">label3</x-slot>
-                            </x-labels-select>
-                        </div>
-                        <div class="col-12 col-lg-3 mb-4">
-                            <x-labels-select>
-                                <x-slot name="title">label</x-slot>
-                                <x-slot name="name">label4</x-slot>
-                            </x-labels-select>
-                        </div>
-                    </div>
-                    <div>
-                        <button type="submit"
-                                class="btn btn-success py-0 px-4 mt-2">
-                            Insert Seed box
-                        </button>
-                    </div>
-                </form>
+        <div class="page-header">
+            <h2 class="page-title">Add Seed Box</h2>
+            <div class="page-actions">
+                <a href="{{ route('seedboxes.index') }}" class="btn btn-outline-secondary">Back to seed boxes</a>
             </div>
         </div>
+
+        <x-response-alerts></x-response-alerts>
+
+        <form action="{{ route('seedboxes.store') }}" method="POST">
+            @csrf
+
+            <!-- Basic Information -->
+            <div class="card content-card mb-4">
+                <div class="card-header card-section-header">
+                    <h5 class="card-section-title mb-0">Basic Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-12 col-lg-4">
+                            <label class="form-label">Title</label>
+                            <input type="text" class="form-control" name="title" required>
+                        </div>
+                        <div class="col-12 col-lg-4">
+                            <label class="form-label">Hostname</label>
+                            <input type="text" class="form-control" name="hostname">
+                        </div>
+                        <div class="col-12 col-lg-4">
+                            <label class="form-label">Type</label>
+                            <select class="form-select" name="seed_box_type">
+                                <option value="uTorrent" selected>uTorrent</option>
+                                <option value="BitTorrent">BitTorrent</option>
+                                <option value="ruTorrent">ruTorrent</option>
+                                <option value="Transmission">Transmission</option>
+                                <option value="qBitTorrent">qBitTorrent</option>
+                                <option value="Zona">Zona</option>
+                                <option value="Deluge">Deluge</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Billing -->
+            <div class="card content-card mb-4">
+                <div class="card-header card-section-header">
+                    <h5 class="card-section-title mb-0">Billing</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <label class="form-label">Provider</label>
+                            <select class="form-select" name="provider_id">
+                                @foreach (App\Models\Providers::all() as $provider)
+                                    <option value="{{ $provider->id }}">{{ $provider->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-6 col-md-6 col-lg-2">
+                            <label class="form-label">Price</label>
+                            <input type="number" class="form-control" name="price" value="2.50" min="0" max="9999" step="0.01" required>
+                        </div>
+                        <div class="col-6 col-md-6 col-lg-2">
+                            <label class="form-label">Currency</label>
+                            <select class="form-select" name="currency">
+                                @foreach (App\Models\Pricing::getCurrencyList() as $currency)
+                                    <option value="{{ $currency }}" {{ Session::get('default_currency') == $currency ? 'selected' : '' }}>{{ $currency }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-2">
+                            <label class="form-label">Term</label>
+                            <select class="form-select" name="payment_term">
+                                <option value="1">Monthly</option>
+                                <option value="2">Quarterly</option>
+                                <option value="3">Half annual</option>
+                                <option value="4">Annual</option>
+                                <option value="5">Biennial</option>
+                                <option value="6">Triennial</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <label class="form-label">Location</label>
+                            <select class="form-select" name="location_id">
+                                @foreach (App\Models\Locations::all() as $location)
+                                    <option value="{{ $location->id }}">{{ $location->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row g-3 mt-1">
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <label class="form-label">Promo Price</label>
+                            <select class="form-select" name="was_promo">
+                                <option value="0" selected>No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <label class="form-label">Owned Since</label>
+                            <input type="date" class="form-control" name="owned_since" value="{{ Carbon\Carbon::now()->format('Y-m-d') }}">
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <label class="form-label">Next Due Date</label>
+                            <input type="date" class="form-control" name="next_due_date" value="{{ Carbon\Carbon::now()->addDays(30)->format('Y-m-d') }}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Specifications -->
+            <div class="card content-card mb-4">
+                <div class="card-header card-section-header">
+                    <h5 class="card-section-title mb-0">Specifications</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-6 col-md-4">
+                            <label class="form-label">Disk (GB)</label>
+                            <input type="number" class="form-control" name="disk" value="500" min="0" max="999999">
+                        </div>
+                        <div class="col-6 col-md-4">
+                            <label class="form-label">Bandwidth (GB)</label>
+                            <input type="number" class="form-control" name="bandwidth" value="1000" min="0" max="999999">
+                        </div>
+                        <div class="col-6 col-md-4">
+                            <label class="form-label">Port Speed (Mbps)</label>
+                            <input type="number" class="form-control" name="port_speed" value="1000" min="0" max="999999">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Labels -->
+            <div class="card content-card mb-4">
+                <div class="card-header card-section-header">
+                    <h5 class="card-section-title mb-0">Labels</h5>
+                    <span class="text-muted small">Optional</span>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        @php $labels = App\Models\Labels::all(); @endphp
+                        <div class="col-6 col-md-3">
+                            <label class="form-label">Label 1</label>
+                            <select class="form-select" name="label1">
+                                <option value="">None</option>
+                                @foreach ($labels as $label)
+                                    <option value="{{ $label->id }}">{{ $label->label }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label class="form-label">Label 2</label>
+                            <select class="form-select" name="label2">
+                                <option value="">None</option>
+                                @foreach ($labels as $label)
+                                    <option value="{{ $label->id }}">{{ $label->label }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label class="form-label">Label 3</label>
+                            <select class="form-select" name="label3">
+                                <option value="">None</option>
+                                @foreach ($labels as $label)
+                                    <option value="{{ $label->id }}">{{ $label->label }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label class="form-label">Label 4</label>
+                            <select class="form-select" name="label4">
+                                <option value="">None</option>
+                                @foreach ($labels as $label)
+                                    <option value="{{ $label->id }}">{{ $label->label }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary mb-4">Add Seed Box</button>
+        </form>
     </div>
 </x-app-layout>

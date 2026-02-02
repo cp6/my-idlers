@@ -1,129 +1,162 @@
 @section("title", "Add a Domain")
 <x-app-layout>
-    <x-slot name="header">
-        {{ __('Insert a new domain') }}
-    </x-slot>
     <div class="container">
-        <x-card class="shadow mt-3">
-            <h4 class="mb-3">Domain information</h4>
-            <x-back-button>
-                <x-slot name="href">{{ route('domains.index') }}</x-slot>
-                Go back
-            </x-back-button>
-            <x-response-alerts></x-response-alerts>
-            <form action="{{ route('domains.store') }}" method="POST">
-                @csrf
-                <div class="row">
-                    <div class="col-12 col-lg-6 mb-4">
-                        <x-text-input title="Domain" name="domain"></x-text-input>
-                    </div>
-                    <div class="col-12 col-lg-3 mb-3">
-                        <x-text-input>
-                            <x-slot name="title">extension</x-slot>
-                            <x-slot name="name">extension</x-slot>
-                            <x-slot name="max">255</x-slot>
-                            <x-slot name="value">com</x-slot>
-                        </x-text-input>
+        <div class="page-header">
+            <h2 class="page-title">Add Domain</h2>
+            <div class="page-actions">
+                <a href="{{ route('domains.index') }}" class="btn btn-outline-secondary">Back to domains</a>
+            </div>
+        </div>
+
+        <x-response-alerts></x-response-alerts>
+
+        <form action="{{ route('domains.store') }}" method="POST">
+            @csrf
+
+            <!-- Domain Information -->
+            <div class="card content-card mb-4">
+                <div class="card-header card-section-header">
+                    <h5 class="card-section-title mb-0">Domain Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-12 col-lg-6">
+                            <label class="form-label">Domain</label>
+                            <input type="text" class="form-control" name="domain" required>
+                        </div>
+                        <div class="col-12 col-lg-3">
+                            <label class="form-label">Extension</label>
+                            <input type="text" class="form-control" name="extension" value="com" maxlength="255">
+                        </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-12 col-lg-4 mb-4">
-                        <x-text-input>
-                            <x-slot name="title">NS1</x-slot>
-                            <x-slot name="name">ns1</x-slot>
-                            <x-slot name="max">255</x-slot>
-                        </x-text-input>
-                    </div>
-                    <div class="col-12 col-lg-4 mb-4">
-                        <x-text-input>
-                            <x-slot name="title">NS2</x-slot>
-                            <x-slot name="name">ns2</x-slot>
-                            <x-slot name="max">255</x-slot>
-                        </x-text-input>
-                    </div>
-                    <div class="col-12 col-lg-4 mb-4">
-                        <x-text-input>
-                            <x-slot name="title">NS3</x-slot>
-                            <x-slot name="name">ns3</x-slot>
-                            <x-slot name="max">255</x-slot>
-                        </x-text-input>
+            </div>
+
+            <!-- Nameservers -->
+            <div class="card content-card mb-4">
+                <div class="card-header card-section-header">
+                    <h5 class="card-section-title mb-0">Nameservers</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-12 col-lg-4">
+                            <label class="form-label">NS1</label>
+                            <input type="text" class="form-control" name="ns1" maxlength="255">
+                        </div>
+                        <div class="col-12 col-lg-4">
+                            <label class="form-label">NS2</label>
+                            <input type="text" class="form-control" name="ns2" maxlength="255">
+                        </div>
+                        <div class="col-12 col-lg-4">
+                            <label class="form-label">NS3</label>
+                            <input type="text" class="form-control" name="ns3" maxlength="255">
+                        </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-3 mb-3">
-                        <x-providers-select>
-                            <x-slot name="current">{{random_int(1,98)}}</x-slot>
-                        </x-providers-select>
+            </div>
+
+            <!-- Billing -->
+            <div class="card content-card mb-4">
+                <div class="card-header card-section-header">
+                    <h5 class="card-section-title mb-0">Billing</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <label class="form-label">Provider</label>
+                            <select class="form-select" name="provider_id">
+                                @foreach (App\Models\Providers::all() as $provider)
+                                    <option value="{{ $provider->id }}">{{ $provider->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-6 col-md-6 col-lg-2">
+                            <label class="form-label">Price</label>
+                            <input type="number" class="form-control" name="price" value="9.99" min="0" max="9999" step="0.01" required>
+                        </div>
+                        <div class="col-6 col-md-6 col-lg-2">
+                            <label class="form-label">Currency</label>
+                            <select class="form-select" name="currency">
+                                @foreach (App\Models\Pricing::getCurrencyList() as $currency)
+                                    <option value="{{ $currency }}" {{ Session::get('default_currency') == $currency ? 'selected' : '' }}>{{ $currency }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-2">
+                            <label class="form-label">Term</label>
+                            <select class="form-select" name="payment_term">
+                                <option value="1">Monthly</option>
+                                <option value="2">Quarterly</option>
+                                <option value="3">Half annual</option>
+                                <option value="4" selected>Annual</option>
+                                <option value="5">Biennial</option>
+                                <option value="6">Triennial</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="col-12 col-md-3 mb-3">
-                        <x-number-input>
-                            <x-slot name="title">Price</x-slot>
-                            <x-slot name="name">price</x-slot>
-                            <x-slot name="value">9.99</x-slot>
-                            <x-slot name="max">9999</x-slot>
-                            <x-slot name="step">0.01</x-slot>
-                            <x-slot name="required"></x-slot>
-                        </x-number-input>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <x-term-select>
-                            <x-slot name="current">4</x-slot>
-                        </x-term-select>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <x-currency-select>
-                            <x-slot name="current">{{Session::get('default_currency')}}</x-slot>
-                        </x-currency-select>
+                    <div class="row g-3 mt-1">
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <label class="form-label">Owned Since</label>
+                            <input type="date" class="form-control" name="owned_since" value="{{ Carbon\Carbon::now()->subDays(30)->format('Y-m-d') }}">
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <label class="form-label">Next Due Date</label>
+                            <input type="date" class="form-control" name="next_due_date" value="{{ Carbon\Carbon::now()->addDays(30)->format('Y-m-d') }}">
+                        </div>
                     </div>
                 </div>
-                <div class="row mb-2">
-                    <div class="col-12 col-md-4 mb-3">
-                        <x-date-input>
-                            <x-slot name="title">Owned since</x-slot>
-                            <x-slot name="name">owned_since</x-slot>
-                            <x-slot name="value">{{Carbon\Carbon::now()->subDays(30)->format('Y-m-d') }}</x-slot>
-                        </x-date-input>
-                    </div>
-                    <div class="col-12 col-md-4 mb-3">
-                        <x-date-input>
-                            <x-slot name="title">Next due date</x-slot>
-                            <x-slot name="name">next_due_date</x-slot>
-                            <x-slot name="value">{{Carbon\Carbon::now()->addDays(30)->format('Y-m-d') }}</x-slot>
-                        </x-date-input>
+            </div>
+
+            <!-- Labels -->
+            <div class="card content-card mb-4">
+                <div class="card-header card-section-header">
+                    <h5 class="card-section-title mb-0">Labels</h5>
+                    <span class="text-muted small">Optional</span>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        @php $labels = App\Models\Labels::all(); @endphp
+                        <div class="col-6 col-md-3">
+                            <label class="form-label">Label 1</label>
+                            <select class="form-select" name="label1">
+                                <option value="">None</option>
+                                @foreach ($labels as $label)
+                                    <option value="{{ $label->id }}">{{ $label->label }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label class="form-label">Label 2</label>
+                            <select class="form-select" name="label2">
+                                <option value="">None</option>
+                                @foreach ($labels as $label)
+                                    <option value="{{ $label->id }}">{{ $label->label }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label class="form-label">Label 3</label>
+                            <select class="form-select" name="label3">
+                                <option value="">None</option>
+                                @foreach ($labels as $label)
+                                    <option value="{{ $label->id }}">{{ $label->label }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label class="form-label">Label 4</label>
+                            <select class="form-select" name="label4">
+                                <option value="">None</option>
+                                @foreach ($labels as $label)
+                                    <option value="{{ $label->id }}">{{ $label->label }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                 </div>
-                <div class="row mb-2">
-                    <div class="col-12 col-lg-3 mb-4">
-                        <x-labels-select>
-                            <x-slot name="title">label</x-slot>
-                            <x-slot name="name">label1</x-slot>
-                        </x-labels-select>
-                    </div>
-                    <div class="col-12 col-lg-3 mb-4">
-                        <x-labels-select>
-                            <x-slot name="title">label</x-slot>
-                            <x-slot name="name">label2</x-slot>
-                        </x-labels-select>
-                    </div>
-                    <div class="col-12 col-lg-3 mb-4">
-                        <x-labels-select>
-                            <x-slot name="title">label</x-slot>
-                            <x-slot name="name">label3</x-slot>
-                        </x-labels-select>
-                    </div>
-                    <div class="col-12 col-lg-3 mb-4">
-                        <x-labels-select>
-                            <x-slot name="title">label</x-slot>
-                            <x-slot name="name">label4</x-slot>
-                        </x-labels-select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12 col-lg-4">
-                        <x-submit-button>Insert domain</x-submit-button>
-                    </div>
-                </div>
-            </form>
-        </x-card>
+            </div>
+
+            <button type="submit" class="btn btn-primary mb-4">Add Domain</button>
+        </form>
     </div>
 </x-app-layout>

@@ -1,32 +1,36 @@
 @section("title", "Add a DNS")
 <x-app-layout>
-    <x-slot name="header">
-        {{ __('Insert a new DNS') }}
-    </x-slot>
     <div class="container">
-        <x-card class="shadow mt-3">
-            <h4 class="mb-3">DNS information</h4>
-            <x-back-button>
-                <x-slot name="href">{{ route('dns.index') }}</x-slot>
-                Go back
-            </x-back-button>
-            <x-response-alerts></x-response-alerts>
-            <form action="{{ route('dns.store') }}" method="POST">
-                @csrf
-                <div class="row">
-                    <div class="col-12 col-lg-4 mb-4">
-                        <x-text-input title="Hostname" name="hostname"></x-text-input>
-                    </div>
-                    <div class="col-12 col-lg-4 mb-4">
-                        <x-text-input>
-                            <x-slot name="title">address</x-slot>
-                            <x-slot name="name">address</x-slot>
-                        </x-text-input>
-                    </div>
-                    <div class="col-12 col-lg-4 mb-3">
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span class="input-group-text">Type</span></div>
-                            <select class="form-control" name="dns_type">
+        <div class="page-header">
+            <h2 class="page-title">Add DNS Record</h2>
+            <div class="page-actions">
+                <a href="{{ route('dns.index') }}" class="btn btn-outline-secondary">Back to DNS</a>
+            </div>
+        </div>
+
+        <x-response-alerts></x-response-alerts>
+
+        <form action="{{ route('dns.store') }}" method="POST">
+            @csrf
+
+            <!-- DNS Information -->
+            <div class="card content-card mb-4">
+                <div class="card-header card-section-header">
+                    <h5 class="card-section-title mb-0">DNS Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-12 col-lg-4">
+                            <label class="form-label">Hostname</label>
+                            <input type="text" class="form-control" name="hostname" required>
+                        </div>
+                        <div class="col-12 col-lg-4">
+                            <label class="form-label">Address</label>
+                            <input type="text" class="form-control" name="address">
+                        </div>
+                        <div class="col-12 col-lg-4">
+                            <label class="form-label">Type</label>
+                            <select class="form-select" name="dns_type">
                                 <option value="A" selected>A</option>
                                 <option value="AAAA">AAAA</option>
                                 <option value="DNAME">DNAME</option>
@@ -35,92 +39,110 @@
                                 <option value="SOA">SOA</option>
                                 <option value="TXT">TXT</option>
                                 <option value="URI">URI</option>
-                            </select></div>
+                            </select>
+                        </div>
                     </div>
                 </div>
-                <div class="row mb-2">
-                    <div class="col-12 col-lg-3 mb-4">
-                        <x-labels-select>
-                            <x-slot name="title">label</x-slot>
-                            <x-slot name="name">label1</x-slot>
-                        </x-labels-select>
-                    </div>
-                    <div class="col-12 col-lg-3 mb-4">
-                        <x-labels-select>
-                            <x-slot name="title">label</x-slot>
-                            <x-slot name="name">label2</x-slot>
-                        </x-labels-select>
-                    </div>
-                    <div class="col-12 col-lg-3 mb-4">
-                        <x-labels-select>
-                            <x-slot name="title">label</x-slot>
-                            <x-slot name="name">label3</x-slot>
-                        </x-labels-select>
-                    </div>
-                    <div class="col-12 col-lg-3 mb-4">
-                        <x-labels-select>
-                            <x-slot name="title">label</x-slot>
-                            <x-slot name="name">label4</x-slot>
-                        </x-labels-select>
+            </div>
+
+            <!-- Labels -->
+            <div class="card content-card mb-4">
+                <div class="card-header card-section-header">
+                    <h5 class="card-section-title mb-0">Labels</h5>
+                    <span class="text-muted small">Optional</span>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        @php $labels = App\Models\Labels::all(); @endphp
+                        <div class="col-6 col-md-3">
+                            <label class="form-label">Label 1</label>
+                            <select class="form-select" name="label1">
+                                <option value="">None</option>
+                                @foreach ($labels as $label)
+                                    <option value="{{ $label->id }}">{{ $label->label }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label class="form-label">Label 2</label>
+                            <select class="form-select" name="label2">
+                                <option value="">None</option>
+                                @foreach ($labels as $label)
+                                    <option value="{{ $label->id }}">{{ $label->label }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label class="form-label">Label 3</label>
+                            <select class="form-select" name="label3">
+                                <option value="">None</option>
+                                @foreach ($labels as $label)
+                                    <option value="{{ $label->id }}">{{ $label->label }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label class="form-label">Label 4</label>
+                            <select class="form-select" name="label4">
+                                <option value="">None</option>
+                                @foreach ($labels as $label)
+                                    <option value="{{ $label->id }}">{{ $label->label }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                 </div>
-                <div class="row">
-                    <p>Related to:</p>
-                    <div class="col-md-3 mb-3">
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span class="input-group-text">Server</span></div>
-                            <select class="form-control" name="server_id">
+            </div>
+
+            <!-- Related To -->
+            <div class="card content-card mb-4">
+                <div class="card-header card-section-header">
+                    <h5 class="card-section-title mb-0">Related To</h5>
+                    <span class="text-muted small">Optional</span>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <label class="form-label">Server</label>
+                            <select class="form-select" name="server_id">
                                 <option value="null"></option>
                                 @foreach ($Servers as $server)
-                                    <option value="{{ $server['id'] }}">
-                                        {{ $server['hostname'] }}
-                                    </option>
+                                    <option value="{{ $server['id'] }}">{{ $server['hostname'] }}</option>
                                 @endforeach
-                            </select></div>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span class="input-group-text">Shared</span></div>
-                            <select class="form-control" name="shared_id">
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <label class="form-label">Shared</label>
+                            <select class="form-select" name="shared_id">
                                 <option value="null"></option>
                                 @foreach ($Shareds as $shared)
-                                    <option value="{{ $shared['id'] }}">
-                                        {{ $shared['hostname'] }}
-                                    </option>
+                                    <option value="{{ $shared['id'] }}">{{ $shared['hostname'] }}</option>
                                 @endforeach
-                            </select></div>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span class="input-group-text">Reseller</span></div>
-                            <select class="form-control" name="reseller_id">
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <label class="form-label">Reseller</label>
+                            <select class="form-select" name="reseller_id">
                                 <option value="null"></option>
                                 @foreach ($Resellers as $reseller)
-                                    <option value="{{ $reseller['id'] }}">
-                                        {{ $reseller['hostname'] }}
-                                    </option>
+                                    <option value="{{ $reseller['id'] }}">{{ $reseller['hostname'] }}</option>
                                 @endforeach
-                            </select></div>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span class="input-group-text">Domain</span></div>
-                            <select class="form-control" name="domain_id">
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <label class="form-label">Domain</label>
+                            <select class="form-select" name="domain_id">
                                 <option value="null"></option>
                                 @foreach ($Domains as $domain)
-                                    <option value="{{ $domain['id'] }}">
-                                        {{ $domain['domain'] }}.{{$domain['extension']}}
-                                    </option>
+                                    <option value="{{ $domain['id'] }}">{{ $domain['domain'] }}.{{ $domain['extension'] }}</option>
                                 @endforeach
-                            </select></div>
+                            </select>
+                        </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-12 col-lg-4">
-                        <x-submit-button>Insert DNS</x-submit-button>
-                    </div>
-                </div>
-            </form>
-        </x-card>
+            </div>
+
+            <button type="submit" class="btn btn-primary mb-4">Add DNS Record</button>
+        </form>
     </div>
 </x-app-layout>
