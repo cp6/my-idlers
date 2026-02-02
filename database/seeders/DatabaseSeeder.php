@@ -8,14 +8,22 @@ class DatabaseSeeder extends Seeder
 {
     public function run()
     {
-        //\App\Models\User::factory(1)->create();//Disable demo first user creation
+        // Core setup seeders (always run first)
         $this->call(SettingsSeeder::class);
         $this->call(ProvidersSeeder::class);
         $this->call(LocationsSeeder::class);
         $this->call(OsSeeder::class);
         $this->call(LabelsSeeder::class);
-       //$this->call(DomainsSeeder::class);
-        //$this->call(ServersSeeder::class);
-        //$this->call(SharedSeeder::class);
+
+        // User seeder
+        $this->call(UsersSeeder::class);
+
+        // Service seeders
+        $this->call(ServersSeeder::class);
+        $this->call(SharedSeeder::class);
+        $this->call(ResellerSeeder::class);
+        $this->call(DomainsSeeder::class);
+        $this->call(MiscSeeder::class);
+        $this->call(DNSSeeder::class);
     }
 }

@@ -28,6 +28,17 @@ Currently seeking a project sponsor
 * Updated all composer package versions
 * Updated all npm package versions
 * Fixed security vulnerabilities in dependencies
+* Added comprehensive seeders for Users, Servers, Shared, Reseller, Domains, Misc and DNS
+
+### Demo/Seeder Login Credentials
+
+After running `php artisan migrate:fresh --seed`, you can login with:
+
+| Name | Email | Password |
+|------|-------|----------|
+| Admin User | admin@example.com | password |
+| John Developer | john@example.com | password |
+| Jane Sysadmin | jane@example.com | password |
 
 #### Please run the following if updating from an existing install:
 
