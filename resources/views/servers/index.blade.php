@@ -246,6 +246,7 @@
                 }
             });
 
+            $.fn.dataTable.ext.errMode = 'none';
             $('#servers-table').DataTable({
                 pageLength: 15,
                 lengthMenu: [5, 10, 15, 25, 50, 100],
@@ -260,7 +261,8 @@
                     paginate: {
                         previous: "Prev",
                         next: "Next"
-                    }
+                    },
+                    emptyTable: "No servers found"
                 }
             });
         });

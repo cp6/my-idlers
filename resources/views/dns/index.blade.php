@@ -1,64 +1,87 @@
 @section("title", "DNS")
-@section('style')
-    <x-modal-style></x-modal-style>
-@endsection
-@section('scripts')
-    <script src="{{ asset('js/vue.min.js') }}"></script>
-@endsection
 <x-app-layout>
-    <x-slot name="header">
-        {{ __('DNS') }}
-    </x-slot>
     <div class="container" id="app">
-        <x-delete-confirm-modal></x-delete-confirm-modal>
-        <x-card class="shadow mt-3">
-            <a href="{{ route('dns.create') }}" class="btn btn-primary mb-3">Add DNS</a>
-            <x-response-alerts></x-response-alerts>
+        <div class="page-header">
+            <h2 class="page-title">DNS</h2>
+            <div class="page-actions">
+                <a href="{{ route('dns.create') }}" class="btn btn-primary">Add DNS</a>
+            </div>
+        </div>
+
+        <x-response-alerts></x-response-alerts>
+
+        <div class="content-card">
             <div class="table-responsive">
-                <table class="table table-bordered">
-                    <thead class="table-light">
-                    <tr>
-                        <th class="text-nowrap">Type</th>
-                        <th class="text-nowrap">Hostname</th>
-                        <th class="text-nowrap">Address</th>
-                        <th class="text-nowrap">Actions</th>
-                    </tr>
+                <table class="table data-table" id="dns-table">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Hostname</th>
+                            <th>Address</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
                     </thead>
                     <tbody>
                     @if(!empty($dn[0]))
                         @foreach($dn as $dns)
-                            <tr>
-                                <td class="text-nowrap">{{ $dns->dns_type}}</td>
-                                <td class="text-nowrap">{{ $dns->hostname}}</td>
-                                <td class="text-nowrap">{{ $dns->address}}</td>
-                                <td class="text-nowrap">
-                                    <form action="{{ route('dns.destroy', $dns->id) }}" method="POST">
-                                        <a href="{{ route('dns.show', $dns->id) }}"
-                                           class="text-body mx-1">
-                                            <i class="fas fa-eye" title="view"></i></a>
-                                        <a href="{{ route('dns.edit', $dns->id) }}"
-                                           class="text-body mx-1">
-                                            <i class="fas fa-pen" title="edit"></i></a>
-                                        @csrf
-                                        @method('DELETE')
-                                        <i class="fas fa-trash text-danger ms-3" @click="confirmDeleteModal"
-                                           id="{{$dns->id}}" title="{{$dns->hostname}}"></i>
-                                    </form>
-                                </td>
-                            </tr>
+                        <tr>
+                            <td><span class="badge badge-type">{{ $dns->dns_type }}</span></td>
+                            <td class="fw-medium">{{ $dns->hostname }}</td>
+                            <td class="text-nowrap">{{ $dns->address }}</td>
+                            <td class="text-center text-nowrap">
+                                <div class="action-buttons">
+                                    <a href="{{ route('dns.show', $dns->id) }}" class="btn btn-sm btn-action" title="View">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="{{ route('dns.edit', $dns->id) }}" class="btn btn-sm btn-action" title="Edit">
+                                        <i class="fas fa-pen"></i>
+                                    </a>
+                                    <button type="button" class="btn btn-sm btn-action btn-delete" title="Delete"
+                                            @click="confirmDeleteModal" id="{{ $dns->id }}" data-title="{{ $dns->hostname }}">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
                         @endforeach
                     @else
                         <tr>
-                            <td class="px-4 py-2 border text-red-500" colspan="3">No DNSes found.</td>
+                            <td colspan="4" class="text-center text-muted py-4">No DNS records found</td>
                         </tr>
                     @endif
                     </tbody>
                 </table>
             </div>
-        </x-card>
-              <x-details-footer></x-details-footer>
+        </div>
+
+        <x-details-footer></x-details-footer>
+        <x-delete-confirm-modal></x-delete-confirm-modal>
     </div>
+
     <x-modal-delete-script>
         <x-slot name="uri">dns</x-slot>
     </x-modal-delete-script>
+
+    @section('scripts')
+    <script>
+        window.addEventListener('load', function () {
+            $.fn.dataTable.ext.errMode = 'none';
+            $('#dns-table').DataTable({
+                pageLength: 15,
+                lengthMenu: [5, 10, 15, 25, 50, 100],
+                columnDefs: [
+                    {orderable: false, targets: [3]}
+                ],
+                language: {
+                    search: "",
+                    searchPlaceholder: "Search...",
+                    lengthMenu: "Show _MENU_",
+                    info: "Showing _START_ to _END_ of _TOTAL_",
+                    paginate: { previous: "Prev", next: "Next" },
+                    emptyTable: "No DNS records found"
+                }
+            });
+        });
+    </script>
+    @endsection
 </x-app-layout>
