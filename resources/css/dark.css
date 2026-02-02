@@ -274,3 +274,337 @@ body {
     color: #f87171;
     background-color: rgba(239, 68, 68, 0.15);
 }
+
+/* ==========================================
+   Index Pages - Dark Mode
+   ========================================== */
+
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem 0 1rem;
+}
+
+.page-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #f1f5f9;
+    margin: 0;
+}
+
+.page-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-outline-secondary {
+    border-color: #475569;
+    color: #cbd5e1;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #334155;
+    border-color: #475569;
+    color: #f1f5f9;
+}
+
+.content-card {
+    background-color: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.card-tabs {
+    border-bottom: 1px solid #334155;
+    background-color: #0f172a;
+}
+
+.card-tabs .nav-tabs {
+    border: none;
+    padding: 0 1rem;
+}
+
+.card-tabs .nav-link {
+    border: none;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
+    padding: 1rem 1.25rem;
+    color: #94a3b8;
+    font-weight: 500;
+    font-size: 0.9375rem;
+}
+
+.card-tabs .nav-link:hover {
+    color: #f1f5f9;
+    border-color: transparent;
+}
+
+.card-tabs .nav-link.active {
+    color: #60a5fa;
+    background-color: transparent;
+    border-bottom-color: #3b82f6;
+}
+
+.card-tabs .nav-link .badge {
+    font-weight: 500;
+    background-color: #334155 !important;
+}
+
+.content-card .table {
+    margin-bottom: 0;
+}
+
+.content-card .table thead th {
+    background-color: #0f172a;
+    border-bottom: 1px solid #334155;
+    border-top: none;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+    color: #94a3b8;
+    padding: 0.875rem 1rem;
+    white-space: nowrap;
+}
+
+.content-card .table tbody td {
+    padding: 0.875rem 1rem;
+    vertical-align: middle;
+    border-bottom: 1px solid #334155;
+    color: #cbd5e1;
+    font-size: 0.9375rem;
+}
+
+.content-card .table tbody tr:hover {
+    background-color: #0f172a;
+}
+
+.badge-type {
+    background-color: #334155;
+    color: #cbd5e1;
+    font-weight: 500;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 0.25rem;
+    justify-content: center;
+}
+
+.btn-action {
+    padding: 0.375rem 0.5rem;
+    color: #94a3b8;
+    background-color: transparent;
+    border: none;
+}
+
+.btn-action:hover {
+    color: #f1f5f9;
+    background-color: #334155;
+}
+
+.btn-action.btn-delete:hover {
+    color: #f87171;
+    background-color: rgba(239, 68, 68, 0.15);
+}
+
+/* DataTables Controls */
+.dataTables_wrapper {
+    padding: 0;
+}
+
+.dataTables_wrapper .row:first-child {
+    padding: 1rem 1.25rem;
+    margin: 0;
+    border-bottom: 1px solid #334155;
+    background-color: #0f172a;
+}
+
+.dataTables_wrapper .row:last-child {
+    padding: 0.75rem 1.25rem;
+    margin: 0;
+    border-top: 1px solid #334155;
+    align-items: center;
+}
+
+.dataTables_wrapper .dataTables_length label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: #94a3b8;
+    margin: 0;
+    white-space: nowrap;
+}
+
+.dataTables_wrapper .dataTables_length select {
+    padding: 0.375rem 0.5rem;
+    font-size: 0.875rem;
+    border: 1px solid #334155;
+    border-radius: 6px;
+    background-color: #1e293b;
+    color: #cbd5e1;
+    cursor: pointer;
+    min-width: 60px;
+}
+
+.dataTables_wrapper .dataTables_length select:focus {
+    border-color: #3b82f6;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.dataTables_wrapper .dataTables_filter {
+    text-align: right;
+}
+
+.dataTables_wrapper .dataTables_filter label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    margin: 0;
+    font-size: 0;
+}
+
+.dataTables_wrapper .dataTables_filter input {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    border: 1px solid #334155;
+    border-radius: 6px;
+    background-color: #1e293b;
+    color: #f1f5f9;
+    width: 220px;
+}
+
+.dataTables_wrapper .dataTables_filter input::placeholder {
+    color: #64748b;
+}
+
+.dataTables_wrapper .dataTables_filter input:focus {
+    border-color: #3b82f6;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.dataTables_wrapper .dataTables_info {
+    font-size: 0.8125rem;
+    color: #94a3b8;
+    padding: 0;
+}
+
+.dataTables_wrapper .dataTables_paginate {
+    text-align: right;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    padding: 0.375rem 0.75rem !important;
+    font-size: 0.875rem !important;
+    border-radius: 6px !important;
+    border: 1px solid #475569 !important;
+    background: #1e293b !important;
+    background-image: none !important;
+    color: #cbd5e1 !important;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    margin-left: 0.25rem !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover:not(.disabled):not(.current) {
+    background: #334155 !important;
+    background-image: none !important;
+    border-color: #64748b !important;
+    color: #f1f5f9 !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:active,
+.dataTables_wrapper .dataTables_paginate .paginate_button:focus {
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current,
+.dataTables_wrapper .dataTables_paginate .paginate_button.current:hover,
+.dataTables_wrapper .dataTables_paginate .paginate_button.current:focus {
+    background: #3b82f6 !important;
+    background-image: none !important;
+    border-color: #3b82f6 !important;
+    color: #ffffff !important;
+    font-weight: 500;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
+.dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover,
+.dataTables_wrapper .dataTables_paginate .paginate_button.disabled:active {
+    color: #64748b !important;
+    background: #0f172a !important;
+    background-image: none !important;
+    border-color: #334155 !important;
+    cursor: not-allowed;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+/* Override any DataTables default button styles */
+.dataTables_wrapper .dataTables_paginate span .paginate_button {
+    box-shadow: none !important;
+    background-image: none !important;
+}
+
+/* Remove default DataTables table spacing */
+.dataTables_wrapper .dataTable {
+    margin: 0 !important;
+    width: 100% !important;
+}
+
+
+/* Force override DataTables Bootstrap pagination styling */
+.dataTables_wrapper .dataTables_paginate .paginate_button,
+.dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
+.dataTables_wrapper .dataTables_paginate .paginate_button.current,
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover,
+.dataTables_wrapper .dataTables_paginate .paginate_button:active,
+.dataTables_wrapper .dataTables_paginate .paginate_button:focus,
+table.dataTable + .dataTables_wrapper .dataTables_paginate .paginate_button,
+div.dataTables_wrapper div.dataTables_paginate ul.pagination li.paginate_button a,
+div.dataTables_wrapper div.dataTables_paginate ul.pagination li a {
+    -webkit-box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    background-image: none !important;
+    outline: 0 !important;
+}
+
+.page-item .page-link,
+.pagination .page-link {
+    background-color: #1e293b !important;
+    border-color: #475569 !important;
+    color: #cbd5e1 !important;
+    box-shadow: none !important;
+}
+
+.page-item.active .page-link,
+.pagination .active .page-link {
+    background-color: #3b82f6 !important;
+    border-color: #3b82f6 !important;
+    color: #ffffff !important;
+    box-shadow: none !important;
+}
+
+.page-item.disabled .page-link,
+.pagination .disabled .page-link {
+    background-color: #0f172a !important;
+    border-color: #334155 !important;
+    color: #64748b !important;
+    box-shadow: none !important;
+}

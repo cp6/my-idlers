@@ -38,6 +38,8 @@ Currently seeking a project sponsor
 * Redesigned dashboard with cleaner stat cards, costs and resources sections
 * Modernized navbar with improved styling and hover states
 * Updated dark mode with new color scheme and page background
+* Modernized servers index page with card-based layout and improved table styling
+* Improved DataTables styling (search, pagination, dropdown) for light and dark modes
 * Made demo user and sample data seeding optional via `SEED_DEMO_DATA` env variable
 
 ### Database Seeding

@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             $this->call(ResellerSeeder::class);
             $this->call(DomainsSeeder::class);
             $this->call(MiscSeeder::class);
+            $this->call(SeedBoxesSeeder::class);
             $this->call(DNSSeeder::class);
         }
     }
