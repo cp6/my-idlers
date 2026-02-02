@@ -1,5 +1,8 @@
 FROM php:8.3-fpm-alpine
 
+# Install dependencies for PHP extensions
+RUN apk add --no-cache linux-headers
+
 # Install PHP extensions
 RUN docker-php-ext-install pdo pdo_mysql sockets bcmath pcntl
 
