@@ -32,6 +32,9 @@ Currently seeking a project sponsor
 * Updated Dockerfile to PHP 8.3 with additional extensions (bcmath, pcntl)
 * Improved Dockerfile with production optimizations and health check
 * Improved run.sh with better env defaults, caching and optional auto-migrate
+* Modernized auth pages (login, register, forgot/reset password) with clean design
+* Added light and dark mode support for auth pages
+* Added `MAX_USERS` env variable to control registration limit (0 = unlimited)
 
 ### Demo/Seeder Login Credentials
 

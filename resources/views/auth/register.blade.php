@@ -1,60 +1,68 @@
 @section('title') {{'Register'}} @endsection
 <x-guest-layout>
     <x-auth-card>
+        <div class="auth-header">
+            <h1 class="auth-title">Create Account</h1>
+            <p class="auth-subtitle">Get started with @if (config()->has('app.name')) {{ config('app.name') }} @else My Idlers @endif</p>
+        </div>
+
         <!-- Validation Errors -->
         <x-auth-validation-errors class="mb-4" :errors="$errors"/>
 
-        <h3 class="text-center mb-5">@if (config()->has('app.name')) {{ config('app.name') }} @else My idlers @endif Register</h3>
-        <form method="POST" action="{{ route('register') }}">
-        @csrf
+        <form method="POST" action="{{ route('register') }}" class="auth-form">
+            @csrf
 
-        <!-- Name -->
-            <div class="form-floating mb-3">
-                <x-label for="name" :value="__('Name')"/>
-
-                <x-input id="name" class="form-control  " type="text" name="name" :value="old('name')" required
-                         autofocus/>
-            </div>
-
-            <!-- Email Address -->
-            <div class="form-floating mb-3">
-                <x-label for="email" :value="__('Email')"/>
-
-                <x-input id="email" class="form-control" type="email" name="email" :value="old('email')" required
-                         autofocus/>
-            </div>
-
-            <!-- Password -->
-            <div class="form-floating mb-3">
-                <x-label for="password" :value="__('Password')"/>
-
-                <x-input id="password" class="form-control"
-                         type="password"
-                         name="password"
-                         required autocomplete="new-password"/>
-            </div>
-
-            <!-- Confirm Password -->
-            <div class="form-floating mb-3">
-                <x-label for="password_confirmation" :value="__('Confirm Password')"/>
-
-                <x-input id="password_confirmation" class="form-control"
-                         type="password"
-                         name="password_confirmation" required/>
-            </div>
-
-            <div class="row mt-3">
-                <div class="col-12">
-                    <a class="text-decoration-none" href="{{ route('login') }}">
-                        {{ __('Already registered?') }}
-                    </a>
-                </div>
-                <div class="col-12">
-                    <x-button class="mt-4 w-100 btn btn-lg btn-primary">
-                        {{ __('Register') }}
-                    </x-button>
+            <div class="form-group">
+                <label for="name" class="form-label">Full name</label>
+                <div class="input-group">
+                    <span class="input-icon">
+                        <i class="fas fa-user"></i>
+                    </span>
+                    <input id="name" type="text" name="name" value="{{ old('name') }}" 
+                           class="form-control" placeholder="John Doe" required autofocus>
                 </div>
             </div>
+
+            <div class="form-group">
+                <label for="email" class="form-label">Email address</label>
+                <div class="input-group">
+                    <span class="input-icon">
+                        <i class="fas fa-envelope"></i>
+                    </span>
+                    <input id="email" type="email" name="email" value="{{ old('email') }}" 
+                           class="form-control" placeholder="you@example.com" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <div class="input-group">
+                    <span class="input-icon">
+                        <i class="fas fa-lock"></i>
+                    </span>
+                    <input id="password" type="password" name="password" 
+                           class="form-control" placeholder="••••••••" required autocomplete="new-password">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="password_confirmation" class="form-label">Confirm password</label>
+                <div class="input-group">
+                    <span class="input-icon">
+                        <i class="fas fa-lock"></i>
+                    </span>
+                    <input id="password_confirmation" type="password" name="password_confirmation" 
+                           class="form-control" placeholder="••••••••" required>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary auth-btn">
+                Create account
+            </button>
         </form>
+
+        <div class="auth-footer">
+            <p>Already have an account? <a href="{{ route('login') }}">Sign in</a></p>
+        </div>
     </x-auth-card>
 </x-guest-layout>

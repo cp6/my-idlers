@@ -22,8 +22,8 @@ class RegisteredUserController extends Controller
      */
     public function create()
     {
-        $users = User::all();
-        if ($users->count() >= 1) {//Only allow 1 user for this app
+        $maxUsers = env('MAX_USERS', 1);
+        if ($maxUsers > 0 && User::count() >= $maxUsers) {
             return redirect('/login');
         }
         return view('auth.register');

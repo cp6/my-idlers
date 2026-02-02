@@ -1,1 +1,88 @@
 @import 'bootstrap-dark-5';
+
+/* Dark Mode Auth Styles */
+.auth-page {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+}
+
+.auth-card {
+    background-color: #1e293b;
+    border-color: #334155;
+}
+
+.auth-logo {
+    background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
+    color: #ffffff;
+}
+
+.auth-title {
+    color: #f1f5f9;
+}
+
+.auth-subtitle {
+    color: #94a3b8;
+}
+
+.auth-form .form-label {
+    color: #cbd5e1;
+}
+
+.auth-form .input-icon {
+    color: #64748b;
+}
+
+.auth-form .form-control {
+    background-color: #0f172a;
+    border-color: #334155;
+    color: #f1f5f9;
+}
+
+.auth-form .form-control::placeholder {
+    color: #64748b;
+}
+
+.auth-form .form-control:focus {
+    background-color: #0f172a;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+}
+
+.form-options .form-check-label {
+    color: #94a3b8;
+}
+
+.form-check-input {
+    background-color: #0f172a;
+    border-color: #475569;
+}
+
+.form-check-input:checked {
+    background-color: #3b82f6;
+    border-color: #3b82f6;
+}
+
+.forgot-link {
+    color: #60a5fa;
+}
+
+.auth-btn {
+    background-color: #3b82f6;
+    border: none;
+    color: #ffffff;
+    box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.3);
+}
+
+.auth-btn:hover {
+    background-color: #2563eb;
+    box-shadow: 0 6px 20px 0 rgba(59, 130, 246, 0.4);
+    color: #ffffff;
+}
+
+.auth-footer {
+    border-top: 1px solid #334155;
+    color: #94a3b8;
+}
+
+.auth-footer a {
+    color: #60a5fa;
+}

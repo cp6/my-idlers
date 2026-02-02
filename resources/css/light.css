@@ -1,1 +1,77 @@
 @import 'bootstrap';
+
+/* Light Mode Auth Styles */
+.auth-page {
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+}
+
+.auth-card {
+    background-color: #ffffff;
+    border-color: #e5e7eb;
+}
+
+.auth-logo {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    color: #ffffff;
+}
+
+.auth-title {
+    color: #111827;
+}
+
+.auth-subtitle {
+    color: #6b7280;
+}
+
+.auth-form .form-label {
+    color: #374151;
+}
+
+.auth-form .input-icon {
+    color: #9ca3af;
+}
+
+.auth-form .form-control {
+    background-color: #f9fafb;
+    border-color: #e5e7eb;
+    color: #111827;
+}
+
+.auth-form .form-control::placeholder {
+    color: #9ca3af;
+}
+
+.auth-form .form-control:focus {
+    background-color: #ffffff;
+    border-color: #3b82f6;
+}
+
+.form-options .form-check-label {
+    color: #4b5563;
+}
+
+.forgot-link {
+    color: #3b82f6;
+}
+
+.auth-btn {
+    background-color: #3b82f6;
+    border: none;
+    color: #ffffff;
+    box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.35);
+}
+
+.auth-btn:hover {
+    background-color: #2563eb;
+    box-shadow: 0 6px 20px 0 rgba(59, 130, 246, 0.45);
+    color: #ffffff;
+}
+
+.auth-footer {
+    border-top: 1px solid #e5e7eb;
+    color: #6b7280;
+}
+
+.auth-footer a {
+    color: #3b82f6;
+}

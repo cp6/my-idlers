@@ -1,7 +1,5 @@
-<main class="form-signin">
-<div class="card">
-    <div class="card-body shadow">
+<div class="auth-container">
+    <div class="auth-card">
         {{ $slot }}
     </div>
 </div>
-</main>

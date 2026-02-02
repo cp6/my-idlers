@@ -1,36 +1,37 @@
+@section('title') {{'Forgot Password'}} @endsection
 <x-guest-layout>
     <x-auth-card>
-        <x-slot name="logo">
-            <a href="/">
-                <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
-            </a>
-        </x-slot>
-
-        <div class="mb-4 text-sm text-gray-600">
-            {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
+        <div class="auth-header">
+            <h1 class="auth-title">Forgot Password?</h1>
+            <p class="auth-subtitle">No worries, we'll send you reset instructions</p>
         </div>
 
         <!-- Session Status -->
-        <x-auth-session-status class="mb-4" :status="session('status')" />
-
+        <x-auth-session-status class="mb-4" :status="session('status')"/>
         <!-- Validation Errors -->
-        <x-auth-validation-errors class="mb-4" :errors="$errors" />
+        <x-auth-validation-errors class="mb-4" :errors="$errors"/>
 
-        <form method="POST" action="{{ route('password.email') }}">
+        <form method="POST" action="{{ route('password.email') }}" class="auth-form">
             @csrf
 
-            <!-- Email Address -->
-            <div>
-                <x-label for="email" :value="__('Email')" />
-
-                <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
+            <div class="form-group">
+                <label for="email" class="form-label">Email address</label>
+                <div class="input-group">
+                    <span class="input-icon">
+                        <i class="fas fa-envelope"></i>
+                    </span>
+                    <input id="email" type="email" name="email" value="{{ old('email') }}" 
+                           class="form-control" placeholder="you@example.com" required autofocus>
+                </div>
             </div>
 
-            <div class="flex items-center justify-end mt-4">
-                <x-button>
-                    {{ __('Email Password Reset Link') }}
-                </x-button>
-            </div>
+            <button type="submit" class="btn btn-primary auth-btn">
+                Send reset link
+            </button>
         </form>
+
+        <div class="auth-footer">
+            <p><a href="{{ route('login') }}"><i class="fas fa-arrow-left me-1"></i>Back to sign in</a></p>
+        </div>
     </x-auth-card>
 </x-guest-layout>
