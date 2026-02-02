@@ -9,7 +9,7 @@ a [YABS](https://github.com/masonr/yet-another-bench-script) output you can get 
 GeekBench 5 & 6 scores to do easier comparing and sorting. Of course storing other services e.g. web hosting is possible
 and supported too with My idlers.
 
-[![Generic badge](https://img.shields.io/badge/version-4.0.0-blue.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Laravel-11.48-red.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/PHP-8.3-purple.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Bootstrap-5.3-pink.svg)](https://shields.io/)
+[![Generic badge](https://img.shields.io/badge/version-4.0.0-blue.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Laravel-11.48-red.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/PHP-8.4-purple.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Bootstrap-5.3-pink.svg)](https://shields.io/)
 
 <img src="https://raw.githubusercontent.com/cp6/my-idlers/main/public/My%20Idlers%20logo.jpg" width="128" height="128" />
 
@@ -30,7 +30,7 @@ Currently seeking a project sponsor
 * Fixed security vulnerabilities in dependencies
 * Added comprehensive seeders for Users, Servers, Shared, Reseller, Domains, Misc and DNS
 * Added YABS seeder with sample benchmark data
-* Updated Dockerfile to PHP 8.3 with additional extensions (bcmath, pcntl)
+* Updated Dockerfile to PHP 8.4 with additional extensions (bcmath, pcntl)
 * Improved Dockerfile with production optimizations and health check
 * Improved run.sh with better env defaults, caching and optional auto-migrate
 * Modernized auth pages (login, register, forgot/reset password) with clean design
@@ -150,7 +150,7 @@ php artisan cache:clear
 
 ## Requires
 
-* PHP 8.3
+* PHP 8.4
 
 ## Features
 
