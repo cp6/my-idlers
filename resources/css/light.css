@@ -75,3 +75,170 @@
 .auth-footer a {
     color: #3b82f6;
 }
+
+/* ==========================================
+   Dashboard Styles - Light Mode
+   ========================================== */
+
+.dashboard-container {
+    padding-top: 1.5rem;
+}
+
+.stat-card {
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 1.25rem;
+    text-align: center;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-card:hover {
+    border-color: #3b82f6;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+
+.stat-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #111827;
+    line-height: 1.2;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-top: 0.25rem;
+}
+
+.dashboard-card {
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.card-header-custom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #e5e7eb;
+    background-color: #f9fafb;
+}
+
+.card-title-custom {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #111827;
+    margin: 0;
+}
+
+.card-body-custom {
+    padding: 1.25rem;
+}
+
+.cost-item,
+.resource-item {
+    text-align: center;
+}
+
+.cost-value,
+.resource-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #111827;
+}
+
+.cost-label,
+.resource-label {
+    font-size: 0.75rem;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+    margin-top: 0.25rem;
+}
+
+.dashboard-card .table {
+    margin-bottom: 0;
+}
+
+.dashboard-card .table thead th {
+    background-color: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+    color: #6b7280;
+    padding: 0.75rem 1rem;
+}
+
+.dashboard-card .table tbody td {
+    padding: 0.75rem 1rem;
+    vertical-align: middle;
+    border-bottom: 1px solid #f3f4f6;
+    color: #374151;
+}
+
+/* ==========================================
+   Navbar Styles - Light Mode
+   ========================================== */
+
+.main-navbar {
+    background-color: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 0.75rem 0;
+}
+
+.main-navbar .navbar-brand {
+    color: #111827;
+    font-size: 1.125rem;
+}
+
+.main-navbar .nav-link {
+    color: #4b5563;
+    font-size: 0.9375rem;
+    padding: 0.5rem 0.875rem;
+    border-radius: 6px;
+    transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.main-navbar .nav-link:hover {
+    color: #111827;
+    background-color: #f3f4f6;
+}
+
+.main-navbar .nav-link.active {
+    color: #3b82f6;
+    background-color: #eff6ff;
+}
+
+.main-navbar .dropdown-menu {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 0.5rem;
+}
+
+.main-navbar .dropdown-item {
+    border-radius: 6px;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9375rem;
+    color: #374151;
+}
+
+.main-navbar .dropdown-item:hover {
+    background-color: #f3f4f6;
+    color: #111827;
+}
+
+.main-navbar .logout-link {
+    color: #6b7280;
+    text-decoration: none;
+}
+
+.main-navbar .logout-link:hover {
+    color: #ef4444;
+    background-color: #fef2f2;
+}

@@ -86,3 +86,191 @@
 .auth-footer a {
     color: #60a5fa;
 }
+
+/* ==========================================
+   Dashboard Styles - Dark Mode
+   ========================================== */
+
+.dashboard-container {
+    padding-top: 1.5rem;
+}
+
+.stat-card {
+    background-color: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 1.25rem;
+    text-align: center;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-card:hover {
+    border-color: #3b82f6;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+}
+
+.stat-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #f1f5f9;
+    line-height: 1.2;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: #94a3b8;
+    margin-top: 0.25rem;
+}
+
+.dashboard-card {
+    background-color: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.card-header-custom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #334155;
+    background-color: #0f172a;
+}
+
+.card-title-custom {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #f1f5f9;
+    margin: 0;
+}
+
+.card-body-custom {
+    padding: 1.25rem;
+}
+
+.cost-item,
+.resource-item {
+    text-align: center;
+}
+
+.cost-value,
+.resource-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #f1f5f9;
+}
+
+.cost-label,
+.resource-label {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+    margin-top: 0.25rem;
+}
+
+.dashboard-card .table {
+    margin-bottom: 0;
+}
+
+.dashboard-card .table thead th {
+    background-color: #0f172a;
+    border-bottom: 1px solid #334155;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+    color: #94a3b8;
+    padding: 0.75rem 1rem;
+}
+
+.dashboard-card .table tbody td {
+    padding: 0.75rem 1rem;
+    vertical-align: middle;
+    border-bottom: 1px solid #334155;
+    color: #cbd5e1;
+}
+
+.dashboard-card .table tbody tr:hover {
+    background-color: #0f172a;
+}
+
+/* ==========================================
+   Navbar & Page Background - Dark Mode
+   ========================================== */
+
+body {
+    background-color: #0f172a;
+}
+
+.main-navbar {
+    background-color: #1e293b;
+    border-bottom: 1px solid #334155;
+    padding: 0.75rem 0;
+}
+
+.main-navbar .navbar-brand {
+    color: #f1f5f9;
+    font-size: 1.125rem;
+}
+
+.main-navbar .navbar-toggler {
+    border-color: #475569;
+}
+
+.main-navbar .navbar-toggler-icon {
+    filter: invert(1);
+}
+
+.main-navbar .nav-link {
+    color: #94a3b8;
+    font-size: 0.9375rem;
+    padding: 0.5rem 0.875rem;
+    border-radius: 6px;
+    transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.main-navbar .nav-link:hover {
+    color: #f1f5f9;
+    background-color: #334155;
+}
+
+.main-navbar .nav-link.active {
+    color: #60a5fa;
+    background-color: rgba(59, 130, 246, 0.15);
+}
+
+.main-navbar .dropdown-menu {
+    background-color: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    padding: 0.5rem;
+}
+
+.main-navbar .dropdown-item {
+    border-radius: 6px;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9375rem;
+    color: #cbd5e1;
+}
+
+.main-navbar .dropdown-item:hover {
+    background-color: #334155;
+    color: #f1f5f9;
+}
+
+.main-navbar .dropdown-divider {
+    border-color: #334155;
+}
+
+.main-navbar .logout-link {
+    color: #94a3b8;
+    text-decoration: none;
+}
+
+.main-navbar .logout-link:hover {
+    color: #f87171;
+    background-color: rgba(239, 68, 68, 0.15);
+}

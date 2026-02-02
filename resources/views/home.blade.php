@@ -1,154 +1,193 @@
-@section("title", "Home")
+@section("title", "Dashboard")
 <x-app-layout>
-    <div class="row mt-3">
-        <ul class="nav nav-tabs mt-3" id="myTab" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="tally-tab" data-bs-toggle="tab" data-bs-target="#tally"
-                        type="button"
-                        role="tab" aria-controls="tally" aria-selected="true">Tally
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="costings-tab"
-                        data-bs-toggle="tab" data-bs-target="#costings" type="button" role="tab"
-                        aria-controls="costings" aria-selected="false">Costings
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="averages-tab"
-                        data-bs-toggle="tab" data-bs-target="#averages" type="button" role="tab"
-                        aria-controls="averages" aria-selected="false">Averages
-                </button>
-            </li>
-        </ul>
-        <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" id="tally" role="tabpanel" aria-labelledby="tally-tab">
-                <div class="row mt-3">
-                    <div class="col-6 col-lg-2 mb-3">
-                        <x-service-tally-card tally="{{ $information['servers'] }}"
-                                              route="{{route('servers.index')}}"
-                                              service="Servers"></x-service-tally-card>
+    <div class="dashboard-container">
+        <!-- Stats Overview -->
+        <div class="row g-3 mb-4">
+            <div class="col-6 col-md-4 col-lg-2">
+                <a href="{{ route('servers.index') }}" class="text-decoration-none">
+                    <div class="stat-card">
+                        <div class="stat-value">{{ $information['servers'] }}</div>
+                        <div class="stat-label">Servers</div>
                     </div>
-                    <div class="col-6 col-lg-2 mb-3">
-                        <x-service-tally-card tally="{{ $information['shared'] }}" route="{{route('shared.index')}}"
-                                              service="Shared"></x-service-tally-card>
+                </a>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <a href="{{ route('shared.index') }}" class="text-decoration-none">
+                    <div class="stat-card">
+                        <div class="stat-value">{{ $information['shared'] }}</div>
+                        <div class="stat-label">Shared</div>
                     </div>
-                    <div class="col-6 col-lg-2 mb-3">
-                        <x-service-tally-card tally="{{ $information['reseller'] }}"
-                                              route="{{route('reseller.index')}}"
-                                              service="Reseller"></x-service-tally-card>
+                </a>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <a href="{{ route('reseller.index') }}" class="text-decoration-none">
+                    <div class="stat-card">
+                        <div class="stat-value">{{ $information['reseller'] }}</div>
+                        <div class="stat-label">Reseller</div>
                     </div>
-                    <div class="col-6 col-lg-2 mb-3">
-                        <x-service-tally-card tally="{{ $information['domains'] }}"
-                                              route="{{route('domains.index')}}"
-                                              service="Domains"></x-service-tally-card>
+                </a>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <a href="{{ route('domains.index') }}" class="text-decoration-none">
+                    <div class="stat-card">
+                        <div class="stat-value">{{ $information['domains'] }}</div>
+                        <div class="stat-label">Domains</div>
                     </div>
-                    <div class="col-6 col-lg-2 mb-3">
-                        <x-service-tally-card tally="{{ $information['misc'] }}" route="{{route('misc.index')}}"
-                                              service="Misc"></x-service-tally-card>
+                </a>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <a href="{{ route('misc.index') }}" class="text-decoration-none">
+                    <div class="stat-card">
+                        <div class="stat-value">{{ $information['misc'] }}</div>
+                        <div class="stat-label">Misc</div>
                     </div>
-                    <div class="col-6 col-lg-2 mb-3">
-                        <x-service-tally-card tally="{{ $information['dns'] }}" route="{{route('dns.index')}}"
-                                              service="DNS"></x-service-tally-card>
+                </a>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <a href="{{ route('dns.index') }}" class="text-decoration-none">
+                    <div class="stat-card">
+                        <div class="stat-value">{{ $information['dns'] }}</div>
+                        <div class="stat-label">DNS</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Costs & Resources Row -->
+        <div class="row g-3 mb-4">
+            <!-- Costs Card -->
+            <div class="col-12 col-lg-6">
+                <div class="dashboard-card">
+                    <div class="card-header-custom">
+                        <h5 class="card-title-custom">Costs</h5>
+                        <span class="badge bg-secondary">{{ $information['currency'] }}</span>
+                    </div>
+                    <div class="card-body-custom">
+                        <div class="row g-3">
+                            <div class="col-6 col-md-3">
+                                <div class="cost-item">
+                                    <div class="cost-value">{{ $information['total_cost_weekly'] }}</div>
+                                    <div class="cost-label">Weekly</div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="cost-item">
+                                    <div class="cost-value">{{ $information['total_cost_monthly'] }}</div>
+                                    <div class="cost-label">Monthly</div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="cost-item">
+                                    <div class="cost-value">{{ $information['total_cost_yearly'] }}</div>
+                                    <div class="cost-label">Yearly</div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="cost-item">
+                                    <div class="cost-value">{{ $information['total_cost_2_yearly'] }}</div>
+                                    <div class="cost-label">2 Years</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="tab-pane fade" id="costings" role="tabpanel" aria-labelledby="costings-tab">
-                <div class="row mt-3">
-                    <div class="col-12 col-lg-2 mb-3">
-                        <x-info-card value="{{$information['total_cost_weekly']}}" title="Weekly cost"
-                                     append="{{$information['currency']}}"></x-info-card>
+            <!-- Resources Card -->
+            <div class="col-12 col-lg-6">
+                <div class="dashboard-card">
+                    <div class="card-header-custom">
+                        <h5 class="card-title-custom">Server Resources</h5>
                     </div>
-                    <div class="col-12 col-lg-2 mb-3">
-                        <x-info-card value="{{$information['total_cost_monthly']}}" title="Monthly cost"
-                                     append="{{$information['currency']}}"></x-info-card>
-                    </div>
-                    <div class="col-12 col-lg-2 mb-3">
-                        <x-info-card value="{{$information['total_cost_yearly']}}" title="Yearly cost"
-                                     append="{{$information['currency']}}"></x-info-card>
-                    </div>
-                    <div class="col-12 col-lg-2 mb-3">
-                        <x-info-card value="{{$information['total_cost_2_yearly']}}" title="2 yearly cost"
-                                     append="{{$information['currency']}}"></x-info-card>
-                    </div>
-                </div>
-            </div>
-
-            <div class="tab-pane fade" id="averages" role="tabpanel" aria-labelledby="averages-tab">
-                <div class="row mt-3">
-                    <div class="col-6 col-lg-2 mb-3">
-                        <x-info-card value="{{$information['servers_summary']['cpu_sum']}}"
-                                     title="CPU"></x-info-card>
-                    </div>
-                    <div class="col-6 col-lg-2 mb-3">
-                        <x-info-card
-                            value="{{number_format($information['servers_summary']['ram_mb_sum'] / 1024, 2)}}"
-                            title="RAM"
-                            append="GB"></x-info-card>
-                    </div>
-                    <div class="col-6 col-lg-2 mb-3">
-                        @if($information['servers_summary']['disk_gb_sum'] >= 1000)
-                            <x-info-card
-                                value="{{number_format($information['servers_summary']['disk_gb_sum'] / 1024,2)}}"
-                                title="DISK" append="TB"></x-info-card>
-                        @else
-                            <x-info-card value="{{$information['servers_summary']['disk_gb_sum']}}" title="DISK"
-                                         append="GB"></x-info-card>
-                        @endif
-                    </div>
-                    <div class="col-6 col-lg-2 mb-3">
-                        <x-info-card
-                            value="{{number_format($information['servers_summary']['bandwidth_sum'] / 1024, 2)}}"
-                            title="Bandwidth" append="TB"></x-info-card>
-                    </div>
-                    <div class="col-6 col-lg-2 mb-3">
-                        <x-info-card value="{{$information['servers_summary']['locations_sum']}}"
-                                     title="Locations"></x-info-card>
-                    </div>
-                    <div class="col-6 col-lg-2 mb-3">
-                        <x-info-card value="{{$information['servers_summary']['providers_sum']}}"
-                                     title="Providers"></x-info-card>
+                    <div class="card-body-custom">
+                        <div class="row g-3">
+                            <div class="col-4 col-md-2">
+                                <div class="resource-item">
+                                    <div class="resource-value">{{ $information['servers_summary']['cpu_sum'] }}</div>
+                                    <div class="resource-label">CPU</div>
+                                </div>
+                            </div>
+                            <div class="col-4 col-md-2">
+                                <div class="resource-item">
+                                    <div class="resource-value">{{ number_format($information['servers_summary']['ram_mb_sum'] / 1024, 1) }}</div>
+                                    <div class="resource-label">RAM GB</div>
+                                </div>
+                            </div>
+                            <div class="col-4 col-md-2">
+                                <div class="resource-item">
+                                    @if($information['servers_summary']['disk_gb_sum'] >= 1000)
+                                        <div class="resource-value">{{ number_format($information['servers_summary']['disk_gb_sum'] / 1024, 1) }}</div>
+                                        <div class="resource-label">Disk TB</div>
+                                    @else
+                                        <div class="resource-value">{{ $information['servers_summary']['disk_gb_sum'] }}</div>
+                                        <div class="resource-label">Disk GB</div>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-4 col-md-2">
+                                <div class="resource-item">
+                                    <div class="resource-value">{{ number_format($information['servers_summary']['bandwidth_sum'] / 1024, 1) }}</div>
+                                    <div class="resource-label">BW TB</div>
+                                </div>
+                            </div>
+                            <div class="col-4 col-md-2">
+                                <div class="resource-item">
+                                    <div class="resource-value">{{ $information['servers_summary']['locations_sum'] }}</div>
+                                    <div class="resource-label">Locations</div>
+                                </div>
+                            </div>
+                            <div class="col-4 col-md-2">
+                                <div class="resource-item">
+                                    <div class="resource-value">{{ $information['servers_summary']['providers_sum'] }}</div>
+                                    <div class="resource-label">Providers</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row mt-3">
-        @if(Session::get('due_soon_amount') > 0)
-            <h3 class="my-3">Due soon</h3>
-            @if(!empty($information['due_soon']))
-                <div class="card shadow mt-3 p-0">
-                    <div class="table-responsive rounded">
-                        <table class="table table-bordered mb-0">
-                            <thead class="table-light">
-                            <tr>
-                                <th class="text-nowrap">Name</th>
-                                <th class="text-nowrap">Type</th>
-                                <th class="text-nowrap">Due</th>
-                                <th class="text-nowrap">Price</th>
-                                <th class="text-nowrap"></th>
-                            </tr>
+
+        <!-- Due Soon Section -->
+        @if(Session::get('due_soon_amount') > 0 && !empty($information['due_soon']))
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="dashboard-card">
+                    <div class="card-header-custom">
+                        <h5 class="card-title-custom">Due Soon</h5>
+                        <span class="badge bg-warning text-dark">{{ count($information['due_soon']) }}</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>Due</th>
+                                    <th>Price</th>
+                                    <th class="text-center" style="width: 60px;">View</th>
+                                </tr>
                             </thead>
                             <tbody>
-                            @foreach($information['due_soon'] as $due_soon)
+                                @foreach($information['due_soon'] as $due_soon)
                                 <tr>
-                                    <td class="text-nowrap">
+                                    <td>
                                         @if($due_soon->service_type === 1)
-                                            {{$due_soon->hostname}}
+                                            {{ $due_soon->hostname }}
                                         @elseif($due_soon->service_type === 2)
-                                            {{$due_soon->main_domain}}
+                                            {{ $due_soon->main_domain }}
                                         @elseif($due_soon->service_type === 3)
-                                            {{$due_soon->reseller}}
+                                            {{ $due_soon->reseller }}
                                         @elseif($due_soon->service_type === 4)
-                                            {{$due_soon->domain}}.{{$due_soon->extension}}
+                                            {{ $due_soon->domain }}.{{ $due_soon->extension }}
                                         @elseif($due_soon->service_type === 5)
-                                            {{$due_soon->name}}
+                                            {{ $due_soon->name }}
                                         @elseif($due_soon->service_type === 6)
-                                            {{$due_soon->title}}
+                                            {{ $due_soon->title }}
                                         @endif
                                     </td>
-                                    <td class="text-nowrap">
+                                    <td>
+                                        <span class="badge bg-secondary">
                                         @if($due_soon->service_type === 1)
                                             VPS
                                         @elseif($due_soon->service_type === 2)
@@ -162,81 +201,73 @@
                                         @elseif($due_soon->service_type === 6)
                                             Seedbox
                                         @endif
+                                        </span>
                                     </td>
-                                    <td class="text-nowrap">
-                                        {{Carbon\Carbon::parse($due_soon->next_due_date)->diffForHumans()}}</td>
-                                    <td class="text-nowrap">{{$due_soon->price}} {{$due_soon->currency}} {{\App\Process::paymentTermIntToString($due_soon->term)}}</td>
-                                    <td class="text-nowrap text-center">
-                                        @if($due_soon->service_type === 1)
-                                            <a href="{{ route('servers.show', $due_soon->service_id) }}"
-                                               class="text-body mx-1"><i class="fas fa-eye"
-                                                                         title="view"></i></a>
-                                        @elseif($due_soon->service_type === 2)
-                                            <a href="{{ route('shared.show', $due_soon->service_id) }}"
-                                               class="text-body mx-1"><i class="fas fa-eye"
-                                                                         title="view"></i></a>
-                                        @elseif($due_soon->service_type === 3)
-                                            <a href="{{ route('reseller.show', $due_soon->service_id) }}"
-                                               class="text-body mx-1"><i class="fas fa-eye"
-                                                                         title="view"></i></a>
-                                        @elseif($due_soon->service_type === 4)
-                                            <a href="{{ route('domains.show', $due_soon->service_id) }}"
-                                               class="text-body mx-1"><i class="fas fa-eye"
-                                                                         title="view"></i></a>
-                                        @elseif($due_soon->service_type === 5)
-                                            <a href="{{ route('misc.show', $due_soon->service_id) }}"
-                                               class="text-body mx-1"><i class="fas fa-eye"
-                                                                         title="view"></i></a>
-                                        @elseif($due_soon->service_type === 6)
-                                            <a href="{{ route('seedboxes.show', $due_soon->service_id) }}"
-                                               class="text-body mx-1"><i class="fas fa-eye"
-                                                                         title="view"></i></a>
-                                        @endif
+                                    <td>{{ Carbon\Carbon::parse($due_soon->next_due_date)->diffForHumans() }}</td>
+                                    <td>{{ $due_soon->price }} {{ $due_soon->currency }} {{ \App\Process::paymentTermIntToString($due_soon->term) }}</td>
+                                    <td class="text-center">
+                                        @php
+                                            $routes = [
+                                                1 => 'servers.show',
+                                                2 => 'shared.show',
+                                                3 => 'reseller.show',
+                                                4 => 'domains.show',
+                                                5 => 'misc.show',
+                                                6 => 'seedboxes.show'
+                                            ];
+                                        @endphp
+                                        <a href="{{ route($routes[$due_soon->service_type], $due_soon->service_id) }}" class="btn btn-sm btn-outline-primary">View</a>
                                     </td>
                                 </tr>
-                            @endforeach
+                                @endforeach
                             </tbody>
                         </table>
-
                     </div>
                 </div>
-            @endif
+            </div>
+        </div>
         @endif
 
-        @if(Session::get('recently_added_amount') > 0)
-            <h3 class="mt-4">Recently added</h3>
-            @if(!empty($information['newest']))
-                <div class="card shadow mt-3 p-0">
-                    <div class="table-responsive rounded">
-                        <table class="table table-bordered mb-0">
-                            <thead class="table-light">
-                            <tr>
-                                <th class="text-nowrap">Name</th>
-                                <th class="text-nowrap">Type</th>
-                                <th class="text-nowrap">Added</th>
-                                <th class="text-nowrap">Price</th>
-                                <th class="text-nowrap"></th>
-                            </tr>
+        <!-- Recently Added Section -->
+        @if(Session::get('recently_added_amount') > 0 && !empty($information['newest']))
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="dashboard-card">
+                    <div class="card-header-custom">
+                        <h5 class="card-title-custom">Recently Added</h5>
+                        <span class="badge bg-success">{{ count($information['newest']) }}</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>Added</th>
+                                    <th>Price</th>
+                                    <th class="text-center" style="width: 60px;">View</th>
+                                </tr>
                             </thead>
                             <tbody>
-                            @foreach($information['newest'] as $new)
+                                @foreach($information['newest'] as $new)
                                 <tr>
-                                    <td class="text-nowrap">
+                                    <td>
                                         @if($new->service_type === 1)
-                                            {{$new->hostname}}
+                                            {{ $new->hostname }}
                                         @elseif($new->service_type === 2)
-                                            {{$new->main_domain}}
+                                            {{ $new->main_domain }}
                                         @elseif($new->service_type === 3)
-                                            {{$new->reseller}}
+                                            {{ $new->reseller }}
                                         @elseif($new->service_type === 4)
-                                            {{$new->domain}}.{{$new->extension}}
+                                            {{ $new->domain }}.{{ $new->extension }}
                                         @elseif($new->service_type === 5)
-                                            {{$new->name}}
+                                            {{ $new->name }}
                                         @elseif($new->service_type === 6)
-                                            {{$new->title}}
+                                            {{ $new->title }}
                                         @endif
                                     </td>
-                                    <td class="text-nowrap">
+                                    <td>
+                                        <span class="badge bg-secondary">
                                         @if($new->service_type === 1)
                                             VPS
                                         @elseif($new->service_type === 2)
@@ -250,51 +281,45 @@
                                         @elseif($new->service_type === 6)
                                             Seedbox
                                         @endif
+                                        </span>
                                     </td>
-                                    <td class="text-nowrap">{{Carbon\Carbon::parse($new->created_at)->diffForHumans()}}</td>
-                                    <td class="text-nowrap">{{$new->price}} {{$new->currency}} {{\App\Process::paymentTermIntToString($new->term)}}</td>
-                                    <td class="text-nowrap text-center">
-                                        @if($new->service_type === 1)
-                                            <a href="{{ route('servers.show', $new->service_id) }}"
-                                               class="text-body mx-1"><i class="fas fa-eye"
-                                                                         title="view"></i></a>
-                                        @elseif($new->service_type === 2)
-                                            <a href="{{ route('shared.show', $new->service_id) }}"
-                                               class="text-body mx-1"><i class="fas fa-eye"
-                                                                         title="view"></i></a>
-                                        @elseif($new->service_type === 3)
-                                            <a href="{{ route('reseller.show', $new->service_id) }}"
-                                               class="text-body mx-1"><i class="fas fa-eye"
-                                                                         title="view"></i></a>
-                                        @elseif($new->service_type === 4)
-                                            <a href="{{ route('domains.show', $new->service_id) }}"
-                                               class="text-body mx-1"><i class="fas fa-eye"
-                                                                         title="view"></i></a>
-                                        @elseif($new->service_type === 5)
-                                            <a href="{{ route('misc.show', $new->service_id) }}"
-                                               class="text-body mx-1"><i class="fas fa-eye"
-                                                                         title="view"></i></a>
-                                        @elseif($new->service_type === 6)
-                                            <a href="{{ route('seedboxes.show', $new->service_id) }}"
-                                               class="text-body mx-1"><i class="fas fa-eye"
-                                                                         title="view"></i></a>
-                                        @endif
+                                    <td>{{ Carbon\Carbon::parse($new->created_at)->diffForHumans() }}</td>
+                                    <td>{{ $new->price }} {{ $new->currency }} {{ \App\Process::paymentTermIntToString($new->term) }}</td>
+                                    <td class="text-center">
+                                        @php
+                                            $routes = [
+                                                1 => 'servers.show',
+                                                2 => 'shared.show',
+                                                3 => 'reseller.show',
+                                                4 => 'domains.show',
+                                                5 => 'misc.show',
+                                                6 => 'seedboxes.show'
+                                            ];
+                                        @endphp
+                                        <a href="{{ route($routes[$new->service_type], $new->service_id) }}" class="btn btn-sm btn-outline-primary">View</a>
                                     </td>
                                 </tr>
-                            @endforeach
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
                 </div>
-            @endif
+            </div>
+        </div>
         @endif
 
+        <!-- Footer -->
         @if(Session::get('timer_version_footer', 0) === 1)
-            <p class="text-muted mt-4 text-end"><small>Page took {{$information['execution_time']}} seconds,
-                    Built on Laravel v{{ Illuminate\Foundation\Application::VERSION }} (PHP v{{ PHP_VERSION }}),
-                    Rates By <a href="https://www.exchangerate-api.com">Exchange Rate API</a>
-                </small>
-            </p>
+        <div class="row">
+            <div class="col-12">
+                <p class="text-muted small text-end mb-4">
+                    Page loaded in {{ $information['execution_time'] }}s &middot;
+                    Laravel v{{ Illuminate\Foundation\Application::VERSION }} &middot;
+                    PHP v{{ PHP_VERSION }} &middot;
+                    Rates by <a href="https://www.exchangerate-api.com" class="text-muted">Exchange Rate API</a>
+                </p>
+            </div>
+        </div>
         @endif
     </div>
 </x-app-layout>

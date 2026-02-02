@@ -35,6 +35,9 @@ Currently seeking a project sponsor
 * Modernized auth pages (login, register, forgot/reset password) with clean design
 * Added light and dark mode support for auth pages
 * Added `MAX_USERS` env variable to control registration limit (0 = unlimited)
+* Redesigned dashboard with cleaner stat cards, costs and resources sections
+* Modernized navbar with improved styling and hover states
+* Updated dark mode with new color scheme and page background
 
 ### Demo/Seeder Login Credentials
 
