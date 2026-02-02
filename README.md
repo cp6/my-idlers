@@ -53,6 +53,7 @@ Currently seeking a project sponsor
 * Added servers index card view option in settings (table or cards layout)
 * Fixed Vue.js loading issues on comparison pages
 * Fixed server comparison null value handling
+* Removed unused legacy auth pages and components
 
 ### Test Suite
 
