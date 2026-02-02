@@ -18,87 +18,81 @@
 
         <x-response-alerts></x-response-alerts>
 
-        <div class="card content-card">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-12 col-lg-6">
-                        <table class="table table-borderless mb-0">
-                            <tbody>
-                            <tr>
-                                <td class="px-2 py-2 text-muted" style="width: 40%;">Type</td>
-                                <td class="px-2 py-2">{{ $dns->dns_type }}</td>
-                            </tr>
-                            <tr>
-                                <td class="px-2 py-2 text-muted">Name</td>
-                                <td class="px-2 py-2">{{ $dns->hostname }}</td>
-                            </tr>
-                            <tr>
-                                <td class="px-2 py-2 text-muted">Address</td>
-                                <td class="px-2 py-2"><code>{{ $dns->address }}</code></td>
-                            </tr>
-                            </tbody>
-                        </table>
+        <div class="detail-card">
+            <div class="detail-section">
+                <div class="detail-grid">
+                    <div>
+                        <div class="detail-section-header">
+                            <h6 class="detail-section-title">DNS Details</h6>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <div class="detail-item">
+                                    <span class="detail-label">Type</span>
+                                    <span class="detail-value">{{ $dns->dns_type }}</span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="detail-item">
+                                    <span class="detail-label">Name</span>
+                                    <span class="detail-value">{{ $dns->hostname }}</span>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="detail-item">
+                                    <span class="detail-label">Address</span>
+                                    <span class="detail-value"><code>{{ $dns->address }}</code></span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-12 col-lg-6">
-                        <table class="table table-borderless mb-0">
-                            <tbody>
-                            <tr>
-                                <td class="px-2 py-2 text-muted" style="width: 40%;">Server</td>
-                                <td class="px-2 py-2">
-                                    @if(isset($dns->server_id))
-                                        <a href="{{ route('servers.show', $dns->server_id) }}">{{ $dns->server_id }}</a>
-                                    @else
-                                        -
-                                    @endif
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="px-2 py-2 text-muted">Shared</td>
-                                <td class="px-2 py-2">
-                                    @if(isset($dns->shared_id))
-                                        <a href="{{ route('shared.show', $dns->shared_id) }}">{{ $dns->shared_id }}</a>
-                                    @else
-                                        -
-                                    @endif
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="px-2 py-2 text-muted">Reseller</td>
-                                <td class="px-2 py-2">
-                                    @if(isset($dns->reseller_id))
-                                        <a href="{{ route('reseller.show', $dns->reseller_id) }}">{{ $dns->reseller_id }}</a>
-                                    @else
-                                        -
-                                    @endif
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="px-2 py-2 text-muted">Domain</td>
-                                <td class="px-2 py-2">
-                                    @if(isset($dns->domain_id))
-                                        <a href="{{ route('domains.show', $dns->domain_id) }}">{{ $dns->domain_id }}</a>
-                                    @else
-                                        -
-                                    @endif
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
+                    <div>
+                        <div class="detail-section-header">
+                            <h6 class="detail-section-title">Linked Services</h6>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <div class="detail-item">
+                                    <span class="detail-label">Server</span>
+                                    <span class="detail-value">@if(isset($dns->server_id))<a href="{{ route('servers.show', $dns->server_id) }}">{{ $dns->server_id }}</a>@else - @endif</span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="detail-item">
+                                    <span class="detail-label">Shared</span>
+                                    <span class="detail-value">@if(isset($dns->shared_id))<a href="{{ route('shared.show', $dns->shared_id) }}">{{ $dns->shared_id }}</a>@else - @endif</span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="detail-item">
+                                    <span class="detail-label">Reseller</span>
+                                    <span class="detail-value">@if(isset($dns->reseller_id))<a href="{{ route('reseller.show', $dns->reseller_id) }}">{{ $dns->reseller_id }}</a>@else - @endif</span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="detail-item">
+                                    <span class="detail-label">Domain</span>
+                                    <span class="detail-value">@if(isset($dns->domain_id))<a href="{{ route('domains.show', $dns->domain_id) }}">{{ $dns->domain_id }}</a>@else - @endif</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </div>
 
-                @if(isset($dns->note))
-                <hr class="my-3">
-                <h6 class="text-muted mb-2">Note</h6>
-                <p class="mb-0">{{ $dns->note->note }}</p>
-                @endif
+            @if(isset($dns->note))
+            <div class="detail-section">
+                <div class="detail-section-header">
+                    <h6 class="detail-section-title">Note</h6>
+                </div>
+                <div class="detail-note">{{ $dns->note->note }}</div>
+            </div>
+            @endif
 
-                <hr class="my-3">
-                <small class="text-muted">
-                    ID: <code>{{ $dns->id }}</code> |
-                    Created: {{ $dns->created_at !== null ? date_format(new DateTime($dns->created_at), 'jS M Y, g:i a') : '-' }} |
-                    Updated: {{ $dns->updated_at !== null ? date_format(new DateTime($dns->updated_at), 'jS M Y, g:i a') : '-' }}
-                </small>
+            <div class="detail-footer">
+                ID: <code>{{ $dns->id }}</code> &middot;
+                Created: {{ $dns->created_at !== null ? date_format(new DateTime($dns->created_at), 'jS M Y, g:i a') : '-' }} &middot;
+                Updated: {{ $dns->updated_at !== null ? date_format(new DateTime($dns->updated_at), 'jS M Y, g:i a') : '-' }}
             </div>
         </div>
     </div>

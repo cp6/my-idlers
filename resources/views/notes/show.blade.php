@@ -33,9 +33,12 @@
 
         <x-response-alerts></x-response-alerts>
 
-        <div class="card content-card">
-            <div class="card-body">
-                <p class="mb-0">{{ $note->note }}</p>
+        <div class="detail-card">
+            <div class="detail-section">
+                <div class="detail-section-header">
+                    <h6 class="detail-section-title">Note Content</h6>
+                </div>
+                <div class="detail-note">{{ $note->note }}</div>
             </div>
         </div>
     </div>

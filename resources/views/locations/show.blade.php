@@ -12,38 +12,42 @@
 
         <x-response-alerts></x-response-alerts>
 
-        <div class="card content-card">
-            <div class="card-body">
-                <table class="table table-borderless mb-0">
-                    <tbody>
-                    @forelse($data as $item)
-                        <tr>
-                            <td class="px-2 py-2 text-muted" style="width: 20%;">
-                                @if(isset($item->hostname))
-                                    Server
-                                @elseif(isset($item->main_domain_shared))
-                                    Shared
-                                @elseif(isset($item->main_domain_reseller))
-                                    Reseller
+        <div class="detail-card">
+            <div class="detail-section">
+                <div class="detail-section-header">
+                    <h6 class="detail-section-title">Services at this location</h6>
+                </div>
+                @if(count($data) > 0)
+                <div class="row g-3">
+                    @foreach($data as $item)
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="detail-item">
+                            <span class="detail-label">
+                                @if(isset($item->hostname)) Server
+                                @elseif(isset($item->main_domain_shared)) Shared
+                                @elseif(isset($item->main_domain_reseller)) Reseller
                                 @endif
-                            </td>
-                            <td class="px-2 py-2">
+                            </span>
+                            <span class="detail-value">
                                 @if(isset($item->hostname))
-                                    <a href="{{ route('servers.show', $item->id) }}" class="text-decoration-none">{{ $item->hostname }}</a>
+                                    <a href="{{ route('servers.show', $item->id) }}">{{ $item->hostname }}</a>
                                 @elseif(isset($item->main_domain_shared))
-                                    <a href="{{ route('shared.show', $item->id) }}" class="text-decoration-none">{{ $item->main_domain_shared }}</a>
+                                    <a href="{{ route('shared.show', $item->id) }}">{{ $item->main_domain_shared }}</a>
                                 @elseif(isset($item->main_domain_reseller))
-                                    <a href="{{ route('reseller.show', $item->id) }}" class="text-decoration-none">{{ $item->main_domain_reseller }}</a>
+                                    <a href="{{ route('reseller.show', $item->id) }}">{{ $item->main_domain_reseller }}</a>
                                 @endif
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td class="px-2 py-2 text-muted" colspan="2">No services found at {{ $location->name }}</td>
-                        </tr>
-                    @endforelse
-                    </tbody>
-                </table>
+                            </span>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+                @else
+                <p class="text-muted mb-0">No services found at {{ $location->name }}</p>
+                @endif
+            </div>
+
+            <div class="detail-footer">
+                ID: <code>{{ $location->id }}</code>
             </div>
         </div>
     </div>

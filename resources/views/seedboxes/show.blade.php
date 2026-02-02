@@ -21,101 +21,96 @@
 
         <x-response-alerts></x-response-alerts>
 
-        <div class="card content-card">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-12 col-lg-6">
-                        <table class="table table-borderless mb-0">
-                            <tbody>
-                            <tr>
-                                <td class="px-2 py-2 text-muted" style="width: 40%;">Type</td>
-                                <td class="px-2 py-2">{{ $seedbox_data->seed_box_type }}</td>
-                            </tr>
-                            <tr>
-                                <td class="px-2 py-2 text-muted">Hostname</td>
-                                <td class="px-2 py-2"><code>{{ $seedbox_data->hostname }}</code></td>
-                            </tr>
-                            <tr>
-                                <td class="px-2 py-2 text-muted">Location</td>
-                                <td class="px-2 py-2">{{ $seedbox_data->location->name }}</td>
-                            </tr>
-                            <tr>
-                                <td class="px-2 py-2 text-muted">Provider</td>
-                                <td class="px-2 py-2">{{ $seedbox_data->provider->name }}</td>
-                            </tr>
-                            <tr>
-                                <td class="px-2 py-2 text-muted">Price</td>
-                                <td class="px-2 py-2">
-                                    {{ $seedbox_data->price->price }} {{ $seedbox_data->price->currency }}
-                                    <small class="text-muted">{{ \App\Process::paymentTermIntToString($seedbox_data->price->term) }}</small>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="px-2 py-2 text-muted">Next Due Date</td>
-                                <td class="px-2 py-2">
-                                    {{ Carbon\Carbon::parse($seedbox_data->price->next_due_date)->diffForHumans() }}
-                                    <small class="text-muted">({{ Carbon\Carbon::parse($seedbox_data->price->next_due_date)->format('d/m/Y') }})</small>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="px-2 py-2 text-muted">Was Promo</td>
-                                <td class="px-2 py-2">{{ ($seedbox_data->was_promo === 1) ? 'Yes' : 'No' }}</td>
-                            </tr>
-                            <tr>
-                                <td class="px-2 py-2 text-muted">Owned Since</td>
-                                <td class="px-2 py-2">
-                                    @if($seedbox_data->owned_since !== null)
-                                        {{ date_format(new DateTime($seedbox_data->owned_since), 'jS F Y') }}
-                                    @endif
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
+        <div class="detail-card">
+            <div class="detail-section">
+                <div class="detail-grid">
+                    <div>
+                        <div class="detail-section-header">
+                            <h6 class="detail-section-title">Seedbox Details</h6>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <div class="detail-item">
+                                    <span class="detail-label">Type</span>
+                                    <span class="detail-value">{{ $seedbox_data->seed_box_type }}</span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="detail-item">
+                                    <span class="detail-label">Location</span>
+                                    <span class="detail-value">{{ $seedbox_data->location->name }}</span>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="detail-item">
+                                    <span class="detail-label">Hostname</span>
+                                    <span class="detail-value"><code>{{ $seedbox_data->hostname }}</code></span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="detail-item">
+                                    <span class="detail-label">Provider</span>
+                                    <span class="detail-value">{{ $seedbox_data->provider->name }}</span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="detail-item">
+                                    <span class="detail-label">Price</span>
+                                    <span class="detail-value">{{ $seedbox_data->price->price }} {{ $seedbox_data->price->currency }} <span class="text-muted">{{ \App\Process::paymentTermIntToString($seedbox_data->price->term) }}</span></span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="detail-item">
+                                    <span class="detail-label">Next Due</span>
+                                    <span class="detail-value">{{ Carbon\Carbon::parse($seedbox_data->price->next_due_date)->diffForHumans() }}</span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="detail-item">
+                                    <span class="detail-label">Was Promo</span>
+                                    <span class="detail-value">{{ ($seedbox_data->was_promo === 1) ? 'Yes' : 'No' }}</span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="detail-item">
+                                    <span class="detail-label">Owned Since</span>
+                                    <span class="detail-value">{{ $seedbox_data->owned_since !== null ? date_format(new DateTime($seedbox_data->owned_since), 'jS M Y') : '-' }}</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-12 col-lg-6">
-                        <table class="table table-borderless mb-0">
-                            <tbody>
-                            <tr>
-                                <td class="px-2 py-2 text-muted" style="width: 40%;">Disk</td>
-                                <td class="px-2 py-2">
-                                    @if($seedbox_data->disk_as_gb >= 1000)
-                                        {{ number_format($seedbox_data->disk_as_gb / 1000, 1) }} TB
-                                    @else
-                                        {{ $seedbox_data->disk_as_gb }} GB
-                                    @endif
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="px-2 py-2 text-muted">Bandwidth</td>
-                                <td class="px-2 py-2">
-                                    @if($seedbox_data->bandwidth >= 1000)
-                                        {{ number_format($seedbox_data->bandwidth / 1000, 1) }} TB
-                                    @else
-                                        {{ $seedbox_data->bandwidth }} GB
-                                    @endif
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="px-2 py-2 text-muted">Port Speed</td>
-                                <td class="px-2 py-2">
-                                    @if($seedbox_data->port_speed >= 1000)
-                                        {{ number_format($seedbox_data->port_speed / 1000, 1) }} Gbps
-                                    @else
-                                        {{ $seedbox_data->port_speed }} Mbps
-                                    @endif
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
+                    <div>
+                        <div class="detail-section-header">
+                            <h6 class="detail-section-title">Specifications</h6>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <div class="detail-item">
+                                    <span class="detail-label">Disk</span>
+                                    <span class="detail-value">@if($seedbox_data->disk_as_gb >= 1000){{ number_format($seedbox_data->disk_as_gb / 1000, 1) }} TB @else {{ $seedbox_data->disk_as_gb }} GB @endif</span>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="detail-item">
+                                    <span class="detail-label">Bandwidth</span>
+                                    <span class="detail-value">@if($seedbox_data->bandwidth >= 1000){{ number_format($seedbox_data->bandwidth / 1000, 1) }} TB @else {{ $seedbox_data->bandwidth }} GB @endif</span>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="detail-item">
+                                    <span class="detail-label">Port Speed</span>
+                                    <span class="detail-value">@if($seedbox_data->port_speed >= 1000){{ number_format($seedbox_data->port_speed / 1000, 1) }} Gbps @else {{ $seedbox_data->port_speed }} Mbps @endif</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </div>
 
-                <hr class="my-3">
-                <small class="text-muted">
-                    ID: <code>{{ $seedbox_data->id }}</code> |
-                    Created: {{ $seedbox_data->created_at !== null ? date_format(new DateTime($seedbox_data->created_at), 'jS M Y, g:i a') : '-' }} |
-                    Updated: {{ $seedbox_data->updated_at !== null ? date_format(new DateTime($seedbox_data->updated_at), 'jS M Y, g:i a') : '-' }}
-                </small>
+            <div class="detail-footer">
+                ID: <code>{{ $seedbox_data->id }}</code> &middot;
+                Created: {{ $seedbox_data->created_at !== null ? date_format(new DateTime($seedbox_data->created_at), 'jS M Y, g:i a') : '-' }} &middot;
+                Updated: {{ $seedbox_data->updated_at !== null ? date_format(new DateTime($seedbox_data->updated_at), 'jS M Y, g:i a') : '-' }}
             </div>
         </div>
     </div>
