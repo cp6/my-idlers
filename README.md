@@ -48,6 +48,35 @@ Currently seeking a project sponsor
 * Modernized account page with profile and API token sections
 * Modernized server and YABS comparison pages with improved table styling
 * Modernized public server listing page with consistent design
+* Added comprehensive test suite with 150 tests covering all major features
+
+### Test Suite
+
+The application now includes a comprehensive test suite with 150 tests and 294 assertions:
+
+**Feature Tests:**
+- Authentication (login, registration, password reset, email verification)
+- Servers CRUD operations and validation
+- Domains CRUD operations and validation
+- DNS records CRUD operations and validation
+- Providers, Locations, Labels, OS CRUD operations
+- IP addresses CRUD operations with HTTP mocking
+- Home dashboard functionality
+
+**Unit Tests:**
+- Server model (server types, comparison logic)
+- Pricing model (cost calculations, term conversions)
+- Settings model (sorting/ordering logic)
+- Labels model (assignment operations)
+- IPs model (IPv4/IPv6 handling)
+- DNS model (type constants)
+
+Run tests with:
+```shell
+vendor/bin/phpunit
+# or with testdox output
+vendor/bin/phpunit --testdox
+```
 
 ### Database Seeding
 
