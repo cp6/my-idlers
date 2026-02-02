@@ -1,163 +1,196 @@
-@section("title", "Edit settings")
+@section("title", "Settings")
 <x-app-layout>
-    <x-slot name="header">
-        Edit Settings
-    </x-slot>
     <div class="container">
-        <x-card class="shadow mt-3">
-            <x-response-alerts></x-response-alerts>
-            <x-back-button>
-                <x-slot name="href">{{ route('/') }}</x-slot>
-                Back to home
-            </x-back-button>
-            <form action="{{ route('settings.update', 1) }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                @method('PUT')
-                <div class="row mt-2">
-                    <div class="col-12 col-md-6 mb-3">
-                        <x-yes-no-select title="Use dark mode" name="dark_mode" value="{{ $setting->dark_mode }}"></x-yes-no-select>
-                    </div>
-                    <div class="col-12 col-md-6 mb-3">
-                        <x-yes-no-select title="Show versions footer" name="show_versions_footer" value="{{ $setting->show_versions_footer }}"></x-yes-no-select>
+        <div class="page-header">
+            <h2 class="page-title">Settings</h2>
+            <div class="page-actions">
+                <a href="{{ route('/') }}" class="btn btn-outline-secondary">Back to home</a>
+            </div>
+        </div>
+
+        <x-response-alerts></x-response-alerts>
+
+        <form action="{{ route('settings.update', 1) }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            @method('PUT')
+
+            <!-- Appearance -->
+            <div class="card content-card mb-4">
+                <div class="card-header card-section-header">
+                    <h5 class="card-section-title mb-0">Appearance</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <label class="form-label">Dark Mode</label>
+                            <select class="form-select" name="dark_mode">
+                                <option value="1" {{ $setting->dark_mode === 1 ? 'selected' : '' }}>Yes</option>
+                                <option value="0" {{ $setting->dark_mode === 0 ? 'selected' : '' }}>No</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <label class="form-label">Show Versions Footer</label>
+                            <select class="form-select" name="show_versions_footer">
+                                <option value="1" {{ $setting->show_versions_footer === 1 ? 'selected' : '' }}>Yes</option>
+                                <option value="0" {{ $setting->show_versions_footer === 0 ? 'selected' : '' }}>No</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <label class="form-label">Custom Favicon</label>
+                            <input type="file" name="favicon" class="form-control" id="favicon" accept=".ico,.png,.jpg">
+                            <small class="text-muted">.ico, .png, .jpg (max 40KB)</small>
+                        </div>
                     </div>
                 </div>
-                <div class="row mt-3">
-                    <div class="col-12 col-md-6 mb-3">
-                        <x-os-select>
-                            <x-slot name="title">Default server OS</x-slot>
-                            <x-slot name="name">default_server_os</x-slot>
-                            <x-slot name="current">{{$setting->default_server_os}}</x-slot>
-                        </x-os-select>
-                    </div>
-                    <div class="col-12 col-md-6 mb-3">
-                        <x-currency-select>
-                            <x-slot name="title">Default currency</x-slot>
-                            <x-slot name="name">default_currency</x-slot>
-                            <x-slot name="current">{{$setting->default_currency}}</x-slot>
-                        </x-currency-select>
-                    </div>
+            </div>
+
+            <!-- Defaults -->
+            <div class="card content-card mb-4">
+                <div class="card-header card-section-header">
+                    <h5 class="card-section-title mb-0">Defaults</h5>
                 </div>
-                <div class="row mt-3">
-                    <div class="col-12 col-md-6 mb-3">
-                        <x-number-input>
-                            <x-slot name="title">Due soon amount to show</x-slot>
-                            <x-slot name="name">due_soon_amount</x-slot>
-                            <x-slot name="step">1</x-slot>
-                            <x-slot name="min">0</x-slot>
-                            <x-slot name="max">12</x-slot>
-                            <x-slot name="value">{{$setting->due_soon_amount}}</x-slot>
-                        </x-number-input>
-                    </div>
-                    <div class="col-12 col-md-6 mb-3">
-                        <x-number-input>
-                            <x-slot name="title">Recently added amount to show</x-slot>
-                            <x-slot name="name">recently_added_amount</x-slot>
-                            <x-slot name="step">1</x-slot>
-                            <x-slot name="min">0</x-slot>
-                            <x-slot name="max">12</x-slot>
-                            <x-slot name="value">{{$setting->recently_added_amount}}</x-slot>
-                        </x-number-input>
-                    </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-12 col-md-6 mb-3">
-                        <x-yes-no-select title="Show servers to public" name="show_servers_public" value="{{ $setting->show_servers_public }}"></x-yes-no-select>
-                    </div>
-                    <div class="col-12 col-md-6 mb-3">
-                        <x-currency-select>
-                            <x-slot name="title">Home page currency</x-slot>
-                            <x-slot name="current">{{$setting->dashboard_currency}}</x-slot>
-                        </x-currency-select>
-                    </div>
-                </div>
-                <p>Only if <i>Show servers to public</i> is <b>YES</b> do these apply:</p>
-                <div class="row mt-3">
-                    <div class="col-12 col-md-6 mb-3">
-                        <x-yes-no-select title="Show servers IP's" name="show_server_value_ip" value="{{ $setting->show_server_value_ip }}"></x-yes-no-select>
-                    </div>
-                    <div class="col-12 col-md-6 mb-3">
-                        <x-yes-no-select title="Show servers hostname" name="show_server_value_hostname" value="{{ $setting->show_server_value_hostname }}"></x-yes-no-select>
-                    </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-12 col-md-6 mb-3">
-                        <x-yes-no-select title="Show servers provider" name="show_server_value_provider" value="{{ $setting->show_server_value_provider }}"></x-yes-no-select>
-                    </div>
-                    <div class="col-12 col-md-6 mb-3">
-                        <x-yes-no-select title="Show servers location" name="show_server_value_location" value="{{ $setting->show_server_value_location }}"></x-yes-no-select>
-                    </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-12 col-md-6 mb-3">
-                        <x-yes-no-select title="Show servers price" name="show_server_value_price" value="{{ $setting->show_server_value_price }}"></x-yes-no-select>
-                    </div>
-                    <div class="col-12 col-md-6 mb-3">
-                        <x-yes-no-select title="Show servers YABS" name="show_server_value_yabs" value="{{ $setting->show_server_value_yabs }}"></x-yes-no-select>
-                    </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-12 col-md-6 mb-3">
-                        <div class="input-group">
-                            <div class="input-group-prepend"><span
-                                    class="input-group-text">Default order by</span></div>
-                            <select class="form-control" name="sort_on">
-                                <option
-                                    value="1" {{ ($setting->sort_on === 1) ? 'selected' : '' }}>
-                                    created_at ASC
-                                </option>
-                                <option
-                                    value="2" {{ ($setting->sort_on === 2) ? 'selected' : '' }}>
-                                    created_at DESC
-                                </option>
-                                <option
-                                    value="3" {{ ($setting->sort_on === 3) ? 'selected' : '' }}>
-                                    next_due_date ASC
-                                </option>
-                                <option
-                                    value="4" {{ ($setting->sort_on === 4) ? 'selected' : '' }}>
-                                    next_due_date DESC
-                                </option>
-                                <option
-                                    value="5" {{ ($setting->sort_on === 5) ? 'selected' : '' }}>
-                                    as_usd ASC
-                                </option>
-                                <option
-                                    value="6" {{ ($setting->sort_on === 6) ? 'selected' : '' }}>
-                                    as_usd DESC
-                                </option>
-                                <option
-                                    value="7" {{ ($setting->sort_on === 7) ? 'selected' : '' }}>
-                                    owned_since ASC
-                                </option>
-                                <option
-                                    value="8" {{ ($setting->sort_on === 8) ? 'selected' : '' }}>
-                                    owned_since DESC
-                                </option>
-                                <option
-                                    value="9" {{ ($setting->sort_on === 9) ? 'selected' : '' }}>
-                                    updated_at ASC
-                                </option>
-                                <option
-                                    value="10" {{ ($setting->sort_on === 10) ? 'selected' : '' }}>
-                                    updated_at DESC
-                                </option>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <label class="form-label">Default Server OS</label>
+                            <select class="form-select" name="default_server_os">
+                                @foreach (App\Models\OS::all() as $os)
+                                    <option value="{{ $os->id }}" {{ $setting->default_server_os == $os->id ? 'selected' : '' }}>
+                                        {{ $os->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <label class="form-label">Default Currency</label>
+                            <select class="form-select" name="default_currency">
+                                @foreach (App\Models\Pricing::getCurrencyList() as $currency)
+                                    <option value="{{ $currency }}" {{ $setting->default_currency === $currency ? 'selected' : '' }}>
+                                        {{ $currency }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <label class="form-label">Dashboard Currency</label>
+                            <select class="form-select" name="dashboard_currency">
+                                @foreach (App\Models\Pricing::getCurrencyList() as $currency)
+                                    <option value="{{ $currency }}" {{ $setting->dashboard_currency === $currency ? 'selected' : '' }}>
+                                        {{ $currency }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <label class="form-label">Default Sort Order</label>
+                            <select class="form-select" name="sort_on">
+                                <option value="1" {{ $setting->sort_on === 1 ? 'selected' : '' }}>Created (oldest)</option>
+                                <option value="2" {{ $setting->sort_on === 2 ? 'selected' : '' }}>Created (newest)</option>
+                                <option value="3" {{ $setting->sort_on === 3 ? 'selected' : '' }}>Due date (soonest)</option>
+                                <option value="4" {{ $setting->sort_on === 4 ? 'selected' : '' }}>Due date (latest)</option>
+                                <option value="5" {{ $setting->sort_on === 5 ? 'selected' : '' }}>Price (lowest)</option>
+                                <option value="6" {{ $setting->sort_on === 6 ? 'selected' : '' }}>Price (highest)</option>
+                                <option value="7" {{ $setting->sort_on === 7 ? 'selected' : '' }}>Owned since (oldest)</option>
+                                <option value="8" {{ $setting->sort_on === 8 ? 'selected' : '' }}>Owned since (newest)</option>
+                                <option value="9" {{ $setting->sort_on === 9 ? 'selected' : '' }}>Updated (oldest)</option>
+                                <option value="10" {{ $setting->sort_on === 10 ? 'selected' : '' }}>Updated (newest)</option>
                             </select>
                         </div>
                     </div>
                 </div>
-                <div class="row mt-3">
-                    <div class="col-12 col-md-6 mb-3">
-                        <label class="form-label pe-2" for="chooseFile">Add custom favicon must be either .ico|.png|.jpg MAX 40KB</label>
-                        <input type="file" name="favicon" class="form-control" id="favicon">
+            </div>
+
+            <!-- Dashboard -->
+            <div class="card content-card mb-4">
+                <div class="card-header card-section-header">
+                    <h5 class="card-section-title mb-0">Dashboard</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <label class="form-label">Due Soon Amount</label>
+                            <input type="number" class="form-control" name="due_soon_amount" 
+                                   value="{{ $setting->due_soon_amount }}" min="0" max="12" step="1">
+                            <small class="text-muted">Items to show in due soon section</small>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <label class="form-label">Recently Added Amount</label>
+                            <input type="number" class="form-control" name="recently_added_amount" 
+                                   value="{{ $setting->recently_added_amount }}" min="0" max="12" step="1">
+                            <small class="text-muted">Items to show in recently added section</small>
+                        </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-12 col-lg-4">
-                        <x-submit-button>Update settings</x-submit-button>
+            </div>
+
+            <!-- Public Server Listing -->
+            <div class="card content-card mb-4">
+                <div class="card-header card-section-header">
+                    <h5 class="card-section-title mb-0">Public Server Listing</h5>
+                    <span class="text-muted small">Configure what's visible at /servers/public</span>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <label class="form-label">Enable Public Listing</label>
+                            <select class="form-select" name="show_servers_public">
+                                <option value="1" {{ $setting->show_servers_public === 1 ? 'selected' : '' }}>Yes</option>
+                                <option value="0" {{ $setting->show_servers_public === 0 ? 'selected' : '' }}>No</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <hr class="my-4">
+                    <p class="text-muted mb-3">Choose which fields to display publicly (only applies when public listing is enabled):</p>
+                    
+                    <div class="row g-3">
+                        <div class="col-6 col-md-4 col-lg-2">
+                            <label class="form-label">Show IP</label>
+                            <select class="form-select" name="show_server_value_ip">
+                                <option value="1" {{ $setting->show_server_value_ip === 1 ? 'selected' : '' }}>Yes</option>
+                                <option value="0" {{ $setting->show_server_value_ip === 0 ? 'selected' : '' }}>No</option>
+                            </select>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-2">
+                            <label class="form-label">Show Hostname</label>
+                            <select class="form-select" name="show_server_value_hostname">
+                                <option value="1" {{ $setting->show_server_value_hostname === 1 ? 'selected' : '' }}>Yes</option>
+                                <option value="0" {{ $setting->show_server_value_hostname === 0 ? 'selected' : '' }}>No</option>
+                            </select>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-2">
+                            <label class="form-label">Show Provider</label>
+                            <select class="form-select" name="show_server_value_provider">
+                                <option value="1" {{ $setting->show_server_value_provider === 1 ? 'selected' : '' }}>Yes</option>
+                                <option value="0" {{ $setting->show_server_value_provider === 0 ? 'selected' : '' }}>No</option>
+                            </select>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-2">
+                            <label class="form-label">Show Location</label>
+                            <select class="form-select" name="show_server_value_location">
+                                <option value="1" {{ $setting->show_server_value_location === 1 ? 'selected' : '' }}>Yes</option>
+                                <option value="0" {{ $setting->show_server_value_location === 0 ? 'selected' : '' }}>No</option>
+                            </select>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-2">
+                            <label class="form-label">Show Price</label>
+                            <select class="form-select" name="show_server_value_price">
+                                <option value="1" {{ $setting->show_server_value_price === 1 ? 'selected' : '' }}>Yes</option>
+                                <option value="0" {{ $setting->show_server_value_price === 0 ? 'selected' : '' }}>No</option>
+                            </select>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-2">
+                            <label class="form-label">Show YABS</label>
+                            <select class="form-select" name="show_server_value_yabs">
+                                <option value="1" {{ $setting->show_server_value_yabs === 1 ? 'selected' : '' }}>Yes</option>
+                                <option value="0" {{ $setting->show_server_value_yabs === 0 ? 'selected' : '' }}>No</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
-            </form>
-        </x-card>
-        <x-details-footer></x-details-footer>
+            </div>
+
+            <button type="submit" class="btn btn-primary mb-4">Update Settings</button>
+        </form>
     </div>
 </x-app-layout>
