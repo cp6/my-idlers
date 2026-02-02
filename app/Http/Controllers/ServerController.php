@@ -18,7 +18,9 @@ class ServerController extends Controller
     {
         $servers = Server::allActiveServers();
         $non_active_servers = Server::allNonActiveServers();
-        return view('servers.index', compact(['servers', 'non_active_servers']));
+        $settings = Settings::getSettings();
+        $view = $settings->servers_index_cards ? 'servers.index-cards' : 'servers.index';
+        return view($view, compact(['servers', 'non_active_servers']));
     }
 
     public function showServersPublic()

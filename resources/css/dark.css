@@ -898,3 +898,75 @@ div.dataTables_wrapper div.dataTables_paginate ul.pagination li a {
 .network-table tr:last-child td {
     border-bottom: none;
 }
+
+
+/* ==========================================
+   Server Cards - Dark Mode
+   ========================================== */
+
+.server-card {
+    background: #1e293b !important;
+    border: 1px solid #334155 !important;
+}
+
+.server-card:hover {
+    border-color: #475569 !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4) !important;
+}
+
+.server-card-header {
+    background: #0f172a !important;
+    border-color: #334155 !important;
+}
+
+.server-card-body {
+    background: #1e293b !important;
+}
+
+.server-card-footer {
+    background: #0f172a !important;
+    border-color: #334155 !important;
+}
+
+.server-hostname {
+    color: #f1f5f9 !important;
+}
+
+.server-location,
+.meta-label,
+.spec-label,
+.price-term {
+    color: #94a3b8 !important;
+}
+
+.spec-value,
+.meta-value {
+    color: #e2e8f0 !important;
+}
+
+.server-os-icon {
+    background: #334155 !important;
+}
+
+.server-specs {
+    border-color: #334155 !important;
+}
+
+.due-badge {
+    background: #334155 !important;
+    color: #94a3b8 !important;
+}
+
+.due-badge.due-warning {
+    background: #854d0e !important;
+    color: #fef08a !important;
+}
+
+.due-badge.due-soon {
+    background: #991b1b !important;
+    color: #fecaca !important;
+}
+
+.price-amount {
+    color: #4ade80 !important;
+}

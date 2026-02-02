@@ -49,6 +49,7 @@ Currently seeking a project sponsor
 * Modernized server and YABS comparison pages with improved table styling
 * Modernized public server listing page with consistent design
 * Added comprehensive test suite with 150 tests covering all major features
+* Added servers index card view option in settings (table or cards layout)
 
 ### Test Suite
 

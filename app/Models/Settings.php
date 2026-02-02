@@ -13,7 +13,7 @@ class Settings extends Model
 
     protected $table = 'settings';
 
-    protected $fillable = ['id', 'show_versions_footer', 'show_servers_public', 'show_server_value_ip', 'show_server_value_hostname', 'show_server_value_provider', 'show_server_value_location', 'show_server_value_price', 'show_server_value_yabs', 'save_yabs_as_txt', 'default_currency', 'default_server_os', 'due_soon_amount', 'recently_added_amount', 'dark_mode', 'dashboard_currency', 'sort_on', 'favicon'];
+    protected $fillable = ['id', 'show_versions_footer', 'show_servers_public', 'show_server_value_ip', 'show_server_value_hostname', 'show_server_value_provider', 'show_server_value_location', 'show_server_value_price', 'show_server_value_yabs', 'save_yabs_as_txt', 'default_currency', 'default_server_os', 'due_soon_amount', 'recently_added_amount', 'dark_mode', 'dashboard_currency', 'sort_on', 'favicon', 'servers_index_cards'];
 
     public static function getSettings(): Settings
     {
@@ -45,6 +45,7 @@ class Settings extends Model
         Session::put('dashboard_currency', $settings->dashboard_currency ?? 'USD');
         Session::put('sort_on', $settings->sort_on ?? 1);
         Session::put('favicon', $settings->favicon ?? 'favicon.ico');
+        Session::put('servers_index_cards', $settings->servers_index_cards ?? 0);
         Session::save();
     }
 

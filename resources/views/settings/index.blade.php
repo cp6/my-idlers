@@ -96,6 +96,13 @@
                                 <option value="10" {{ $setting->sort_on === 10 ? 'selected' : '' }}>Updated (newest)</option>
                             </select>
                         </div>
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <label class="form-label">Servers Index View</label>
+                            <select class="form-select" name="servers_index_cards">
+                                <option value="0" {{ ($setting->servers_index_cards ?? 0) == 0 ? 'selected' : '' }}>Table</option>
+                                <option value="1" {{ ($setting->servers_index_cards ?? 0) == 1 ? 'selected' : '' }}>Cards</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
             </div>

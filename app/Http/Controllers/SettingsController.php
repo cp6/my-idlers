@@ -30,9 +30,10 @@ class SettingsController extends Controller
             'default_server_os' => 'required|integer',
             'due_soon_amount' => 'required|integer|between:0,12',
             'recently_added_amount' => 'required|integer|between:0,12',
-            'currency' => 'required|string|size:3',
+            'dashboard_currency' => 'required|string|size:3',
             'sort_on' => 'required|integer|between:1,10',
             'favicon' => 'sometimes|nullable|mimes:ico,jpg,png|max:40',
+            'servers_index_cards' => 'required|integer|min:0|max:1',
         ]);
 
         $settings = Settings::where('id', 1)->first();
@@ -65,9 +66,10 @@ class SettingsController extends Controller
             'default_server_os' => $request->default_server_os,
             'due_soon_amount' => $request->due_soon_amount,
             'recently_added_amount' => $request->recently_added_amount,
-            'dashboard_currency' => $request->currency,
+            'dashboard_currency' => $request->dashboard_currency,
             'sort_on' => $request->sort_on,
-            'favicon' => $favicon_filename ?? $settings->favicon
+            'favicon' => $favicon_filename ?? $settings->favicon,
+            'servers_index_cards' => $request->servers_index_cards
         ]);
 
         Cache::forget('due_soon');//Main page due_soon cache
