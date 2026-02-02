@@ -44,6 +44,7 @@ Currently seeking a project sponsor
 * Made demo user and sample data seeding optional via `SEED_DEMO_DATA` env variable
 * Redesigned all create and edit pages with organized card sections and consistent form styling
 * Redesigned all show/detail pages with polished detail cards and visual hierarchy
+* Modernized settings page with organized card-based sections
 
 ### Database Seeding
 
