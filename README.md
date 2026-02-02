@@ -21,6 +21,23 @@ and supported too with My idlers.
 
 Currently seeking a project sponsor
 
+## 4.0.0 changes (February 2026):
+
+* Updated Laravel version to 11.48
+* Updated Bootstrap version to 5.3.8
+* Updated all composer package versions
+* Updated all npm package versions
+* Fixed security vulnerabilities in dependencies
+
+#### Please run the following if updating from an existing install:
+
+```shell
+composer update
+php artisan migrate
+php artisan route:cache
+php artisan cache:clear
+```
+
 ## 3.0.0 changes (9 December 2024):
 
 * Updated PHP version to 8.3
@@ -42,15 +59,6 @@ Currently seeking a project sponsor
 * Fixed due in (days) column showing a massive float
 * Removed 1 user being seeded
 * Removed doctrine/dbal
-
-#### Please run the following if updating from an existing install:
-
-```shell
-composer update
-php artisan migrate
-php artisan route:cache
-php artisan cache:clear
-```
 
 ## Requires
 
