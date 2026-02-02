@@ -137,9 +137,13 @@ class Server extends Model
         }
     }
 
-    public static function tableRowCompare(string $val1, string $val2, string $value_type = '', bool $is_int = true): string
+    public static function tableRowCompare(?string $val1, ?string $val2, string $value_type = '', bool $is_int = true): string
     {
         //<td class="td-nowrap plus-td">+303<span class="data-type">MBps</span></td>
+        if ($val1 === null || $val2 === null) {
+            return '<td class="text-center equal-td">—</td>';
+        }
+        
         $str = '<td class="td-nowrap ';
         $value_append = '<span class="data-type">' . $value_type . '</span>';
         if ($is_int) {

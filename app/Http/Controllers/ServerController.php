@@ -234,15 +234,20 @@ class ServerController extends Controller
     {
         $server1_data = Server::server($server1);
 
-        if (!isset($server1_data[0]->yabs[0])) {
+        if (!$server1_data || !isset($server1_data->yabs[0])) {
             abort(404);
         }
 
         $server2_data = Server::server($server2);
 
-        if (!isset($server2_data[0]->yabs[0])) {
+        if (!$server2_data || !isset($server2_data->yabs[0])) {
             abort(404);
         }
+        
+        // Wrap in array for view compatibility
+        $server1_data = [$server1_data];
+        $server2_data = [$server2_data];
+        
         return view('servers.compare', compact('server1_data', 'server2_data'));
     }
 }

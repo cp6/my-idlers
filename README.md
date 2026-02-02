@@ -29,6 +29,7 @@ Currently seeking a project sponsor
 * Updated all npm package versions
 * Fixed security vulnerabilities in dependencies
 * Added comprehensive seeders for Users, Servers, Shared, Reseller, Domains, Misc and DNS
+* Added YABS seeder with sample benchmark data
 * Updated Dockerfile to PHP 8.3 with additional extensions (bcmath, pcntl)
 * Improved Dockerfile with production optimizations and health check
 * Improved run.sh with better env defaults, caching and optional auto-migrate
@@ -50,6 +51,8 @@ Currently seeking a project sponsor
 * Modernized public server listing page with consistent design
 * Added comprehensive test suite with 150 tests covering all major features
 * Added servers index card view option in settings (table or cards layout)
+* Fixed Vue.js loading issues on comparison pages
+* Fixed server comparison null value handling
 
 ### Test Suite
 

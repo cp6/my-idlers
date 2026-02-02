@@ -1,7 +1,4 @@
 @section("title", "Choose servers")
-@section('scripts')
-    <script src="{{ asset('js/vue.min.js') }}"></script>
-@endsection
 <x-app-layout>
     <div class="container" id="app">
         <div class="page-header">
@@ -53,27 +50,29 @@
     </div>
 
     <script type="application/javascript">
-        let app = new Vue({
-            el: "#app",
-            data: {
-                "base_url": "servers-compare/",
-                "full_url": "{{ route('servers.compare', ['server1' => $all_servers[0]->id, 'server2' => $all_servers[1]->id]) }}",
-                "url_input": "",
-                "server1": "{{ $all_servers[0]->id ?? '' }}",
-                "server2": "{{ $all_servers[1]->id ?? '' }}",
-            },
-            methods: {
-                changeServer1: function changeServer1(event) {
-                    this.server1 = event.target.value;
-                    this.full_url = this.base_url + this.server1 + '/' + this.server2;
-                    this.url_input = this.full_url;
+        window.addEventListener('load', function() {
+            let app = new Vue({
+                el: "#app",
+                data: {
+                    "base_url": "{{ url('servers-compare') }}/",
+                    "full_url": "{{ route('servers.compare', ['server1' => $all_servers[0]->id, 'server2' => $all_servers[1]->id]) }}",
+                    "url_input": "",
+                    "server1": "{{ $all_servers[0]->id ?? '' }}",
+                    "server2": "{{ $all_servers[1]->id ?? '' }}",
                 },
-                changeServer2: function changeServer2(event) {
-                    this.server2 = event.target.value;
-                    this.full_url = this.base_url + this.server1 + '/' + this.server2;
-                    this.url_input = this.full_url;
+                methods: {
+                    changeServer1: function changeServer1(event) {
+                        this.server1 = event.target.value;
+                        this.full_url = this.base_url + this.server1 + '/' + this.server2;
+                        this.url_input = this.full_url;
+                    },
+                    changeServer2: function changeServer2(event) {
+                        this.server2 = event.target.value;
+                        this.full_url = this.base_url + this.server1 + '/' + this.server2;
+                        this.url_input = this.full_url;
+                    }
                 }
-            }
+            });
         });
     </script>
 </x-app-layout>
