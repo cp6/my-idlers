@@ -54,6 +54,7 @@ Currently seeking a project sponsor
 * Fixed Vue.js loading issues on comparison pages
 * Fixed server comparison null value handling
 * Fixed inactive services still being counted in cost calculations ([#125](https://github.com/cp6/my-idlers/issues/125))
+* Fixed OS icons showing wrong icons for certain OS IDs ([#123](https://github.com/cp6/my-idlers/pull/123))
 * Removed unused legacy auth pages and components
 
 ### Test Suite

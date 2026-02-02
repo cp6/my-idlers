@@ -116,23 +116,40 @@ class Server extends Model
 
     public static function osIntToIcon(int $os, string $os_name): string
     {
+        // OS IDs based on OsSeeder:
+        // 1: None
+        // 2-3: AlmaLinux, 46: AlmaLinux 9
+        // 4-7: CentOS
+        // 8-10: Debian, 45: Debian 11
+        // 11-14: Fedora, 44: Fedora 41
+        // 15-17: FreeBSD, 47: FreeBSD 14.1
+        // 18-20: OpenBSD, 43: OpenBSD 7.5
+        // 21-25: RHEL/Rocky
+        // 26-31: Ubuntu, 42: Ubuntu 24.04
+        // 32-38: Windows, 41: Windows Server 2022
+        // 39-40: Custom/Other
+
         if ($os === 1) {//None
             return "<i class='fas fa-expand' title='{$os_name}'></i>";
-        } else if ($os <= 3) {//Centos
+        } elseif ($os === 2 || $os === 3 || $os === 46) {//AlmaLinux
+            return "<i class='fa-brands fa-linux os-icon' title='{$os_name}'></i>";
+        } elseif ($os >= 4 && $os <= 7) {//CentOS
             return "<i class='fa-brands fa-centos os-icon' title='{$os_name}'></i>";
-        } elseif (($os > 7 && $os <= 10) || $os === 44) {//Debian
-            return "<i class='fa-brands fa-linux os-icon' title='{$os_name}'></i>";
-        } elseif (($os > 11 && $os < 15) || $os === 43) {//Fedora
+        } elseif (($os >= 8 && $os <= 10) || $os === 45) {//Debian
+            return "<i class='fa-brands fa-debian os-icon' title='{$os_name}'></i>";
+        } elseif (($os >= 11 && $os <= 14) || $os === 44) {//Fedora
             return "<i class='fa-brands fa-fedora os-icon' title='{$os_name}'></i>";
-        } elseif (($os > 14 && $os < 18) || $os === 46) {//FreeBSD
+        } elseif (($os >= 15 && $os <= 17) || $os === 47) {//FreeBSD
+            return "<i class='fa-brands fa-freebsd os-icon' title='{$os_name}'></i>";
+        } elseif (($os >= 18 && $os <= 20) || $os === 43) {//OpenBSD
             return "<i class='fa-brands fa-linux os-icon' title='{$os_name}'></i>";
-        } elseif (($os > 17 && $os < 21) || $os === 42) {//OpenBSD
-            return "<i class='fa-brands fa-linux os-icon' title='{$os_name}'></i>";
-        } elseif (($os > 25 && $os < 32) || $os === 41) {//Ubuntu
+        } elseif ($os >= 21 && $os <= 25) {//RHEL/Rocky
+            return "<i class='fa-brands fa-redhat os-icon' title='{$os_name}'></i>";
+        } elseif (($os >= 26 && $os <= 31) || $os === 42) {//Ubuntu
             return "<i class='fa-brands fa-ubuntu os-icon' title='{$os_name}'></i>";
-        } elseif (($os > 32 && $os < 38) || $os === 40) {//Windows
+        } elseif (($os >= 32 && $os <= 38) || $os === 41) {//Windows
             return "<i class='fa-brands fa-windows os-icon' title='{$os_name}'></i>";
-        } else {//OTHER ISO CUSTOM etc
+        } else {//Custom, Other, or unknown
             return "<i class='fa-solid fa-compact-disc os-icon' title='{$os_name}'></i>";
         }
     }
