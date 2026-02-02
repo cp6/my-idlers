@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
             $this->call(MiscSeeder::class);
             $this->call(SeedBoxesSeeder::class);
             $this->call(DNSSeeder::class);
+            $this->call(YabsSeeder::class);
         }
     }
 
