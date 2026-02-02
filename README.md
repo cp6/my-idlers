@@ -45,6 +45,9 @@ Currently seeking a project sponsor
 * Redesigned all create and edit pages with organized card sections and consistent form styling
 * Redesigned all show/detail pages with polished detail cards and visual hierarchy
 * Modernized settings page with organized card-based sections
+* Modernized account page with profile and API token sections
+* Modernized server and YABS comparison pages with improved table styling
+* Modernized public server listing page with consistent design
 
 ### Database Seeding
 
