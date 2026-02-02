@@ -29,6 +29,9 @@ Currently seeking a project sponsor
 * Updated all npm package versions
 * Fixed security vulnerabilities in dependencies
 * Added comprehensive seeders for Users, Servers, Shared, Reseller, Domains, Misc and DNS
+* Updated Dockerfile to PHP 8.3 with additional extensions (bcmath, pcntl)
+* Improved Dockerfile with production optimizations and health check
+* Improved run.sh with better env defaults, caching and optional auto-migrate
 
 ### Demo/Seeder Login Credentials
 
