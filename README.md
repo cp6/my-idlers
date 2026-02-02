@@ -102,6 +102,13 @@ php artisan migrate:fresh --seed
 php artisan migrate:fresh --seed
 ```
 
+### Environment Variables
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `SEED_DEMO_DATA` | `false` | Set to `true` to seed demo user and sample data during `migrate:fresh --seed` |
+| `MAX_USERS` | `0` | Maximum number of users allowed to register. `0` = unlimited |
+
 ### Demo Login Credentials
 
 When `SEED_DEMO_DATA=true` is set, a demo user is created:
