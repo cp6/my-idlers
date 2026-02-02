@@ -33,17 +33,9 @@
 
         <x-response-alerts></x-response-alerts>
 
-        <div class="row g-4">
-            <!-- Note Content -->
-            <div class="col-12">
-                <div class="card content-card">
-                    <div class="card-header card-section-header">
-                        <h5 class="card-section-title mb-0">Note Content</h5>
-                    </div>
-                    <div class="card-body">
-                        <p class="mb-0">{{ $note->note }}</p>
-                    </div>
-                </div>
+        <div class="card content-card">
+            <div class="card-body">
+                <p class="mb-0">{{ $note->note }}</p>
             </div>
         </div>
     </div>
