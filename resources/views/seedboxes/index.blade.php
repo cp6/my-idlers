@@ -4,6 +4,7 @@
         <div class="page-header">
             <h2 class="page-title">Seedboxes</h2>
             <div class="page-actions">
+                <x-export-buttons route="export.seedboxes" />
                 <a href="{{ route('seedboxes.create') }}" class="btn btn-primary">Add seedbox</a>
             </div>
         </div>

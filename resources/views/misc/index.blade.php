@@ -4,6 +4,7 @@
         <div class="page-header">
             <h2 class="page-title">Misc Services</h2>
             <div class="page-actions">
+                <x-export-buttons route="export.misc" />
                 <a href="{{ route('misc.create') }}" class="btn btn-primary">Add misc service</a>
             </div>
         </div>

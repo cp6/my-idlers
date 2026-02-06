@@ -4,6 +4,7 @@
         <div class="page-header">
             <h2 class="page-title">Domains</h2>
             <div class="page-actions">
+                <x-export-buttons route="export.domains" />
                 <a href="{{ route('domains.create') }}" class="btn btn-primary">Add domain</a>
             </div>
         </div>

@@ -252,6 +252,8 @@
     align-items: center;
     justify-content: space-between;
     padding: 1.5rem 0 1rem;
+    flex-wrap: wrap;
+    gap: 0.75rem;
 }
 
 .page-title {
@@ -264,6 +266,27 @@
 .page-actions {
     display: flex;
     gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 576px) {
+    .page-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .page-actions {
+        justify-content: flex-start;
+    }
+    
+    .page-actions .btn {
+        flex: 1;
+        min-width: 0;
+    }
+    
+    .page-actions .dropdown {
+        flex: 0 0 auto;
+    }
 }
 
 .content-card {

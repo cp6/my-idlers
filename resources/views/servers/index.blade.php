@@ -4,6 +4,7 @@
         <div class="page-header">
             <h2 class="page-title">Servers</h2>
             <div class="page-actions">
+                <x-export-buttons route="export.servers" />
                 <a href="{{ route('servers.create') }}" class="btn btn-primary">Add server</a>
                 <a href="{{ route('servers-compare-choose') }}" class="btn btn-outline-secondary">Compare</a>
             </div>

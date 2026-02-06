@@ -4,6 +4,7 @@
         <div class="page-header">
             <h2 class="page-title">Shared Hosting</h2>
             <div class="page-actions">
+                <x-export-buttons route="export.shared" />
                 <a href="{{ route('shared.create') }}" class="btn btn-primary">Add shared hosting</a>
             </div>
         </div>

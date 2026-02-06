@@ -9,7 +9,7 @@ a [YABS](https://github.com/masonr/yet-another-bench-script) output you can get 
 GeekBench 5 & 6 scores to do easier comparing and sorting. Of course storing other services e.g. web hosting is possible
 and supported too with My idlers.
 
-[![Generic badge](https://img.shields.io/badge/version-4.0.0-blue.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Laravel-11.48-red.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/PHP-8.4-purple.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Bootstrap-5.3-pink.svg)](https://shields.io/)
+[![Generic badge](https://img.shields.io/badge/version-4.1.0-blue.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Laravel-11.48-red.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/PHP-8.4-purple.svg)](https://shields.io/) [![Generic badge](https://img.shields.io/badge/Bootstrap-5.3-pink.svg)](https://shields.io/)
 
 <img src="https://raw.githubusercontent.com/cp6/my-idlers/main/public/My%20Idlers%20logo.jpg" width="128" height="128" />
 
@@ -22,6 +22,25 @@ and supported too with My idlers.
 Proudly sponsored by [PikaPods](https://www.pikapods.com/) - Deploy your own My Idlers instance with one click, no server setup required. PikaPods handles all the infrastructure so you can focus on managing your services.
 
 [![PikaPods](https://www.pikapods.com/static/run-button.svg)](https://www.pikapods.com/pods?run=my-idlers)
+
+## 4.1.0 changes (February 2026):
+
+* Added data export feature for all service types (servers, domains, shared, reseller, seedboxes, DNS, misc)
+* Export data in JSON or CSV format
+* Added export buttons to all index pages
+* Added global export section to settings page for exporting all data at once
+* Global CSV export creates a ZIP file with separate CSV files per service type
+* Added new API endpoints for data export:
+  - `GET /api/export/servers?format=json|csv`
+  - `GET /api/export/domains?format=json|csv`
+  - `GET /api/export/shared?format=json|csv`
+  - `GET /api/export/reseller?format=json|csv`
+  - `GET /api/export/seedboxes?format=json|csv`
+  - `GET /api/export/dns?format=json|csv`
+  - `GET /api/export/misc?format=json|csv`
+  - `GET /api/export/all?format=json|csv`
+* Added ExportService for centralized export logic
+* Added comprehensive test suite for export functionality
 
 ## 4.0.0 changes (February 2026):
 

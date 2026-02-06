@@ -3,6 +3,7 @@
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\DNSController;
 use App\Http\Controllers\DomainsController;
+use App\Http\Controllers\ExportController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\IPsController;
 use App\Http\Controllers\LabelsController;
@@ -67,4 +68,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('servers-compare/{server1}/{server2}', [ServerController::class, 'compareServers'])->name('servers.compare');
 
     Route::get('ip/{IP}/pull-ip-info', [IPsController::class, 'getUpdateWhoIs'])->middleware(['throttle:10,1'])->name('ip.pull.info');
+
+    // Export routes
+    Route::get('/export/servers', [ExportController::class, 'servers'])->name('export.servers');
+    Route::get('/export/domains', [ExportController::class, 'domains'])->name('export.domains');
+    Route::get('/export/shared', [ExportController::class, 'shared'])->name('export.shared');
+    Route::get('/export/reseller', [ExportController::class, 'reseller'])->name('export.reseller');
+    Route::get('/export/seedboxes', [ExportController::class, 'seedboxes'])->name('export.seedboxes');
+    Route::get('/export/dns', [ExportController::class, 'dns'])->name('export.dns');
+    Route::get('/export/misc', [ExportController::class, 'misc'])->name('export.misc');
+    Route::get('/export/all', [ExportController::class, 'all'])->name('export.all');
 });

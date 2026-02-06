@@ -4,6 +4,7 @@
         <div class="page-header">
             <h2 class="page-title">Reseller Hosting</h2>
             <div class="page-actions">
+                <x-export-buttons route="export.reseller" />
                 <a href="{{ route('reseller.create') }}" class="btn btn-primary">Add reseller</a>
             </div>
         </div>

@@ -79,3 +79,15 @@ Route::middleware('auth:api')->get('yabs/', 'App\Http\Controllers\ApiController@
 Route::middleware('auth:api')->get('yabs/{id}', 'App\Http\Controllers\ApiController@getYabs');
 
 Route::middleware('auth:api')->get('note/{id}', 'App\Http\Controllers\ApiController@getNote');
+
+// Export routes
+Route::middleware('auth:api')->group(function () {
+    Route::get('export/servers', [App\Http\Controllers\ApiController::class, 'exportServers']);
+    Route::get('export/domains', [App\Http\Controllers\ApiController::class, 'exportDomains']);
+    Route::get('export/shared', [App\Http\Controllers\ApiController::class, 'exportShared']);
+    Route::get('export/reseller', [App\Http\Controllers\ApiController::class, 'exportReseller']);
+    Route::get('export/seedboxes', [App\Http\Controllers\ApiController::class, 'exportSeedboxes']);
+    Route::get('export/dns', [App\Http\Controllers\ApiController::class, 'exportDns']);
+    Route::get('export/misc', [App\Http\Controllers\ApiController::class, 'exportMisc']);
+    Route::get('export/all', [App\Http\Controllers\ApiController::class, 'exportAll']);
+});

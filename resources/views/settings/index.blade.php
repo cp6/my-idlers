@@ -199,5 +199,24 @@
 
             <button type="submit" class="btn btn-primary mb-4">Update Settings</button>
         </form>
+
+        <!-- Data Export -->
+        <div class="card content-card mb-4">
+            <div class="card-header card-section-header">
+                <h5 class="card-section-title mb-0">Data Export</h5>
+                <span class="text-muted small">Export all your data for backup or migration</span>
+            </div>
+            <div class="card-body">
+                <p class="text-muted mb-3">Download a complete export of all your services, including servers, domains, shared hosting, reseller hosting, seedboxes, DNS records, and miscellaneous services.</p>
+                <div class="d-flex gap-2">
+                    <a href="{{ route('export.all', ['format' => 'json']) }}" class="btn btn-outline-primary">
+                        <i class="fas fa-file-code me-1"></i>Export as JSON
+                    </a>
+                    <a href="{{ route('export.all', ['format' => 'csv']) }}" class="btn btn-outline-success">
+                        <i class="fas fa-file-archive me-1"></i>Export as CSV (ZIP)
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 </x-app-layout>

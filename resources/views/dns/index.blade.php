@@ -4,6 +4,7 @@
         <div class="page-header">
             <h2 class="page-title">DNS</h2>
             <div class="page-actions">
+                <x-export-buttons route="export.dns" />
                 <a href="{{ route('dns.create') }}" class="btn btn-primary">Add DNS</a>
             </div>
         </div>
