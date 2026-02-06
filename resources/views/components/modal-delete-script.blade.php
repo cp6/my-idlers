@@ -11,10 +11,11 @@
             },
             methods: {
                 confirmDeleteModal(event) {
+                    var el = event.target.closest('button') || event.target;
                     this.showModal = true;
-                    this.modal_hostname = event.target.title;
-                    this.modal_id = event.target.id;
-                    this.delete_form_action = '{{$uri}}/' + this.modal_id;
+                    this.modal_hostname = el.dataset.title || el.title;
+                    this.modal_id = el.id;
+                    this.delete_form_action = '/{{$uri}}/' + this.modal_id;
                 }
             }
         });
