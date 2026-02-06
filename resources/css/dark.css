@@ -541,27 +541,29 @@ body {
 }
 
 .dataTables_wrapper .dataTables_paginate .paginate_button {
-    padding: 0.375rem 0.75rem !important;
+    padding: 0 !important;
     font-size: 0.875rem !important;
-    border-radius: 6px !important;
-    border: 1px solid #475569 !important;
-    background: #1e293b !important;
+    border-radius: 0 !important;
+    border: none !important;
+    background: transparent !important;
     background-image: none !important;
-    color: #cbd5e1 !important;
+    color: #9ca3af !important;
     cursor: pointer;
-    transition: all 0.15s ease;
-    margin-left: 0.25rem !important;
+    transition: color 0.15s ease;
+    margin-left: 0.5rem !important;
     box-shadow: none !important;
     outline: none !important;
+    text-decoration: none !important;
 }
 
 .dataTables_wrapper .dataTables_paginate .paginate_button:hover:not(.disabled):not(.current) {
-    background: #334155 !important;
+    background: transparent !important;
     background-image: none !important;
-    border-color: #64748b !important;
-    color: #f1f5f9 !important;
+    border-color: transparent !important;
+    color: #e5e7eb !important;
     box-shadow: none !important;
     outline: none !important;
+    text-decoration: underline !important;
 }
 
 .dataTables_wrapper .dataTables_paginate .paginate_button:active,
@@ -573,13 +575,14 @@ body {
 .dataTables_wrapper .dataTables_paginate .paginate_button.current,
 .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover,
 .dataTables_wrapper .dataTables_paginate .paginate_button.current:focus {
-    background: #3b82f6 !important;
+    background: transparent !important;
     background-image: none !important;
-    border-color: #3b82f6 !important;
-    color: #ffffff !important;
-    font-weight: 500;
+    border-color: transparent !important;
+    color: #60a5fa !important;
+    font-weight: 600;
     box-shadow: none !important;
     outline: none !important;
+    text-decoration: underline !important;
 }
 
 .dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
