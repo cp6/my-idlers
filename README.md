@@ -245,63 +245,57 @@ For GET requests the header must have `Accept: application/json` and your API to
 
 All API requests must be appended with `api/` e.g `mydomain.com/api/servers/gYk8J0a7`
 
-**GET request:**
+**GET requests:**
 
-`dns/`
+| Endpoint | Description |
+|----------|-------------|
+| `dns/` | Get all DNS records |
+| `dns/{id}` | Get DNS record |
+| `domains/` | Get all domains |
+| `domains/{id}` | Get domain |
+| `servers` | Get all servers |
+| `servers/{id}` | Get server |
+| `IPs/` | Get all IPs |
+| `IPs/{id}` | Get IP |
+| `labels/` | Get all labels |
+| `labels/{id}` | Get label |
+| `locations/` | Get all locations |
+| `locations/{id}` | Get location |
+| `misc/` | Get all misc services |
+| `misc/{id}` | Get misc service |
+| `networkSpeeds/` | Get all network speeds |
+| `networkSpeeds/{id}` | Get network speed |
+| `os/` | Get all operating systems |
+| `os/{id}` | Get operating system |
+| `pricing/` | Get all pricing |
+| `pricing/{id}` | Get pricing |
+| `providers/` | Get all providers |
+| `providers/{id}` | Get provider |
+| `reseller/` | Get all reseller hosting |
+| `reseller/{id}` | Get reseller hosting |
+| `seedbox/` | Get all seedboxes |
+| `seedbox/{id}` | Get seedbox |
+| `settings/` | Get settings |
+| `shared/` | Get all shared hosting |
+| `shared/{id}` | Get shared hosting |
+| `yabs/` | Get all YABS |
+| `yabs/{id}` | Get YABS |
+| `note/{id}` | Get note |
+| `online/{hostname}` | Check if host is up |
+| `dns/{domainName}/{type}` | Get IP for domain |
 
-`dns/{id}`
+**Export endpoints (v4.1):**
 
-`domains/`
-
-`domains/{id}`
-
-`servers`
-
-`servers/{id}`
-
-`labels/`
-
-`labels/{id}`
-
-`locations/`
-
-`locations/{id}`
-
-`misc/`
-
-`misc/{id}`
-
-`networkSpeeds/`
-
-`networkSpeeds/{id}`
-
-`os/`
-
-`os/{id}`
-
-`pricing/`
-
-`pricing/{id}`
-
-`providers/`
-
-`providers/{id}`
-
-`reseller/`
-
-`reseller/{id}`
-
-`seedbox/`
-
-`seedbox/{id}`
-
-`settings/`
-
-`shared/`
-
-`shared/{id}`
-
-`note/{id}`
+| Endpoint | Description |
+|----------|-------------|
+| `export/servers?format=json\|csv` | Export servers |
+| `export/domains?format=json\|csv` | Export domains |
+| `export/shared?format=json\|csv` | Export shared hosting |
+| `export/reseller?format=json\|csv` | Export reseller hosting |
+| `export/seedboxes?format=json\|csv` | Export seedboxes |
+| `export/dns?format=json\|csv` | Export DNS records |
+| `export/misc?format=json\|csv` | Export misc services |
+| `export/all?format=json\|csv` | Export all data |
 
 **POST requests**
 
