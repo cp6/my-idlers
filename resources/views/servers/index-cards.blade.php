@@ -1,6 +1,6 @@
 @section('title', 'Servers')
 <x-app-layout>
-    <div class="container" id="app">
+    <div class="servers-index" id="app">
         <div class="page-header">
             <h2 class="page-title">Servers</h2>
             <div class="page-actions">
@@ -503,6 +503,24 @@
             text-transform: uppercase;
             letter-spacing: 0.05em;
             display: none;
+        }
+
+        @media (max-width: 576px) {
+            .servers-index .tab-content {
+                padding-left: 0.5rem;
+                padding-right: 0.5rem;
+            }
+
+            .servers-index .row.g-3 {
+                --bs-gutter-x: 0.5rem;
+            }
+
+            .servers-index .server-card-header,
+            .servers-index .server-card-body,
+            .servers-index .server-card-footer {
+                padding-left: 0.75rem;
+                padding-right: 0.75rem;
+            }
         }
 
         </style>

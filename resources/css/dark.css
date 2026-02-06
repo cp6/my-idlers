@@ -308,16 +308,20 @@ body {
     }
     
     .page-actions {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
         justify-content: flex-start;
     }
     
-    .page-actions .btn {
-        flex: 1;
-        min-width: 0;
+    .page-actions .btn,
+    .page-actions .dropdown-toggle {
+        width: 100%;
+        justify-content: center;
     }
-    
+
     .page-actions .dropdown {
-        flex: 0 0 auto;
+        width: 100%;
     }
 }
 
