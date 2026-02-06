@@ -149,60 +149,40 @@ php artisan route:cache
 php artisan cache:clear
 ```
 
-## 3.0.0 changes (9 December 2024):
-
-* Updated PHP version to 8.3
-* Updated Laravel version to ^11
-* Updated composer package versions
-* Updated routes into middleware grouping for auth
-* Updated login and register forms
-* Updated servers, shared, reseller and domains pages to use Datatables
-* Added icons to back and submit button components
-* Added icon button to shared and reseller create pages
-* Added several updated OS versions to OsSeeder
-* Added Font awesome Brands webfont
-* Added IP whois data columns to the ips table
-* Added IP whois data fetching and updating DB
-* Added Note to API
-* Fixed OS icons not loading in servers index page
-* Fixed Settings being called without being created (existing)
-* Fixed issue with OS: `Call to a member function toJson() on array`
-* Fixed due in (days) column showing a massive float
-* Removed 1 user being seeded
-* Removed doctrine/dbal
-
 ## Requires
 
 * PHP 8.4
 
 ## Features
 
-* Add servers
-* Add shared hosting
-* Add domains
+* Add and manage servers, shared hosting, reseller hosting, seedboxes, domains, DNS and misc services
 * [Auto get IP's from hostname](https://cdn.write.corbpie.com/wp-content/uploads/2021/01/my-idlers-self-hosted-server-domain-information-ips-from-hostname.gif)
 * [Check up/down status](https://cdn.write.corbpie.com/wp-content/uploads/2021/01/my-idlers-self-hosted-server-domain-information-ping-up-feature.gif)
-* Get YABS data from output
-* Compare 2 servers
-* Save & view YABS output
-* Update YABS disk & network results
-* Next due date system
-* Multi currency compatibility
-* Multi payment-term compatibility
-* Pre-defined operating systems
-* Assign labels
+* Get YABS data from output or POST directly from yabs.sh
+* Compare servers and YABS benchmarks
+* Save & view YABS output with disk and network speeds
+* Export data in JSON or CSV format
+* Light and dark mode themes
+* Next due date tracking with dashboard overview
+* Multi currency and payment term support
+* Pre-defined operating systems with icons
+* Assign labels to services
 * Assign server type (KVM, OVZ, LXC & dedi)
-* Easy to edit values
-* Assign notes
+* Assign notes to any service
+* Public server listing option
+* REST API for all resources
+* Registration limit control (MAX_USERS)
 
 ## Install
 
 * Run `git clone https://github.com/cp6/my-idlers.git` into your directory of choice
 * Run `composer install`
+* Run `npm install`
 * Run `cp .env.example .env`
-* Edit (If needed) MySQL details in .env
+* Edit MySQL details and other settings in .env
 * Run `php artisan key:generate`
 * Run `php artisan make:database my_idlers` to create database
+* Run `npm run prod` to build assets
 * Run `php artisan migrate:fresh --seed` to create tables and seed data
 * Run `php artisan serve`
 
@@ -210,9 +190,11 @@ php artisan cache:clear
 
 If you already have at least version 2.0 installed:
 
-* Run `git clone https://github.com/cp6/my-idlers.git`
+* Run `git pull`
 * Run `composer install`
 * Run `composer update`
+* Run `npm install`
+* Run `npm run prod`
 * Run `php artisan migrate`
 * Run `php artisan route:cache`
 * Run `php artisan cache:clear`
@@ -221,12 +203,14 @@ If you already have at least version 2.0 installed:
 
 ```
 docker run \
-  -p 8000:8000\
+  -p 8000:8000 \
   -e APP_URL=https://... \
   -e DB_HOST=... \
   -e DB_DATABASE=... \
   -e DB_USERNAME=... \
   -e DB_PASSWORD=... \
+  -e MAX_USERS=0 \
+  -e SEED_DEMO_DATA=false \
   ghcr.io/cp6/my-idlers:latest
 docker exec ... php artisan migrate:fresh --seed --force  # Set up database one time
 ```
