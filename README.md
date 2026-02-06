@@ -41,6 +41,8 @@ Proudly sponsored by [PikaPods](https://www.pikapods.com/) - Deploy your own My 
   - `GET /api/export/all?format=json|csv`
 * Added ExportService for centralized export logic
 * Added comprehensive test suite for export functionality
+* Modernized confirm-password and verify-email auth pages
+* Redesigned error pages (401, 403, 404, 500, 503) with card layout and light/dark mode support
 
 ## 4.0.0 changes (February 2026):
 
