@@ -19,7 +19,9 @@ and supported too with My idlers.
 
 ## Project sponsor
 
-Currently seeking a project sponsor
+Proudly sponsored by [PikaPods](https://www.pikapods.com/) - Deploy your own My Idlers instance with one click, no server setup required. PikaPods handles all the infrastructure so you can focus on managing your services.
+
+[![PikaPods](https://www.pikapods.com/static/run-button.svg)](https://www.pikapods.com/pods?run=my-idlers)
 
 ## 4.0.0 changes (February 2026):
 
