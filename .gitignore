@@ -1,3 +1,6 @@
+# Kiro
+.kiro/
+
 ### Laravel ###
 vendor/
 node_modules/
