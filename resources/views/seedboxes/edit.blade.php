@@ -77,6 +77,7 @@
                                 <option value="4" {{ $seedbox_data->price->term == 4 ? 'selected' : '' }}>Annual</option>
                                 <option value="5" {{ $seedbox_data->price->term == 5 ? 'selected' : '' }}>Biennial</option>
                                 <option value="6" {{ $seedbox_data->price->term == 6 ? 'selected' : '' }}>Triennial</option>
+                                <option value="7" {{ $seedbox_data->price->term == 7 ? 'selected' : '' }}>One time</option>
                             </select>
                         </div>
                         <div class="col-12 col-md-6 col-lg-3">
