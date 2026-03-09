@@ -114,7 +114,7 @@
                             <div class="col-6">
                                 <div class="detail-item">
                                     <span class="detail-label">Bandwidth</span>
-                                    <span class="detail-value">{{ $server_data->bandwidth }} GB</span>
+                                    <span class="detail-value">@if($server_data->bandwidth == 0) Unlimited @else {{ $server_data->bandwidth }} GB @endif</span>
                                 </div>
                             </div>
                             @foreach($server_data->ips as $ip)

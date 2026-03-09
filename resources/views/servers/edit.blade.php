@@ -70,7 +70,11 @@
                         </div>
                         <div class="col-12 col-md-6 col-lg-3">
                             <label class="form-label">Bandwidth (GB)</label>
-                            <input type="number" class="form-control" name="bandwidth" value="{{ $server_data->bandwidth }}" min="0" max="999999">
+                            <input type="number" class="form-control" name="bandwidth" id="bandwidth" value="{{ $server_data->bandwidth }}" min="0" max="999999" {{ $server_data->bandwidth == 0 ? 'readonly' : '' }}>
+                            <div class="form-check mt-1">
+                                <input class="form-check-input" type="checkbox" id="bandwidth_unlimited" {{ $server_data->bandwidth == 0 ? 'checked' : '' }} onchange="var el=document.getElementById('bandwidth');if(this.checked){el.value=0;el.readOnly=true;}else{el.readOnly=false;el.value=1000;}">
+                                <label class="form-check-label small" for="bandwidth_unlimited">Unlimited</label>
+                            </div>
                         </div>
                     </div>
                     @if(count($server_data->ips) > 0)

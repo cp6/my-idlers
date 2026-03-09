@@ -125,7 +125,11 @@
                         </div>
                         <div class="col-6 col-md-4">
                             <label class="form-label">Bandwidth (GB)</label>
-                            <input type="number" class="form-control" name="bandwidth" value="1000" min="0" max="999999">
+                            <input type="number" class="form-control" name="bandwidth" id="bandwidth" value="1000" min="0" max="999999">
+                            <div class="form-check mt-1">
+                                <input class="form-check-input" type="checkbox" id="bandwidth_unlimited" onchange="var el=document.getElementById('bandwidth');if(this.checked){el.value=0;el.readOnly=true;}else{el.readOnly=false;el.value=1000;}">
+                                <label class="form-check-label small" for="bandwidth_unlimited">Unlimited</label>
+                            </div>
                         </div>
                         <div class="col-6 col-md-4">
                             <label class="form-label">Port Speed (Mbps)</label>
