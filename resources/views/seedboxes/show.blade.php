@@ -93,7 +93,7 @@
                             <div class="col-12">
                                 <div class="detail-item">
                                     <span class="detail-label">Bandwidth</span>
-                                    <span class="detail-value">@if($seedbox_data->bandwidth >= 1000){{ number_format($seedbox_data->bandwidth / 1000, 1) }} TB @else {{ $seedbox_data->bandwidth }} GB @endif</span>
+                                    <span class="detail-value">@if($seedbox_data->bandwidth == 0) Unlimited @elseif($seedbox_data->bandwidth >= 1000){{ number_format($seedbox_data->bandwidth / 1000, 1) }} TB @else {{ $seedbox_data->bandwidth }} GB @endif</span>
                                 </div>
                             </div>
                             <div class="col-12">

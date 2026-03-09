@@ -93,7 +93,7 @@
                             <div class="col-6">
                                 <div class="detail-item">
                                     <span class="detail-label">Bandwidth</span>
-                                    <span class="detail-value">{{ $reseller->bandwidth }} GB</span>
+                                    <span class="detail-value">@if($reseller->bandwidth == 0) Unlimited @else {{ $reseller->bandwidth }} GB @endif</span>
                                 </div>
                             </div>
                             <div class="col-6">

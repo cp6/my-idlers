@@ -93,7 +93,7 @@
                             <div class="col-6">
                                 <div class="detail-item">
                                     <span class="detail-label">Bandwidth</span>
-                                    <span class="detail-value">{{ $shared->bandwidth }} GB</span>
+                                    <span class="detail-value">@if($shared->bandwidth == 0) Unlimited @else {{ $shared->bandwidth }} GB @endif</span>
                                 </div>
                             </div>
                             <div class="col-6">
