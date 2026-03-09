@@ -92,6 +92,7 @@
                                 <option value="4" {{ $domain_info->price->term == 4 ? 'selected' : '' }}>Annual</option>
                                 <option value="5" {{ $domain_info->price->term == 5 ? 'selected' : '' }}>Biennial</option>
                                 <option value="6" {{ $domain_info->price->term == 6 ? 'selected' : '' }}>Triennial</option>
+                                <option value="7" {{ $domain_info->price->term == 7 ? 'selected' : '' }}>One time</option>
                             </select>
                         </div>
                     </div>

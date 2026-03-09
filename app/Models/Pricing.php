@@ -80,6 +80,8 @@ class Pricing extends Model
             return ($cost / 24);
         } elseif ($term === 6) {
             return ($cost / 36);
+        } elseif ($term === 7) {
+            return 0;
         } else {
             return $cost;
         }
@@ -99,6 +101,8 @@ class Pricing extends Model
             return 24;
         } elseif ($term === 6) {
             return 36;
+        } elseif ($term === 7) {
+            return 0;
         } else {
             return 62;
         }
