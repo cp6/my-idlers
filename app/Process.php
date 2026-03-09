@@ -36,6 +36,8 @@ class Process
             return "p/2y";
         } elseif ($term === 6) {
             return "p/3y";
+        } elseif ($term === 7) {
+            return "once";
         } else {
             return "unknown";
         }

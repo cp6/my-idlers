@@ -45,6 +45,7 @@
                                 <option value="4">Annual</option>
                                 <option value="5">Biennial</option>
                                 <option value="6">Triennial</option>
+                                <option value="7">One time</option>
                             </select>
                         </div>
                     </div>

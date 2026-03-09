@@ -77,6 +77,7 @@
                                 <option value="4" {{ $shared->price->term == 4 ? 'selected' : '' }}>Annual</option>
                                 <option value="5" {{ $shared->price->term == 5 ? 'selected' : '' }}>Biennial</option>
                                 <option value="6" {{ $shared->price->term == 6 ? 'selected' : '' }}>Triennial</option>
+                                <option value="7" {{ $shared->price->term == 7 ? 'selected' : '' }}>One time</option>
                             </select>
                         </div>
                         <div class="col-12 col-md-6 col-lg-3">

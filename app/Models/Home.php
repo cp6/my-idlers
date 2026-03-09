@@ -96,6 +96,10 @@ class Home extends Model
         foreach ($due_soon as $service) {
             if (Carbon::createFromFormat('Y-m-d', $service->next_due_date)->isPast()) {
                 $months = $pricing->termAsMonths($service->term);//Get months for term to update the next due date to
+                if ($months === 0) {//one-time payment, don't auto-advance due date
+                    $count++;
+                    continue;
+                }
                 $new_due_date = Carbon::createFromFormat('Y-m-d', $service->next_due_date)->addMonths($months)->format('Y-m-d');
                 DB::table('pricings')//Update the DB
                 ->where('service_id', $service->service_id)
@@ -136,7 +140,8 @@ class Home extends Model
                     } else {
                         $the_price = $price['as_usd'];
                     }
-                    if ($price['term'] === 1) {//1 month
+                    if ($price['term'] === 7) {//one-time payment, skip recurring totals
+                    } elseif ($price['term'] === 1) {//1 month
                         $total_cost_weekly += ($the_price / 4);
                         $total_cost_pm += $the_price;
                     } elseif ($price['term'] === 2) {//3 months

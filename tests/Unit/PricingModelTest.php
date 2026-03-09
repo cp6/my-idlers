@@ -80,6 +80,16 @@ class PricingModelTest extends TestCase
         $this->assertEquals(36, $this->pricing->termAsMonths(6));
     }
 
+    public function test_cost_as_per_month_returns_zero_for_one_time_term()
+    {
+        $this->assertEquals(0, $this->pricing->costAsPerMonth('50.00', 7));
+    }
+
+    public function test_term_as_months_returns_0_for_one_time()
+    {
+        $this->assertEquals(0, $this->pricing->termAsMonths(7));
+    }
+
     public function test_term_as_months_returns_62_for_unknown_term()
     {
         $this->assertEquals(62, $this->pricing->termAsMonths(99));
